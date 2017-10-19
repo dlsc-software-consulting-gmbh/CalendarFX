@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>view</artifactId>
+    <name>CalendarFXView</name>
+
+    <parent>
+        <groupId>com.calendarfx</groupId>
+        <artifactId>calendar</artifactId>
+        <version>8.4.1</version>
+        <relativePath>../CalendarFX</relativePath>
+    </parent>
+
+    <repositories>
+        <!-- repository>
+            <id>oss-sonatype</id>
+            <name>oss-sonatype</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository -->
+
+        <repository>
+            <id>bintray</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/jerady/maven</url>
+        </repository>
+
+
+        <repository>
+            <id>my-local-core-repo</id>
+            <url>file://${project.basedir}/repository</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.calendarfx</groupId>
+            <artifactId>recurrence</artifactId>
+            <version>8.4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-commons</artifactId>
+            <version>8.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-fontawesome</artifactId>
+            <version>4.7.0-1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smardec</groupId>
+            <artifactId>license4j</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.loadui</groupId>
+            <artifactId>testFx</artifactId>
+            <version>3.1.2</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.3</version>
+
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <sourceHighlighter>coderay</sourceHighlighter>
+                    <backend>html</backend>
+                    <imagesDir>manual-images</imagesDir>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

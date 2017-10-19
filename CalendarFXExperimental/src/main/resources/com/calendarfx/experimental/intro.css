@@ -1,0 +1,14 @@
+
+.intro-pane {
+    -fx-background-color: rgba(0,0,0,.8);
+}
+
+.snapshot-image {
+    -fx-stroke: red;
+    -fx-fill: green;
+}
+
+.snapshot-background {
+    -fx-background-color: white;
+    -fx-background-radius: 4;
+}

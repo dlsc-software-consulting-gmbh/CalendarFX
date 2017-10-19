@@ -1,0 +1,8 @@
+.red-border {
+	-fx-border-color: red;
+	-fx-border-width: 1px;
+}
+
+.orange-background {
+	-fx-background-color: orange;
+}

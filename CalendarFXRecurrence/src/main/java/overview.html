@@ -1,0 +1,49 @@
+<body>
+
+<p><a href="http://rfc.net/rfc2445.html">RFC 2445</a> defines protocols for
+interoperability between calendar applications, and this library provides java
+implementations for a number of RFC 2445 primitives including those that
+describe how events repeat.  Start by taking alook at the <code>compat</code>
+packages.</p>
+
+<h3>Dates, Times, and Compatability Layers</h3>
+<p>RFC 2445 allows mixing of dates, date-times (and periods) within the same
+recurrence description.  RFC 2445's concept of date values fit awkwardly with
+most existing date libraries.  <code>java.util</code> has no concept of period
+or of local times, makes no distinction between dates and date-times, and has
+no real "value" type since <code>Date</code> is mutable.
+<a href="http://joda-time.sourceforge.net/">Joda-time</a> provides an excellent
+date library, but many existing applications use the old <code>java.util</code>
+code.  We decided to create value types that hew closely to RFC 2445 types, and
+then provide compatibility layers, so that applications need not link joda-time
+if they use <code>java.util</code>, but can easily work with joda-time if they
+choose.</p>
+
+<p><code>java.util</code> support is provided by the <code><a
+  href="com/google/ical/compat/javautil/DateIteratorFactory.html"
+>DateIteratorFactory</a></code>.</p>
+
+<p>There are two factories for Joda time, one which provides
+<code>DateTime</code>s and one for <code>LocalDate</code>s.  See <code><a
+  href="com/google/ical/compat/jodatime/package-summary.html"
+>com.google.ical.compat.jodatime</a></code> for details.</p>
+
+<h3>Dependencies</h3>
+<p>Requires <b><a href="http://ant.apache.org/">ant</a></b> to build.</p>
+<p>This library requires <b>joda-time</b> to build, but if you don't use the
+joda-time compatability layer, can be run without it by running
+<code style="white-space: nowrap">ant rfc2445-no-joda</code> and using
+<code>rfc2445-no-joda.jar</code>.</p>
+<p>Requires <b>Jdk1.5</b>.</p>
+<p>The test target requires <b><a href="http://www.junit.org/">junit</a></b>,
+which should typically be in your <code>$ANT_HOME/lib</code> directory.</p>
+
+<h3>To-Do</h3>
+<ul>
+<li>Support for recurrences more frequently than daily
+<li>Support for periods in rdate-lists
+<li>Support for periods iterators
+<li>Support for Java ME if people are interested?
+</ul>
+
+</body>

@@ -1,0 +1,218 @@
+/**
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
+ * 
+ * This file is part of CalendarFX.
+ */
+
+package impl.com.calendarfx.view;
+
+import com.calendarfx.view.TimeField;
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.control.SkinBase;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
+import javafx.util.StringConverter;
+
+import java.time.LocalTime;
+
+@SuppressWarnings("javadoc")
+public class TimeFieldSkin extends SkinBase<TimeField> {
+
+    private NumericTextField hourField;
+    private NumericTextField minuteField;
+
+    public TimeFieldSkin(TimeField field) {
+        super(field);
+
+        StringConverter<String> valueConverter = new StringConverter<String>() {
+
+            @Override
+            public String fromString(String text) {
+                if (text.length() == 0) {
+                    return "00";
+                } else if (text.length() == 1) {
+                    return "0" + text;
+                }
+
+                return text;
+            }
+
+            @Override
+            public String toString(String text) {
+                return text;
+            }
+        };
+
+        TextFormatter<String> hourFormatter = new TextFormatter<>(
+                valueConverter, "0");
+        TextFormatter<String> minuteFormatter = new TextFormatter<>(
+                valueConverter, "0");
+
+        hourField = new NumericTextField(23);
+        hourField.setOnKeyPressed(new RollingHandler(hourField, 23));
+        hourField.setTextFormatter(hourFormatter);
+
+        minuteField = new NumericTextField(59);
+        minuteField.setOnKeyPressed(new RollingHandler(minuteField, 59));
+        minuteField.setTextFormatter(minuteFormatter);
+
+        Label separator = new Label(":"); //$NON-NLS-1$
+        separator.setMaxHeight(Double.MAX_VALUE);
+
+        HBox box = new HBox();
+        box.setFillHeight(true);
+        box.getChildren().addAll(hourField, separator, minuteField);
+
+        getChildren().add(box);
+
+        field.valueProperty().addListener(it -> {
+            if (!updatingFields) {
+                updateFields();
+            }
+        });
+
+        updateFields();
+
+        // Install the listener after setting the values, avoid unnecessary
+        // notifications
+        hourField.textProperty().addListener(it -> updateValue());
+        minuteField.textProperty().addListener(it -> updateValue());
+    }
+
+    private boolean updatingFields;
+
+    private void updateFields() {
+        updatingFields = true;
+
+        TimeField timeField = getSkinnable();
+        LocalTime localTime = timeField.getValue();
+        if (localTime != null) {
+            hourField.setText(Integer.toString(localTime.getHour()));
+            minuteField.setText(Integer.toString(localTime.getMinute()));
+        } else {
+            hourField.setText("");
+            minuteField.setText("");
+        }
+
+        updatingFields = false;
+    }
+
+    private void updateValue() {
+        int hour = 0;
+        int minute = 0;
+        try {
+            hour = Math.max(0, Math.min(23, Integer.parseInt(hourField.getText())));
+            minute = Math.max(0, Math.min(59, Integer.parseInt(minuteField.getText())));
+        } catch (NumberFormatException ex) {
+            // do nothing
+        }
+
+        /*
+         * LocalTime is immutable, hence we have to create new instances over
+         * and over again, which causes property change events. So we have to
+         * have this check here to ensure that the value has really changed. And
+         * we only care about hours and minutes, so we are not using
+         * LocalTime.equals().
+         */
+        LocalTime oldTime = getSkinnable().getValue();
+        LocalTime newTime = LocalTime.of(hour, minute);
+
+        if (oldTime != null && newTime != null) {
+            if (!(oldTime.getHour() == newTime.getHour() && oldTime.getMinute() == newTime.getMinute())) {
+                getSkinnable().setValue(newTime);
+            }
+        } else if (newTime == null) {
+            getSkinnable().setValue(null);
+
+        }
+    }
+
+    public class RollingHandler implements EventHandler<KeyEvent> {
+
+        private int max;
+        private TextField field;
+
+        public RollingHandler(TextField field, int max) {
+            this.field = field;
+            this.max = max;
+        }
+
+        @Override
+        public void handle(KeyEvent event) {
+            switch (event.getCode()) {
+                case UP:
+                    increment();
+                    break;
+                case DOWN:
+                    decrement();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void increment() {
+            Integer value = 0;
+            try {
+                value = Integer.parseInt(field.getText());
+            } catch (NumberFormatException ex) {
+                // do nothing
+            }
+            if (value < max) {
+                value++;
+            } else if (getSkinnable().isRollOver()) {
+                value = 0;
+            }
+            if (value < 10) {
+                field.setText("0" + Integer.toString(value));
+            } else {
+                field.setText(Integer.toString(value));
+            }
+        }
+
+        private void decrement() {
+            Integer value = 0;
+            try {
+                value = Integer.parseInt(field.getText());
+            } catch (NumberFormatException ex) {
+                // do nothing
+            }
+            if (value > 0) {
+                value--;
+            } else if (getSkinnable().isRollOver()) {
+                value = max;
+            }
+
+            if (value < 10) {
+                field.setText("0" + Integer.toString(value));
+            } else {
+                field.setText(Integer.toString(value));
+            }
+        }
+    }
+
+    public class NumericTextField extends TextField {
+
+        public NumericTextField(int max) {
+            setPrefColumnCount(2);
+            focusedProperty().addListener(it -> {
+                if (isFocused()) {
+                    selectAll();
+                }
+            });
+        }
+
+        @Override
+        public void replaceText(int start, int end, String s) {
+            super.replaceText(start, end, s.replaceAll("[^0-9]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        @Override
+        public void replaceSelection(String s) {
+            super.replaceSelection(s.replaceAll("[^0-9]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
+}

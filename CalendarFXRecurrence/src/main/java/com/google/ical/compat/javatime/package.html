@@ -1,0 +1,20 @@
+<body>
+<p><a href="http://joda-time.sourceforge.net/"
+>Joda time</a> compatability layer.</p>
+
+<p>RFC 2445 allows mixing of dates, date-times (and periods) within the same
+recurrence description.  Joda Time makes a clear distinction between dates and
+times, so we provide two iterator factories, one for <code><a
+href="http://joda-time.sourceforge.net/api-release/org/joda/time/LocalDate.html"
+>LocalDate</a></code>s and another for <code><a
+href="http://joda-time.sourceforge.net/api-release/org/joda/time/DateTime.html"
+>DateTime</a></code>s.</p>
+
+<p>If you need to blur the distinction between
+<code><a href="LocalDateIterator.hml">LocalDateIterator</a></code> and
+<code><a href="DateTimeIterator.html">DateTimeIterator</a></code> you can
+downcast them to <code>Iterator&lt;? extends <a
+  href="http://joda-time.sourceforge.net/api-release/index.html"
+>ReadablePartial</a>&gt;</code>.</p>
+
+</body>

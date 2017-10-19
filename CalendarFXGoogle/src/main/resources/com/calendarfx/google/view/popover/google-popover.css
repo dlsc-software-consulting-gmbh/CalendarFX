@@ -1,0 +1,76 @@
+
+.title {
+	-fx-font-weight: bold;
+}
+
+.button-icon {
+	-fx-cursor: hand;
+}
+
+.link {
+	-fx-cursor: hand;
+	-fx-underline: true;
+}
+
+.details-view .notification-item {
+	-fx-spacing: 5;
+	-fx-padding: 0 0 5 0;
+}
+
+.attendees-view .top {
+	-fx-spacing: 5;
+	-fx-padding: 0 0 5 0;
+}
+
+.attendees-view .center {
+	-fx-spacing: 5;
+	-fx-padding: 0 0 10 0;
+	-fx-fill-width: true;
+	-fx-fit-to-width: true;
+}
+
+.attendees-view .scroll-pane {
+	-fx-padding: 5;
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+	-fx-fit-to-width: true;
+}
+
+.attendees-view .bottom {
+	-fx-spacing: 5;
+	-fx-padding: 5;
+}
+
+.attendees-view .bottom .checks-parent {
+	-fx-spacing: 10;
+}
+
+.attendees-view .email-field {
+	-fx-text-fill: black;
+}
+
+.attendees-view .email-field:invalid {
+	-fx-text-fill: red;
+}
+
+.attendee-item {
+	-fx-spacing: 5;
+	-fx-padding: 5;
+	-fx-background-color: #EEE;
+}
+
+.popover-footer {
+    -fx-padding: 0.0 !important;
+}
+
+.map-placeholder {
+    -fx-padding: 10.0;
+}
+
+.map-view-wrapper {
+	-fx-padding: 0 20 20 20;
+}
+
+.map {
+	-fx-border-color: gray;
+}

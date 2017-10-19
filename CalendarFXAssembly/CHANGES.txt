@@ -1,0 +1,83 @@
+Release 8.4.0
+-------------
+
+In general: this is a major update and many things have changed, have been added, have been
+removed. When you decide to upgrade to this release then please be aware that you might have
+to invest a lot of time first before your application will be back to where it was before.
+
+- CalendarEvent: the event hierarchy has changed. There is now a new super event type
+  called ANY. Direct sub event types are CALENDAR_CHANGED and ENTRY_CHANGED. All other
+  event types are children of ENTRY_CHANGED.
+
+- CSS: completely reworked / rewrote the calendar.css stylesheet. Styling is much more
+  verbose and consistent now. Sorry for the changes in this area but it really needed
+  to be cleaned up.
+
+- Performance: switched from "brute force" update strategy where often everything was
+  recreated in the views to a more fine-grained update strategy where changes are based
+  on the event types. Also lowered the scene graph complexity by removing containers
+  that only served layout purposes and that could be replaced with custom layout method
+  implementations or with a grid pane.
+
+- Real printing capabilities have been added, including a detailed preview dialog.
+
+- New complex views:
+	DetailedDayView - combines a day view, a time scale, calendar header, all day view,
+	 				  weekday header, an agenda view, and a scrollbar to a single view.
+	 				  This view replaces most of those individual controls except for the
+	 				  AgendaView in the DayPage(Skin).
+
+	DetailedWeekView - same as the day view, but for multiple days. Replaces the individual
+					   controls in the WeekPage(Skin).
+	MonthSheetView - a grid style view that can be used to display an entire year at once.
+
+- New simple views:
+	MarginSelector - supports entering print margins for the four sides of a document
+	WeekFieldsView - allows the user to specify the "first day of week" and the "number of
+	days" required for the first week of the year to actually be called "first".
+
+- DayPage: now implements a responsive layout to hide the left-hand side (agenda view, year
+  month view, today label) when the available width is too small to show the left-hand and
+  the right-hand side.
+
+- The class "Interval" now performs validity checks. It is no longer possible to create
+  intervals with invalid bounds, e.g. the end date can not be before the start date.
+
+- Renamed the setStartDate/Time() and setEndDate/Time() methods in Entry to changeXXX().
+  Example: setStartDate has become changeStartDate().
+
+  Motivation: the start/end date/time properties are read-only, so there can not be any
+  setters. Currently these setter methods were convenience methods updating the interval
+  property on Entry. In addition the "new" changeXYZ() methods ensure that the interval
+  always stays valid, which means that the start date / time will always be before the
+  end date / time and that the minimum duration property will be respected.
+
+  Calling changeStartTime/Date() will make an entry start earlier while keeping its duration,
+  so the whole entry moves as is to a new location. Calling changeEndTime/Date() behaves
+  differently. It will change the duration of the entry. These two different semantics
+  make it easier to edit a given entry.
+
+- EntryDetailView: now ensures that the time bounds are always valid.
+
+- DayViewScrollPane: a new scrollpane to properly scroll and at the same time resize the
+  scrolled day view. This pane makes sure that the hour layout strategy will be properly
+  observed, e.g. "always show 8 hours in viewport".
+
+- AgendaView: now fires RequestEvent(s) that contain the entry on which the user clicked
+  and not just the start time of the entry.
+
+- Calendar: this model class used to carry a "visible" property. This property had to be
+  moved to a view class as it is only used by the view. This change was needed when the
+  print preview dialog was added. Inside this view the user wants to be able to show or
+  hide a calendar without changing its visibility in the regular calendar view.
+
+- Calendar: added startBatchUpdates(), stopBatchUpdates() to efficiently perform many calendar
+  changes without continuously updating the views.
+
+- CalendarView: moved the "layout" button support (used to toggle between standard and swimlane
+  layout) to DayPage and WeekPage. Only these two are actually supporting the two different
+  layouts. The button was useless in the context of the MonthPage and the YearPage.
+
+- WeekDayHeaderView: renamed inner class DateCell to WeekDayCell.
+
+

@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.calendarfx</groupId>
+    <artifactId>calendar</artifactId>
+    <version>8.4.1</version>
+    <packaging>pom</packaging>
+    <name>CalendarFX</name>
+    <description>The parent project for the various CalendarFX modules.
+    </description>
+    <organization>
+        <name>Dirk Lemmermann Software &amp; Consulting</name>
+    </organization>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <modules>
+        <module>CalendarFXRecurrence</module>
+        <module>CalendarFXSampler</module>
+        <module>CalendarFXView</module>
+        <module>CalendarFXExperimental</module>
+        <module>CalendarFXGoogle</module>
+        <module>CalendarFXApp</module>
+        <module>CalendarFXiCal</module>
+        <module>CalendarFXWeather</module>
+        <module>CalendarFXAssembly</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.code.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <header>${project.basedir}/license-header.txt</header>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>target/**</exclude>
+                        <exclude>m2-target/**</exclude>
+                        <exclude>**/*.properties</exclude>
+                    </excludes>
+                    <properties>
+                        <name>CalendarFX</name>
+                        <year>2015, 2016, 2017</year>
+                        <holder>Dirk Lemmermann Software &amp; Consulting
+                            (dlsc.com)
+                        </holder>
+                        <contact>dlemmermann@gmail.com</contact>
+                    </properties>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Test Dependencies -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.1</version>
+                <configuration>
+                    <windowtitle>CalendarFX API</windowtitle>
+                    <aggregate>true</aggregate>
+                    <show>protected</show>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>

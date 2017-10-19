@@ -1,0 +1,1946 @@
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Base colors for the predefined styles
+ */
+
+* {
+    -style1-color: rgba(119.0, 192.0, 75.0, 0.9);
+    -style2-color: rgba(65.0, 143.0, 203.0, 0.9);
+    -style3-color: rgba(247.0, 209.0, 91.0, 0.9);
+    -style4-color: rgba(157.0, 91.0, 159.0, 0.9);
+    -style5-color: rgba(208.0, 82.0, 95.0, 0.9);
+    -style6-color: rgba(249.0, 132.0, 75.0, 0.9);
+    -style7-color: rgba(174.0, 102.0, 62.0, 0.9);
+
+    -weekend-fill-color: rgb(245.0, 245.0, 245.0);
+    -today-fill-color: firebrick;
+
+    -usage-very-low-color: lightgreen;
+    -usage-low-color: green;
+    -usage-medium-color: gold;
+    -usage-high-color: darkorange;
+    -usage-very-high-color: red;
+
+    -usage-very-low-text-color: green;
+    -usage-low-text-color: lightgreen;
+    -usage-medium-text-color: black;
+    -usage-high-text-color: black;
+    -usage-very-high-text-color: white;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * A few ID-based styes.
+ */
+
+#toolbar {
+    -fx-padding: 10.0;
+    -fx-border-width: 0.0 0.0 0.5 0.0;
+    -fx-border-color: gray;
+}
+
+#switcher {
+
+}
+
+#search-field {
+    -fx-background-radius: 100.0px;
+    -fx-pref-width: 200.0px;
+}
+
+#search-icon {
+    -glyph-name: "SEARCH";
+    -glyph-size: 1.0em;
+}
+
+#date-picker {
+    -fx-border-color: lightgray transparent transparent transparent;
+    -fx-border-insets: 0.0 6.0 0.0 6.0;
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+    -fx-min-width: 200.0px;
+    -fx-min-height: 180.0px;
+}
+
+#tray-pane {
+    -fx-border-color: null;
+}
+
+.date-hyperlink {
+    -fx-cursor: hand;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for CalendarView.
+ */
+
+.calendar-view .master-detail-pane > .split-pane > .split-pane-divider {
+    -fx-padding: 0.0 1.0 0.0 0.0;
+}
+
+.calendar-view .master-detail-pane > .split-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0.0, 0.0;
+    -fx-padding: 0.0;
+}
+
+.calendar-view .button-icon {
+    -fx-fill: rgb(100, 100, 100);
+    -glyph-size: 14.0px;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the PageBase abstract superclass of the day, week, month, and year page.
+ * The page base consists of a big content node in the middle and a header that displays
+ * navigation buttons to go forward, back, to today and the currently shown date (range).
+ */
+
+.calendar-page {
+    -fx-background-color: white;
+}
+
+.calendar-page > .container > .content {
+    -fx-padding: 10px;
+}
+
+.calendar-page > .container > .header > .date-text {
+    -fx-font-size: 2.2em;
+}
+
+.calendar-page > .container > .header > .navigation-button-bar {
+}
+
+.calendar-page > .container > .header > .navigation-button-bar > .container > .previous-date-button {
+    -fx-padding: 3 7 3 7;
+}
+
+.calendar-page > .container > .header > .navigation-button-bar > .container > .next-date-button {
+    -fx-padding: 3 7 3 7;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the "days" page.
+ */
+
+.day-page > .container > .content > .left-side > .header {
+    -fx-background-color: gray;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 1em 0 1em;
+}
+
+.day-page > .container > .content > .left-side > .header > .today-label {
+    -fx-font-family: Arial;
+    -fx-font-size: 12.0em;
+    -fx-text-fill: white;
+}
+
+.day-page > .container > .content > .left-side > .agenda-view {
+    -fx-padding: 2em 0 0 0;
+    -fx-background-insets: 0.0px;
+}
+
+.day-page .day-view {
+    -fx-pref-width: 350px;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-of-week-label {
+    -fx-border-color: transparent transparent lightgray transparent;
+    -fx-padding: 0.0 0.0 5.0 0.0;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .week-label,
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-of-week-label {
+    -fx-text-fill: white;
+    -fx-font-size: 10.0px;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .week-label {
+    -fx-padding: 0.0 2.0 0.0 0.0;
+    -fx-min-width: 2.0em;
+    -fx-min-height: 2.0em;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .current-date-label {
+    -fx-text-fill: firebrick;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .current-date-border {
+    -fx-border-color: transparent transparent firebrick transparent;
+    -fx-border-width: 2.0;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .month-day {
+    -fx-padding: .2em .3em .2em .3em;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-of-month-label {
+    -fx-text-fill: white;
+    -fx-font-size: .9em;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-not-of-month-label {
+    -fx-text-fill: lightgray;
+    -fx-text-stroke: black;
+    -fx-font-size: .8em;
+}
+
+.day-page > .container > .content > .left-side > .header > .year-month-view > .container > .weekend-day {
+    -fx-background-color: rgba(0,0,0,.2);
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the DatePopOver control.
+ */
+
+.date-popover > .border {
+    -fx-fill: linear-gradient(#f6f6f6 50.0%, #e6e6e6 100.0%) !important;
+}
+
+.date-popover > .content > .entries-pane {
+    -fx-padding: 0.5em;
+}
+
+.date-popover > .content > .entries-pane > .entry > .title {
+    -fx-padding: 2.0;
+    -fx-font-size: 12px;
+}
+
+.date-popover > .content > .no-entries-label {
+    -fx-padding: 4.0;
+    -fx-font-size: 14px;
+}
+
+.date-popover > .content > .entries-pane > .entry > .time {
+    -fx-padding: 2.0 2.0 2.0 40.0;
+    -fx-font-size: 10px;
+    -fx-text-fill: gray;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for the EntryDetailsView.
+ */
+
+.entry-details-view > .content {
+    -fx-hgap: 1.0em;
+    -fx-vgap: 1.0em;
+}
+
+.entry-details-view > .content > .recurrence-summary-label {
+    -fx-font-weight: bold;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the source view. This control displays the currently known
+ * calendar sources and for each source the calendars inside of it.
+ */
+
+.source-view > .container > .titled-pane > .title > .arrow-button .arrow {
+    -fx-opacity: 0.0;
+}
+
+.source-view > .container > .titled-pane > .title > .arrow-button {
+    -fx-pref-width: 0.0;
+    -fx-pref-height: 0.0;
+}
+
+.source-view > .container > .titled-pane {
+    -fx-background-color: transparent;
+    -fx-animated: true;
+}
+
+.source-view > .container > .titled-pane:expanded {
+}
+
+.source-view > .container > .titled-pane > .title {
+    -fx-font-weight: bold;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-insets: 1.0 10.0 1.0 10.0;
+}
+
+.source-view > .container > .titled-pane:collapsed > .title {
+    -fx-border-color: transparent transparent lightgray transparent;
+    -fx-effect: null;
+}
+
+.source-view > .container > .titled-pane > .content {
+    -fx-border-color: transparent;
+    -fx-padding: 0.0 20.0 0.0 20.0;
+    -fx-background-color: transparent;
+}
+
+.source-view > .container > .titled-pane > .title > .arrow-button > .arrow {
+    -fx-pref-width: 0.0;
+    -fx-pref-height: 0.0;
+}
+
+.source-view > .container > .single-calendar-group {
+    -fx-padding: 1em;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the scroll pane that wraps the source view.
+ */
+
+.source-view-scroll-pane,
+.source-view-scroll-pane:focused {
+    -fx-padding: 0.0;
+    -fx-background-radius: 0.0;
+    -fx-background-insets: 0.0;
+    -fx-background-color: transparent;
+    -fx-border-radius: 0.0;
+    -fx-border-insets: 0.0;
+    -fx-border-color: transparent;
+    -fx-fit-to-width: true;
+    -fx-fit-to-height: true;
+}
+
+.source-view-scroll-pane .corner {
+    -fx-background-insets: 0.0px;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the year view.
+ */
+
+.year-view > .container {
+    -fx-hgap: 20px;
+    -fx-vgap: 20px;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the year month view.
+ */
+.year-month-view > .container > .header {
+    -fx-padding: 0.0 0.0 10.0 0.0;
+}
+
+.year-month-view > .container > .header > .month-header {
+}
+
+.year-month-view > .container > .header > .year-header {
+}
+
+.year-month-view > .container > .header > .month-header > .month-label {
+    -fx-font-size: 18.0px;
+}
+
+.year-month-view > .container > .header > .year-header > .year-label {
+    -fx-font-size: 18.0px;
+}
+
+.year-month-view > .container {
+    -fx-padding: 1em;
+}
+
+.year-month-view > .container > .header > .year-header > .previous-button,
+.year-month-view > .container > .header > .year-header > .next-button,
+.year-month-view > .container > .header > .month-header > .previous-button,
+.year-month-view > .container > .header > .month-header > .next-button {
+    -fx-background-color: gray;
+    -fx-pref-width: 8.0;
+    -fx-pref-height: 8.0;
+    -fx-max-width: 8.0;
+    -fx-max-height: 8.0;
+}
+
+.year-month-view > .container > .header > .year-header > .previous-button:hover,
+.year-month-view > .container > .header > .year-header > .next-button:hover,
+.year-month-view > .container > .header > .month-header > .previous-button:hover,
+.year-month-view > .container > .header > .month-header > .next-button:hover {
+    -fx-background-color: lightgray;
+}
+
+.year-month-view > .container > .header > .year-header > .previous-button:pressed,
+.year-month-view > .container > .header > .year-header > .next-button:pressed,
+.year-month-view > .container > .header > .month-header > .previous-button:pressed,
+.year-month-view > .container > .header > .month-header > .next-button:pressed {
+    -fx-background-color: gray;
+}
+
+.year-month-view > .container > .header > .year-header > .previous-button,
+.year-month-view > .container > .header > .month-header > .previous-button {
+    -fx-shape: "M3,0 V3 L0 1.5 L3,0 Z";
+}
+
+.year-month-view > .container > .header > .year-header > .next-button,
+.year-month-view > .container > .header > .month-header > .next-button {
+    -fx-shape: "M0,0 L3 1.5 L0,3 V0 Z";
+}
+
+.year-month-view > .container > .day-of-week-label {
+    -fx-border-color: transparent transparent lightgray transparent;
+    -fx-padding: 0.0 0.0 5.0 0.0;
+}
+
+.year-month-view > .container > .week-label,
+.year-month-view > .container > .day-of-week-label {
+    -fx-text-fill: gray;
+    -fx-font-size: 10.0px;
+}
+
+.year-month-view > .container > .week-label {
+    -fx-padding: 0.0 2.0 0.0 0.0;
+    -fx-min-width: 2.0em;
+    -fx-min-height: 2.0em;
+}
+
+.year-month-view > .container > .current-date-label {
+    -fx-text-fill: firebrick;
+}
+
+.year-month-view > .container > .current-date-border {
+    -fx-border-color: transparent transparent firebrick transparent;
+    -fx-border-width: 2.0;
+}
+
+.year-month-view > .container > .month-day {
+    -fx-padding: .2em .3em .2em .3em;
+}
+
+.year-month-view > .container > .day-of-month-label {
+    -fx-text-fill: rgba(0.0, 0.0, 0.0, 0.66);
+}
+
+.year-month-view > .container > .day-not-of-month-label {
+    -fx-text-fill: lightgray;
+}
+
+.year-month-view > .container > .weekend-day {
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+.year-month-view > .container > .usage-very-low {
+    -fx-background-color: -usage-very-low-color;
+    -fx-text-fill: -usage-very-low-text-color;
+}
+
+.year-month-view > .container > .usage-low {
+    -fx-background-color: -usage-low-color;
+    -fx-text-fill: -usage-low-text-color;
+}
+
+.year-month-view > .container > .usage-medium {
+    -fx-background-color: -usage-medium-color;
+    -fx-text-fill: -usage-medium-text-color;
+}
+
+.year-month-view > .container > .usage-high {
+    -fx-background-color: -usage-high-color;
+    -fx-text-fill: -usage-high-text-color;
+}
+
+.year-month-view > .container > .usage-very-high {
+    -fx-background-color: -usage-very-high-color;
+    -fx-text-fill: -usage-very-high-text-color;
+}
+
+.year-month-view > .container > .selected-month-date {
+    -fx-background-color: lightgray;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.year-month-view > .container > .today {
+    -fx-background-color: -today-fill-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the month view.
+ */
+
+.month-view > .container > .day {
+    -fx-padding: 0.0px;
+    -fx-background-insets: 0.0px;
+    -fx-border-color: lightgray transparent transparent transparent;
+    -fx-border-insets: 0.0;
+    -fx-border-width: 1.0 0.0 0.0 0.0;
+}
+
+.month-view > .container > .day:selected {
+    -fx-background-color: aliceblue;
+}
+
+.month-view > .container > .today,
+.month-view > .container > .current-week {
+    -fx-border-insets: 0.0;
+    -fx-border-width: 5.0 0.0 0.0 0.0;
+}
+
+.month-view > .container > .current-week {
+    -fx-border-color: salmon transparent transparent transparent;
+}
+
+.month-view > .container > .today {
+    -fx-background-color: lavenderblush;
+    -fx-text-fill: red;
+    -fx-border-color: firebrick transparent transparent transparent;
+}
+
+.month-view > .container > .day > .entries-pane {
+    -fx-spacing: 1.0px;
+}
+
+.month-view > .container > .day > .header {
+    -fx-padding: 2.0 4.0 2.0 0.0;
+}
+
+.month-view > .container > .day > .header > .day-of-month-label,
+.month-view > .container > .day > .header > .day-not-of-month-label {
+    -fx-alignment: center-right;
+    -fx-font-weight: bold;
+}
+
+.month-view > .container > .day > .header > .day-of-month-label {
+    -fx-text-fill: derive(gray, -40.0%);
+}
+
+.month-view > .container > .day > .header > .day-not-of-month-label {
+    -fx-text-fill: lightgray;
+}
+
+.month-view > .container > .day > .header > .weekend-day {
+    -fx-text-fill: gray;
+}
+
+.month-view > .container > .day > .header > .week-of-year-label,
+.month-view > .container > .day > .header > .current-week-of-year-label {
+    -fx-font-size: 0.8em;
+    -fx-font-weight: bold;
+    -fx-padding: 0.25em;
+}
+
+.month-view > .container > .day > .header > .week-of-year-label {
+    -fx-text-fill: white;
+    -fx-background-color: gray;
+}
+
+.month-view > .container > .day > .header > .current-week-of-year-label {
+    -fx-text-fill: lightcoral;
+    -fx-background-color: lavenderblush;
+}
+
+.month-view > .container > .day-of-week-label,
+.month-view > .container > .day-of-weekend-label {
+    -fx-text-fill: derive(gray, -40.0%);
+    -fx-padding: 0.0 0.0 5.0px 0.0;
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+}
+
+.month-view > .container > .day-of-weekend-label {
+    -fx-text-fill: derive(gray, 10.0%);
+}
+
+.month-view > .container > .weekend-day {
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+.month-view > .container > .day > .entries-pane > .more-label {
+    -fx-text-fill: gray;
+    -fx-font-weight: bold;
+    -fx-padding: 0.0 0.0 0.0 10.0px;
+}
+
+.month-view > .container > .day > .header > .today-label {
+    -fx-text-fill: firebrick;
+    -fx-background-insets: 0.0 4.0px 0.0 4.0px;
+    -fx-alignment: center-right;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the day view.
+ */
+
+.day-view {
+    -fx-padding: 0.0 0.0 0.0 0.0;
+}
+
+.day-view.today {
+}
+
+.day-view.weekend-day {
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+.day-view > .half-hour-line {
+    -fx-stroke: derive(lightgray, +40%);
+}
+
+.day-view > .full-hour-line {
+    -fx-stroke: lightgray;
+}
+
+.day-view > .current-time-line {
+    -fx-stroke: firebrick;
+}
+
+.day-view > .early-hour-line,
+.day-view > .late-hour-line {
+    -fx-opacity: 0.5;
+}
+
+.day-view > .early-hours-region,
+.day-view > .late-hours-region {
+    -fx-background-color: rgba(200.0, 200.0, 200.0, 0.2);
+}
+
+.day-view > .current-time-circle {
+    -fx-stroke: firebrick;
+    -fx-fill: firebrick;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the weekday view.
+ */
+
+.weekday-view {
+}
+
+.weekday-view.today {
+    -fx-background-color: lavenderblush;
+}
+
+.weekday-view.weekend-day {
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the time scale (01:00, 02:00, .... 24:00).
+ */
+
+.time-scale {
+    -fx-padding: 0.0 5.0 0.0 5.0;
+}
+
+.time-scale > .time-label {
+    -fx-font-size: 0.8em;
+    -fx-text-fill: gray;
+}
+
+.time-scale > .current-time-label {
+    -fx-font-size: 0.8em;
+    -fx-text-fill: firebrick;
+}
+
+.time-scale > .early-hour-label,
+.time-scale > .late-hour-label {
+    -fx-opacity: 0.5;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the WeekDayHeaderView.
+ */
+
+.weekday-header-view > .container > .cell {
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+    -fx-padding: 0.0 0.0 4.0 0.0;
+    -fx-border-insets: 0.0 0.0 0.0 0.0;
+    -fx-alignment: center;
+    -fx-border-color: transparent transparent lightgray transparent;
+}
+
+.weekday-header-view > .container > .today {
+    -fx-text-fill: firebrick;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the AllDayView.
+ */
+
+.all-day-view {
+    -fx-min-height: 2.0em;
+    -fx-row-height: 20.0px; /* custom styleable property */
+    -fx-row-spacing: 2.0px; /* custom styleable property */
+    -fx-column-spacing: 2.0px; /* custom styleable property */
+}
+
+.all-day-view > .container > .day-region {
+    -fx-border-width: 0.0 0.0 5.0 0.0;
+    -fx-border-color: transparent transparent lightgray transparent;
+}
+
+.all-day-view > .container > .today {
+    -fx-border-color: transparent transparent firebrick transparent;
+    -fx-background-color: lavenderblush;
+}
+
+.all-day-view > .container > .weekend {
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the AgendaView.
+ */
+
+.agenda-view > .container > .list-view > .placeholder-label {
+    -fx-text-fill: gray;
+    -fx-font-size: 2.5em;
+}
+
+.agenda-view > .container {
+    -fx-padding: 0.0;
+}
+
+.agenda-view > .container > .list-view {
+    -fx-background-color: transparent;
+}
+
+.agenda-view > .container > .status-label {
+    -fx-text-fill: gray;
+    -fx-alignment: center;
+}
+
+.agenda-view > .container > .list-view > .virtual-flow > .scroll-bar:vertical,
+.agenda-view > .container > .list-view > .virtual-flow > .scroll-bar:vertical .decrement-arrow,
+.agenda-view > .container > .list-view > .virtual-flow > .scroll-bar:vertical .increment-arrow {
+    -fx-pref-width: 0.0;
+}
+
+.agenda-view-list-cell {
+    -fx-background-color: transparent;
+}
+
+.agenda-view-list-cell > .container > .header {
+    -fx-border-color: transparent transparent lightgray transparent;
+    -fx-border-width: 3.0;
+    -fx-border-insets: 0.0 0.0 4.0 0.0;
+}
+
+.agenda-view-list-cell > .container > .header.today {
+    -fx-border-color: transparent transparent firebrick transparent;
+}
+
+.agenda-view-list-cell > .container > .header > .date-label,
+.agenda-view-list-cell > .container > .header > .weekday-label {
+    -fx-padding: 0.0 0.0 4.0 0.0;
+    -fx-font-size: 0.8em;
+    -fx-font-weight: bold;
+    -fx-text-fill: gray;
+}
+
+.agenda-view-list-cell > .container > .header > .today,
+.agenda-view-list-cell > .container > .header > .today {
+    -fx-text-fill: firebrick;
+}
+
+.agenda-view-list-cell > .container > .body {
+    -fx-padding: 0.0 0.0 20.0 0.0;
+    -fx-vgap: 5.0px;
+    -fx-hgap: 8.0px;
+}
+
+.agenda-view-list-cell > .container > .body > .title-label {
+    -fx-padding: 4.0 4.0 4.0 0.0;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.agenda-view-list-cell > .container > .body > .time-label {
+    -fx-text-fill: gray;
+}
+
+.agenda-view-list-cell > .container > .body > .separator {
+    -fx-pref-height: 1.0;
+    -fx-border-color: lightgray;
+    -fx-border-style: dashed none none none;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the SearchResultView.
+ */
+
+.search-result-view > .list-view,
+.search-result-view > .list-view:focused {
+    -fx-pref-width: 200.0px;
+    -fx-background-color: rgb(245.0, 245.0, 245.0);
+}
+
+.search-result-view > .list-view > .placeholder-label {
+    -fx-text-fill: gray;
+    -fx-font-size: 1.5em;
+}
+
+.search-result-cell:selected {
+    -fx-background-color: rgb(235.0, 235.0, 235.0);
+}
+
+.search-result-cell:filled:focused:selected {
+    -fx-background-color: rgb(235.0, 235.0, 235.0);
+}
+
+.search-result-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent lightgray transparent;
+    -fx-border-insets: 0.0 6.0 0.0 6.0;
+}
+
+.search-result-cell > .container > .title-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 0.9em;
+    -fx-text-fill: black;
+}
+
+.search-result-cell > .container > .date-time-pane > .date-label,
+.search-result-cell > .container > .date-time-pane > .time-label {
+    -fx-font-size: 0.8em;
+    -fx-text-fill: gray;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the MonthEntryView.
+ */
+
+.month-entry-view {
+    -fx-font-size: .9em;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Default styles for calendar entries.
+ */
+
+.default-style-entry {
+    -fx-background-color: magenta;
+    -fx-background-radius: 0.0px;
+    -fx-background-insets: 0.0 2.0 0.0 2.0;
+    -fx-border-insets: 0.0 0.0 0.0 2.0;
+    -fx-border-width: 0.0 0.0 0.0 4.0;
+}
+
+.default-style-entry:dragged {
+    -fx-opacity: 0.5;
+}
+
+.default-style-entry:dragged-start,
+.default-style-entry:dragged-end {
+    -fx-opacity: 0.0;
+}
+
+.default-style-entry:selected {
+    -fx-border-width: 0.0;
+}
+
+.default-style-entry-time-label {
+    -fx-font-size: 0.9em;
+    -fx-padding: 4.0 4.0 2.0 4.0;
+}
+
+.default-style-entry-title-label {
+    -fx-font-size: 0.9em;
+    -fx-font-weight: bold;
+    -fx-padding: 0.0 4.0 0.0 4.0;
+}
+
+.default-style-entry-title-label-full-day {
+    -fx-font-size: 0.9em;
+    -fx-font-weight: bold;
+    -fx-padding: 0.0 4.0 0.0 4.0;
+}
+
+.default-style-entry:selected .default-style-entry-time-label {
+    -fx-text-fill: white;
+}
+
+.default-style-entry:selected .default-style-entry-title-label {
+    -fx-text-fill: white;
+}
+
+.default-style-visibility-checkbox > .box {
+
+}
+
+.default-style-visibility-checkbox > .box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, -fx-body-color;
+    -fx-background-radius: 3.0, 2.0, 1.0;
+    -fx-padding: 0.166667em 0.166667em 0.25em 0.25em; /* 2 2 3 3 */
+}
+
+.default-style-visibility-checkbox:focused > .box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, -fx-body-color;
+    -fx-background-insets: -0.2, 1.0, 2.0, -1.4, 2.6;
+    -fx-background-radius: 3.0, 2.0, 1.0, 4.0, 1.0;
+}
+
+.default-style-entry-popover-title {
+}
+
+/* Small entries */
+.default-style-entry-small {
+    -fx-padding: 0.15em 0.5em 0.15em 0.5em;
+}
+
+.default-style-entry-small-only, .default-style-entry-small-last {
+    -fx-background-insets: 0.0 2.0 0.0 0.0;
+}
+
+.default-style-entry-small:selected > .default-style-entry-small-title-label {
+    -fx-font-size: 0.9em;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.default-style-entry-small:selected > .default-style-entry-small-time-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.default-style-entry-small:selected > * > .default-style-icon,
+.default-style-entry-small:selected > * > .default-style-icon-small {
+    -fx-stroke: white;
+    -fx-fill: white;
+}
+
+.default-style-entry-small-time-label {
+    -fx-font-size: 0.8em;
+    -fx-text-fill: gray;
+    -fx-font-weight: bold;
+}
+
+.default-style-entry-small-time-label-full-day {
+    -fx-font-size: 0.8em;
+    -fx-text-fill: derive(gray, -25.0%);
+}
+
+.default-style-entry-small-title-label {
+    -fx-text-fill: derive(gray, -40.0%);
+}
+
+.default-style-entry-small-title-label-full-day {
+    -fx-text-fill: derive(gray, -40.0%);
+}
+
+.default-style-entry-small-full-day {
+
+}
+
+.default-style-entry-small-full-day:selected > .default-style-entry-small-time-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.default-style-entry-small-full-day:selected > .default-style-entry-small-title-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.default-style-calendar-header {
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+    -fx-background-color: magenta;
+    -fx-alignment: center;
+    -fx-padding: 0.25em;
+    -fx-text-overrun: clip;
+}
+
+.default-style-calendar-header:first,
+.default-style-calendar-header:middle,
+.default-style-calendar-header:last {
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for calendar type 1 (green).
+ */
+
+.style1-icon, .style1-icon-small {
+    -fx-fill: -style1-color;
+    -fx-stroke: -style1-color;
+}
+
+.style1-entry {
+    -fx-background-color: derive(-style1-color, 70.0%);
+    -fx-border-color: -style1-color;
+}
+
+.style1-entry:selected {
+    -fx-background-color: -style1-color;
+}
+
+.style1-entry-time-label, .style1-entry-title-label {
+    -fx-text-fill: derive(-style1-color, -30.0%);
+}
+
+.style1-entry-small:selected {
+    -fx-background-color: -style1-color;
+}
+
+.style1-entry-small-full-day {
+    -fx-background-color: derive(-style1-color, 70.0%);
+}
+
+.style1-entry-small-title-label-full-day {
+    -fx-text-fill: derive(-style1-color, -30.0%);
+}
+
+.style1-entry-small-full-day:selected {
+    -fx-background-color: -style1-color;
+}
+
+.style1-visibility-checkbox > .box,
+.style1-source-grid-item-box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, derive(-style1-color, 70.0%);
+}
+
+.style1-visibility-checkbox:focused > .box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, derive(-style1-color, 70.0%);
+}
+
+.style1-entry-popover-title {
+    -fx-text-fill: derive(-style1-color, -50.0%) !important;
+}
+
+.style1-calendar-header {
+    -fx-background-color: derive(-style1-color, 70.0%);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for calendar type 2 (blue).
+ */
+
+.style2-icon, .style2-icon-small {
+    -fx-fill: -style2-color;
+    -fx-stroke: -style2-color;
+}
+
+.style2-entry {
+    -fx-background-color: derive(-style2-color, 70.0%);
+    -fx-border-color: -style2-color;
+}
+
+.style2-entry:selected {
+    -fx-background-color: -style2-color;
+}
+
+.style2-entry-time-label, .style2-entry-title-label {
+    -fx-text-fill: derive(-style2-color, -50.0%);
+}
+
+.style2-entry-small:selected {
+    -fx-background-color: -style2-color;
+}
+
+.style2-entry-small-full-day {
+    -fx-background-color: derive(-style2-color, 70.0%);
+}
+
+.style2-entry-small-title-label-full-day {
+    -fx-text-fill: derive(-style2-color, -30.0%);
+}
+
+.style2-entry-small-full-day:selected {
+    -fx-background-color: -style2-color;
+}
+
+.style2-visibility-checkbox > .box,
+.style2-source-grid-item-box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, derive(-style2-color, 70.0%);
+}
+
+.style2-visibility-checkbox:focused > .box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, derive(-style2-color, 70.0%);
+}
+
+.style2-entry-popover-title {
+    -fx-text-fill: derive(-style2-color, -30.0%) !important;
+}
+
+.style2-calendar-header {
+    -fx-background-color: derive(-style2-color, 70.0%);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for calendar type 3 (yellow).
+ */
+
+.style3-icon, .style3-icon-small {
+    -fx-fill: -style3-color;
+    -fx-stroke: -style3-color;
+}
+
+.style3-entry {
+    -fx-background-color: derive(-style3-color, 70.0%);
+    -fx-border-color: -style3-color;
+}
+
+.style3-entry:selected {
+    -fx-background-color: -style3-color;
+}
+
+.style3-entry-time-label, .style3-entry-title-label {
+    -fx-text-fill: derive(-style3-color, -50.0%);
+}
+
+.style3-entry-small:selected {
+    -fx-background-color: -style3-color;
+}
+
+.style3-entry-small-full-day {
+    -fx-background-color: derive(-style3-color, 70.0%);
+}
+
+.style3-entry-small-title-label-full-day {
+    -fx-text-fill: derive(-style3-color, -30.0%);
+}
+
+.style3-entry-small-full-day:selected {
+    -fx-background-color: -style3-color;
+}
+
+.style3-visibility-checkbox > .box,
+.style3-source-grid-item-box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, derive(-style3-color, 70.0%);
+}
+
+.style3-visibility-checkbox:focused > .box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, derive(-style3-color, 70.0%);
+}
+
+.style3-entry-popover-title {
+    -fx-text-fill: derive(-style3-color, -30.0%) !important;
+}
+
+.style3-calendar-header {
+    -fx-background-color: derive(-style3-color, 70.0%);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for calendar type 4 (purple).
+ */
+
+.style4-icon, .style4-icon-small {
+    -fx-fill: -style4-color;
+    -fx-stroke: -style4-color;
+}
+
+.style4-entry {
+    -fx-background-color: derive(-style4-color, 70.0%);
+    -fx-border-color: -style4-color;
+}
+
+.style4-entry:selected {
+    -fx-background-color: -style4-color;
+}
+
+.style4-entry-time-label, .style4-entry-title-label {
+    -fx-text-fill: derive(-style4-color, -50.0%);
+}
+
+.style4-entry-small:selected {
+    -fx-background-color: -style4-color;
+}
+
+.style4-entry-small-full-day {
+    -fx-background-color: derive(-style4-color, 70.0%);
+}
+
+.style4-entry-small-title-label-full-day {
+    -fx-text-fill: derive(-style4-color, -30.0%);
+}
+
+.style4-entry-small-full-day:selected {
+    -fx-background-color: -style4-color;
+}
+
+.style4-visibility-checkbox > .box,
+.style4-source-grid-item-box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, derive(-style4-color, 70.0%);
+}
+
+.style4-visibility-checkbox:focused > .box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, derive(-style4-color, 70.0%);
+}
+
+.style4-entry-popover-title {
+    -fx-text-fill: derive(-style4-color, -30.0%) !important;
+}
+
+.style4-calendar-header {
+    -fx-background-color: derive(-style4-color, 70.0%);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for calendar type 5 (red).
+ */
+
+.style5-icon, .style5-icon-small {
+    -fx-fill: -style5-color;
+    -fx-stroke: -style5-color;
+}
+
+.style5-entry {
+    -fx-background-color: derive(-style5-color, 70.0%);
+    -fx-border-color: -style5-color;
+}
+
+.style5-entry:selected {
+    -fx-background-color: -style5-color;
+}
+
+.style5-entry-time-label, .style5-entry-title-label {
+    -fx-text-fill: derive(-style5-color, -50.0%);
+}
+
+.style5-entry-small:selected {
+    -fx-background-color: -style6-color;
+}
+
+.style5-entry-small-full-day {
+    -fx-background-color: derive(-style5-color, 70.0%);
+}
+
+.style5-entry-small-title-label-full-day {
+    -fx-text-fill: derive(-style5-color, -30.0%);
+}
+
+.style5-entry-small-full-day:selected {
+    -fx-background-color: -style5-color;
+}
+
+.style5-visibility-checkbox > .box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, derive(-style5-color, 70.0%);
+}
+
+.style5-visibility-checkbox:focused > .box,
+.style5-source-grid-item-box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, derive(-style5-color, 70.0%);
+}
+
+.style5-entry-popover-title {
+    -fx-text-fill: derive(-style5-color, -30.0%) !important;
+}
+
+.style5-calendar-header {
+    -fx-background-color: derive(-style5-color, 70.0%);
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for calendar type 6 (orange).
+ */
+
+.style6-icon, .style6-icon-small {
+    -fx-fill: -style6-color;
+    -fx-stroke: -style6-color;
+}
+
+.style6-entry {
+    -fx-background-color: derive(-style6-color, 70.0%);
+    -fx-border-color: -style6-color;
+}
+
+.style6-entry:selected {
+    -fx-background-color: -style6-color;
+}
+
+.style6-entry-time-label, .style6-entry-title-label {
+    -fx-text-fill: derive(-style6-color, -50.0%);
+}
+
+.style6-entry-small:selected {
+    -fx-background-color: -style6-color;
+}
+
+.style6-entry-small-full-day {
+    -fx-background-color: derive(-style6-color, 70.0%);
+}
+
+.style6-entry-small-title-label-full-day {
+    -fx-text-fill: derive(-style6-color, -30.0%);
+}
+
+.style6-entry-small-full-day:selected {
+    -fx-background-color: -style6-color;
+}
+
+.style6-visibility-checkbox > .box,
+.style6-source-grid-item-box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, derive(-style6-color, 70.0%);
+}
+
+.style6-visibility-checkbox:focused > .box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, derive(-style6-color, 70.0%);
+}
+
+.style6-entry-popover-title {
+    -fx-text-fill: derive(-style6-color, -30.0%) !important;
+}
+
+.style6-calendar-header {
+    -fx-background-color: derive(-style6-color, 70.0%);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed for calendar type 7 (brown).
+ */
+
+.style7-icon, .style7-icon-small {
+    -fx-fill: -style7-color;
+    -fx-stroke: -style7-color;
+}
+
+.style7-entry {
+    -fx-background-color: derive(-style7-color, 70.0%);
+    -fx-border-color: -style7-color;
+}
+
+.style7-entry:selected {
+    -fx-background-color: -style7-color;
+}
+
+.style7-entry-time-label, .style7-entry-title-label {
+    -fx-text-fill: derive(-style7-color, -50.0%);
+}
+
+.style7-entry-small:selected {
+    -fx-background-color: -style7-color;
+}
+
+.style7-entry-small-full-day {
+    -fx-background-color: derive(-style7-color, 70.0%);
+}
+
+.style7-entry-small-title-label-full-day {
+    -fx-text-fill: derive(-style7-color, -30.0%);
+}
+
+.style7-entry-small-full-day:selected {
+    -fx-background-color: -style7-color;
+}
+
+.style7-visibility-checkbox > .box,
+.style7-source-grid-item-box {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
+    -fx-inner-border, derive(-style7-color, 70.0%);
+}
+
+.style7-visibility-checkbox:focused > .box {
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
+    -fx-faint-focus-color, derive(-style7-color, 70.0%);
+}
+
+.style7-entry-popover-title {
+    -fx-text-fill: derive(-style7-color, -30.0%) !important;
+}
+
+.style7-calendar-header {
+    -fx-background-color: derive(-style7-color, 70.0%);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the entry popover control.
+ */
+
+.popover-header {
+    -fx-padding: 10.0 0.0 10.0 10.0;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent lightgray transparent;
+    -fx-border-insets: 0.0 10.0 0.0 10.0;
+}
+
+.popover-header > .title {
+    -fx-padding: 0.0;
+    -fx-text-fill: green;
+    -fx-font-size: 16.0px;
+    -fx-background-color: null;
+    -fx-border-color: null;
+}
+
+.popover-header > .location {
+    -fx-padding: 0.0;
+    -fx-text-fill: gray;
+    -fx-background-color: null;
+    -fx-border-color: null;
+}
+
+.popover-footer {
+    -fx-padding: 10.0 10.0 10.0 10.0;
+}
+
+.popover-accordion > .titled-pane > .title > .arrow-button .arrow {
+    -fx-opacity: 0.0;
+}
+
+.popover-accordion > .titled-pane > .title > .arrow-button {
+    -fx-pref-width: 0.0;
+    -fx-pref-height: 0.0;
+}
+
+.popover-accordion > .titled-pane {
+    -fx-background-color: transparent;
+    -fx-animated: true;
+    -fx-text-fill: gray;
+}
+
+.popover-accordion > .titled-pane:expanded {
+    -fx-text-fill: gray;
+}
+
+.popover-accordion > .titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-border-style: dashed;
+    -fx-border-color: lightgray transparent transparent transparent;
+    -fx-border-insets: 1.0 10.0 1.0 10.0;
+}
+
+.popover-accordion > .first-titled-pane > .title {
+    -fx-border-color: transparent transparent transparent transparent;
+}
+
+.popover-accordion > .titled-pane:collapsed > .title {
+    -fx-border-color: lightgray transparent transparent transparent;
+}
+
+.popover-accordion > .first-titled-pane:collapsed > .title {
+    -fx-border-color: transparent transparent transparent transparent;
+}
+
+.popover-accordion > .titled-pane > .content {
+    -fx-background-color: rgba(245.0, 245.0, 235.0, 0.5);
+    -fx-border-color: linear-gradient(to bottom, rgba(0.0, 0.0, 0.0, 0.2), rgba(0.0, 0.0, 0.0, 0.0));
+    -fx-border-width: 6.0 0.0 0.0 0.0;
+    -fx-padding: 20.0;
+}
+
+.popover-accordion > .titled-pane > .title > .arrow-button > .arrow {
+    -fx-pref-width: 0.0;
+    -fx-pref-height: 0.0;
+}
+
+.popover-accordion > .titled-pane:expanded > * {
+    -fx-background-color: rgba(240.0, 240.0, 240.0, 0.95);
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the RecurrenceView control.
+ */
+
+.recurrence-view {
+    -fx-background-color: white;
+}
+
+.recurrence-view > .container {
+    -fx-hgap: 1.0em;
+    -fx-vgap: 1.0em;
+}
+
+.recurrence-view > .container > .ends-after-box,
+.recurrence-view > .container > .ends-on-box,
+.recurrence-view > .container > .repeat-count-box {
+    -fx-spacing: 0.5em;
+    -fx-alignment: center-left;
+}
+
+.recurrence-view > .container > .label {
+    -fx-font-weight: bold;
+}
+
+.recurrence-view > .container > .weekday-box {
+
+}
+
+.recurrence-view > .container > .repeat-by-box {
+    -fx-spacing: 1.0em;
+}
+
+.recurrence-view > .container > .weekday-box > .toggle-button {
+    -fx-background-radius: 0.0;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles used for the RecurrencePopup control.
+ */
+
+.recurrence-popup {
+    -fx-padding: 1.0em;
+    -fx-background-color: rgba(255.0, 255.0, 255.0, 0.95);
+    -fx-background-radius: 4.0px;
+    -fx-effect: dropshadow(gaussian, rgba(0.0, 0.0, 0.0, 0.2), 10.0, 0.5, 2.0, 2.0);
+    -fx-border-radius: 4.0px;
+    -fx-border-color: linear-gradient(to bottom, rgba(0.0, 0.0, 0.0, 0.3), rgba(0.0, 0.0, 0.0, 0.7));
+    -fx-border-width: 0.5;
+}
+
+.recurrence-popup > .content {
+    -fx-background-color: transparent;
+}
+
+.recurrence-popup > .content > .recurrence-view {
+    -fx-background-color: transparent;
+}
+
+.recurrence-popup > .content > .button-pane {
+    -fx-spacing: 1.0em;
+    -fx-padding: 2.0em 1.0em 0.5em 1.0em;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles used for MonthSheetView control.
+ */
+
+.month-sheet-view {
+    -fx-background-color: white;
+}
+
+.month-sheet-view .month-header {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-font-size: 1.1em;
+    -fx-border-color: firebrick;
+    -fx-border-width: 0.0 0.0 2.0 0.0;
+}
+
+.month-sheet-view .date-cell {
+    -fx-padding: 2.0;
+    -fx-border-color: lightgray;
+    -fx-border-width: 0.0 1.0 1.0 0.0;
+    -fx-font-size: .8em;
+}
+
+.month-sheet-view .date-cell:today {
+    -fx-background-color: -today-fill-color;
+}
+
+.month-sheet-view .date-cell .week-number-label {
+    -fx-text-fill: gray;
+    -fx-font-size: 0.7em;
+    -fx-alignment: top-right;
+}
+
+.month-sheet-view .date-cell.weekend-day {
+    -fx-background-color: -weekend-fill-color;
+}
+
+.month-sheet-view > .container > .date-cell .day-of-month-label {
+    -fx-pref-width: 2.0em;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+.month-sheet-view > .container > .date-cell.first-month {
+    -fx-border-width: 0.0 1.0 1.0 1.0;
+}
+
+.month-sheet-view > .container > .date-cell.last-month {
+    -fx-border-width: 0.0 1.0 1.0 0.0;
+}
+
+.month-sheet-view > .container > .date-cell.first-day-of-week {
+}
+
+.month-sheet-view > .container > .date-cell:today > .day-of-month-label,
+.month-sheet-view > .container > .date-cell:today > .day-of-week-label,
+.month-sheet-view > .container > .date-cell:today > .week-number-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.month-sheet-view > .container > .date-cell.usage-very-low {
+    -fx-background-color: -usage-very-low-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-low {
+    -fx-background-color: -usage-low-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-medium {
+    -fx-background-color: -usage-medium-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-high {
+    -fx-background-color: -usage-high-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-very-high {
+    -fx-background-color: -usage-very-high-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-very-low > .label {
+    -fx-text-fill: -usage-very-low-text-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-low > .label {
+    -fx-text-fill: -usage-low-text-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-medium > .label {
+    -fx-text-fill: -usage-medium-text-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-high > .label {
+    -fx-text-fill: -usage-high-text-color;
+}
+
+.month-sheet-view > .container > .date-cell.usage-very-high > .label {
+    -fx-text-fill: -usage-very-high-text-color;
+}
+
+.month-sheet-view > .container > .badge-date-cell {
+    -fx-min-width: 100.0;
+}
+
+.month-sheet-view > .container > .badge-date-cell > .badge-label {
+    -fx-pref-width: 2em;
+    -fx-background-radius: 2;
+    -fx-font-size: 0.8em;
+    -fx-font-weight: bold;
+    -fx-text-alignment: right;
+    -fx-padding: 1.0 4.0 1.0 4.0;
+}
+
+.month-sheet-view > .container > .badge-date-cell > .badge-label.usage-very-low {
+    -fx-background-color: -usage-very-low-color;
+    -fx-text-fill: -usage-very-low-text-color;
+}
+
+.month-sheet-view > .container > .badge-date-cell > .badge-label.usage-low {
+    -fx-background-color: -usage-low-color;
+    -fx-text-fill: -usage-low-text-color;
+}
+
+.month-sheet-view > .container > .badge-date-cell > .badge-label.usage-medium {
+    -fx-background-color: -usage-medium-color;
+    -fx-text-fill: -usage-medium-text-color;
+}
+
+.month-sheet-view > .container > .badge-date-cell > .badge-label.usage-high {
+    -fx-background-color: -usage-high-color;
+    -fx-text-fill: -usage-high-text-color;
+}
+
+.month-sheet-view > .container > .badge-date-cell > .badge-label.usage-very-high {
+    -fx-background-color: -usage-very-high-color;
+    -fx-text-fill: -usage-very-high-text-color;
+}
+
+
+
+.month-sheet-view > .container > .extended-date-cell.weekend-day {
+    -fx-background-color: derive(blanchedalmond, -5.0%);
+}
+
+.month-sheet-view > .container > .extended-date-cell {
+    -fx-background-color: blanchedalmond;
+}
+
+.month-sheet-view > .container > .date-cell:selected {
+    -fx-background-color: -fx-selection-bar;
+    -fx-border-color: derive(-fx-selection-bar, -10.0%);
+}
+
+.month-sheet-view > .container > .date-cell:selected > .day-of-month-label,
+.month-sheet-view > .container > .date-cell:selected > .day-of-week-label,
+.month-sheet-view > .container > .date-cell:selected > .week-number-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the PaperView control.
+ */
+
+.paper-view {
+}
+
+.paper-view > .container {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+.paper-view > .container > .custom-fields {
+    -fx-hgap: 5.0;
+    -fx-vgap: 5.0;
+}
+
+.paper-view > .container > .custom-fields > .text-field {
+    -fx-pref-width: 3em;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the TimeRangeView control.
+ */
+
+.time-range-view {
+}
+
+.time-range-view > .container {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the SettingsView control.
+ */
+
+.print-settings-view {
+}
+
+.print-settings-view > .container {
+    -fx-spacing: 15.0;
+}
+
+.print-settings-view > .container > .section-title-label {
+    -fx-font-weight: bold;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the SourceGridView control.
+ */
+
+.source-grid-view {
+    -fx-spacing: 7.0;
+}
+
+.source-grid-view .column {
+    -fx-spacing: 5.0;
+}
+
+.source-grid-view .column .item-box {
+    -fx-pref-width: 20.0;
+    -fx-pref-height: 10.0;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the PrintablePage control.
+ */
+
+.print-page {
+    -fx-background-color: white;
+}
+
+.print-page > .container {
+    -fx-padding: 10.0;
+}
+
+.print-page > .container > .header {
+    -fx-padding: 0.0 0.0 10.0 0.0;
+}
+
+.print-page > .container > .header > .title-section {
+    -fx-spacing: 20.0;
+}
+
+.print-page > .container > .header > .title-section > .period-label {
+    -fx-font-size: 28.0px;
+    -fx-font-weight: bold;
+}
+
+.print-page > .container > .header > .mini-calendars {
+    -fx-padding: 0.0 0.0 0.0 0.0;
+}
+
+.print-page .year-month-view > .container {
+    -fx-padding: 5.0 10.0 5.0 10.0;
+}
+
+/*
+ * The YearMonthView instances shown inside the PrintablePage control should be smaller than
+ * normally. Otherwise they waste too much space.
+ */
+.print-page .year-month-view > .container > .day-of-week-label,
+.print-page .year-month-view > .container > .day-of-month-label,
+.print-page .year-month-view > .container > .day-not-of-month-label {
+    -fx-font-size: 10.0px;
+}
+
+.print-page .year-month-view > .container > .header > .month-header > .month-label,
+.print-page .year-month-view > .container > .header > .year-header > .year-label {
+    -fx-font-size: 14.0px;
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the PreviewPane control.
+ */
+
+.print-preview {
+    -fx-padding: 10.0;
+}
+
+.print-preview > .container > .center {
+    -fx-background-color: lightgrey;
+    -fx-border-width: 1.0px;
+    -fx-border-color: black;
+}
+
+.print-preview > .container > .footer {
+    -fx-padding: 20.0 0.0 0.0 0.0;
+    -fx-spacing: 10.0;
+}
+
+.print-preview > .container > .center > .zoom-pane > .print-page {
+    -fx-border-color: gray;
+    -fx-border-width: 1.0;
+    -fx-effect: dropshadow(three-pass-box, gray, 10.0, 0.0, 0.0, 0.0);
+}
+
+/* 
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the PrintView control.
+ */
+
+.print-view {
+    -fx-padding: 15.0;
+    -fx-background-color: white;
+}
+
+.print-view > .container > .button-bar {
+    -fx-alignment: center-right;
+    -fx-spacing: 10;
+}
+
+.print-view > .container > .separator {
+    -fx-padding: 0 10 0 10;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the ButtonBar control.
+ */
+
+.button-bar > .container > .button {
+    -fx-padding: 3 15 3 15;
+    -fx-border-color: transparent;
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+.button-bar > .container > .button:focused {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+
+.button-bar > .container > .button.left-pill {
+    -fx-background-radius: 3 0 0 3;
+}
+
+.button-bar > .container > .button.left-pill:focused {
+    -fx-background-radius: 3 0 0 3;
+}
+
+.button-bar > .container > .button.right-pill {
+    -fx-background-radius: 0 3 3 0;
+}
+
+.button-bar > .container > .button.right-pill:focused {
+    -fx-background-radius: 0 3 3 0;
+    -fx-background-insets: -2 -2 -2 0, 0, 1 1 1 0, 2 2 2 1;
+}
+
+.button-bar > .container > .button.center-pill {
+    -fx-background-radius: 0;
+}
+
+.button-bar > .container > .button.center-pill:focused {
+    -fx-background-radius: 0;
+    -fx-background-insets: -2 0 -2 -1, 0 0 0 -1, 1 1 1 0, 2 2 2 1;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the DetailedDayView control.
+ */
+
+.detailed-day-view {
+    -fx-padding: 0.0;
+}
+
+.detailed-day-view > .container > .separator {
+    -fx-padding: 5px;
+}
+
+.detailed-day-view > .container > .all-day-label {
+    -fx-font-weight: normal;
+    -fx-text-fill: gray;
+    -fx-font-size: .9em;
+    -fx-border-color: lightgray;
+    -fx-border-width: 0 0 5 0;
+    -fx-padding: 0 2 0 0;
+    -fx-alignment: right;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the DetailedWeekView control.
+ */
+
+.detailed-week-view > .container > .filler-right,
+.detailed-week-view > .container > .filler-left {
+    -fx-border-color: lightgray;
+    -fx-border-width: 0 0 1 0;
+}
+
+.detailed-week-view > .container > .all-day-filler {
+    -fx-border-color: lightgray;
+    -fx-border-width: 0 0 5 0;
+}
+
+.detailed-week-view > .container > .all-day-label {
+    -fx-font-weight: normal;
+    -fx-text-fill: gray;
+    -fx-font-size: .9em;
+    -fx-border-color: lightgray;
+    -fx-border-width: 0 0 5 0;
+    -fx-padding: 0 2 0 0;
+    -fx-alignment: right;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the WeekFieldsView control.
+ */
+
+.week-fields {
+}
+
+.week-fields > .content {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}

@@ -1,0 +1,670 @@
+= CalendarFX 8 Developer Manual
+Dirk Lemmermann <dlemmermann@gmail.com>
+:toc: left
+:source-highlighter: coderay
+:imagesdir: manual-images
+
+This is the CalendarFX developer manual. It aims to contain all the information required to quickly get a calendar UI into your application. If you notice any mistakes or if you are missing vital information then please let us know.
+
+image::title.png[Calendar View,align="center"]
+
+== Distribution
+
+CalendarFX is distributed as an archive (ZIP file). Once downloaded double click on the file to extract it. When you open the extracted folder you will see the following content.
+
+image::distribution.png[Distribution,align="center"]
+
+css:: Contains the calendar.css file used for styling all controls in CalendarFX.
+demos:: Several executable JAR files - double click to start the demo. If the applications do not start or you encounter problems try starting the demos from the command line like this "java -jar calendar-demo.jar".
+docs:: The generated JavaDocs / API documentation. The docs are covering everything in great detail. Many screenshots can be found inside of them. 
+ext:: A folder with third-party libraries. ControlsFX is used for providing additional controls (e.g. MasterDetailPane, CustomTextField), some of which are the result of our work on CalendarFX and have been handed over as open source to the community (e.g. PopOver). The second JAR file includes the FontAwesome graphics and API. The third JAR file in the "ext" folder "license4j.jar" is used for supporting the licensing concept behind CalendarFX.
+i18n:: Contains the resource bundles (english, german).
+legal:: A folder containing the licensing agreements (development, runtime, source code, research).
+lib:: The CalendarFX JAR files.
+manual:: Contains this document.
+misc:: Logging and i18N information and resources.
+tutorial:: Two JavaFX apps showing you how to get started with CalendarFX.
+
+== Installation
+
+To use CalendarFX for your project, simply add the calendarfx JAR files found in the "lib" folder and all JAR files found in the "ext" folder to the classpath of your application. This is all that is needed, no further configuration required, at least not for the trial period of several months. After this period it will be necessary to set a license key as shown below. For buying options please refer to the website at http://www.calendarfx.com.
+
+[source,java,linenums]
+----
+CalendarFX.setLicenseKey("abb91c8aa43efhhllm...");
+----
+
+== Quick Start
+
+The following section shows you how to quickly setup a JavaFX application that will show a complete calendar user interface. It includes a day view, a week view, a month view, a year view, an agenda view, a calendar selection view, and a search UI.
+
+[source,java,linenums]
+.CalendarApp.java
+----
+package com.calendarfx.app;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.Calendar.Style;
+import com.calendarfx.model.CalendarSource;
+import com.calendarfx.view.CalendarView;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class CalendarApp extends Application {
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+
+	    CalendarView calendarView = new CalendarView(); // <1>
+
+		Calendar birthdays = new Calendar("Birthdays"); // <2>
+		Calendar holidays = new Calendar("Holidays");
+
+		birthdays.setStyle(Style.STYLE1); // <3>
+		holidays.setStyle(Style.STYLE2);
+
+		CalendarSource myCalendarSource = new CalendarSource("My Calendars"); // <4>
+		myCalendarSource.getCalendars().addAll(birthdays, holidays);
+
+		calendarView.getCalendarSources().addAll(myCalendarSource); // <5>
+
+		calendarView.setRequestedTime(LocalTime.now());
+
+		Thread updateTimeThread = new Thread("Calendar: Update Time Thread") {
+			@Override
+			public void run() {
+				while (true) {
+					Platform.runLater(() -> {
+						calendarView.setToday(LocalDate.now());
+						calendarView.setTime(LocalTime.now());
+					});
+
+					try {
+						// update every 10 seconds
+						sleep(10000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+				}
+			};
+		};
+
+		updateTimeThread.setPriority(Thread.MIN_PRIORITY);
+		updateTimeThread.setDaemon(true);
+		updateTimeThread.start();
+
+		Scene scene = new Scene(calendarView);
+		primaryStage.setTitle("Calendar");
+		primaryStage.setScene(scene);
+		primaryStage.setWidth(1300);
+		primaryStage.setHeight(1000);
+		primaryStage.centerOnScreen();
+		primaryStage.show();
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
+----
+<1> Create the calendar view
+<2> Create one or more calendars
+<3> Set a style on each calendar (entries will use different colors)
+<4> Create a calendar source (e.g. "Google") and add calendars to it
+<5> Add calendars to the view
+
+== Model
+
+The primary model classes in CalendarFX are "CalendarSource", "Calendar" and "Entry". A calendar source often represents a calendar account, for example an account with "Google Calendar" (http://calendar.google.com). A group consists of a list of calendars and each calendar manages any number of entries. An entry represents an event with a start date / time and an end date / time.
+
+=== Entry
+
+The "Entry" class encapsulates all information that is required to display an event or an appointment in any of the calendar views included in CalendarFX. 
+
+[.thumb]
+image::entry.png[Calendar Entry,align="center"]
+
+The properties of an entry are:
+
+ID:: a unique identifier
+
+Title:: The title / name of the event or appointment (e.g. "Dentist Appointment")
+
+Calendar:: The calendar to which the entry belongs.
+
+Interval:: A complex data type grouping together start date / time, end date / time, and a time zone.
+
+Location:: A free text description of a location, for example "Manhatten, New York". This information can be used by Geo services to return coordinates so that the UI can display a map if needed.
+
+Full Day:: A flag used to signal that the event is relevant for the entire day and that the start and end times are not relevant, for example a birthday or a holiday. Full day entries are displayed as shown below.
+
+[.thumb]
+image::all-day-view.png[All Day View]
+
+Minimum Duration:: Ensures that the user can not create entries with a duration of less than, for example, 15 minutes.
+
+User Object:: An arbitrary object which might be responsible for the creation of the entry in the first place.
+
+Recurrence Rule:: A text representation of a recurrence pattern according to RFC 2445 ("RRULE:FREQ=DAILY")
+
+[IMPORTANT]
+====
+This last property is very interesting. It allows the entry to express that it defines a recurence. The entry can specify that it will be repeated over and over again following a given pattern. For example: "every Monday, Tuesday and Wednesday of every week until December 31st". If an entry is indeed a recurring entry then it produces one or more "recurrences". These recurrences are created by the framework by invoking the *Entry.createRecurrence()* method. The result of this method is another Entry that will be configured with the same values as the source entry.
+====
+
+Recurrence:: A flag that expresses whether the entry represents a recurrence or not.
+
+Recurrence Source:: A reference to the original source entry.
+
+Recurrence ID:: If an entry represents a recurrence of a source entry then this property will store an additional ID, normally the date where the recurrence occurs.
+
+In addition to these properties several read-only properties are available for convenience.
+
+Multi Day:: Needed y to easily determine if an entry spans multiple days. This information is constantly needed in various places of the framework for display / layout purposes.
+
+Start Date:: The date when the event begins (e.g. 5/12/2015).
+
+Start Time:: The time of day when the event begins (e.g. 2:15pm).
+
+End Date:: The date when the event ends (e.g. 8/12/2015).
+
+End Time:: The time of day when the event ends (e.g. 6:45pm).
+
+=== Calendar
+
+The "Calendar" class is used to store entries in a binary interval tree. This data structure is not exposed to the outside. Instead methods exist on Calendar to add, remove, and find entries.
+
+The following is a description of the main properties of the Calendar class:
+
+Name:: The display name of the calendar, shown in several places within the UI.
+
+Short Name:: A short version of the calendar name. By default it is set to be equal to the regular name, but if the application is using the swimlane layout then it might make sense to also define a short name due to limited space.
+
+Read-Only:: A flag for controlling whether entries can be added interactively in the UI or not. Setting this flag to false does not prevent the application itself to add entries.
+
+Style:: Basically a name prefix for looking up different styles from the CSS file (calendar.css): "style1-", "style2-". The "Calendar" class defines a "Style" enumerator that can be used to easily set the value of this property with one of the predefined styles.
+
+Look Ahead / Back Duration:: Two properties of type "java.time.Duration" that are used in combination with the current system time in order to create a time interval. The calendar class uses this time interval inside of its findEntries(String searchTerm) method. 
+
+==== Adding and Removing Entries
+
+To add an entry simply call the addEntry() method on calendar.
+Example:
+[source,java,linenums]
+----
+Calendar calendar = ...
+Entry<String> dentistAppointment = new Entry<>("Dentist");
+calendar.addEntry(dentistAppointment);
+----
+
+To remove an entry call the removeEntry() method on calendar.
+
+[source,java,linenums]
+----
+Calendar calendar = ...
+Entry<String> dentistAppointment = ...
+calendar.removeEntry(dentistAppointment);
+----
+
+Alternatively you can simply set the calendar directly on the entry.
+
+[source,java,linenums]
+----
+Calendar calendar = ...
+Entry<String> dentistAppointment = ...
+dentistAppointment.setCalendar(calendar);
+----
+
+To remove the entry from its calendar simply set the calendar to null.
+
+[source,java,linenums]
+----
+Entry<String> dentistAppointment = ...
+dentistAppointment.setCalendar(null);
+----
+
+
+==== Finding Entries for a Time Interval
+
+The calendar class provides a findEntries() method which receives a start date, an end date, and a time zone. The result of invoking this method is a map where the keys are the dates for which entries were found and the values are lists of entries on that day. 
+
+[NOTE]
+====
+The result does not only contain entries that were previously added by calling the addEntry() method but also recurrence entries that were generated on-the-fly for those entries that define a recurrence rule.
+====
+
+[source,java,linenums]
+----
+Calendar calendar = ...
+Map<LocalDate, List<Entry<?>>> result = calendar.findEntries(LocalDate startDate,
+            LocalDate endDate, ZoneId zoneId)
+----
+
+==== Finding Entries for a Search String
+
+The second findEntries() method accepts a search term as a parameter and is used to find entries that were previously added to the calendar and that match the term. 
+
+[source,java,linenums]
+----
+Calendar calendar = ...
+List<Entry<?>> result = calendar.findEntries(String searchTerm)
+----
+
+To find actual matches the method invokes the Entry.matches(String) method on all entries that are found within the time interval defined by the current date, the look back duration, and the look ahead duration. 
+
+=== Calendar Source
+
+A calendar source is used for creating a group of calendars. A very typical scenario would be that a calendar source represents an online calendar account (e.g. Google calendar). Calendars can be added to a source by simply calling mySource.getCalendars().add(myCalendar). 
+
+== Events
+
+CalendarFX utilizes the JavaFX event model to inform the application about changes made in a calendar, about user interaction that might require loading of new data, and about user interaction that might require showing different views.
+
+=== Calendar Events
+
+An event type that indicates that a change was made to the data is probably the most obvious type that anyone would expect from a UI framework. In CalendarFX this event type is called CalendarEvent.
+
+.Calendar Event Type Hierarchy
+* ANY : the super event type
+** CALENDAR_CHANGED : "something" inside the calendar changed, usually causing rebuild of views (example: calendar batch updates finished)
+** ENTRY_CHANGED : the super type for changes made to an entry
+*** ENTRY_CALENDAR_CHANGED : the entry was assigned to a different calendar
+*** ENTRY_FULL_DAY_CHANGED : the full day flag was changed (from true to false or vice versa)
+*** ENTRY_INTERVAL_CHANGED : the time interval of the entry was changed (start date / time, end date / time)
+*** ENTRY_LOCATION_CHANGED : the location of the entry has changed
+*** ENTRY_RECURRENCE_RULE_CHANGED : the recurrence rule was modified
+*** ENTRY_TITLE_CHANGED : the entry title has changed
+*** ENTRY_USER_OBJECT_CHANGED : a new user object was set on the entry
+
+Listeners for this event type can be added to calendars by calling:
+
+[source,java,linenums]
+----
+Calendar calendar = new Calendar("Demo");
+EventHandler<CalendarEvent> handler = evt -> foo(evt);
+calendar.addEventHandler(handler);
+----
+
+=== Load Events
+
+Load events are used by the framework to signal to the application that the UI requires data for a specific time interval. This
+can be very useful for implementing a lazy loading strategy. If the user switches from one month to another then an event of this
+type will be fired and the time bounds on this event will be the first and the last day of that month. The LoadEvent type only
+supports a single event type called LOAD.
+
+Listeners for this event type can be registerd on any date control:
+
+[source,java,linenums]
+----
+DayView view = new DayView();
+view.addEventHandler(LoadEvent.LOAD, evt -> foo(evt));
+----
+
+=== Request Events
+
+A somewhat unique event class is RequestEvent. It is used by the controls of the framework to signal to other framework controls that
+the user wants to "jump" to another view. For example: the user clicks on the date shown for a day in the MonthView then the month view will fire a request
+event that informs the framework that the user wants to switch to the DayView to see more detail for that day.
+
+== DateControl
+
+A calendar user interface hardly ever consists of just a single control. They are composed of several views, some showing a single day or a week or
+a month. In CalendarFX the CalendarView control consists of dedicated "pages" for a day, a week, a month, or a full year. Each one of these pages consists
+of one or more subtypes of DateControl. The following image shows a simplified view of the scene graph / the containment hierarchy.
+
+[.thumb]
+image::hierarchy.png[Hierarchy View,align="center"]
+
+To make all of these controls work together in harmony it is important that they share many properties. This is accomplished by JavaFX property binding.
+The class DateControl features a method called "bind" that ensures the dates and times shown by the controls are synchronized. But also that
+many of the customization featuers (e.g. node factories) are shared.
+
+The following listing shows the implementation of the DateControl.bind() method to give you an idea how much is bound within CalendarFX.
+
+[source,java,linenums]
+----
+    public final void bind(DateControl otherControl, boolean bindDate) {
+
+        // bind lists
+        Bindings.bindContentBidirectional(otherControl.getCalendarSources(), 
+        	getCalendarSources());
+        Bindings.bindContentBidirectional(otherControl.getSelections(), 
+        	getSelections());
+        Bindings.bindContentBidirectional(otherControl.getWeekendDays(), 
+        	getWeekendDays());
+
+        // bind properties
+        Bindings.bindBidirectional(otherControl.entryFactoryProperty(), 
+        	entryFactoryProperty());
+        Bindings.bindBidirectional(otherControl.defaultCalendarProviderProperty(), 
+        	defaultCalendarProviderProperty());
+        Bindings.bindBidirectional(otherControl.virtualGridProperty(), 
+        	virtualGridProperty());
+        Bindings.bindBidirectional(otherControl.draggedEntryProperty(), 
+        	draggedEntryProperty());
+        Bindings.bindBidirectional(otherControl.requestedTimeProperty(), 
+        	requestedTimeProperty());
+
+        Bindings.bindBidirectional(otherControl.selectionModeProperty(), 
+        	selectionModeProperty());
+        Bindings.bindBidirectional(otherControl.selectionModeProperty(), 
+        	selectionModeProperty());
+        Bindings.bindBidirectional(otherControl.weekFieldsProperty(), 
+        	weekFieldsProperty());
+        Bindings.bindBidirectional(otherControl.layoutProperty(), 
+        	layoutProperty());
+
+        if (bindDate) {
+            Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
+        }
+
+        Bindings.bindBidirectional(otherControl.todayProperty(), 
+        	todayProperty());
+        Bindings.bindBidirectional(otherControl.zoneIdProperty(), 
+        	zoneIdProperty());
+
+        // edit callbacks
+        Bindings.bindBidirectional(
+        	otherControl.entryDetailsCallbackProperty(), 
+        	entryDetailsCallbackProperty());
+        Bindings.bindBidirectional(
+        	otherControl.dateDetailsCallbackProperty(), 
+        	dateDetailsCallbackProperty());
+        Bindings.bindBidirectional(
+        	otherControl.contextMenuCallbackProperty(), 
+        	contextMenuCallbackProperty());
+        Bindings.bindBidirectional(
+        	otherControl.entryContextMenuCallbackProperty(), 
+        	entryContextMenuCallbackProperty());
+        Bindings.bindBidirectional(
+        	otherControl.calendarSourceFactoryProperty(), 
+        	calendarSourceFactoryProperty());
+        Bindings.bindBidirectional(
+        	otherControl.entryDetailsPopOverContentCallbackProperty(), 
+        	entryDetailsPopOverContentCallbackProperty());
+    }
+----
+
+=== Class Hierarchy
+
+CalendarFX ships with many built-in views for displaying calendar information. All of these views inherit from DateControl. The class
+hierarchy can be seen in the following image:
+
+image::datecontrol.png[Class Hierarchy,align="center"]
+
+
+=== Current Date, Time, and Today
+
+Each DateControl keeps track of the "current date" and "today". The current date is the date that the control is supposed to display to the user.
+"Today" is the date that the control assumes to be the actual date. "Today" defaults to the current system date (provided by the operating system) but
+it can be any date.
+
+
+[IMPORTANT]
+.Updating today and current time
+====
+The "today" and "time" properties do not get updated by themselves. See the daemon thread created in the listing shown in the
+"Quick Start" section.
+====
+
+DateControl defines utility methods that allow for easy modification of the "current" date.
+
+[source,java,linenums]
+----
+public void goToday();
+public void goForward();
+public void goBack();
+----
+
+
+=== Adding Calendars / Sources
+
+Even though the DateControl class provides a getCalendars() method this is not the place where calendars are being added. Instead
+always create calendar sources, add calendars to them, and then add the sources to the control. The "calendars" list is a read-only
+flat list representation of all calendars in all calendar sources. The "calendars" list gets updated by the framework.
+
+[source,java,linenums]
+.Adding Calendars
+----
+Calendar katja = new Calendar("Katja");
+Calendar dirk = new Calendar("Dirk");
+
+CalendarSource familyCalendarSource = new CalendarSource("Family");
+familyCalendarSource.getCalendars().addAll(katja, dirk);
+
+CalendarView calendarView = new CalendarView();
+calendarView.getCalendarSources().setAll(familyCalendarSource);
+----
+
+=== Customizing or Replacing the PopOver
+
+The DateControl class has built-in support for displaying a PopOver control when the user double clicks on a calendar entry. The
+content node of this PopOver can be replaced. It is normally used to show some basic entry details (e.g. start / end date, title, event location) but
+applications might have defined specialized entries with custom properties that require additional UI elements. This can be accomplished
+by the help of the PopOver content node factory.
+
+[source,java,linenums]
+.PopOver Content Node Factory
+----
+CalendarView calendarView = new CalendarView();
+calendarView.setEntryDetailsPopOverContentCallback(param -> new MyCustomPopOverContentNode());
+----
+
+If an application does not want to use the PopOver at all but instead display a standard dialog then there is a way of doing that, too. Simply
+register an entry details callback.
+
+[source,java,linenums]
+.Entry Details Callback
+----
+CalendarView calendarView = new CalendarView();
+calendarView.setEntryDetailsCallback(param -> new MyCustomEntryDialog());
+----
+
+These two callbacks normally work hand in hand. The default implementation of the entry details callback is producing a PopOver and sets the content
+node on the PopOver via the help of the content node callback.
+
+=== Context Menu Support
+
+A common place for customization are context menus. The DateControl class produces a context menu via specialized callbacks. One callback is used
+to produce a menu for a given calendar entry, the second callback is used when the user triggers the context menu by clicking in the background
+of a DateControl.
+
+[source,java,linenums]
+.PopOver Content Node Factory
+----
+CalendarView calendarView = new CalendarView();
+calendarView.setEntryContextMenuCallback(param -> new MyEntryContextMenu());
+calendarView.setContextMenuCallback(param -> new MyContextMenu());
+----
+
+[IMPORTANT]
+.Context Menus
+====
+The context menu callbacks are automatically shared among all date controls that are bound to each other. The same context menu code will execute for
+different views, the DayView, the MonthView, and so on. This means that the code that builds the context menu will need to check the parameter object
+that was passed to the callback to configure itself appropriately.
+
+The same is true for basically all callbacks used by the DateControl.
+====
+
+
+=== Creating Entries
+
+The user can create new entries by double clicking anywhere inside a DateControl. The actual work of creating a new entry instance is then delegated
+to a specialized entry factory that can be set on DateControl.
+
+[source,java,linenums]
+.Entry Factory
+----
+CalendarView calendarView = new CalendarView();
+calendarView.setEntryFactory(param -> new MyEntryFactory());
+----
+
+Once the entry factory has returned the new entry it will be added to the calendar that is being returned by the "default calendar" provider. This provider
+is also customizable via a callback.
+
+[source,java,linenums]
+.Default Calendar Provider
+----
+CalendarView calendarView = new CalendarView();
+calendarView.setDefaultCalendarProvider(param -> new MyDefaultCalendarProvider());
+----
+
+Besides the double click creation the application can also programmatically request the DateControl to create a new entry at a given point in time. Two
+methods are available for this: createEntryAt(ZonedDateTime) and createEntryAt(ZonedDateTime, Calendar). The second method will ensure that the entry
+will be added to the given calendar while the first method will invoke the default calendar provider.
+
+=== Creating Calendar Sources
+
+The user might also wish to add another calendar source to the application. In this case the DateControl will invoke the calendar source factory. The default
+implementation of this factory does nothing more than to create a new instance of the standard CalendarSource class. Applications are free to return a specialization
+of CalendarSource instead (e.g. GoogleCalendarAccount). A custom factory might even prompt the user first with a dialog, e.g. to request user credentials.
+
+[source,java,linenums]
+.Default Calendar Provider
+----
+CalendarView calendarView = new CalendarView();
+calendarView.setCalendarSourceFactory(param -> new MyCalendarSource());
+----
+
+The calendar source factory gets invoked when the method DateControl.createCalendarSource() gets invoked. The CalendarView class already provides a button
+in its toolbar that will call this method.
+
+== Entry Views
+
+Entry views are JavaFX nodes that are representing calendar entries. There are several different types, all extending EntryViewBase:
+
+Day Entry View:: Shown inside a DayView or WeekDayView control. These views can be customized by subclassing DayEntryViewSkin and overriding the createContent() method.
+All Day Entry View:: Shown inside the AllDayView control.
+Month Entry View:: Shown inside the MonthView control.
+
+== Calendar Views
+
+The most fundamental views inside CalendarFX are of course the views used to display a day (24 hours), an entire week, a month, and a year.
+
+DayView:: Shows a 24 hour time period vertically. The control has several options that can be used to influence the layout of the hours. E.g.: it is possible
+to define hour ranges where the time will be compressed in order to save space on the screen (early and late hours are often not relevant). The view can also
+specify whether it wants to always show a fixed number of hours or a fixed height for each hour.
+
+[.thumb]
+image::day-view.png[Day View,align="center"]
+
+DetailedDayView:: wraps the DayView control with several additional controls: an AllDayView, a TimeScaleView, a CalendarHeaderView, a ScrollBar and and (optional)
+AgendaView.
+
+[.thumb]
+image::detailed-day-view-agenda.png[Detailed Day View,align="center"]
+
+WeekView:: The name of this control is somewhat misleading, because it can show any number of WeekDayView instances, not just 5 or 7 but also 14 (two weeks) or 21 (three weeks).
+In this view entries can be easily edited to span multiple days.
+
+[.thumb]
+image::week-view.png[Week View,align="center"]
+
+DetailedWeekView:: same concept as the DetailedDayView. This view wraps the WeekView and adds several other controls.
+
+[.thumb]
+image::detailed-week-view.png[Detailed Week View,align="center"]
+
+MonthView:: Shows up to 31 days for the current month plus some days of the previous and the next month.
+
+[.thumb]
+image::month-view.png[Month View,align="center"]
+
+MonthSheetView:: Shows several months in a column layout. Weekdays can be aligned so that the same weekdays are always next to each other. A customizable
+cell factory is used to create the date cells. Several default implementations are included in CalendarFX: simple date cell, usage date cell, badge date cell,
+detail date cell.
+
+[.thumb]
+image::month-sheet-view.png[Month Sheet View,align="center"]
+
+[.thumb]
+image::month-sheet-view-aligned.png[Month Sheet View Aligned,align="center"]
+
+YearView:: Shows twelve YearMonthView instances.
+
+[.thumb]
+image::year-view.png[Year View,align="center"]
+
+YearMonthView:: Sort of a date picker control. 12 instances of this control are used to build up the YearPage control. This control provides many properties for easy
+customization. The month label, the year label, and the arrow buttons can be hidden. A cell factory can be set to customize the appearance of each day, and so on.
+
+[.thumb]
+image::date-picker.png[Year Month View,align="center"]
+
+AllDayView:: Just like the WeekView this control can also span multiple days. It is being used as a header for the DayView inside the DayPage and also for the WeekView inside
+the WeekPage. The control displays calendar entries that have their "full day" property set to true.
+
+[.thumb]
+image::all-day-view.png[All Day View,align="center"]
+
+CalendarHeaderView:: Displays the names of all currently visible calendars, but only when the DateControl has its layout set to SWIMLANE and not to STANDARD.
+
+[.thumb]
+image::calendar-header-view.png[Calendar Header View,align="center"]
+
+== Calendar Pages
+
+Calendar pages are complex controls that are composed of several controls, many of them DateControl instances. All pages provide controls to navigate to different
+dates or to quickly jump to "Today". Each page also shows a title with the current date shown. The CalendarView class manages one instance of each page type to let the
+user switch from a day, to a week, to a month, to a year.
+
+DayPage:: Shows an AgendaView, a DetailedDayView, and a YearMonthView. This page is designed to give the user a quick overview of what is going on today and
+in the near future (agenda).
+
+[.thumb]
+image::day-page.png[Day Page,align="center",border="1"]
+
+WeekPage:: Composed of a DetailedWeekView.
+
+[.thumb]
+image::week-page.png[Week Page,align="center"]
+
+MonthPage:: Shows a single MonthView control.
+
+[.thumb]
+image::month-page.png[Month Page,align="center"]
+
+YearPage:: Shows a YearView with twelve YearMonthView sub-controls. Alternatively can switch to a MonthSheetView.
+
+[.thumb]
+image::year-page.png[Year Page using YearView,align="center"]
+
+[.thumb]
+image::year-page-2.png[Year Page using MonthSheetView,align="center"]
+
+== Developer Console
+
+CalendarFX supports a special system property called "calendarfx.developer". If this property is set to "true" then a developer console is being added
+to the skin of CalendarView. The console can be made visible by pressing META-D. The console is a standard CalendarFX
+control and you can also add it directly to your application for development purposes.
+
+[.thumb]
+image::developer-console.png[Developer Console,align="center"]
+
+== Logging
+
+CalendarFX uses the standard java logging api for its logging. The logging settings and the available loggers
+can be found inside the distribution (misc/logging.properties). CalendarFX uses domains for logging and not
+packages or classes. Several domains are available: view, model, editing, recurrence, etc...
+
+== Internationalization (i18n)
+
+The default resource bundle of CalendarFX is English. A German bundle is also included. Both can be found
+in the distribution (misc/messages.properties, misc/messages_de.properties). To add another language to 
+CalendarFX simply create a package called com.calendarfx.view and place your own bundle inside of it.
+
+== Known Issues
+
+* There is currently no support for defining exceptions for recurrence rules. In most calendar applications, when the user edits a recurrent entry, the user will be asked whether
+he wants to change just this one recurrence or the whole series. This feature is currently not supported but will be in one of the next releases.
+
+* In SwimLane layout it would be nice if the user could drag an entry horizontally from one column / calendar to another. This is currently not supported. We will
+investigate if this can be added in one of the next releases.
