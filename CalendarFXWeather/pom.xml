@@ -9,7 +9,6 @@
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
         <version>8.4.1</version>
-        <relativePath>../CalendarFX</relativePath>
     </parent>
 
     <repositories>

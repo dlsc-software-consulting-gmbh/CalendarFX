@@ -128,11 +128,6 @@
 			</excludes>
 		</fileSet>
 
-		<fileSet>
-			<directory>licenses</directory>
-			<outputDirectory>legal</outputDirectory>
-		</fileSet>
-
 	</fileSets>
 
 </assembly>
