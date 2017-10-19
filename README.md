@@ -10,7 +10,7 @@ A Java framework for creating sophisticated calendar views based on JavaFX. A de
 3. CalendarFXExperimental - a playground for new controls
 4. CalendarFXGoogle - code for working with Google calendars
 5. CalendarFXiCal - code for dealing with iCal data
-6. CalendarFXRecurrence - an extension for the Google recurrence API (RFC 2445). Needed for the new data and time API of Java 8
+6. CalendarFXRecurrence - an extension for the Google recurrence API (RFC 2445). Needed for the new date and time API of Java 8
 7. CalendarFXSampler - a demo app based on FXSampler to test controls individually
 8. CalendarFXView - the main module containing the various calendar views
 9. CalendarFXWeather - a standalone demo for the month sheet view
