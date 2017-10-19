@@ -23,34 +23,32 @@ The "bin" assembly contains almost everything except for the source files.
  
 ### css
 
-	Contains the calendar.css file.
+Contains the calendar.css file.
 
 ### demos
 
-	Contains several standalone / runnable JAR files. Demos can be
-	started by either double clicking on them or by calling java -jar demo.jar. Make
-	sure to use at least Java 8u60+.
+Contains several standalone / runnable JAR files. Demos can be started by either double clicking on them or by calling java -jar demo.jar. Make sure to use at least Java 8u60+.
    
 ### docs
 
-	Contains the generated JavaDocs / API HTML files.
+Contains the generated JavaDocs / API HTML files.
    
 ### ext
 
-	Contains third party libraries that are needed for running CalendarFX (controlsfx, license4j, fontawesomefx).
+Contains third party libraries that are needed for running CalendarFX (controlsfx, license4j, fontawesomefx).
 
 ### i18n
 
-	The resource bundles used by CalendarFX.
+The resource bundles used by CalendarFX.
 	
 ### lib
 
-	The actual CalendarFX libraries.
+The actual CalendarFX libraries.
 	
 ### misc
 
-	Property files used for logging.
+Property files used for logging.
 	
 ### tutorial
 
-	Getting started files.
+Getting started files.
