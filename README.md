@@ -1,6 +1,8 @@
 # CalendarFX
 A Java framework for creating sophisticated calendar views based on JavaFX.
 
+![alt text](screenshot.png "Screenshot")
+
 # Modules
 
 1. CalendarFXApp - contains a standalone application (day, week, month, year views).
