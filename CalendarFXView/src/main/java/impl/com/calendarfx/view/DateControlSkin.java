@@ -47,9 +47,9 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
 
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
             if (change.wasAdded()) {
-                if (change.getKey().equals("refresh.data")) { //$NON-NLS-1$
-                    LoggingDomain.VIEW.fine("data refresh was requested by the application"); //$NON-NLS-1$
-                    control.getProperties().remove("refresh.data"); //$NON-NLS-1$
+                if (change.getKey().equals("refresh.data")) {
+                    LoggingDomain.VIEW.fine("data refresh was requested by the application");
+                    control.getProperties().remove("refresh.data");
                     refreshData();
                 }
             }
@@ -77,7 +77,7 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
             }
         });
 
-        nagging();
+        showInfo();
     }
 
     protected void refreshData() {
@@ -183,9 +183,16 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
         return Util.intersect(interval.getStartZonedDateTime(), interval.getEndZonedDateTime(), st, et);
     }
 
-    private synchronized void nagging() {
-        System.out.println("CalendarFX user interface framework for Java, (Version " + CalendarFX.getVersion() + ")"); //$NON-NLS-1$
-        System.out.println("(c) 2014 - 2017 DLSC Software & Consulting"); //$NON-NLS-1$
-        System.out.println("http://www.dlsc.com"); //$NON-NLS-1$
+    private static boolean infoShown;
+
+    private synchronized void showInfo() {
+        if (!infoShown) {
+            infoShown = true;
+
+            System.out.println("CalendarFX user interface framework for Java");
+            System.out.println("(c) 2014 - 2017 DLSC Software & Consulting");
+            System.out.println("Version: " + CalendarFX.getVersion());
+            System.out.println("Website: http://www.dlsc.com");
+        }
     }
 }
