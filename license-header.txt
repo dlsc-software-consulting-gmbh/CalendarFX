@@ -1,3 +1,0 @@
-Copyright (C) ${year} ${holder} 
-
-This file is part of ${name}.
