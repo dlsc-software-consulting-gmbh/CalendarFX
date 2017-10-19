@@ -1,5 +1,5 @@
 # CalendarFX
-A Java framework for creating sophisticated calendar views based on JavaFX.
+A Java framework for creating sophisticated calendar views based on JavaFX. A detailed developer manual can be found online here: http://dlsc.com/wp-content/html/calendarfx/manual.html
 
 ![alt text](screenshot.png "Screenshot")
 
