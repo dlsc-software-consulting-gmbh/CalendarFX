@@ -20,7 +20,9 @@ Simply run the 'install' target inside the top level project. Once completed you
 
 There are currently two assemblies being created inside the target folder of the assembly module.
 The "bin" assembly contains almost everything except for the source files.
- 
+
+## Binary Assembly
+
 ### css
 
 Contains the calendar.css file.
