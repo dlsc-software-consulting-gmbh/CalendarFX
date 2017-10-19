@@ -23,6 +23,8 @@ The "bin" assembly contains almost everything except for the source files.
 
 ## Binary Assembly
 
+The following are the directories found inside the binary assembly.
+
 ### css
 
 Contains the calendar.css file.
