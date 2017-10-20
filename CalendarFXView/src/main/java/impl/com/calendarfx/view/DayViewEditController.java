@@ -24,6 +24,7 @@ public class DayViewEditController {
 
     private static final Logger LOGGER = LoggingDomain.EDITING;
 
+    private boolean dragging;
     private DayViewBase dayView;
     private DayEntryView dayEntryView;
     private Entry<?> entry;
@@ -80,7 +81,9 @@ public class DayViewEditController {
     }
 
     private void mouseMoved(MouseEvent evt) {
-        initDragModeAndHandle(evt);
+        if (!dragging) {
+            initDragModeAndHandle(evt);
+        }
 
         if (handle == null) {
             return;
@@ -125,6 +128,7 @@ public class DayViewEditController {
         if (dragMode == null) {
             return;
         }
+        dragging = true;
 
         switch (dragMode) {
             case START_AND_END_TIME:
@@ -161,6 +165,7 @@ public class DayViewEditController {
 
 
     private void mouseReleased(MouseEvent evt) {
+        dragging = false;
         if (!evt.getButton().equals(MouseButton.PRIMARY) || dayEntryView == null || dragMode == null) {
             return;
         }
@@ -193,6 +198,12 @@ public class DayViewEditController {
 
         Calendar calendar = entry.getCalendar();
         if (calendar.isReadOnly()) {
+            return;
+        }
+
+        if (dayView.getDraggedEntry() == null) {
+            // we might see "mouse dragged" events close before "mouse pressed". in this case, our drag/dro handling
+            // has not been fully initialized yet.
             return;
         }
 
