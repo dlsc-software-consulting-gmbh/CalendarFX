@@ -478,8 +478,11 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             getSkinnable().requestLayout();
         }
 
-        if (evt.isEntryAdded() && isRelevant(entry)) {
+        if (evt.isEntryAdded()) {
             addEntryView(entry);
+        }
+
+        if (isRelevant(entry)) {
             getSkinnable().requestLayout();
         }
     }
