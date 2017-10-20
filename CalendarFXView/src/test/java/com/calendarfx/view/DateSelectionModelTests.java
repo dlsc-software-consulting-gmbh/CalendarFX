@@ -6,6 +6,13 @@
 
 package com.calendarfx.view;
 
+import com.calendarfx.view.DateSelectionModel.SelectionMode;
+import org.junit.Test;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
@@ -18,15 +25,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
-import com.calendarfx.view.DateSelectionModel;
-import com.calendarfx.view.DateSelectionModel.SelectionMode;
-
 public class DateSelectionModelTests {
 	
 	@Test
@@ -38,7 +36,7 @@ public class DateSelectionModelTests {
 		assertNotNull(model.getSelectedDates());
 		assertThat(model.getSelectedDates(), is(empty()));
 		assertTrue(model.isEmpty());
-		assertEquals(model.getSelectionMode(), SelectionMode.SINGLE_DATE);
+		assertEquals(model.getSelectionMode(), SelectionMode.MULTIPLE_DATES);
 		assertThat(model.getLastSelected(), is(nullValue()));
 	}
 
@@ -159,7 +157,8 @@ public class DateSelectionModelTests {
 		LocalDate now = LocalDate.now();
 		LocalDate tomorrow = now.plusDays(1);
 		DateSelectionModel model = new DateSelectionModel();
-		
+		model.setSelectionMode(SelectionMode.SINGLE_DATE);
+
 		// When
 		model.select(now);
 		model.select(tomorrow);
@@ -181,7 +180,8 @@ public class DateSelectionModelTests {
 		LocalDate tomorrow = now.plusDays(1);
 		LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
 		DateSelectionModel model = new DateSelectionModel();
-		
+		model.setSelectionMode(SelectionMode.SINGLE_DATE);
+
 		// When
 		model.selectRange(now, dayAfterTomorrow);
 		
@@ -203,7 +203,8 @@ public class DateSelectionModelTests {
 		LocalDate tomorrow = now.plusDays(1);
 		LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
 		DateSelectionModel model = new DateSelectionModel();
-		
+		model.setSelectionMode(SelectionMode.SINGLE_DATE);
+
 		// When
 		model.select(now);
 		model.selectUntil(dayAfterTomorrow);
