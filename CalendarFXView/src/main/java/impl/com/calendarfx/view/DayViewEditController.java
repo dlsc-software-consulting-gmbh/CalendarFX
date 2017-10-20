@@ -11,6 +11,7 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.*;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
@@ -36,20 +37,22 @@ public class DayViewEditController {
     public DayViewEditController(DayViewBase dayView) {
         this.dayView = Objects.requireNonNull(dayView);
 
+        final EventHandler<MouseEvent> mouseReleasedHandler = this::mouseReleased;
+
         dayView.addEventFilter(MouseEvent.MOUSE_PRESSED, this::mousePressed);
         dayView.addEventFilter(MouseEvent.MOUSE_DRAGGED, this::mouseDragged);
         // mouse released is very important for us. register with the scene so we get that in any case.
-        dayView.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, this::mouseReleased);
-        dayView.getScene().addEventFilter(MouseEvent.MOUSE_EXITED, this::mouseReleased);
+        dayView.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+        dayView.getScene().addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
         // also register with the scene property. Mostly to remove our event filter if the component gets destroyed.
         dayView.sceneProperty().addListener(((observable, oldValue, newValue) -> {
             if (oldValue != null) {
-                oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, this::mouseReleased);
-                oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, this::mouseReleased);
+                oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+                oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
             if (newValue != null ){
-                newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, this::mouseReleased);
-                newValue.addEventFilter(MouseEvent.MOUSE_EXITED, this::mouseReleased);
+                newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+                newValue.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
         }));
         dayView.addEventFilter(MouseEvent.MOUSE_MOVED, this::mouseMoved);
