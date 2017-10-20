@@ -181,10 +181,10 @@ public class DayViewEditController {
 
 
     private void mouseReleased(MouseEvent evt) {
-        dragging = false;
-        if (!evt.getButton().equals(MouseButton.PRIMARY) || dayEntryView == null || dragMode == null) {
+        if (!evt.getButton().equals(MouseButton.PRIMARY) || dayEntryView == null || dragMode == null || !dragging) {
             return;
         }
+        dragging = false;
 
         Calendar calendar = entry.getCalendar();
         if (calendar.isReadOnly()) {
@@ -208,7 +208,7 @@ public class DayViewEditController {
     }
 
     private void mouseDragged(MouseEvent evt) {
-        if (!evt.getButton().equals(MouseButton.PRIMARY) || dayEntryView == null || dragMode == null) {
+        if (!evt.getButton().equals(MouseButton.PRIMARY) || dayEntryView == null || dragMode == null || !dragging) {
             return;
         }
 
