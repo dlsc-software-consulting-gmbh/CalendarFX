@@ -201,6 +201,12 @@ public class DayViewEditController {
             return;
         }
 
+        if (dayView.getDraggedEntry() == null) {
+            // we might see "mouse dragged" events close before "mouse pressed". in this case, our drag/dro handling
+            // has not been fully initialized yet.
+            return;
+        }
+
         switch (dragMode) {
             case START_TIME:
                 switch (handle) {
@@ -308,11 +314,6 @@ public class DayViewEditController {
 
     private void changeStartAndEndTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
-        if (draggedEntry == null) {
-            // we might see "mouse dragged" events close before "mouse pressed". in this case, our drag/dro handling
-            // has not been fully initialized yet.
-            return;
-        }
         LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
 
         LOGGER.fine("changing start/end time, time = " + locationTime //$NON-NLS-1$

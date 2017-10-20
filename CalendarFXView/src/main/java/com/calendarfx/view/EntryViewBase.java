@@ -373,7 +373,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 		 * We might run in the sampler application. Then the entry view will not
 		 * be inside a date control.
 		 */
-		if (control != null) {
+		if (control != null && getParent() != null) {
 			Callback<EntryDetailsParameter, Boolean> callback = control.getEntryDetailsCallback();
 			EntryDetailsParameter param = new EntryDetailsParameter(evt, control, getEntry(), getParent(), x, y);
 			callback.call(param);
