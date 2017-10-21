@@ -42,8 +42,10 @@ public class DayViewEditController {
         dayView.addEventFilter(MouseEvent.MOUSE_PRESSED, this::mousePressed);
         dayView.addEventFilter(MouseEvent.MOUSE_DRAGGED, this::mouseDragged);
         // mouse released is very important for us. register with the scene so we get that in any case.
-        dayView.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-        dayView.getScene().addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
+        if (dayView.getScene() != null) {
+            dayView.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+            dayView.getScene().addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
+        }
         // also register with the scene property. Mostly to remove our event filter if the component gets destroyed.
         dayView.sceneProperty().addListener(((observable, oldValue, newValue) -> {
             if (oldValue != null) {
@@ -108,7 +110,9 @@ public class DayViewEditController {
         }
 
         if (handle == null) {
-            dayEntryView.setCursor(Cursor.DEFAULT);
+            if (dayEntryView != null) {
+                dayEntryView.setCursor(Cursor.DEFAULT);
+            }
             return;
         }
 
