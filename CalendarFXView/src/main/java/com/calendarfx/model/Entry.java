@@ -991,36 +991,36 @@ public class Entry<T> implements Comparable<Entry<?>> {
         }
     };
 
-    private BooleanProperty preventDragDropReschedule;
+    private SimpleObjectProperty<DragDropReschedulePolicy> dragDropReschedulePolicy;
 
     /**
      * A property used to store the state if drag/drop reschedule should be allowed.
      *
      * @return the preventDragDropReschedule property
      */
-    public final BooleanProperty preventDragDropRescheduleProperty() {
-        if (preventDragDropReschedule == null) {
-            preventDragDropReschedule = new SimpleBooleanProperty();
-        };
-        return preventDragDropReschedule;
+    public final SimpleObjectProperty<DragDropReschedulePolicy> dragDropReschedulePolicyProperty() {
+        if (dragDropReschedulePolicy == null) {
+            dragDropReschedulePolicy = new SimpleObjectProperty<>(DragDropReschedulePolicy.ANY);
+        }
+        return dragDropReschedulePolicy;
     }
 
     /**
-     * Sets the value of {@link #preventDragDropRescheduleProperty()}.
+     * Sets the value of {@link #dragDropReschedulePolicyProperty()}.
      *
-     * @param preventDragDropReschedule true if drag/drop reschedule should be forbidden
+     * @param dragDropReschedulePolicy enum to configure the allowed drag/drop reschedule actions
      */
-    public final void setPreventDragDropReschedule(boolean preventDragDropReschedule) {
-        preventDragDropRescheduleProperty().set(preventDragDropReschedule);
+    public final void setDragDropReschedulePolicy(DragDropReschedulePolicy dragDropReschedulePolicy) {
+        dragDropReschedulePolicyProperty().set(dragDropReschedulePolicy);
     }
 
     /**
-     * Returns the value of {@link #preventDragDropRescheduleProperty()}.
+     * Returns the value of {@link #dragDropReschedulePolicyProperty()}.
      *
-     * @return true if drag/drop of this entry is fobidden
+     * @return the setting of the drag/drop reschedule action
      */
-    public final boolean isPreventDragDropReschedule() {
-        return preventDragDropReschedule != null && preventDragDropReschedule.get();
+    public final DragDropReschedulePolicy getDragDropReschedulePolicy() {
+        return dragDropReschedulePolicy != null ? dragDropReschedulePolicy.get() : DragDropReschedulePolicy.ANY;
     }
 
     /**

@@ -7,10 +7,7 @@
 package com.calendarfx.demo.performance;
 
 import com.calendarfx.demo.CalendarFXDateControlSample;
-import com.calendarfx.model.Calendar;
-import com.calendarfx.model.CalendarSource;
-import com.calendarfx.model.Entry;
-import com.calendarfx.model.Interval;
+import com.calendarfx.model.*;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import impl.com.calendarfx.view.CalendarPropertySheet;
@@ -59,13 +56,7 @@ public class HelloPerformance extends CalendarFXDateControlSample {
 		// button
 		Button button = new Button("Create Entries");
 		button.setMaxWidth(Double.MAX_VALUE);
-		button.setOnAction(evt -> createEntries(false));
-		VBox.setVgrow(button, Priority.NEVER);
-		vBox.getChildren().add(button);
-
-		button = new Button("Create Entries - noDnD");
-		button.setMaxWidth(Double.MAX_VALUE);
-		button.setOnAction(evt -> createEntries(true));
+		button.setOnAction(evt -> createEntries());
 		VBox.setVgrow(button, Priority.NEVER);
 		vBox.getChildren().add(button);
 
@@ -92,7 +83,7 @@ public class HelloPerformance extends CalendarFXDateControlSample {
 		return vBox;
 	}
 
-	public void createEntries(boolean preventDragDropReschedule) {
+	public void createEntries() {
 		calendar.setStyle(Calendar.Style.getStyle(style++));
 		calendar.clear();
 
@@ -108,9 +99,27 @@ public class HelloPerformance extends CalendarFXDateControlSample {
 		calendar.startBatchUpdates();
 
 		for (int i = 0; i < count; i++) {
-			Entry<String> entry = new Entry<>((preventDragDropReschedule?"NoDnD":"Entry ") + i);
-			if (preventDragDropReschedule) {
-				entry.setPreventDragDropReschedule(true);
+			Entry<String> entry = new Entry<>("Entry " + i);
+			switch (i%5) {
+				case 0:
+					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.ANY);
+					break;
+				case 1:
+					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.CHANGE_NOTHING);
+					entry.setTitle(entry.getTitle() + "#");
+					break;
+				case 2:
+					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.CHANGE_SCHEDULE_START);
+					entry.setTitle(entry.getTitle() + "<");
+					break;
+				case 3:
+					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.CHANGE_SCHEDULE_END);
+					entry.setTitle(entry.getTitle() + ">");
+					break;
+				case 4:
+					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.MOVE);
+					entry.setTitle(entry.getTitle() + "*");
+					break;
 			}
 			entry.setInterval(new Interval(entryDate, entryTime, entryDate, entryTime.plusMinutes(30)));
 			entryTime = entryTime.plusHours(1);
