@@ -991,6 +991,38 @@ public class Entry<T> implements Comparable<Entry<?>> {
         }
     };
 
+    private BooleanProperty preventDragDropReschedule;
+
+    /**
+     * A property used to store the state if drag/drop reschedule should be allowed.
+     *
+     * @return the preventDragDropReschedule property
+     */
+    public final BooleanProperty preventDragDropRescheduleProperty() {
+        if (preventDragDropReschedule == null) {
+            preventDragDropReschedule = new SimpleBooleanProperty();
+        };
+        return preventDragDropReschedule;
+    }
+
+    /**
+     * Sets the value of {@link #preventDragDropRescheduleProperty()}.
+     *
+     * @param preventDragDropReschedule true if drag/drop reschedule should be forbidden
+     */
+    public final void setPreventDragDropReschedule(boolean preventDragDropReschedule) {
+        preventDragDropRescheduleProperty().set(preventDragDropReschedule);
+    }
+
+    /**
+     * Returns the value of {@link #preventDragDropRescheduleProperty()}.
+     *
+     * @return true if drag/drop of this entry is fobidden
+     */
+    public final boolean isPreventDragDropReschedule() {
+        return preventDragDropReschedule != null && preventDragDropReschedule.get();
+    }
+
     /**
      * A property used to store the title of the entry.
      *

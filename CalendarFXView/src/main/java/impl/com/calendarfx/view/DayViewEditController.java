@@ -76,7 +76,7 @@ public class DayViewEditController {
 
         entry = dayEntryView.getEntry();
         Calendar calendar = entry.getCalendar();
-        if (calendar.isReadOnly()) {
+        if (calendar.isReadOnly() || entry.isPreventDragDropReschedule()) {
             return;
         }
 
@@ -133,6 +133,10 @@ public class DayViewEditController {
         LOGGER.finer("time: " + dayView.getZonedDateTimeAt(evt.getX(), evt.getY()));
 
         if (!(evt.getTarget() instanceof EntryViewBase)) {
+            return;
+        }
+        Entry entry = ((EntryViewBase) evt.getTarget()).getEntry();
+        if (entry != null && entry.isPreventDragDropReschedule()) {
             return;
         }
 

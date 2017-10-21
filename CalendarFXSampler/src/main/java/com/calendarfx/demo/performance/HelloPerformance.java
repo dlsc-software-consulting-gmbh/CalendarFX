@@ -59,7 +59,13 @@ public class HelloPerformance extends CalendarFXDateControlSample {
 		// button
 		Button button = new Button("Create Entries");
 		button.setMaxWidth(Double.MAX_VALUE);
-		button.setOnAction(evt -> createEntries());
+		button.setOnAction(evt -> createEntries(false));
+		VBox.setVgrow(button, Priority.NEVER);
+		vBox.getChildren().add(button);
+
+		button = new Button("Create Entries - noDnD");
+		button.setMaxWidth(Double.MAX_VALUE);
+		button.setOnAction(evt -> createEntries(true));
 		VBox.setVgrow(button, Priority.NEVER);
 		vBox.getChildren().add(button);
 
@@ -86,7 +92,7 @@ public class HelloPerformance extends CalendarFXDateControlSample {
 		return vBox;
 	}
 
-	public void createEntries() {
+	public void createEntries(boolean preventDragDropReschedule) {
 		calendar.setStyle(Calendar.Style.getStyle(style++));
 		calendar.clear();
 
@@ -102,7 +108,10 @@ public class HelloPerformance extends CalendarFXDateControlSample {
 		calendar.startBatchUpdates();
 
 		for (int i = 0; i < count; i++) {
-			Entry<String> entry = new Entry<>("Entry " + i);
+			Entry<String> entry = new Entry<>((preventDragDropReschedule?"NoDnD":"Entry ") + i);
+			if (preventDragDropReschedule) {
+				entry.setPreventDragDropReschedule(true);
+			}
 			entry.setInterval(new Interval(entryDate, entryTime, entryDate, entryTime.plusMinutes(30)));
 			entryTime = entryTime.plusHours(1);
 			if (entryTime.isAfter(dailyEndTime)) {
