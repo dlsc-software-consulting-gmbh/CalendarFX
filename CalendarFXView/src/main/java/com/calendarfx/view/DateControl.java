@@ -333,7 +333,7 @@ public abstract class DateControl extends CalendarFXControl {
             calendarMenu.setDisable(param.getCalendar().isReadOnly());
             contextMenu.getItems().add(calendarMenu);
 
-            if (getEntryActionPolicy().allowDelete(entry)) {
+            if (getEntryActionPolicy().call(new EntryEditAction(entry, EditOperation.DELETE))) {
                 /*
                  * Delete calendar entry.
                  */
@@ -1040,26 +1040,26 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * If an action will be issued on an item the given instance will be asked if the action is allowed
      */
-    private final SimpleObjectProperty<EntryAction> entryActionPolicy = new SimpleObjectProperty<>(new EntryAction());
+    private final SimpleObjectProperty<Callback<EntryEditAction, Boolean>> entryActionPolicy = new SimpleObjectProperty<>(action -> true);
 
     /**
      * If an action will be issued on an item the given instance will be asked if the action is allowed
      */
-    public EntryAction getEntryActionPolicy() {
+    public Callback<EntryEditAction, Boolean> getEntryActionPolicy() {
         return entryActionPolicy.get();
     }
 
     /**
      * If an action will be issued on an item the given instance will be asked if the action is allowed
      */
-    public SimpleObjectProperty<EntryAction> entryActionPolicyProperty() {
+    public SimpleObjectProperty<Callback<EntryEditAction, Boolean>> entryActionPolicyProperty() {
         return entryActionPolicy;
     }
 
     /**
      * If an action will be issued on an item the given instance will be asked if the action is allowed
      */
-    public void setEntryActionPolicy(EntryAction entryActionPolicy) {
+    public void setEntryActionPolicy(Callback<EntryEditAction, Boolean> entryActionPolicy) {
         this.entryActionPolicy.set(entryActionPolicy);
     }
 
