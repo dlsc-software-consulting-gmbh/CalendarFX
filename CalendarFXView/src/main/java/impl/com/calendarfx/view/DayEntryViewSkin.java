@@ -13,19 +13,25 @@ import com.calendarfx.view.DraggedEntry;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.SkinBase;
 import javafx.scene.shape.Rectangle;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+/**
+ * The default day entry renderer. <br />
+ * It renders a title and the start time of the entry.
+ */
 public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
     private Entry<?> entry;
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
-    private Label startTimeLabel;
-    private Label titleLabel;
+    private Labeled startTimeLabel;
+    private Labeled titleLabel;
 
     private final InvalidationListener updateStylesListener = it -> updateStyles();
     private final WeakInvalidationListener weakUpdateStylesListener = new WeakInvalidationListener(updateStylesListener);
@@ -51,10 +57,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
             entry = entry.getRecurrenceSourceEntry();
         }
 
-        entry.intervalProperty().addListener(weakUpdateLabelsListener);
-        entry.calendarProperty().addListener(weakUpdateStylesListener);
-
-        view.positionProperty().addListener(weakUpdateLabelsListener);
+        setupUpdateListeners(weakUpdateLabelsListener, weakUpdateStylesListener);
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(view.widthProperty());
@@ -64,7 +67,21 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         updateStyles();
     }
 
-    private void updateStyles() {
+    /**
+     * This method registers the given listeners so that the node will be notified about changes of e.g. the entry
+     * which require updates on the UI.
+     */
+    protected void setupUpdateListeners(InvalidationListener updateLabelsListener, InvalidationListener updateStylesListener) {
+        entry.intervalProperty().addListener(updateLabelsListener);
+        entry.calendarProperty().addListener(updateStylesListener);
+
+        getSkinnable().positionProperty().addListener(updateLabelsListener);
+    }
+
+    /**
+     * This methods updates the styles of the node according to the entry settings.
+     */
+    protected void updateStyles() {
         DayEntryView view = getSkinnable();
 
         Calendar calendar = entry.getCalendar();
@@ -89,7 +106,10 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
                 calendar.getStyle() + "-entry-title-label");
     }
 
-    private Label createStartTimeLabel() {
+    /**
+     * The label used to render the start time
+     */
+    protected Labeled createStartTimeLabel() {
         Label label = new Label();
         label.setMinSize(0, 0);
 
@@ -98,12 +118,22 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
             entry = entry.getRecurrenceSourceEntry();
         }
 
-        label.setText(formatter.format(entry.getStartTime()));
+        label.setText(formatTime(entry.getStartTime()));
 
         return label;
     }
 
-    private Label createTitleLabel() {
+    /**
+     * Convert the given time to a string
+     */
+    protected String formatTime(LocalTime time) {
+        return formatter.format(time);
+    }
+
+    /**
+     * The label used to render the title
+     */
+    protected Labeled createTitleLabel() {
         Entry<?> entry = getSkinnable().getEntry();
         if (entry.isRecurrence()) {
             entry = entry.getRecurrenceSourceEntry();
@@ -117,13 +147,16 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         return label;
     }
 
-    private void updateLabels() {
+    /**
+     * This method will be called if the labels needs to be updated
+     */
+    protected void updateLabels() {
         Entry<?> entry = getSkinnable().getEntry();
         if (entry.isRecurrence()) {
             entry = entry.getRecurrenceSourceEntry();
         }
 
-        startTimeLabel.setText(formatter.format(entry.getStartTime()));
+        startTimeLabel.setText(formatTime(entry.getStartTime()));
     }
 
     @Override
