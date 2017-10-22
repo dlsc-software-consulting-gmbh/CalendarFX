@@ -1,15 +1,14 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
  * This file is part of CalendarFX.
  */
 
 package com.calendarfx.view;
 
 import com.calendarfx.model.Calendar;
-import com.calendarfx.model.EditOperation;
 import com.calendarfx.model.Entry;
-import com.calendarfx.model.EntryEditAction;
+import com.calendarfx.model.EntryEditParameter;
 import com.calendarfx.util.LoggingDomain;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -54,13 +53,13 @@ class CreateDeleteHandler {
         case DELETE:
         case BACK_SPACE:
             for (Entry<?> entry : dateControl.getSelections()) {
-                if (!dateControl.getEntryActionPolicy().call(new EntryEditAction(entry, EditOperation.DELETE))) {
+                if (!dateControl.getEntryEditPolicy().call(new EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
                     continue;
                 }
                 if (entry.isRecurrence()) {
                     entry = entry.getRecurrenceSourceEntry();
                 }
-                if (!dateControl.getEntryActionPolicy().call(new EntryEditAction(entry, EditOperation.DELETE))) {
+                if (!dateControl.getEntryEditPolicy().call(new EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
                     continue;
                 }
 
