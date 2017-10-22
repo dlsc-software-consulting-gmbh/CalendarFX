@@ -21,9 +21,7 @@ import org.controlsfx.control.PropertySheet.Item;
 
 import java.text.ParseException;
 import java.time.*;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static com.calendarfx.util.LoggingDomain.MODEL;
 import static java.util.Objects.requireNonNull;
@@ -990,38 +988,6 @@ public class Entry<T> implements Comparable<Entry<?>> {
             }
         }
     };
-
-    private SimpleObjectProperty<DragDropReschedulePolicy> dragDropReschedulePolicy;
-
-    /**
-     * A property used to store the state if drag/drop reschedule should be allowed.
-     *
-     * @return the preventDragDropReschedule property
-     */
-    public final SimpleObjectProperty<DragDropReschedulePolicy> dragDropReschedulePolicyProperty() {
-        if (dragDropReschedulePolicy == null) {
-            dragDropReschedulePolicy = new SimpleObjectProperty<>(DragDropReschedulePolicy.ANY);
-        }
-        return dragDropReschedulePolicy;
-    }
-
-    /**
-     * Sets the value of {@link #dragDropReschedulePolicyProperty()}.
-     *
-     * @param dragDropReschedulePolicy enum to configure the allowed drag/drop reschedule actions
-     */
-    public final void setDragDropReschedulePolicy(DragDropReschedulePolicy dragDropReschedulePolicy) {
-        dragDropReschedulePolicyProperty().set(dragDropReschedulePolicy);
-    }
-
-    /**
-     * Returns the value of {@link #dragDropReschedulePolicyProperty()}.
-     *
-     * @return the setting of the drag/drop reschedule action
-     */
-    public final DragDropReschedulePolicy getDragDropReschedulePolicy() {
-        return dragDropReschedulePolicy != null ? dragDropReschedulePolicy.get() : DragDropReschedulePolicy.ANY;
-    }
 
     /**
      * A property used to store the title of the entry.

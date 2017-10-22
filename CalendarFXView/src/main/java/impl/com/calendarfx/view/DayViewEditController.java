@@ -78,7 +78,7 @@ public class DayViewEditController {
 
         entry = dayEntryView.getEntry();
         Calendar calendar = entry.getCalendar();
-        if (calendar.isReadOnly() || entry.getDragDropReschedulePolicy().isNone()) {
+        if (calendar.isReadOnly() || !dayView.getEntryActionPolicy().allowAnyDnD(entry)) {
             return;
         }
 
@@ -87,17 +87,17 @@ public class DayViewEditController {
         LOGGER.finer("y-coordinate inside entry view: " + y);
 
         if (y > dayEntryView.getHeight() - 5) {
-            if (entry.getDragDropReschedulePolicy().isAllowChangeEnd()) {
+            if (dayView.getEntryActionPolicy().allowChangeEnd(entry)) {
                 dragMode = DraggedEntry.DragMode.END_TIME;
                 handle = Handle.BOTTOM;
             }
         } else if (y < 5) {
-            if (entry.getDragDropReschedulePolicy().isAllowChangeStart()) {
+            if (dayView.getEntryActionPolicy().allowChangeStart(entry)) {
                 dragMode = DraggedEntry.DragMode.START_TIME;
                 handle = Handle.TOP;
             }
         } else {
-            if (entry.getDragDropReschedulePolicy().isAllowMove()) {
+            if (dayView.getEntryActionPolicy().allowMove(entry)) {
                 dragMode = DraggedEntry.DragMode.START_AND_END_TIME;
                 handle = Handle.CENTER;
             }
@@ -150,7 +150,7 @@ public class DayViewEditController {
             return;
         }
         Entry entry = ((EntryViewBase) evt.getTarget()).getEntry();
-        if (entry == null || entry.getDragDropReschedulePolicy().isNone()) {
+        if (entry == null || !dayView.getEntryActionPolicy().allowAnyDnD(entry)) {
             return;
         }
 

@@ -6,10 +6,7 @@
 
 package com.calendarfx.view;
 
-import com.calendarfx.model.Calendar;
-import com.calendarfx.model.CalendarSource;
-import com.calendarfx.model.Entry;
-import com.calendarfx.model.Interval;
+import com.calendarfx.model.*;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
@@ -336,22 +333,24 @@ public abstract class DateControl extends CalendarFXControl {
             calendarMenu.setDisable(param.getCalendar().isReadOnly());
             contextMenu.getItems().add(calendarMenu);
 
-			/*
-             * Delete calendar entry.
-			 */
-            MenuItem delete = new MenuItem(Messages.getString("DateControl.MENU_ITEM_DELETE")); //$NON-NLS-1$
-            contextMenu.getItems().add(delete);
-            delete.setDisable(param.getCalendar().isReadOnly());
-            delete.setOnAction(evt -> {
-                Calendar calendar = entry.getCalendar();
-                if (!calendar.isReadOnly()) {
-                    if (entry.isRecurrence()) {
-                        entry.getRecurrenceSourceEntry().removeFromCalendar();
-                    } else {
-                        entry.removeFromCalendar();
+            if (getEntryActionPolicy().allowDelete(entry)) {
+                /*
+                 * Delete calendar entry.
+                 */
+                MenuItem delete = new MenuItem(Messages.getString("DateControl.MENU_ITEM_DELETE")); //$NON-NLS-1$
+                contextMenu.getItems().add(delete);
+                delete.setDisable(param.getCalendar().isReadOnly());
+                delete.setOnAction(evt -> {
+                    Calendar calendar = entry.getCalendar();
+                    if (!calendar.isReadOnly()) {
+                        if (entry.isRecurrence()) {
+                            entry.getRecurrenceSourceEntry().removeFromCalendar();
+                        } else {
+                            entry.removeFromCalendar();
+                        }
                     }
-                }
-            });
+                });
+            }
 
             return contextMenu;
         });
@@ -1036,6 +1035,32 @@ public abstract class DateControl extends CalendarFXControl {
             return "EntryContextMenuParameter [entry=" + entryView //$NON-NLS-1$
                     + ", dateControl =" + getDateControl() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         }
+    }
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     */
+    private final SimpleObjectProperty<EntryAction> entryActionPolicy = new SimpleObjectProperty<>(new EntryAction());
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     */
+    public EntryAction getEntryActionPolicy() {
+        return entryActionPolicy.get();
+    }
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     */
+    public SimpleObjectProperty<EntryAction> entryActionPolicyProperty() {
+        return entryActionPolicy;
+    }
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     */
+    public void setEntryActionPolicy(EntryAction entryActionPolicy) {
+        this.entryActionPolicy.set(entryActionPolicy);
     }
 
     private final ObjectProperty<Callback<EntryContextMenuParameter, ContextMenu>> entryContextMenuCallback = new SimpleObjectProperty<>(this, "entryFactory"); //$NON-NLS-1$
@@ -2340,6 +2365,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.bindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
         Bindings.bindBidirectional(otherControl.entryDetailsPopOverContentCallbackProperty(), entryDetailsPopOverContentCallbackProperty());
+        Bindings.bindBidirectional(otherControl.entryActionPolicyProperty(), entryActionPolicyProperty());
     }
 
     /**
@@ -2389,6 +2415,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
+        Bindings.unbindBidirectional(otherControl.entryActionPolicyProperty(), entryActionPolicyProperty());
     }
 
     private final BooleanProperty suspendUpdates = new SimpleBooleanProperty(this, "suspendUpdates", false);

@@ -100,27 +100,6 @@ public class HelloPerformance extends CalendarFXDateControlSample {
 
 		for (int i = 0; i < count; i++) {
 			Entry<String> entry = new Entry<>("Entry " + i);
-			switch (i%5) {
-				case 0:
-					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.ANY);
-					break;
-				case 1:
-					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.CHANGE_NOTHING);
-					entry.setTitle(entry.getTitle() + "#");
-					break;
-				case 2:
-					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.CHANGE_SCHEDULE_START);
-					entry.setTitle(entry.getTitle() + "<");
-					break;
-				case 3:
-					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.CHANGE_SCHEDULE_END);
-					entry.setTitle(entry.getTitle() + ">");
-					break;
-				case 4:
-					entry.setDragDropReschedulePolicy(DragDropReschedulePolicy.MOVE);
-					entry.setTitle(entry.getTitle() + "*");
-					break;
-			}
 			entry.setInterval(new Interval(entryDate, entryTime, entryDate, entryTime.plusMinutes(30)));
 			entryTime = entryTime.plusHours(1);
 			if (entryTime.isAfter(dailyEndTime)) {

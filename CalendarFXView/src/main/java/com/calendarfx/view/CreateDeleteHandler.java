@@ -8,6 +8,7 @@ package com.calendarfx.view;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
+import com.calendarfx.model.EntryAction;
 import com.calendarfx.util.LoggingDomain;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -52,8 +53,14 @@ class CreateDeleteHandler {
         case DELETE:
         case BACK_SPACE:
             for (Entry<?> entry : dateControl.getSelections()) {
+                if (!dateControl.getEntryActionPolicy().allowDelete(entry)) {
+                    continue;
+                }
                 if (entry.isRecurrence()) {
                     entry = entry.getRecurrenceSourceEntry();
+                }
+                if (!dateControl.getEntryActionPolicy().allowDelete(entry)) {
+                    continue;
                 }
 
                 Calendar calendar = entry.getCalendar();
