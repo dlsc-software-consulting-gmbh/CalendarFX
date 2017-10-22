@@ -117,8 +117,10 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 				if (callback != null) {
 					EntryContextMenuParameter param = new EntryContextMenuParameter(evt, dateControl, EntryViewBase.this);
 					ContextMenu menu = callback.call(param);
-					setContextMenu(menu);
-					menu.show(EntryViewBase.this, evt.getScreenX(), evt.getScreenY());
+					if (menu != null) {
+						setContextMenu(menu);
+						menu.show(EntryViewBase.this, evt.getScreenX(), evt.getScreenY());
+					}
 				}
 			}
 		});
