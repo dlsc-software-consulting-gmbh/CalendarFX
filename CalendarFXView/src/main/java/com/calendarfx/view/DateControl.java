@@ -1132,7 +1132,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
-    private final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicy = new SimpleObjectProperty<>(action -> false);
+    private final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicy = new SimpleObjectProperty<>(action -> true);
 
     /**
      * A property that stores a callback used for editing entries. If an edit operation will be executed
