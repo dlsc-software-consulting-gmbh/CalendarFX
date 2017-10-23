@@ -36,276 +36,276 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class DateSelectionModelTests {
-  
-	@Test
-	public void shouldBeEmptySelection() {
-		// Given
-		DateSelectionModel model = new DateSelectionModel();
 
-		// Then
-		assertNotNull(model.getSelectedDates());
-		assertThat(model.getSelectedDates(), is(empty()));
-		assertTrue(model.isEmpty());
-		assertEquals(model.getSelectionMode(), SelectionMode.MULTIPLE_DATES);
-		assertThat(model.getLastSelected(), is(nullValue()));
-	}
+    @Test
+    public void shouldBeEmptySelection() {
+        // Given
+        DateSelectionModel model = new DateSelectionModel();
 
-	@Test
-	public void shouldSelectOneSingleDate() {
-		// Given
-		LocalDate now = LocalDate.now();
-		DateSelectionModel model = new DateSelectionModel();
+        // Then
+        assertNotNull(model.getSelectedDates());
+        assertThat(model.getSelectedDates(), is(empty()));
+        assertTrue(model.isEmpty());
+        assertEquals(model.getSelectionMode(), SelectionMode.MULTIPLE_DATES);
+        assertThat(model.getLastSelected(), is(nullValue()));
+    }
 
-		// When
-		model.select(now);
+    @Test
+    public void shouldSelectOneSingleDate() {
+        // Given
+        LocalDate now = LocalDate.now();
+        DateSelectionModel model = new DateSelectionModel();
 
-		// Then
-		assertTrue(model.isSelected(now));
-		assertThat(model.getSelectedDates(), contains(now));
-		assertEquals(model.getLastSelected(), now);
-	}
+        // When
+        model.select(now);
 
-  @Test
-	public void shouldSelectDateAndClearSelection() {
-		// Given
-		LocalDate now = LocalDate.now();
-		DateSelectionModel model = new DateSelectionModel();
-		
-		// When
-		model.select(now);
-		
-		// Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates(), contains(now));
+        // Then
+        assertTrue(model.isSelected(now));
+        assertThat(model.getSelectedDates(), contains(now));
+        assertEquals(model.getLastSelected(), now);
+    }
 
-		// When
-		model.clear();
+    @Test
+    public void shouldSelectDateAndClearSelection() {
+        // Given
+        LocalDate now = LocalDate.now();
+        DateSelectionModel model = new DateSelectionModel();
 
-		// Then
-		assertTrue(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(empty()));
-		assertThat(model.getLastSelected(), is(nullValue()));
-	}
+        // When
+        model.select(now);
 
-  @Test
-	public void shouldSelectAndDeselectDate() {
-		// Given
-		LocalDate now = LocalDate.now();
-		DateSelectionModel model = new DateSelectionModel();
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates(), contains(now));
 
-		// When
-		model.select(now);
+        // When
+        model.clear();
 
-		// Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates(), contains(now));
-		assertTrue(model.isSelected(now));
+        // Then
+        assertTrue(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(empty()));
+        assertThat(model.getLastSelected(), is(nullValue()));
+    }
 
-		// When
-		model.deselect(now);
+    @Test
+    public void shouldSelectAndDeselectDate() {
+        // Given
+        LocalDate now = LocalDate.now();
+        DateSelectionModel model = new DateSelectionModel();
 
-		// Then
-		assertTrue(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(empty()));
-		assertThat(model.getLastSelected(), is(nullValue()));
-	}
+        // When
+        model.select(now);
 
-  @Test
-	public void shouldSelectDateRange() {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate tomorrow = now.plusDays(1);
-		LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates(), contains(now));
+        assertTrue(model.isSelected(now));
 
-		// When
-		model.selectRange(now, dayAfterTomorrow);
+        // When
+        model.deselect(now);
 
-		// Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(3)));
-		assertThat(model.getSelectedDates(), contains(now, tomorrow, dayAfterTomorrow));
-		assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
-		assertTrue(model.isSelected(now));
-		assertTrue(model.isSelected(tomorrow));
-		assertTrue(model.isSelected(dayAfterTomorrow));
-	}
+        // Then
+        assertTrue(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(empty()));
+        assertThat(model.getLastSelected(), is(nullValue()));
+    }
 
-  @Test
-	public void shouldSelectMultipleDates() {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate tomorrow = now.plusDays(1);
-		LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
-		LocalDate oneYearAfter = dayAfterTomorrow.plusYears(1);
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.MULTIPLE_DATES);
+    @Test
+    public void shouldSelectDateRange() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+        LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
 
-		// When
-		model.selectRange(now, dayAfterTomorrow);
-		model.select(oneYearAfter);
+        // When
+        model.selectRange(now, dayAfterTomorrow);
 
-		// Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(4)));
-		assertThat(model.getSelectedDates(), contains(now, tomorrow, dayAfterTomorrow, oneYearAfter));
-		assertThat(model.getLastSelected(), is(equalTo(oneYearAfter)));
-		assertTrue(model.isSelected(now));
-		assertTrue(model.isSelected(tomorrow));
-		assertTrue(model.isSelected(dayAfterTomorrow));
-		assertTrue(model.isSelected(oneYearAfter));
-	}
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(3)));
+        assertThat(model.getSelectedDates(), contains(now, tomorrow, dayAfterTomorrow));
+        assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
+        assertTrue(model.isSelected(now));
+        assertTrue(model.isSelected(tomorrow));
+        assertTrue(model.isSelected(dayAfterTomorrow));
+    }
 
-  @Test
-	public void shouldChangeSelectionFromTodayToTomorrow () {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate tomorrow = now.plusDays(1);
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.SINGLE_DATE);
+    @Test
+    public void shouldSelectMultipleDates() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+        LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
+        LocalDate oneYearAfter = dayAfterTomorrow.plusYears(1);
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.MULTIPLE_DATES);
 
-		// When
-		model.select(now);
-		model.select(tomorrow);
+        // When
+        model.selectRange(now, dayAfterTomorrow);
+        model.select(oneYearAfter);
 
-    // Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(1)));
-		assertThat(model.getSelectedDates(), contains(tomorrow));
-		assertThat(model.getLastSelected(), is(equalTo(tomorrow)));
-		assertFalse(model.isSelected(now));
-		assertTrue(model.isSelected(tomorrow));
-	}
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(4)));
+        assertThat(model.getSelectedDates(), contains(now, tomorrow, dayAfterTomorrow, oneYearAfter));
+        assertThat(model.getLastSelected(), is(equalTo(oneYearAfter)));
+        assertTrue(model.isSelected(now));
+        assertTrue(model.isSelected(tomorrow));
+        assertTrue(model.isSelected(dayAfterTomorrow));
+        assertTrue(model.isSelected(oneYearAfter));
+    }
 
-  @Test
-	public void shouldSelectOnlySingleDate_AttemptRangeSelection() {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate tomorrow = now.plusDays(1);
-		LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.SINGLE_DATE);
+    @Test
+    public void shouldChangeSelectionFromTodayToTomorrow() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.SINGLE_DATE);
 
-		// When
-		model.selectRange(now, dayAfterTomorrow);
+        // When
+        model.select(now);
+        model.select(tomorrow);
 
-    // Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(1)));
-		assertThat(model.getSelectedDates(), contains(dayAfterTomorrow));
-		assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
-		assertFalse(model.isSelected(now));
-		assertFalse(model.isSelected(tomorrow));
-		assertTrue(model.isSelected(dayAfterTomorrow));
-	}
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(1)));
+        assertThat(model.getSelectedDates(), contains(tomorrow));
+        assertThat(model.getLastSelected(), is(equalTo(tomorrow)));
+        assertFalse(model.isSelected(now));
+        assertTrue(model.isSelected(tomorrow));
+    }
 
-  @Test
-	public void shouldSelectOnlySingleDate_AttemptMultipleSelection() {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate tomorrow = now.plusDays(1);
-		LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.SINGLE_DATE);
+    @Test
+    public void shouldSelectOnlySingleDate_AttemptRangeSelection() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+        LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.SINGLE_DATE);
 
-		// When
-		model.select(now);
-		model.selectUntil(dayAfterTomorrow);
+        // When
+        model.selectRange(now, dayAfterTomorrow);
 
-    // Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(1)));
-		assertThat(model.getSelectedDates(), contains(dayAfterTomorrow));
-		assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
-		assertFalse(model.isSelected(now));
-		assertFalse(model.isSelected(tomorrow));
-		assertTrue(model.isSelected(dayAfterTomorrow));
-	}
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(1)));
+        assertThat(model.getSelectedDates(), contains(dayAfterTomorrow));
+        assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
+        assertFalse(model.isSelected(now));
+        assertFalse(model.isSelected(tomorrow));
+        assertTrue(model.isSelected(dayAfterTomorrow));
+    }
 
-  @Test
-	public void shouldSelectRangeTodayAndTomorrow () {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate tomorrow = now.plusDays(1);
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
+    @Test
+    public void shouldSelectOnlySingleDate_AttemptMultipleSelection() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+        LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.SINGLE_DATE);
 
-		// When
-		model.select(now);
-		model.select(tomorrow);
+        // When
+        model.select(now);
+        model.selectUntil(dayAfterTomorrow);
 
-		// Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(2)));
-		assertThat(model.getSelectedDates(), contains(now, tomorrow));
-		assertThat(model.getLastSelected(), is(equalTo(tomorrow)));
-		assertTrue(model.isSelected(now));
-		assertTrue(model.isSelected(tomorrow));
-	}
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(1)));
+        assertThat(model.getSelectedDates(), contains(dayAfterTomorrow));
+        assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
+        assertFalse(model.isSelected(now));
+        assertFalse(model.isSelected(tomorrow));
+        assertTrue(model.isSelected(dayAfterTomorrow));
+    }
 
-  @Test
-	public void shouldSelectFromTodayUntilTomorrow () {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate tomorrow = now.plusDays(1);
-		LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
+    @Test
+    public void shouldSelectRangeTodayAndTomorrow() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
 
-		// When
-		model.select(now);
-		model.selectUntil(dayAfterTomorrow);
+        // When
+        model.select(now);
+        model.select(tomorrow);
 
-		// Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(3)));
-		assertThat(model.getSelectedDates(), contains(now, tomorrow, dayAfterTomorrow));
-		assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
-		assertTrue(model.isSelected(now));
-		assertTrue(model.isSelected(tomorrow));
-		assertTrue(model.isSelected(dayAfterTomorrow));
-	}
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(2)));
+        assertThat(model.getSelectedDates(), contains(now, tomorrow));
+        assertThat(model.getLastSelected(), is(equalTo(tomorrow)));
+        assertTrue(model.isSelected(now));
+        assertTrue(model.isSelected(tomorrow));
+    }
 
-  @Test
-	public void shouldSelectFromTodayUntilNextTwoWeeks () {
-		// Given
-		LocalDate now = LocalDate.now();
-		LocalDate nextWeek = now.plusWeeks(1);
-		LocalDate nextWeekAfterNextWeek = nextWeek.plusWeeks(1);
+    @Test
+    public void shouldSelectFromTodayUntilTomorrow() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+        LocalDate dayAfterTomorrow = tomorrow.plusDays(1);
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
 
-    List<LocalDate> days = new ArrayList<>();
-		LocalDate start = now;
-		while (start.isBefore(nextWeekAfterNextWeek) || start.isEqual(nextWeekAfterNextWeek)) {
-			days.add(start);
-			start = start.plusDays(1);
-		}
+        // When
+        model.select(now);
+        model.selectUntil(dayAfterTomorrow);
 
-		DateSelectionModel model = new DateSelectionModel();
-		model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(3)));
+        assertThat(model.getSelectedDates(), contains(now, tomorrow, dayAfterTomorrow));
+        assertThat(model.getLastSelected(), is(equalTo(dayAfterTomorrow)));
+        assertTrue(model.isSelected(now));
+        assertTrue(model.isSelected(tomorrow));
+        assertTrue(model.isSelected(dayAfterTomorrow));
+    }
 
-		// When
-		model.select(now);
-		model.selectUntil(nextWeek);
-		model.selectUntil(nextWeekAfterNextWeek);
+    @Test
+    public void shouldSelectFromTodayUntilNextTwoWeeks() {
+        // Given
+        LocalDate now = LocalDate.now();
+        LocalDate nextWeek = now.plusWeeks(1);
+        LocalDate nextWeekAfterNextWeek = nextWeek.plusWeeks(1);
 
-    // Then
-		assertFalse(model.isEmpty());
-		assertThat(model.getSelectedDates(), is(not(empty())));
-		assertThat(model.getSelectedDates().size(), is(equalTo(days.size())));
-		assertThat(model.getLastSelected(), is(equalTo(nextWeekAfterNextWeek)));
+        List<LocalDate> days = new ArrayList<>();
+        LocalDate start = now;
+        while (start.isBefore(nextWeekAfterNextWeek) || start.isEqual(nextWeekAfterNextWeek)) {
+            days.add(start);
+            start = start.plusDays(1);
+        }
 
-    for (LocalDate day : days) {
-			assertTrue(model.isSelected(day));
-		}
-	}
+        DateSelectionModel model = new DateSelectionModel();
+        model.setSelectionMode(SelectionMode.SINGLE_DATE_RANGE);
+
+        // When
+        model.select(now);
+        model.selectUntil(nextWeek);
+        model.selectUntil(nextWeekAfterNextWeek);
+
+        // Then
+        assertFalse(model.isEmpty());
+        assertThat(model.getSelectedDates(), is(not(empty())));
+        assertThat(model.getSelectedDates().size(), is(equalTo(days.size())));
+        assertThat(model.getLastSelected(), is(equalTo(nextWeekAfterNextWeek)));
+
+        for (LocalDate day : days) {
+            assertTrue(model.isSelected(day));
+        }
+    }
 }
