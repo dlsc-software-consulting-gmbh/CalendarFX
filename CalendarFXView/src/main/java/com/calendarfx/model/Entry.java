@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -11,7 +11,18 @@ import com.google.ical.compat.javatime.LocalDateIteratorFactory;
 import com.google.ical.values.DateValue;
 import com.google.ical.values.RRule;
 import impl.com.calendarfx.view.util.Util;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -20,8 +31,15 @@ import javafx.collections.ObservableMap;
 import org.controlsfx.control.PropertySheet.Item;
 
 import java.text.ParseException;
-import java.time.*;
-import java.util.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.calendarfx.util.LoggingDomain.MODEL;
 import static java.util.Objects.requireNonNull;
@@ -214,9 +232,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
 
                 super.set(newInterval);
 
-				/*
+                /*
                  * Update the read-only properties if needed.
-				 */
+                 */
                 if (startDate != null) {
                     startDate.set(newInterval.getStartDate());
                 }
@@ -618,9 +636,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
         return recurrenceRule != null && !(recurrenceRule.get() == null) && !recurrenceRule.get().trim().equals(""); //$NON-NLS-1$
     }
 
-	/*
+    /*
      * Recurrence support.
-	 */
+     */
 
     private StringProperty recurrenceRule;
 
@@ -875,9 +893,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
         setCalendar(null);
     }
 
-	/*
+    /*
      * User object support.
-	 */
+     */
 
     private ObjectProperty<T> userObject;
 
@@ -931,9 +949,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
         return userObject == null ? null : userObject.get();
     }
 
-	/*
+    /*
      * Zone ID support.
-	 */
+     */
 
     private ReadOnlyObjectWrapper<ZoneId> zoneId;
 
@@ -1016,9 +1034,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
         return titleProperty().get();
     }
 
-	/*
+    /*
      * Location support.
-	 */
+     */
 
     private StringProperty location;
 
@@ -1276,9 +1294,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
         }
     }
 
-	/*
+    /*
      * Utility methods.
-	 */
+     */
 
     /**
      * Used by the {@link Calendar#findEntries(String)} to find entries based on
@@ -1482,14 +1500,14 @@ public class Entry<T> implements Comparable<Entry<?>> {
             LocalDateIterator iterator = LocalDateIteratorFactory.createLocalDateIterator(recurrenceRule, utilStartDate, zoneId, true);
 
             /*
-            * TODO: for performance reasons we should definitely
-			* use the advanceTo() call, but unfortunately this
-			* collides with the fact that e.g. the DetailedWeekView loads
-			* data day by day. So a given day would not show
-			* entries that start on the day before but intersect
-			* with the given day. We have to find a solution for
-			* this.
-			*/
+             * TODO: for performance reasons we should definitely
+             * use the advanceTo() call, but unfortunately this
+             * collides with the fact that e.g. the DetailedWeekView loads
+             * data day by day. So a given day would not show
+             * entries that start on the day before but intersect
+             * with the given day. We have to find a solution for
+             * this.
+             */
             // iterator.advanceTo(org.joda.time.LocalDate.fromDateFields(Date.from(st.toInstant())));
 
             while (iterator.hasNext()) {

@@ -1,21 +1,34 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
 package impl.com.calendarfx.view;
 
-import com.calendarfx.model.*;
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.Entry;
+import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.view.*;
+import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DayEntryView;
+import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase;
+import com.calendarfx.view.DraggedEntry;
+import com.calendarfx.view.EntryViewBase;
+import com.calendarfx.view.VirtualGrid;
+import com.calendarfx.view.WeekView;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -50,7 +63,7 @@ public class DayViewEditController {
                 oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
                 oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
-            if (newValue != null ){
+            if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
                 newValue.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
@@ -76,7 +89,7 @@ public class DayViewEditController {
 
         entry = dayEntryView.getEntry();
         Calendar calendar = entry.getCalendar();
-        if (calendar.isReadOnly() || !dayView.getEntryEditPolicy().call(new EntryEditParameter(dayView, entry, DateControl.EditOperation.DRAG_AND_DROP))) {
+        if (calendar.isReadOnly()) {
             return;
         }
 
@@ -85,17 +98,17 @@ public class DayViewEditController {
         LOGGER.finer("y-coordinate inside entry view: " + y);
 
         if (y > dayEntryView.getHeight() - 5) {
-            if (dayView.getEntryEditPolicy().call(new EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_END))) {
+            if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_END))) {
                 dragMode = DraggedEntry.DragMode.END_TIME;
                 handle = Handle.BOTTOM;
             }
         } else if (y < 5) {
-            if (dayView.getEntryEditPolicy().call(new EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_START))) {
+            if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_START))) {
                 dragMode = DraggedEntry.DragMode.START_TIME;
                 handle = Handle.TOP;
             }
         } else {
-            if (dayView.getEntryEditPolicy().call(new EntryEditParameter(dayView, entry, DateControl.EditOperation.MOVE))) {
+            if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.MOVE))) {
                 dragMode = DraggedEntry.DragMode.START_AND_END_TIME;
                 handle = Handle.CENTER;
             }
@@ -148,7 +161,7 @@ public class DayViewEditController {
             return;
         }
         Entry entry = ((EntryViewBase) evt.getTarget()).getEntry();
-        if (entry == null || !dayView.getEntryEditPolicy().call(new EntryEditParameter(dayView, entry, DateControl.EditOperation.DRAG_AND_DROP))) {
+        if (entry == null) {
             return;
         }
 
@@ -160,31 +173,43 @@ public class DayViewEditController {
         if (dragMode == null) {
             return;
         }
-        dragging = true;
 
         switch (dragMode) {
             case START_AND_END_TIME:
-                dayEntryView.getProperties().put("dragged", true); //$NON-NLS-1$
+                if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.MOVE))) {
+                    dragging = true;
+                    dayEntryView.getProperties().put("dragged", true); //$NON-NLS-1$
 
-                LocalDateTime time = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
-                offsetDuration = Duration.between(entry.getStartAsLocalDateTime(), time);
-                entryDuration = entry.getDuration();
+                    LocalDateTime time = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
+                    offsetDuration = Duration.between(entry.getStartAsLocalDateTime(), time);
+                    entryDuration = entry.getDuration();
 
-                LOGGER.finer("time at mouse pressed location: " + time);
-                LOGGER.finer("offset duration: " + offsetDuration);
-                LOGGER.finer("entry duration: " + entryDuration);
+                    LOGGER.finer("time at mouse pressed location: " + time);
+                    LOGGER.finer("offset duration: " + offsetDuration);
+                    LOGGER.finer("entry duration: " + entryDuration);
 
-                dayView.requestLayout();
+                    dayView.requestLayout();
+                }
                 break;
             case END_TIME:
-                dayEntryView.getProperties().put("dragged-end", true); //$NON-NLS-1$
+                if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_END))) {
+                    dragging = true;
+                    dayEntryView.getProperties().put("dragged-end", true); //$NON-NLS-1$
+                }
                 break;
             case START_TIME:
-                dayEntryView.getProperties().put("dragged-start", true); //$NON-NLS-1$
+                if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_START))) {
+                    dragging = true;
+                    dayEntryView.getProperties().put("dragged-start", true); //$NON-NLS-1$
+                }
                 break;
             default:
                 break;
 
+        }
+
+        if (!dragging) {
+            return;
         }
 
         DayView dayView = dayEntryView.getDateControl();

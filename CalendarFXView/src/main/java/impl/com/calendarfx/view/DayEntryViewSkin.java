@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -27,11 +27,10 @@ import java.time.format.FormatStyle;
  */
 public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
-    private Entry<?> entry;
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
-    private Labeled startTimeLabel;
-    private Labeled titleLabel;
+    private Label startTimeLabel;
+    private Label titleLabel;
 
     private final InvalidationListener updateStylesListener = it -> updateStyles();
     private final WeakInvalidationListener weakUpdateStylesListener = new WeakInvalidationListener(updateStylesListener);
@@ -52,12 +51,14 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
         getChildren().addAll(startTimeLabel, titleLabel);
 
-        entry = view.getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
+        Entry entry = getEntry();
 
-        setupUpdateListeners(weakUpdateLabelsListener, weakUpdateStylesListener);
+        entry.intervalProperty().addListener(weakUpdateLabelsListener);
+        entry.calendarProperty().addListener(weakUpdateStylesListener);
+        entry.titleProperty().addListener(weakUpdateLabelsListener);
+
+        getSkinnable().positionProperty().addListener(weakUpdateLabelsListener);
+        updateLabels();
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(view.widthProperty());
@@ -68,14 +69,14 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * This method registers the given listeners so that the node will be notified about changes of e.g. the entry
-     * which require updates on the UI.
+     * @returns The entry.
      */
-    protected void setupUpdateListeners(InvalidationListener updateLabelsListener, InvalidationListener updateStylesListener) {
-        entry.intervalProperty().addListener(updateLabelsListener);
-        entry.calendarProperty().addListener(updateStylesListener);
-
-        getSkinnable().positionProperty().addListener(updateLabelsListener);
+    protected Entry getEntry() {
+        Entry<?> entry = getSkinnable().getEntry();
+        if (entry.isRecurrence()) {
+            entry = entry.getRecurrenceSourceEntry();
+        }
+        return entry;
     }
 
     /**
@@ -83,6 +84,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
      */
     protected void updateStyles() {
         DayEntryView view = getSkinnable();
+        Entry entry = getEntry();
 
         Calendar calendar = entry.getCalendar();
         if (entry instanceof DraggedEntry) {
@@ -107,56 +109,52 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * The label used to render the start time
+     * The label used to render the start time.
+     * @returns The label component.
      */
-    protected Labeled createStartTimeLabel() {
+    protected Label createStartTimeLabel() {
         Label label = new Label();
         label.setMinSize(0, 0);
-
-        Entry<?> entry = getSkinnable().getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
-
-        label.setText(formatTime(entry.getStartTime()));
 
         return label;
     }
 
     /**
-     * Convert the given time to a string
+     * Convert the given time to a string.
+     * @returns The formatted time.
      */
     protected String formatTime(LocalTime time) {
         return formatter.format(time);
     }
 
     /**
-     * The label used to render the title
+     * Convert the given title. This method can be overridden for e.g. translating the title.
+     * @returns The formatted title.
      */
-    protected Labeled createTitleLabel() {
-        Entry<?> entry = getSkinnable().getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
+    protected String formatTitle(String title) {
+        return title;
+    }
 
+    /**
+     * The label used to render the title.
+     * @returns The title component.
+     */
+    protected Label createTitleLabel() {
         Label label = new Label();
         label.setWrapText(true);
         label.setMinSize(0, 0);
-        label.textProperty().bind(entry.titleProperty());
 
         return label;
     }
 
     /**
-     * This method will be called if the labels needs to be updated
+     * This method will be called if the labels need to be updated.
      */
     protected void updateLabels() {
-        Entry<?> entry = getSkinnable().getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
+        Entry entry = getEntry();
 
         startTimeLabel.setText(formatTime(entry.getStartTime()));
+        titleLabel.setText(formatTitle(entry.getTitle()));
     }
 
     @Override

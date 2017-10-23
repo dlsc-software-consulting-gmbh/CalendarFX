@@ -1038,63 +1038,110 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     /**
-     * Possible edit operations with an entry.
+     * Possible edit operations on an entry.
      * This enum will be used as parameter of the callback set with {@link DateControl#setEntryEditPolicy}.
      */
     public enum EditOperation {
 
         /**
-         * Checked if any drag/drop operation is allowed
-         */
-        DRAG_AND_DROP,
-
-        /**
          * Checked if the start of an entry can be changed (e.g. using drag/drop).
-         * for drag and drop you also have to allow {@link #DRAG_AND_DROP}
          */
         CHANGE_START,
 
         /**
-         * Checked if the end of an entry can be changed (e.g. using drag/drop)
-         * for drag and drop you also have to allow {@link #DRAG_AND_DROP}
+         * Checked if the end of an entry can be changed (e.g. using drag/drop).
          */
         CHANGE_END,
 
         /**
-         * Checked if entry can be moved using drag/drop
-         * for drag and drop you also have to allow {@link #DRAG_AND_DROP}
+         * Checked if entry can be moved using drag/drop.
          */
         MOVE,
 
         /**
-         * Checked if an entry can be deleted
+         * Checked if an entry can be deleted.
          */
         DELETE
     }
 
     /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     * Class used for parameter of {@link com.calendarfx.view.DateControl#entryEditPolicy} functional interface.
      */
-    private final SimpleObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicy = new SimpleObjectProperty<>(action -> true);
+    public static final class EntryEditParameter {
+
+        /**
+         * The date control the entity is associated with.
+         */
+        private final DateControl dateControl;
+
+        /**
+         * The entity the operation is operated on.
+         */
+        private final Entry<?> entry;
+
+        /**
+         * The operation.
+         */
+        private final DateControl.EditOperation editOperation;
+
+        public EntryEditParameter(DateControl dateControl, Entry<?> entry, DateControl.EditOperation editOperation) {
+            this.dateControl = dateControl;
+            this.entry = entry;
+            this.editOperation = editOperation;
+        }
+
+        /**
+         * The {@link DateControl} which is asking for a specific {@link com.calendarfx.view.DateControl.EditOperation} permission.
+         * @returns The date control.
+         */
+        public DateControl getDateControl() {
+            return dateControl;
+        }
+
+        /**
+         * The entry where the {@link com.calendarfx.view.DateControl.EditOperation} should be applied.
+         * @returns The entry.
+         */
+        public Entry<?> getEntry() {
+            return entry;
+        }
+
+        /**
+         * The actual edit operation.
+         * @returns The edit operation.
+         */
+        public DateControl.EditOperation getEditOperation() {
+            return editOperation;
+        }
+    }
 
     /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
      */
-    public Callback<EntryEditParameter, Boolean> getEntryEditPolicy() {
+    private final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicy = new SimpleObjectProperty<>(action -> true);
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
+     *
+     * @returns The entry edit policy callback
+     */
+    public final Callback<EntryEditParameter, Boolean> getEntryEditPolicy() {
         return entryEditPolicy.get();
     }
 
     /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
+
+     * @returns The entry edit policy callback property
      */
-    public SimpleObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicyProperty() {
+    public final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicyProperty() {
         return entryEditPolicy;
     }
 
     /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
      */
-    public void setEntryEditPolicy(Callback<EntryEditParameter, Boolean> entryEditPolicy) {
+    public final void setEntryEditPolicy(Callback<EntryEditParameter, Boolean> entryEditPolicy) {
         this.entryEditPolicy.set(entryEditPolicy);
     }
 

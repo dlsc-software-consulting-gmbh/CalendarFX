@@ -1,13 +1,16 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
 package com.calendarfx.demo.performance;
 
 import com.calendarfx.demo.CalendarFXDateControlSample;
-import com.calendarfx.model.*;
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarSource;
+import com.calendarfx.model.Entry;
+import com.calendarfx.model.Interval;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import impl.com.calendarfx.view.CalendarPropertySheet;
