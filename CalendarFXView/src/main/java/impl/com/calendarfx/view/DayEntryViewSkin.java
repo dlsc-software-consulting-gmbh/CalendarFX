@@ -22,8 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
 /**
- * The default day entry renderer. <br />
- * It renders a title and the start time of the entry.
+ * The default day entry view. <br />
+ * It displays a title and the start time of the entry.
  */
 public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
@@ -109,7 +109,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * The label used to render the start time.
+     * The label used to show the start time.
      * @returns The label component.
      */
     protected Label createStartTimeLabel() {
@@ -136,7 +136,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * The label used to render the title.
+     * The label used to show the title.
      * @returns The title component.
      */
     protected Label createTitleLabel() {

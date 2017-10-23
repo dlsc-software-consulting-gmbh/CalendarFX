@@ -1117,6 +1117,8 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * If an action will be issued on an item the given instance will be asked if the action is allowed.
+     *
+     * @see EditOperation
      */
     private final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicy = new SimpleObjectProperty<>(action -> true);
 
@@ -1124,6 +1126,8 @@ public abstract class DateControl extends CalendarFXControl {
      * If an action will be issued on an item the given instance will be asked if the action is allowed.
      *
      * @returns The entry edit policy callback
+     *
+     * @see EditOperation
      */
     public final Callback<EntryEditParameter, Boolean> getEntryEditPolicy() {
         return entryEditPolicy.get();
@@ -1131,8 +1135,10 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * If an action will be issued on an item the given instance will be asked if the action is allowed.
-
+     *
      * @returns The entry edit policy callback property
+     *
+     * @see EditOperation
      */
     public final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicyProperty() {
         return entryEditPolicy;
