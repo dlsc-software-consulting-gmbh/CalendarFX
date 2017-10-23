@@ -16,7 +16,14 @@
 
 package com.calendarfx.view.page;
 
-import com.calendarfx.view.*;
+import com.calendarfx.view.AgendaView;
+import com.calendarfx.view.AllDayView;
+import com.calendarfx.view.DayView;
+import com.calendarfx.view.DetailedDayView;
+import com.calendarfx.view.Messages;
+import com.calendarfx.view.MonthView;
+import com.calendarfx.view.TimeScaleView;
+import com.calendarfx.view.YearMonthView;
 import com.calendarfx.view.print.ViewType;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;

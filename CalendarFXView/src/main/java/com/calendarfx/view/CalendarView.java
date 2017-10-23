@@ -16,12 +16,21 @@
 
 package com.calendarfx.view;
 
-import com.calendarfx.view.page.*;
+import com.calendarfx.view.page.DayPage;
+import com.calendarfx.view.page.MonthPage;
+import com.calendarfx.view.page.PageBase;
+import com.calendarfx.view.page.WeekPage;
+import com.calendarfx.view.page.YearPage;
 import com.calendarfx.view.print.PrintView;
 import impl.com.calendarfx.view.CalendarViewSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener.Change;
 import javafx.collections.ObservableList;

@@ -16,7 +16,12 @@
 
 package com.calendarfx.google.service;
 
-import com.calendarfx.google.converter.*;
+import com.calendarfx.google.converter.BeanConverter;
+import com.calendarfx.google.converter.CalendarListEntryToGoogleCalendarConverter;
+import com.calendarfx.google.converter.EventToGoogleEntryConverter;
+import com.calendarfx.google.converter.GoogleCalendarToCalendarConverter;
+import com.calendarfx.google.converter.GoogleCalendarToCalendarListEntryConverter;
+import com.calendarfx.google.converter.GoogleEntryToEventConverter;
 import com.calendarfx.google.model.GoogleCalendar;
 import com.calendarfx.google.model.GoogleEntry;
 import com.google.api.services.calendar.model.Calendar;

@@ -23,7 +23,11 @@ package com.google.ical.compat.jodatime;
 import junit.framework.TestCase;
 import org.joda.time.DateTimeZone;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Random;
+import java.util.TimeZone;
 
 /**
  *

@@ -6,7 +6,11 @@
 
 package com.google.ical.util;
 
-import com.google.ical.values.*;
+import com.google.ical.values.DateTimeValue;
+import com.google.ical.values.DateTimeValueImpl;
+import com.google.ical.values.DateValue;
+import com.google.ical.values.DateValueImpl;
+import com.google.ical.values.TimeValue;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

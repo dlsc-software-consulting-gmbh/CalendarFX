@@ -16,7 +16,15 @@
 
 package impl.com.calendarfx.view;
 
-import com.calendarfx.view.*;
+import com.calendarfx.view.AgendaView;
+import com.calendarfx.view.AllDayView;
+import com.calendarfx.view.CalendarHeaderView;
+import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DayView;
+import com.calendarfx.view.DetailedDayView;
+import com.calendarfx.view.Messages;
+import com.calendarfx.view.RequestEvent;
+import com.calendarfx.view.TimeScaleView;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -25,7 +33,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
 
 import static impl.com.calendarfx.view.ViewHelper.scrollToRequestedTime;
 

@@ -21,7 +21,12 @@
 package com.google.ical.iter;
 
 import com.google.ical.util.DTBuilder;
-import com.google.ical.values.*;
+import com.google.ical.values.DateTimeValueImpl;
+import com.google.ical.values.DateValue;
+import com.google.ical.values.DateValueImpl;
+import com.google.ical.values.IcalParseUtil;
+import com.google.ical.values.Weekday;
+import com.google.ical.values.WeekdayNum;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Field;
