@@ -42,11 +42,6 @@
             <url>https://dl.bintray.com/jerady/maven</url>
         </repository>
 
-
-        <repository>
-            <id>my-local-core-repo</id>
-            <url>file://${project.basedir}/repository</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -73,19 +68,6 @@
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-fontawesome</artifactId>
             <version>4.7.0-1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.smardec</groupId>
-            <artifactId>license4j</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.loadui</groupId>
-            <artifactId>testFx</artifactId>
-            <version>3.1.2</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

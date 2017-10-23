@@ -1046,24 +1046,29 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
+    // entry edit support
+
     /**
-     * Possible edit operations on an entry.
-     * This enum will be used as parameter of the callback set with {@link DateControl#setEntryEditPolicy}.
+     * Possible edit operations on an entry. This enum will be used as parameter of the
+     * callback set with {@link DateControl#setEntryEditPolicy}.
+     *
+     * @see #setEntryEditPolicy(Callback)
      */
     public enum EditOperation {
 
         /**
-         * Checked if the start of an entry can be changed (e.g. using drag/drop).
+         * Checked if the start of an entry can be changed.
          */
         CHANGE_START,
 
         /**
-         * Checked if the end of an entry can be changed (e.g. using drag/drop).
+         * Checked if the end of an entry can be changed.
          */
         CHANGE_END,
 
         /**
-         * Checked if entry can be moved using drag/drop.
+         * Checked if entry can be moved around, hence changing start and end time at
+         * the same time.
          */
         MOVE,
 
@@ -1074,7 +1079,8 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     /**
-     * Class used for parameter of {@link com.calendarfx.view.DateControl#entryEditPolicy} functional interface.
+     * Class used for parameter of {@link DateControl#entryEditPolicy}
+     * functional interface.
      */
     public static final class EntryEditParameter {
 
@@ -1093,15 +1099,15 @@ public abstract class DateControl extends CalendarFXControl {
          */
         private final DateControl.EditOperation editOperation;
 
-        public EntryEditParameter(DateControl dateControl, Entry<?> entry, DateControl.EditOperation editOperation) {
-            this.dateControl = dateControl;
-            this.entry = entry;
-            this.editOperation = editOperation;
+        public EntryEditParameter(DateControl dateControl, Entry<?> entry, EditOperation editOperation) {
+            this.dateControl = Objects.requireNonNull(dateControl);
+            this.entry = Objects.requireNonNull(entry);
+            this.editOperation = Objects.requireNonNull(editOperation);
         }
 
         /**
-         * The {@link DateControl} which is asking for a specific {@link com.calendarfx.view.DateControl.EditOperation} permission.
-         * @returns The date control.
+         * The {@link DateControl} which is asking for a specific {@link DateControl.EditOperation} permission.
+         * @return The date control.
          */
         public DateControl getDateControl() {
             return dateControl;
@@ -1109,7 +1115,8 @@ public abstract class DateControl extends CalendarFXControl {
 
         /**
          * The entry where the {@link com.calendarfx.view.DateControl.EditOperation} should be applied.
-         * @returns The entry.
+         *
+         * @return The entry.
          */
         public Entry<?> getEntry() {
             return entry;
@@ -1117,35 +1124,29 @@ public abstract class DateControl extends CalendarFXControl {
 
         /**
          * The actual edit operation.
-         * @returns The edit operation.
+         *
+         * @return The edit operation.
          */
-        public DateControl.EditOperation getEditOperation() {
+        public EditOperation getEditOperation() {
             return editOperation;
+        }
+
+        @Override
+        public String toString() {
+            return "EntryEditParameter{" +
+                    "dateControl=" + dateControl +
+                    ", entry=" + entry +
+                    ", editOperation=" + editOperation +
+                    '}';
         }
     }
 
-    /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed.
-     *
-     * @see EditOperation
-     */
     private final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicy = new SimpleObjectProperty<>(action -> true);
 
     /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed.
-     *
-     * @returns The entry edit policy callback
-     *
-     * @see EditOperation
-     */
-    public final Callback<EntryEditParameter, Boolean> getEntryEditPolicy() {
-        return entryEditPolicy.get();
-    }
-
-    /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed.
-     *
-     * @returns The entry edit policy callback property
+     * A property that stores a callback used for editing entries. If an edit operation will be executed
+     * on an entry then the callback will be invoked to determine if the operation is allowed. By default
+     * all operations listed inside {@link EditOperation} are allowed.
      *
      * @see EditOperation
      */
@@ -1154,10 +1155,26 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     /**
-     * If an action will be issued on an item the given instance will be asked if the action is allowed.
+     * Returns the value of {@link #entryEditPolicy}.
+     *
+     * @return The entry edit policy callback
+     *
+     * @see EditOperation
      */
-    public final void setEntryEditPolicy(Callback<EntryEditParameter, Boolean> entryEditPolicy) {
-        this.entryEditPolicy.set(entryEditPolicy);
+    public final Callback<EntryEditParameter, Boolean> getEntryEditPolicy() {
+        return entryEditPolicy.get();
+    }
+
+    /**
+     * Sets the value of {@link #entryEditPolicy}.
+     *
+     * @param policy the entry edit policy callback
+     *
+     * @see EditOperation
+     */
+    public final void setEntryEditPolicy(Callback<EntryEditParameter, Boolean> policy) {
+        Objects.requireNonNull(policy, "The edit entry policy can not be null");
+        this.entryEditPolicy.set(policy);
     }
 
     private final ObjectProperty<Callback<EntryContextMenuParameter, ContextMenu>> entryContextMenuCallback = new SimpleObjectProperty<>(this, "entryFactory"); //$NON-NLS-1$
