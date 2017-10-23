@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -20,88 +20,89 @@
 
 package com.google.ical.values;
 
+import junit.framework.TestCase;
+
 import java.text.ParseException;
 import java.util.TimeZone;
-import junit.framework.TestCase;
 
 /**
  * @author mikesamuel+svn@gmail.com (Mike Samuel)
  */
 public class IcalParseUtilTest extends TestCase {
 
-  private static final TimeZone PDT =
- TimeZone.getTimeZone("America/Los_Angeles");
-  private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+    private static final TimeZone PDT =
+            TimeZone.getTimeZone("America/Los_Angeles");
+    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
-  public void testParseDates() throws Exception {
-    assertEquals(new DateValueImpl(2006, 2, 25),
-                 IcalParseUtil.parseDateValue("20060225", null));
-    assertEquals(new DateValueImpl(2006, 2, 25),
-                 IcalParseUtil.parseDateValue("20060225", PDT));
-    assertEquals(new DateValueImpl(2006, 2, 25),
-                 IcalParseUtil.parseDateValue("20060225", UTC));
-  }
-
-  public void testParseDateTimes() throws Exception {
-    assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 0, 0),
-                 IcalParseUtil.parseDateValue("20060225T120000", null));
-    assertEquals(new DateTimeValueImpl(2006, 2, 25, 20, 0, 0),
-                 IcalParseUtil.parseDateValue("20060225T120000", PDT));
-    assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 30, 5),
-                 IcalParseUtil.parseDateValue("20060225T123005", UTC));
-  }
-
-  public void testParseDateTimesUtc() throws Exception {
-    assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 0, 0),
-                 IcalParseUtil.parseDateValue("20060225T120000Z", null));
-    assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 0, 0),
-                 IcalParseUtil.parseDateValue("20060225T120000Z", PDT));
-    assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 30, 5),
-                 IcalParseUtil.parseDateValue("20060225T123005Z", UTC));
-  }
-
-  public void testBadDates() throws Exception {
-    try {
-      IcalParseUtil.parsePeriodValue("19700101/19700101T010000");
-      fail("mismatched types");
-    } catch (ParseException ex) {
-      // pass
+    public void testParseDates() throws Exception {
+        assertEquals(new DateValueImpl(2006, 2, 25),
+                IcalParseUtil.parseDateValue("20060225", null));
+        assertEquals(new DateValueImpl(2006, 2, 25),
+                IcalParseUtil.parseDateValue("20060225", PDT));
+        assertEquals(new DateValueImpl(2006, 2, 25),
+                IcalParseUtil.parseDateValue("20060225", UTC));
     }
-    try {
-      IcalParseUtil.parsePeriodValue("19700101T120000/19700102");
-      fail("mismatched types");
-    } catch (ParseException ex) {
-      // pass
-    }
-    try {
-      IcalParseUtil.parsePeriodValue("19700102/19700101");
-      fail("misordered dates");
-    } catch (ParseException ex) {
-      // pass
-    }
-    try {
-      IcalParseUtil.parsePeriodValue("19700102");
-      fail("missing end");
-    } catch (ParseException ex) {
-      // pass
-    }
-    try {
-      IcalParseUtil.parsePeriodValue("so/bogus");
-      fail("bogus");
-    } catch (ParseException ex) {
-      // pass
-    }
-  }
 
-  public void testNormalized() throws Exception {
-    assertEquals(new DateTimeValueImpl(2006, 3, 1, 12, 0, 0),
-                 IcalParseUtil.parseDateValue("20060229T120000Z", null));
-  }
+    public void testParseDateTimes() throws Exception {
+        assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 0, 0),
+                IcalParseUtil.parseDateValue("20060225T120000", null));
+        assertEquals(new DateTimeValueImpl(2006, 2, 25, 20, 0, 0),
+                IcalParseUtil.parseDateValue("20060225T120000", PDT));
+        assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 30, 5),
+                IcalParseUtil.parseDateValue("20060225T123005", UTC));
+    }
 
-  public void testUnfold() throws Exception {
-    assertEquals("", IcalParseUtil.unfoldIcal(""));
-    assertEquals("foo", IcalParseUtil.unfoldIcal("foo"));
-    assertEquals("foo", IcalParseUtil.unfoldIcal("f\r\to\n o\r\n "));
-  }
+    public void testParseDateTimesUtc() throws Exception {
+        assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 0, 0),
+                IcalParseUtil.parseDateValue("20060225T120000Z", null));
+        assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 0, 0),
+                IcalParseUtil.parseDateValue("20060225T120000Z", PDT));
+        assertEquals(new DateTimeValueImpl(2006, 2, 25, 12, 30, 5),
+                IcalParseUtil.parseDateValue("20060225T123005Z", UTC));
+    }
+
+    public void testBadDates() throws Exception {
+        try {
+            IcalParseUtil.parsePeriodValue("19700101/19700101T010000");
+            fail("mismatched types");
+        } catch (ParseException ex) {
+            // pass
+        }
+        try {
+            IcalParseUtil.parsePeriodValue("19700101T120000/19700102");
+            fail("mismatched types");
+        } catch (ParseException ex) {
+            // pass
+        }
+        try {
+            IcalParseUtil.parsePeriodValue("19700102/19700101");
+            fail("misordered dates");
+        } catch (ParseException ex) {
+            // pass
+        }
+        try {
+            IcalParseUtil.parsePeriodValue("19700102");
+            fail("missing end");
+        } catch (ParseException ex) {
+            // pass
+        }
+        try {
+            IcalParseUtil.parsePeriodValue("so/bogus");
+            fail("bogus");
+        } catch (ParseException ex) {
+            // pass
+        }
+    }
+
+    public void testNormalized() throws Exception {
+        assertEquals(new DateTimeValueImpl(2006, 3, 1, 12, 0, 0),
+                IcalParseUtil.parseDateValue("20060229T120000Z", null));
+    }
+
+    public void testUnfold() throws Exception {
+        assertEquals("", IcalParseUtil.unfoldIcal(""));
+        assertEquals("foo", IcalParseUtil.unfoldIcal("foo"));
+        assertEquals("foo", IcalParseUtil.unfoldIcal("f\r\to\n o\r\n "));
+    }
 
 }

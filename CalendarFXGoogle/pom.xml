@@ -1,108 +1,124 @@
+<!--
+  ~  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	<name>CalendarFXGoogle</name>
-	<artifactId>google</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <name>CalendarFXGoogle</name>
+    <artifactId>google</artifactId>
 
-	<parent>
-		<groupId>com.calendarfx</groupId>
-		<artifactId>calendar</artifactId>
-		<version>8.4.1</version>
-	</parent>
+    <parent>
+        <groupId>com.calendarfx</groupId>
+        <artifactId>calendar</artifactId>
+        <version>8.4.1</version>
+    </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.lynden</groupId>
-			<artifactId>GMapsFX</artifactId>
-			<version>2.0.9</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.lynden</groupId>
+            <artifactId>GMapsFX</artifactId>
+            <version>2.0.9</version>
+        </dependency>
 
-		<!-- Required for GMapsFX -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.24</version>
-		</dependency>
+        <!-- Required for GMapsFX -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.24</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.calendarfx</groupId>
-			<artifactId>view</artifactId>
-			<version>8.4.1</version>
-		</dependency>
+        <dependency>
+            <groupId>com.calendarfx</groupId>
+            <artifactId>view</artifactId>
+            <version>8.4.1</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client</artifactId>
-			<version>1.22.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.22.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client-java6</artifactId>
-			<version>1.21.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client-java6</artifactId>
+            <version>1.21.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client-jackson2</artifactId>
-			<version>1.22.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client-jackson2</artifactId>
+            <version>1.22.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.apis</groupId>
-			<artifactId>google-api-services-calendar</artifactId>
-			<version>v3-rev236-1.22.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-calendar</artifactId>
+            <version>v3-rev236-1.22.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.apis</groupId>
-			<artifactId>google-api-services-oauth2</artifactId>
-			<version>v2-rev124-1.22.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-oauth2</artifactId>
+            <version>v2-rev124-1.22.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.code.geocoder-java</groupId>
-			<artifactId>geocoder-java</artifactId>
-			<version>0.16</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.code.geocoder-java</groupId>
+            <artifactId>geocoder-java</artifactId>
+            <version>0.16</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>r05</version>
-		</dependency>
-		
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r05</version>
+        </dependency>
 
-	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<finalName>google-demo</finalName>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
-					<archive>
-						<manifest>
-							<mainClass>com.calendarfx.google.GoogleCalendarApp</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-samples</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <finalName>google-demo</finalName>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.calendarfx.google.GoogleCalendarApp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-samples</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

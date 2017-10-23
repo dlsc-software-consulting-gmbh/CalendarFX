@@ -1,7 +1,18 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *  Copyright (C) 2006 Google Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.demo.views;
@@ -9,7 +20,6 @@ package com.calendarfx.demo.views;
 import com.calendarfx.demo.CalendarFXDateControlSample;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.WeekTimeScaleView;
-
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.effect.Reflection;
@@ -18,45 +28,45 @@ import javafx.scene.layout.StackPane;
 
 public class HelloWeekTimeScaleView extends CalendarFXDateControlSample {
 
-	@Override
-	public String getSampleName() {
-		return "Week Time Scale";
-	}
+    @Override
+    public String getSampleName() {
+        return "Week Time Scale";
+    }
 
-	@Override
-	protected DateControl createControl() {
-		return new WeekTimeScaleView();
-	}
-	
-	@Override
-	protected Node wrap(Node node) {
-		HBox box = new HBox();
-		box.setStyle("-fx-padding: 100px;");
-		box.setAlignment(Pos.CENTER);
-		box.setFillHeight(false);
+    @Override
+    protected DateControl createControl() {
+        return new WeekTimeScaleView();
+    }
 
-		StackPane stackPane = new StackPane();
-		stackPane.setStyle(
-				"-fx-background-color: white; -fx-border-color: gray; -fx-border-width: .25px; -fx-padding: 0 20 0 20;");
-		box.getChildren().add(stackPane);
+    @Override
+    protected Node wrap(Node node) {
+        HBox box = new HBox();
+        box.setStyle("-fx-padding: 100px;");
+        box.setAlignment(Pos.CENTER);
+        box.setFillHeight(false);
 
-		stackPane.getChildren().add(node);
-		stackPane.setEffect(new Reflection());
+        StackPane stackPane = new StackPane();
+        stackPane.setStyle(
+                "-fx-background-color: white; -fx-border-color: gray; -fx-border-width: .25px; -fx-padding: 0 20 0 20;");
+        box.getChildren().add(stackPane);
 
-		return box;
-	}
+        stackPane.getChildren().add(node);
+        stackPane.setEffect(new Reflection());
 
-	@Override
-	protected Class<?> getJavaDocClass() {
-		return WeekTimeScaleView.class;
-	}
+        return box;
+    }
 
-	@Override
-	public String getSampleDescription() {
-		return "The scale shows the time of day vertically.";
-	}
+    @Override
+    protected Class<?> getJavaDocClass() {
+        return WeekTimeScaleView.class;
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    @Override
+    public String getSampleDescription() {
+        return "The scale shows the time of day vertically.";
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

@@ -1,23 +1,21 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
 package com.calendarfx.view;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.time.ZonedDateTime;
-
+import com.calendarfx.model.Entry;
+import com.calendarfx.util.CalendarFX;
+import javafx.scene.Parent;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
 
-import com.calendarfx.model.Entry;
-import com.calendarfx.util.CalendarFX;
+import java.time.ZonedDateTime;
 
-import javafx.scene.Parent;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class DateControlTest extends GuiTest {
 

@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -25,9 +25,10 @@ import com.google.ical.iter.RecurrenceIterator;
 import com.google.ical.iter.RecurrenceIteratorFactory;
 import com.google.ical.values.DateValue;
 import com.google.ical.values.DateValueImpl;
-import java.text.ParseException;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
+
+import java.text.ParseException;
 
 /**
  * a factory for converting RRULEs and RDATEs into
@@ -40,117 +41,132 @@ import org.joda.time.LocalDate;
  */
 public class LocalDateIteratorFactory {
 
-  /**
-   * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
-   * them into a single local date iterator.
-   * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
-   * @param start the first occurrence of the series.
-   * @param tzid the local timezone -- used to interpret any dates in RDATE and
-   *   EXDATE lines that don't have TZID params.
-   * @param strict true if any failure to parse should result in a
-   *   ParseException.  false causes bad content lines to be logged and ignored.
-   */
-  public static LocalDateIterator createLocalDateIterator(
-      String rdata, LocalDate start, DateTimeZone tzid, boolean strict)
-      throws ParseException {
-    return new RecurrenceIteratorWrapper(
-        RecurrenceIteratorFactory.createRecurrenceIterator(
-            rdata, localDateToDateValue(start),
-            TimeZoneConverter.toTimeZone(tzid), strict));
-  }
-
-  /**
-   * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
-   * them into a single local date iterator.
-   * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
-   * @param start the first occurrence of the series.
-   * @param strict true if any failure to parse should result in a
-   *   ParseException.  false causes bad content lines to be logged and ignored.
-   */
-  public static LocalDateIterator createLocalDateIterator(
-      String rdata, LocalDate start, boolean strict)
-      throws ParseException {
-    return createLocalDateIterator(rdata, start, DateTimeZone.UTC, strict);
-  }
-
-  /**
-   * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
-   * them into a single local date iterable.
-   * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
-   * @param start the first occurrence of the series.
-   * @param tzid the local timezone -- used to interpret any dates in RDATE and
-   *   EXDATE lines that don't have TZID params.
-   * @param strict true if any failure to parse should result in a
-   *   ParseException.  false causes bad content lines to be logged and ignored.
-   */
-  public static LocalDateIterable createLocalDateIterable(
-      String rdata, LocalDate start, DateTimeZone tzid, boolean strict)
-      throws ParseException {
-    return new RecurrenceIterableWrapper(
-        RecurrenceIteratorFactory.createRecurrenceIterable(
-            rdata, localDateToDateValue(start),
-            TimeZoneConverter.toTimeZone(tzid), strict));
-  }
-
-  /**
-   * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
-   * them into a single local date iterable.
-   * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
-   * @param start the first occurrence of the series.
-   * @param strict true if any failure to parse should result in a
-   *   ParseException.  false causes bad content lines to be logged and ignored.
-   */
-  public static LocalDateIterable createLocalDateIterable(
-      String rdata, LocalDate start, boolean strict)
-      throws ParseException {
-    return createLocalDateIterable(rdata, start, DateTimeZone.UTC, strict);
-  }
-
-  /**
-   * creates a local date iterator given a recurrence iterator from
-   * {@link com.google.ical.iter.RecurrenceIteratorFactory}.
-   */
-  public static LocalDateIterator createLocalDateIterator(
-      RecurrenceIterator rit) {
-    return new RecurrenceIteratorWrapper(rit);
-  }
-
-  private static final class RecurrenceIterableWrapper
-      implements LocalDateIterable {
-    private final RecurrenceIterable it;
-
-    public RecurrenceIterableWrapper(RecurrenceIterable it) { this.it = it; }
-
-    public LocalDateIterator iterator() {
-      return new RecurrenceIteratorWrapper(it.iterator());
+    /**
+     * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
+     * them into a single local date iterator.
+     * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
+     * @param start the first occurrence of the series.
+     * @param tzid the local timezone -- used to interpret any dates in RDATE and
+     *   EXDATE lines that don't have TZID params.
+     * @param strict true if any failure to parse should result in a
+     *   ParseException.  false causes bad content lines to be logged and ignored.
+     */
+    public static LocalDateIterator createLocalDateIterator(
+            String rdata, LocalDate start, DateTimeZone tzid, boolean strict)
+            throws ParseException {
+        return new RecurrenceIteratorWrapper(
+                RecurrenceIteratorFactory.createRecurrenceIterator(
+                        rdata, localDateToDateValue(start),
+                        TimeZoneConverter.toTimeZone(tzid), strict));
     }
-  }
 
-  private static final class RecurrenceIteratorWrapper
-      implements LocalDateIterator {
-    private final RecurrenceIterator it;
-    RecurrenceIteratorWrapper(RecurrenceIterator it) { this.it = it; }
-    public boolean hasNext() { return it.hasNext(); }
-    public LocalDate next() { return dateValueToLocalDate(it.next()); }
-    public void remove() { throw new UnsupportedOperationException(); }
-    public void advanceTo(LocalDate d) {
-      // we need to treat midnight as a date value so that passing in
-      // dateValueToDate(<some-date-value>) will not advance past any
-      // occurrences of some-date-value in the iterator.
-      it.advanceTo(localDateToDateValue(d));
+    /**
+     * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
+     * them into a single local date iterator.
+     * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
+     * @param start the first occurrence of the series.
+     * @param strict true if any failure to parse should result in a
+     *   ParseException.  false causes bad content lines to be logged and ignored.
+     */
+    public static LocalDateIterator createLocalDateIterator(
+            String rdata, LocalDate start, boolean strict)
+            throws ParseException {
+        return createLocalDateIterator(rdata, start, DateTimeZone.UTC, strict);
     }
-  }
 
-  static LocalDate dateValueToLocalDate(DateValue dvUtc) {
-    return new LocalDate(dvUtc.year(), dvUtc.month(), dvUtc.day());
-  }
+    /**
+     * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
+     * them into a single local date iterable.
+     * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
+     * @param start the first occurrence of the series.
+     * @param tzid the local timezone -- used to interpret any dates in RDATE and
+     *   EXDATE lines that don't have TZID params.
+     * @param strict true if any failure to parse should result in a
+     *   ParseException.  false causes bad content lines to be logged and ignored.
+     */
+    public static LocalDateIterable createLocalDateIterable(
+            String rdata, LocalDate start, DateTimeZone tzid, boolean strict)
+            throws ParseException {
+        return new RecurrenceIterableWrapper(
+                RecurrenceIteratorFactory.createRecurrenceIterable(
+                        rdata, localDateToDateValue(start),
+                        TimeZoneConverter.toTimeZone(tzid), strict));
+    }
 
-  static DateValue localDateToDateValue(LocalDate date) {
-    return new DateValueImpl(
-        date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
-  }
+    /**
+     * given a block of RRULE, EXRULE, RDATE, and EXDATE content lines, parse
+     * them into a single local date iterable.
+     * @param rdata RRULE, EXRULE, RDATE, and EXDATE lines.
+     * @param start the first occurrence of the series.
+     * @param strict true if any failure to parse should result in a
+     *   ParseException.  false causes bad content lines to be logged and ignored.
+     */
+    public static LocalDateIterable createLocalDateIterable(
+            String rdata, LocalDate start, boolean strict)
+            throws ParseException {
+        return createLocalDateIterable(rdata, start, DateTimeZone.UTC, strict);
+    }
 
-  private LocalDateIteratorFactory() {
-    // uninstantiable
-  }
+    /**
+     * creates a local date iterator given a recurrence iterator from
+     * {@link com.google.ical.iter.RecurrenceIteratorFactory}.
+     */
+    public static LocalDateIterator createLocalDateIterator(
+            RecurrenceIterator rit) {
+        return new RecurrenceIteratorWrapper(rit);
+    }
+
+    private static final class RecurrenceIterableWrapper
+            implements LocalDateIterable {
+        private final RecurrenceIterable it;
+
+        public RecurrenceIterableWrapper(RecurrenceIterable it) {
+            this.it = it;
+        }
+
+        public LocalDateIterator iterator() {
+            return new RecurrenceIteratorWrapper(it.iterator());
+        }
+    }
+
+    private static final class RecurrenceIteratorWrapper
+            implements LocalDateIterator {
+        private final RecurrenceIterator it;
+
+        RecurrenceIteratorWrapper(RecurrenceIterator it) {
+            this.it = it;
+        }
+
+        public boolean hasNext() {
+            return it.hasNext();
+        }
+
+        public LocalDate next() {
+            return dateValueToLocalDate(it.next());
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public void advanceTo(LocalDate d) {
+            // we need to treat midnight as a date value so that passing in
+            // dateValueToDate(<some-date-value>) will not advance past any
+            // occurrences of some-date-value in the iterator.
+            it.advanceTo(localDateToDateValue(d));
+        }
+    }
+
+    static LocalDate dateValueToLocalDate(DateValue dvUtc) {
+        return new LocalDate(dvUtc.year(), dvUtc.month(), dvUtc.day());
+    }
+
+    static DateValue localDateToDateValue(LocalDate date) {
+        return new DateValueImpl(
+                date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+    }
+
+    private LocalDateIteratorFactory() {
+        // uninstantiable
+    }
 }

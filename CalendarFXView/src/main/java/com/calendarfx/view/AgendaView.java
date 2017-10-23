@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.view;
@@ -169,34 +179,34 @@ public class AgendaView extends DateControl {
 
     private final BooleanProperty showStatusLabel = new SimpleBooleanProperty(this, "showStatusLabel", true);
 
-    public final BooleanProperty showStatusLabelProperty () {
+    public final BooleanProperty showStatusLabelProperty() {
         return showStatusLabel;
     }
 
-    public final boolean isShowStatusLabel () {
+    public final boolean isShowStatusLabel() {
         return showStatusLabelProperty().get();
     }
 
-    public final void setShowStatusLabel (boolean showStatusLabel) {
+    public final void setShowStatusLabel(boolean showStatusLabel) {
         showStatusLabelProperty().set(showStatusLabel);
     }
 
     private final ObjectProperty<Callback<AgendaView, ? extends AgendaEntryCell>> cellFactory = new SimpleObjectProperty<Callback<AgendaView, ? extends AgendaEntryCell>>(this, "cellFactory", view -> new AgendaEntryCell(this)) {
         @Override
-        public void set (Callback<AgendaView, ? extends AgendaEntryCell> newValue) {
+        public void set(Callback<AgendaView, ? extends AgendaEntryCell> newValue) {
             super.set(Objects.requireNonNull(newValue));
         }
     };
 
-    public final ObjectProperty<Callback<AgendaView, ? extends AgendaEntryCell>> cellFactoryProperty () {
+    public final ObjectProperty<Callback<AgendaView, ? extends AgendaEntryCell>> cellFactoryProperty() {
         return cellFactory;
     }
 
-    public final Callback<AgendaView, ? extends AgendaEntryCell> getCellFactory () {
+    public final Callback<AgendaView, ? extends AgendaEntryCell> getCellFactory() {
         return cellFactoryProperty().get();
     }
 
-    public final void setCellFactory (Callback<AgendaView, ? extends AgendaEntryCell> cellFactory) {
+    public final void setCellFactory(Callback<AgendaView, ? extends AgendaEntryCell> cellFactory) {
         cellFactoryProperty().set(cellFactory);
     }
 

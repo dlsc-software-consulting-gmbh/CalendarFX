@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -28,15 +28,17 @@ import java.util.Map;
  */
 public interface IcalObject {
 
-  /** the name of the content line, such as EXRULE, SUMMARY, ORGANIZER. */
-  String getName();
-  /** returns a String containing ical content lines. */
-  String toIcal();
-  /**
-   * map of extension parameters such as X-Google-Foo=bar.
-   * The iteration order is the order they appear in the
-   * content line.
-   */
-  Map<String, String> getExtParams();
+    /** the name of the content line, such as EXRULE, SUMMARY, ORGANIZER. */
+    String getName();
+
+    /** returns a String containing ical content lines. */
+    String toIcal();
+
+    /**
+     * map of extension parameters such as X-Google-Foo=bar.
+     * The iteration order is the order they appear in the
+     * content line.
+     */
+    Map<String, String> getExtParams();
 
 }

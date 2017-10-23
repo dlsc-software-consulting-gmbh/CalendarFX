@@ -1,7 +1,18 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *  Copyright (C) 2006 Google Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.demo.print;
@@ -12,30 +23,30 @@ import javafx.scene.Node;
 
 public class HelloOptionsView extends CalendarFXSample {
 
-	private final OptionsView view = new OptionsView();
+    private final OptionsView view = new OptionsView();
 
-	@Override
-	protected Class<?> getJavaDocClass() {
-		return OptionsView.class;
-	}
+    @Override
+    protected Class<?> getJavaDocClass() {
+        return OptionsView.class;
+    }
 
-	@Override
-	protected Node createControl() {
-		return view;
-	}
+    @Override
+    protected Node createControl() {
+        return view;
+    }
 
-	@Override
-	public String getSampleName() {
-		return "Options View";
-	}
+    @Override
+    public String getSampleName() {
+        return "Options View";
+    }
 
-	@Override
-	public String getSampleDescription() {
-		return "A control that allows to change a few basic settings before printing a calendar view.";
-	}
+    @Override
+    public String getSampleDescription() {
+        return "A control that allows to change a few basic settings before printing a calendar view.";
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 }

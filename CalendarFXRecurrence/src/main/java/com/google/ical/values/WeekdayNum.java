@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -39,38 +39,43 @@ package com.google.ical.values;
  * @author mikesamuel+svn@gmail.com (Mike Samuel)
  */
 public class WeekdayNum {
-  public final int num;
-  public final Weekday wday;
+    public final int num;
+    public final Weekday wday;
 
-  /**
-   * @param num in -53,53
-   * @param wday non null.
-   */
-  public WeekdayNum(int num, Weekday wday) {
-    if (!(-53 <= num && 53 >= num && null != wday)) {
-      throw new IllegalArgumentException();
+    /**
+     * @param num in -53,53
+     * @param wday non null.
+     */
+    public WeekdayNum(int num, Weekday wday) {
+        if (!(-53 <= num && 53 >= num && null != wday)) {
+            throw new IllegalArgumentException();
+        }
+        this.num = num;
+        this.wday = wday;
     }
-    this.num = num;
-    this.wday = wday;
-  }
-  public String toIcal() {
-    return (0 != this.num)
-        ? String.valueOf(this.num) + this.wday
-        : this.wday.toString();
-  }
-  @Override
-  public String toString() {
-    return toIcal();
-  }
-  @Override
-  public boolean equals(Object o) {
-    if (!(o instanceof WeekdayNum)) { return false; }
-    WeekdayNum wdn = (WeekdayNum) o;
-    return this.num == wdn.num && this.wday == wdn.wday;
-  }
 
-  @Override
-  public int hashCode() {
-    return num ^ (53 * wday.hashCode());
-  }
+    public String toIcal() {
+        return (0 != this.num)
+                ? String.valueOf(this.num) + this.wday
+                : this.wday.toString();
+    }
+
+    @Override
+    public String toString() {
+        return toIcal();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof WeekdayNum)) {
+            return false;
+        }
+        WeekdayNum wdn = (WeekdayNum) o;
+        return this.num == wdn.num && this.wday == wdn.wday;
+    }
+
+    @Override
+    public int hashCode() {
+        return num ^ (53 * wday.hashCode());
+    }
 }

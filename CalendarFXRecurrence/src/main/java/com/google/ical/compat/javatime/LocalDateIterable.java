@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -29,7 +29,7 @@ import java.time.LocalDate;
  */
 public interface LocalDateIterable extends Iterable<LocalDate> {
 
-  @Override
-LocalDateIterator iterator();
+    @Override
+    LocalDateIterator iterator();
 
 }

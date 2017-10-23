@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -13,5 +13,5 @@ package com.google.ical.iter;
  * nor does BYMONTHDAY=31.
  */
 abstract class SingleValueGenerator extends Generator {
-  abstract int getValue();
+    abstract int getValue();
 }

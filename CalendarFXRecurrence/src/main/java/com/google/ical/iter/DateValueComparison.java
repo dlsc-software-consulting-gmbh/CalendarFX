@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -64,29 +64,29 @@ import com.google.ical.values.TimeValue;
  */
 final class DateValueComparison {
 
-  /**
-   * reduces a date to a value that can be easily compared to others, consistent
-   * with {@link com.google.ical.values.DateValueImpl#compareTo}.
-   */
-  static long comparable(DateValue dv) {
-    long comp = (((((long) dv.year()) << 4) + dv.month()) << 5) + dv.day();
-    if (dv instanceof TimeValue) {
-      TimeValue tv = (TimeValue) dv;
-      // We add 1 to comparable for timed values to make sure that timed
-      // events are distinct from all-day events, in keeping with
-      // DateValue.compareTo.
+    /**
+     * reduces a date to a value that can be easily compared to others, consistent
+     * with {@link com.google.ical.values.DateValueImpl#compareTo}.
+     */
+    static long comparable(DateValue dv) {
+        long comp = (((((long) dv.year()) << 4) + dv.month()) << 5) + dv.day();
+        if (dv instanceof TimeValue) {
+            TimeValue tv = (TimeValue) dv;
+            // We add 1 to comparable for timed values to make sure that timed
+            // events are distinct from all-day events, in keeping with
+            // DateValue.compareTo.
 
-      // It would be odd if an all day exclusion matched a midnight event on
-      // the same day, but not one at another time of day.
-      return (((((comp << 5) + tv.hour()) << 6) + tv.minute()) << 6)
-        +  tv.second() + 1;
-    } else {
-      return comp << 17;
+            // It would be odd if an all day exclusion matched a midnight event on
+            // the same day, but not one at another time of day.
+            return (((((comp << 5) + tv.hour()) << 6) + tv.minute()) << 6)
+                    + tv.second() + 1;
+        } else {
+            return comp << 17;
+        }
     }
-  }
 
-  private DateValueComparison() {
-    // uninstantiable
-  }
+    private DateValueComparison() {
+        // uninstantiable
+    }
 
 }

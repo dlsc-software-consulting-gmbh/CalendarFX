@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package impl.com.calendarfx.view;
@@ -25,87 +35,87 @@ import java.util.List;
 
 public class SourceGridViewSkin extends SkinBase<SourceGridView> {
 
-	private static final String DEFAULT_STYLE = "source-grid-view";
+    private static final String DEFAULT_STYLE = "source-grid-view";
 
-	private final InvalidationListener buildListener = obs -> build();
-	private final WeakInvalidationListener buildWeakListener = new WeakInvalidationListener(buildListener);
-	
-	private final ListChangeListener<CalendarSource> sourcesChangeListener = c -> {
-		while (c.next()) {
-			for (CalendarSource added : c.getAddedSubList()) {
-				added.getCalendars().addListener(buildWeakListener);
-			}
-			
-			for (CalendarSource removed : c.getRemoved()) {
-				removed.getCalendars().removeListener(buildWeakListener);
-			}
-		}
-		
-		build();
-	};
-	private final WeakListChangeListener<CalendarSource> sourcesWeakChangeListener = new WeakListChangeListener<>(sourcesChangeListener);
-	
-	private final HBox container;
+    private final InvalidationListener buildListener = obs -> build();
+    private final WeakInvalidationListener buildWeakListener = new WeakInvalidationListener(buildListener);
 
-	public SourceGridViewSkin(SourceGridView control) {
-		super(control);
+    private final ListChangeListener<CalendarSource> sourcesChangeListener = c -> {
+        while (c.next()) {
+            for (CalendarSource added : c.getAddedSubList()) {
+                added.getCalendars().addListener(buildWeakListener);
+            }
 
-		container = new HBox();
-		container.getStyleClass().add(DEFAULT_STYLE);
-		build();
+            for (CalendarSource removed : c.getRemoved()) {
+                removed.getCalendars().removeListener(buildWeakListener);
+            }
+        }
 
-		control.getCalendarSources().addListener(sourcesWeakChangeListener);
-		control.maximumRowsPerColumnProperty().addListener(buildWeakListener);
-		getChildren().add(container);
-	}
+        build();
+    };
+    private final WeakListChangeListener<CalendarSource> sourcesWeakChangeListener = new WeakListChangeListener<>(sourcesChangeListener);
 
-	private void build() {
-		List<Node> children = new ArrayList<>();
+    private final HBox container;
 
-		VBox row = null;
-		int count = 0;
+    public SourceGridViewSkin(SourceGridView control) {
+        super(control);
 
-		final SourceGridView view = getSkinnable();
+        container = new HBox();
+        container.getStyleClass().add(DEFAULT_STYLE);
+        build();
 
-		for (CalendarSource source : view.getCalendarSources()) {
-			for (Calendar calendar : source.getCalendars()) {
+        control.getCalendarSources().addListener(sourcesWeakChangeListener);
+        control.maximumRowsPerColumnProperty().addListener(buildWeakListener);
+        getChildren().add(container);
+    }
 
-				view.getCalendarVisibilityProperty(calendar).removeListener(buildWeakListener);
-				view.getCalendarVisibilityProperty(calendar).addListener(buildWeakListener);
+    private void build() {
+        List<Node> children = new ArrayList<>();
 
-				if (!view.isCalendarVisible(calendar)) {
-					continue;
-				}
+        VBox row = null;
+        int count = 0;
 
-				if (count == 0) {
-					row = new VBox();
-					row.getStyleClass().add("column");
-					children.add(row);
-				}
+        final SourceGridView view = getSkinnable();
 
-				row.getChildren().add(new CalendarItem(calendar));
-				count++;
+        for (CalendarSource source : view.getCalendarSources()) {
+            for (Calendar calendar : source.getCalendars()) {
 
-				if (count == view.getMaximumRowsPerColumn()) {
-					count = 0;
-				}
-			}
-		}
+                view.getCalendarVisibilityProperty(calendar).removeListener(buildWeakListener);
+                view.getCalendarVisibilityProperty(calendar).addListener(buildWeakListener);
 
-		container.getChildren().setAll(children);
-	}
+                if (!view.isCalendarVisible(calendar)) {
+                    continue;
+                }
 
-	private static class CalendarItem extends Label {
+                if (count == 0) {
+                    row = new VBox();
+                    row.getStyleClass().add("column");
+                    children.add(row);
+                }
 
-		public CalendarItem(Calendar calendar) {
-			Pane graphic = new Pane();
-			graphic.getStyleClass().add("item-box");
-			graphic.getStyleClass().add(calendar.getStyle() + "-source-grid-item-box");
+                row.getChildren().add(new CalendarItem(calendar));
+                count++;
 
-			getStyleClass().add("item");
-			setGraphic(graphic);
-			setText(calendar.getName());
-		}
+                if (count == view.getMaximumRowsPerColumn()) {
+                    count = 0;
+                }
+            }
+        }
 
-	}
+        container.getChildren().setAll(children);
+    }
+
+    private static class CalendarItem extends Label {
+
+        public CalendarItem(Calendar calendar) {
+            Pane graphic = new Pane();
+            graphic.getStyleClass().add("item-box");
+            graphic.getStyleClass().add(calendar.getStyle() + "-source-grid-item-box");
+
+            getStyleClass().add("item");
+            setGraphic(graphic);
+            setText(calendar.getName());
+        }
+
+    }
 }

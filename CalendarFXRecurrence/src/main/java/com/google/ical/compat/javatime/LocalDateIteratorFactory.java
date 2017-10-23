@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -20,15 +20,15 @@
 
 package com.google.ical.compat.javatime;
 
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-
 import com.google.ical.iter.RecurrenceIterable;
 import com.google.ical.iter.RecurrenceIterator;
 import com.google.ical.iter.RecurrenceIteratorFactory;
 import com.google.ical.values.DateValue;
 import com.google.ical.values.DateValueImpl;
+
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 /**
  * a factory for converting RRULEs and RDATEs into
@@ -58,8 +58,8 @@ public class LocalDateIteratorFactory {
      *            and ignored.
      */
     public static LocalDateIterator createLocalDateIterator(String rdata,
-            LocalDate start, ZoneId zoneId, boolean strict)
-                    throws ParseException {
+                                                            LocalDate start, ZoneId zoneId, boolean strict)
+            throws ParseException {
         return new RecurrenceIteratorWrapper(RecurrenceIteratorFactory
                 .createRecurrenceIterator(rdata, localDateToDateValue(start),
                         TimeZoneConverter.toTimeZone(zoneId), strict));
@@ -79,7 +79,7 @@ public class LocalDateIteratorFactory {
      *            and ignored.
      */
     public static LocalDateIterator createLocalDateIterator(String rdata,
-            LocalDate start, boolean strict) throws ParseException {
+                                                            LocalDate start, boolean strict) throws ParseException {
         return createLocalDateIterator(rdata, start, ZoneId.of("UTC"), strict);
     }
 
@@ -100,8 +100,8 @@ public class LocalDateIteratorFactory {
      *            and ignored.
      */
     public static LocalDateIterable createLocalDateIterable(String rdata,
-            LocalDate start, ZoneId tzid, boolean strict)
-                    throws ParseException {
+                                                            LocalDate start, ZoneId tzid, boolean strict)
+            throws ParseException {
         return new RecurrenceIterableWrapper(RecurrenceIteratorFactory
                 .createRecurrenceIterable(rdata, localDateToDateValue(start),
                         TimeZoneConverter.toTimeZone(tzid), strict));
@@ -121,7 +121,7 @@ public class LocalDateIteratorFactory {
      *            and ignored.
      */
     public static LocalDateIterable createLocalDateIterable(String rdata,
-            LocalDate start, boolean strict) throws ParseException {
+                                                            LocalDate start, boolean strict) throws ParseException {
         return createLocalDateIterable(rdata, start, ZoneId.of("UTC"), strict);
     }
 

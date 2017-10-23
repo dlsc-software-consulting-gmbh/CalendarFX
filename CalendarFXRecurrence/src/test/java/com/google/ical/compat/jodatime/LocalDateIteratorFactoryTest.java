@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -34,94 +34,94 @@ import org.joda.time.LocalDate;
  */
 public class LocalDateIteratorFactoryTest extends TestCase {
 
-  private static final DateTimeZone PST =
-      DateTimeZone.forID("America/Los_Angeles");
+    private static final DateTimeZone PST =
+            DateTimeZone.forID("America/Los_Angeles");
 
-  public void testDateValueToLocalDate() throws Exception {
-    assertEquals(date(2006, 10, 13),
-                 LocalDateIteratorFactory.dateValueToLocalDate(
-                     new DateValueImpl(2006, 10, 13)));
-    assertEquals(date(2006, 10, 13),
-                 LocalDateIteratorFactory.dateValueToLocalDate(
-                     new DateTimeValueImpl(2006, 10, 13, 12, 30, 1)));
-  }
+    public void testDateValueToLocalDate() throws Exception {
+        assertEquals(date(2006, 10, 13),
+                LocalDateIteratorFactory.dateValueToLocalDate(
+                        new DateValueImpl(2006, 10, 13)));
+        assertEquals(date(2006, 10, 13),
+                LocalDateIteratorFactory.dateValueToLocalDate(
+                        new DateTimeValueImpl(2006, 10, 13, 12, 30, 1)));
+    }
 
-  public void testLocalDateToDateTimeValue() throws Exception {
-    assertEquals(new DateValueImpl(2006, 10, 13),
-                 LocalDateIteratorFactory.localDateToDateValue(
-                     date(2006, 10, 13)));
-  }
+    public void testLocalDateToDateTimeValue() throws Exception {
+        assertEquals(new DateValueImpl(2006, 10, 13),
+                LocalDateIteratorFactory.localDateToDateValue(
+                        date(2006, 10, 13)));
+    }
 
-  public void testConsistency() throws Exception {
-    DateValue dv = new DateValueImpl(2006, 10, 13);
-    assertEquals(dv, LocalDateIteratorFactory.localDateToDateValue(
-                          LocalDateIteratorFactory.dateValueToLocalDate(dv)));
-  }
+    public void testConsistency() throws Exception {
+        DateValue dv = new DateValueImpl(2006, 10, 13);
+        assertEquals(dv, LocalDateIteratorFactory.localDateToDateValue(
+                LocalDateIteratorFactory.dateValueToLocalDate(dv)));
+    }
 
-  public void testCreateLocalDateIterableUntimed() throws Exception {
-    LocalDateIterable iterable =
-      LocalDateIteratorFactory.createLocalDateIterable(
-          "RRULE:FREQ=DAILY;INTERVAL=2;COUNT=8\n"
-          + "EXDATE:20060103,20060105,20060107T000000,20060113",
-          date(2006, 1, 1), PST, true);
+    public void testCreateLocalDateIterableUntimed() throws Exception {
+        LocalDateIterable iterable =
+                LocalDateIteratorFactory.createLocalDateIterable(
+                        "RRULE:FREQ=DAILY;INTERVAL=2;COUNT=8\n"
+                                + "EXDATE:20060103,20060105,20060107T000000,20060113",
+                        date(2006, 1, 1), PST, true);
 
-    LocalDateIterator it = iterable.iterator();
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 1), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 7), it.next());  // does not match midnight
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 9), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 11), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 15), it.next());
-    assertTrue(!it.hasNext());
+        LocalDateIterator it = iterable.iterator();
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 1), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 7), it.next());  // does not match midnight
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 9), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 11), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 15), it.next());
+        assertTrue(!it.hasNext());
 
-    it = iterable.iterator();
-    it.advanceTo(date(2006, 1, 9));
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 9), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 11), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 15), it.next());
-    assertTrue(!it.hasNext());
-  }
+        it = iterable.iterator();
+        it.advanceTo(date(2006, 1, 9));
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 9), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 11), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 15), it.next());
+        assertTrue(!it.hasNext());
+    }
 
-  public void testCreateLocalDateIterableTimed() throws Exception {
-    LocalDateIterable iterable =
-      LocalDateIteratorFactory.createLocalDateIterable(
-          "RRULE:FREQ=DAILY;INTERVAL=2;COUNT=8\n"
-          + "EXDATE:20060103,20060105,20060107T000000,20060113",
-          date(2006, 1, 1), PST, true);
+    public void testCreateLocalDateIterableTimed() throws Exception {
+        LocalDateIterable iterable =
+                LocalDateIteratorFactory.createLocalDateIterable(
+                        "RRULE:FREQ=DAILY;INTERVAL=2;COUNT=8\n"
+                                + "EXDATE:20060103,20060105,20060107T000000,20060113",
+                        date(2006, 1, 1), PST, true);
 
-    LocalDateIterator it = iterable.iterator();
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 1), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 7), it.next());  // does not match midnight
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 9), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 11), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 15), it.next());
-    assertTrue(!it.hasNext());
+        LocalDateIterator it = iterable.iterator();
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 1), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 7), it.next());  // does not match midnight
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 9), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 11), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 15), it.next());
+        assertTrue(!it.hasNext());
 
-    it = iterable.iterator();
-    it.advanceTo(date(2006, 1, 9));
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 9), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 11), it.next());
-    assertTrue(it.hasNext());
-    assertEquals(date(2006, 1, 15), it.next());
-    assertTrue(!it.hasNext());
-  }
+        it = iterable.iterator();
+        it.advanceTo(date(2006, 1, 9));
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 9), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 11), it.next());
+        assertTrue(it.hasNext());
+        assertEquals(date(2006, 1, 15), it.next());
+        assertTrue(!it.hasNext());
+    }
 
-  private static LocalDate date(int y, int m, int d) {
-    return new LocalDate(y, m, d);
-  }
+    private static LocalDate date(int y, int m, int d) {
+        return new LocalDate(y, m, d);
+    }
 
 }

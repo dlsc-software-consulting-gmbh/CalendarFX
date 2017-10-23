@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.experimental;
@@ -21,15 +31,15 @@ import java.time.LocalTime;
 
 public class IntroPaneApp extends Application {
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		CalendarView calendarView = new CalendarView();
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        CalendarView calendarView = new CalendarView();
 
-		Calendar katja = new Calendar("Katja");
-		Calendar dirk = new Calendar("Dirk");
-		Calendar philip = new Calendar("Philip");
-		Calendar jule = new Calendar("Jule");
-		Calendar armin = new Calendar("Armin");
+        Calendar katja = new Calendar("Katja");
+        Calendar dirk = new Calendar("Dirk");
+        Calendar philip = new Calendar("Philip");
+        Calendar jule = new Calendar("Jule");
+        Calendar armin = new Calendar("Armin");
         Calendar birthdays = new Calendar("Birthdays");
         Calendar holidays = new Calendar("Holidays");
 
@@ -41,64 +51,64 @@ public class IntroPaneApp extends Application {
         birthdays.setShortName("B");
         holidays.setShortName("H");
 
-		katja.setStyle(Style.STYLE1);
-		dirk.setStyle(Style.STYLE2);
-		philip.setStyle(Style.STYLE3);
-		jule.setStyle(Style.STYLE4);
-		armin.setStyle(Style.STYLE5);
+        katja.setStyle(Style.STYLE1);
+        dirk.setStyle(Style.STYLE2);
+        philip.setStyle(Style.STYLE3);
+        jule.setStyle(Style.STYLE4);
+        armin.setStyle(Style.STYLE5);
         birthdays.setStyle(Style.STYLE6);
         holidays.setStyle(Style.STYLE7);
 
-		CalendarSource familyCalendarSource = new CalendarSource("Family");
-		familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
+        CalendarSource familyCalendarSource = new CalendarSource("Family");
+        familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
 
-		calendarView.getCalendarSources().setAll(familyCalendarSource);
-		calendarView.setRequestedTime(LocalTime.now());
+        calendarView.getCalendarSources().setAll(familyCalendarSource);
+        calendarView.setRequestedTime(LocalTime.now());
 
-		IntroPane introPane = new IntroPane();
-		introPane.getTargets().add(new IntroPane.IntroTarget(calendarView.getDayPage(), "#add-calendar-button"));
-		introPane.getTargets().add(new IntroPane.IntroTarget(calendarView.getDayPage(), ".navi-button"));
-		introPane.getTargets().add(new IntroPane.IntroTarget(calendarView.getDayPage(), ".agenda-view"));
+        IntroPane introPane = new IntroPane();
+        introPane.getTargets().add(new IntroPane.IntroTarget(calendarView.getDayPage(), "#add-calendar-button"));
+        introPane.getTargets().add(new IntroPane.IntroTarget(calendarView.getDayPage(), ".navi-button"));
+        introPane.getTargets().add(new IntroPane.IntroTarget(calendarView.getDayPage(), ".agenda-view"));
 
-		StackPane stackPane = new StackPane();
-		stackPane.getChildren().addAll(calendarView, introPane);
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(calendarView, introPane);
 
-		Thread updateTimeThread = new Thread("Calendar: Update Time Thread") {
-			@Override
-			public void run() {
-				while (true) {
-					Platform.runLater(() -> {
-						calendarView.setToday(LocalDate.now());
-						calendarView.setTime(LocalTime.now());
-					});
+        Thread updateTimeThread = new Thread("Calendar: Update Time Thread") {
+            @Override
+            public void run() {
+                while (true) {
+                    Platform.runLater(() -> {
+                        calendarView.setToday(LocalDate.now());
+                        calendarView.setTime(LocalTime.now());
+                    });
 
-					try {
-						// update every 10 seconds
-						sleep(10000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+                    try {
+                        // update every 10 seconds
+                        sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-				}
-			}
-		};
+                }
+            }
+        };
 
-		updateTimeThread.setPriority(Thread.MIN_PRIORITY);
-		updateTimeThread.setDaemon(true);
-		updateTimeThread.start();
+        updateTimeThread.setPriority(Thread.MIN_PRIORITY);
+        updateTimeThread.setDaemon(true);
+        updateTimeThread.start();
 
-		Scene scene = new Scene(stackPane);
-		primaryStage.setTitle("Calendar");
-		primaryStage.setScene(scene);
-		primaryStage.setWidth(1300);
-		primaryStage.setHeight(1000);
-		primaryStage.setMinWidth(1000);
-		primaryStage.setMinHeight(850);
-		primaryStage.centerOnScreen();
-		primaryStage.show();
-	}
+        Scene scene = new Scene(stackPane);
+        primaryStage.setTitle("Calendar");
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(1300);
+        primaryStage.setHeight(1000);
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(850);
+        primaryStage.centerOnScreen();
+        primaryStage.show();
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

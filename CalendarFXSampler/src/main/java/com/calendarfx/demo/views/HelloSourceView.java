@@ -1,7 +1,18 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *  Copyright (C) 2006 Google Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.demo.views;
@@ -11,7 +22,6 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.SourceView;
-
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,158 +30,158 @@ import javafx.scene.layout.VBox;
 
 public class HelloSourceView extends CalendarFXSample {
 
-	private SourceView sourceView;
+    private SourceView sourceView;
 
-	private CalendarSource workCalendarSource;
+    private CalendarSource workCalendarSource;
 
-	private CalendarSource familyCalendarSource;
+    private CalendarSource familyCalendarSource;
 
-	@Override
-	public String getSampleName() {
-		return "Source View";
-	}
+    @Override
+    public String getSampleName() {
+        return "Source View";
+    }
 
-	@Override
-	protected Node createControl() {
-		sourceView = new SourceView();
+    @Override
+    protected Node createControl() {
+        sourceView = new SourceView();
 
-		Calendar meetings = new Calendar("Meetings");
-		Calendar training = new Calendar("Training");
-		Calendar customers = new Calendar("Customers");
-		Calendar holidays = new Calendar("Holidays");
+        Calendar meetings = new Calendar("Meetings");
+        Calendar training = new Calendar("Training");
+        Calendar customers = new Calendar("Customers");
+        Calendar holidays = new Calendar("Holidays");
 
-		meetings.setStyle(Style.STYLE2);
-		training.setStyle(Style.STYLE3);
-		customers.setStyle(Style.STYLE4);
-		holidays.setStyle(Style.STYLE5);
+        meetings.setStyle(Style.STYLE2);
+        training.setStyle(Style.STYLE3);
+        customers.setStyle(Style.STYLE4);
+        holidays.setStyle(Style.STYLE5);
 
-		workCalendarSource = new CalendarSource("Work");
-		workCalendarSource.getCalendars().addAll(meetings, training, customers,
-				holidays);
+        workCalendarSource = new CalendarSource("Work");
+        workCalendarSource.getCalendars().addAll(meetings, training, customers,
+                holidays);
 
-		Calendar birthdays = new Calendar("Birthdays");
-		Calendar katja = new Calendar("Katja");
-		Calendar dirk = new Calendar("Dirk");
-		Calendar philip = new Calendar("Philip");
-		Calendar jule = new Calendar("Jule");
-		Calendar armin = new Calendar("Armin");
+        Calendar birthdays = new Calendar("Birthdays");
+        Calendar katja = new Calendar("Katja");
+        Calendar dirk = new Calendar("Dirk");
+        Calendar philip = new Calendar("Philip");
+        Calendar jule = new Calendar("Jule");
+        Calendar armin = new Calendar("Armin");
 
-		familyCalendarSource = new CalendarSource("Family");
-		familyCalendarSource.getCalendars().addAll(birthdays, katja, dirk,
-				philip, jule, armin);
+        familyCalendarSource = new CalendarSource("Family");
+        familyCalendarSource.getCalendars().addAll(birthdays, katja, dirk,
+                philip, jule, armin);
 
-		sourceView.getCalendarSources().addAll(workCalendarSource,
-				familyCalendarSource);
-		
-		return sourceView;
-	}
-	
-	@Override
-	public Node getControlPanel() {
-		VBox box = new VBox();
-		box.setSpacing(5);
-		box.setFillWidth(true);
+        sourceView.getCalendarSources().addAll(workCalendarSource,
+                familyCalendarSource);
 
-		Button addWorkCalendar = new Button("Add Work Calendar");
-		addWorkCalendar.setOnAction(evt -> addWorkCalendar());
+        return sourceView;
+    }
 
-		Button removeWorkCalendar = new Button("Remove Work Calendar");
-		removeWorkCalendar.setOnAction(evt -> removeWorkCalendar());
+    @Override
+    public Node getControlPanel() {
+        VBox box = new VBox();
+        box.setSpacing(5);
+        box.setFillWidth(true);
 
-		Button addWorkCalendarSource = new Button("Add Work Calendar Source");
-		addWorkCalendarSource.setOnAction(evt -> addWorkCalendarSource());
+        Button addWorkCalendar = new Button("Add Work Calendar");
+        addWorkCalendar.setOnAction(evt -> addWorkCalendar());
 
-		Button removeWorkCalendarSource = new Button(
-				"Remove Work Calendar Source");
-		removeWorkCalendarSource.setOnAction(evt -> removeWorkCalendarSource());
+        Button removeWorkCalendar = new Button("Remove Work Calendar");
+        removeWorkCalendar.setOnAction(evt -> removeWorkCalendar());
 
-		box.getChildren().addAll(addWorkCalendar, removeWorkCalendar,
-				addWorkCalendarSource, removeWorkCalendarSource);
+        Button addWorkCalendarSource = new Button("Add Work Calendar Source");
+        addWorkCalendarSource.setOnAction(evt -> addWorkCalendarSource());
 
-		Button addFamilyCalendar = new Button("Add Family Calendar");
-		addFamilyCalendar.setOnAction(evt -> addFamilyCalendar());
+        Button removeWorkCalendarSource = new Button(
+                "Remove Work Calendar Source");
+        removeWorkCalendarSource.setOnAction(evt -> removeWorkCalendarSource());
 
-		Button removeFamilyCalendar = new Button("Remove Family Calendar");
-		removeFamilyCalendar.setOnAction(evt -> removeFamilyCalendar());
+        box.getChildren().addAll(addWorkCalendar, removeWorkCalendar,
+                addWorkCalendarSource, removeWorkCalendarSource);
 
-		Button addFamilyCalendarSource = new Button(
-				"Add Family Calendar Source");
-		addFamilyCalendarSource.setOnAction(evt -> addFamilyCalendarSource());
+        Button addFamilyCalendar = new Button("Add Family Calendar");
+        addFamilyCalendar.setOnAction(evt -> addFamilyCalendar());
 
-		Button removeFamilyCalendarSource = new Button(
-				"Remove Family Calendar Source");
-		removeFamilyCalendarSource
-				.setOnAction(evt -> removeFamilyCalendarSource());
+        Button removeFamilyCalendar = new Button("Remove Family Calendar");
+        removeFamilyCalendar.setOnAction(evt -> removeFamilyCalendar());
 
-		box.getChildren().addAll(new Separator(Orientation.HORIZONTAL),
-				addFamilyCalendar, removeFamilyCalendar,
-				addFamilyCalendarSource, removeFamilyCalendarSource);
+        Button addFamilyCalendarSource = new Button(
+                "Add Family Calendar Source");
+        addFamilyCalendarSource.setOnAction(evt -> addFamilyCalendarSource());
 
-		addWorkCalendar.setMaxWidth(Double.MAX_VALUE);
-		removeWorkCalendar.setMaxWidth(Double.MAX_VALUE);
-		addWorkCalendarSource.setMaxWidth(Double.MAX_VALUE);
-		removeWorkCalendarSource.setMaxWidth(Double.MAX_VALUE);
+        Button removeFamilyCalendarSource = new Button(
+                "Remove Family Calendar Source");
+        removeFamilyCalendarSource
+                .setOnAction(evt -> removeFamilyCalendarSource());
 
-		addFamilyCalendar.setMaxWidth(Double.MAX_VALUE);
-		removeFamilyCalendar.setMaxWidth(Double.MAX_VALUE);
-		addFamilyCalendarSource.setMaxWidth(Double.MAX_VALUE);
-		removeFamilyCalendarSource.setMaxWidth(Double.MAX_VALUE);
+        box.getChildren().addAll(new Separator(Orientation.HORIZONTAL),
+                addFamilyCalendar, removeFamilyCalendar,
+                addFamilyCalendarSource, removeFamilyCalendarSource);
 
-		return box;
-	}
+        addWorkCalendar.setMaxWidth(Double.MAX_VALUE);
+        removeWorkCalendar.setMaxWidth(Double.MAX_VALUE);
+        addWorkCalendarSource.setMaxWidth(Double.MAX_VALUE);
+        removeWorkCalendarSource.setMaxWidth(Double.MAX_VALUE);
 
-	private int calendarCounter = 1;
+        addFamilyCalendar.setMaxWidth(Double.MAX_VALUE);
+        removeFamilyCalendar.setMaxWidth(Double.MAX_VALUE);
+        addFamilyCalendarSource.setMaxWidth(Double.MAX_VALUE);
+        removeFamilyCalendarSource.setMaxWidth(Double.MAX_VALUE);
 
-	private void addWorkCalendar() {
-		Calendar calendar = new Calendar("Work Calendar " + calendarCounter++);
-		calendar.setStyle(Style.getStyle(calendarCounter));
-		workCalendarSource.getCalendars().add(calendar);
-	}
+        return box;
+    }
 
-	private void removeWorkCalendar() {
-		workCalendarSource.getCalendars().remove(
-				workCalendarSource.getCalendars().size() - 1);
-	}
+    private int calendarCounter = 1;
 
-	private void addWorkCalendarSource() {
-		sourceView.getCalendarSources().add(workCalendarSource);
-	}
+    private void addWorkCalendar() {
+        Calendar calendar = new Calendar("Work Calendar " + calendarCounter++);
+        calendar.setStyle(Style.getStyle(calendarCounter));
+        workCalendarSource.getCalendars().add(calendar);
+    }
 
-	private void removeWorkCalendarSource() {
-		sourceView.getCalendarSources().remove(workCalendarSource);
-	}
+    private void removeWorkCalendar() {
+        workCalendarSource.getCalendars().remove(
+                workCalendarSource.getCalendars().size() - 1);
+    }
 
-	private void addFamilyCalendar() {
-		Calendar calendar = new Calendar("Family Calendar " + calendarCounter++);
-		calendar.setStyle(Style.getStyle(calendarCounter));
-		familyCalendarSource.getCalendars().add(calendar);
-	}
+    private void addWorkCalendarSource() {
+        sourceView.getCalendarSources().add(workCalendarSource);
+    }
 
-	private void addFamilyCalendarSource() {
-		sourceView.getCalendarSources().add(familyCalendarSource);
-	}
+    private void removeWorkCalendarSource() {
+        sourceView.getCalendarSources().remove(workCalendarSource);
+    }
 
-	private void removeFamilyCalendar() {
-		familyCalendarSource.getCalendars().remove(
-				familyCalendarSource.getCalendars().size() - 1);
-	}
+    private void addFamilyCalendar() {
+        Calendar calendar = new Calendar("Family Calendar " + calendarCounter++);
+        calendar.setStyle(Style.getStyle(calendarCounter));
+        familyCalendarSource.getCalendars().add(calendar);
+    }
 
-	private void removeFamilyCalendarSource() {
-		sourceView.getCalendarSources().remove(familyCalendarSource);
-	}
+    private void addFamilyCalendarSource() {
+        sourceView.getCalendarSources().add(familyCalendarSource);
+    }
 
-	@Override
-	protected Class<?> getJavaDocClass() {
-		return SourceView.class;
-	}
+    private void removeFamilyCalendar() {
+        familyCalendarSource.getCalendars().remove(
+                familyCalendarSource.getCalendars().size() - 1);
+    }
 
-	@Override
-	public String getSampleDescription() {
-		return "Shows all calendar sources. Sources are used to group calendars together that all origin from the same "
-				+ "source, e.g. Google calendar. Sources can be collapsed by clicking on their name.";
-	}
+    private void removeFamilyCalendarSource() {
+        sourceView.getCalendarSources().remove(familyCalendarSource);
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    @Override
+    protected Class<?> getJavaDocClass() {
+        return SourceView.class;
+    }
+
+    @Override
+    public String getSampleDescription() {
+        return "Shows all calendar sources. Sources are used to group calendars together that all origin from the same "
+                + "source, e.g. Google calendar. Sources can be collapsed by clicking on their name.";
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

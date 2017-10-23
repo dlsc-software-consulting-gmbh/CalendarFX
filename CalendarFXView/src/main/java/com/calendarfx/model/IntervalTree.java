@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.model;
@@ -9,11 +19,7 @@ package com.calendarfx.model;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -112,7 +118,7 @@ class IntervalTree<E extends Entry<?>> {
     }
 
     public final Collection<E> getIntersectingObjects(Instant start,
-            Instant end) {
+                                                      Instant end) {
         Collection<E> result = new ArrayList<>();
         if (root == null) {
             return result;
@@ -124,7 +130,7 @@ class IntervalTree<E extends Entry<?>> {
     }
 
     private void searchIntersecting(TreeEntry<E> entry,
-            TimeInterval timeInterval, Collection<E> result) {
+                                    TimeInterval timeInterval, Collection<E> result) {
         // Don't search nodes that don't exist
         if (entry == null) {
             return;
@@ -209,7 +215,7 @@ class IntervalTree<E extends Entry<?>> {
         try {
             return entry.isRecurring()
                     ? ZonedDateTime.of(entry.getRecurrenceEnd(), LocalTime.MAX,
-                            entry.getZoneId()).toInstant().toEpochMilli()
+                    entry.getZoneId()).toInstant().toEpochMilli()
                     : entry.getEndMillis();
         } catch (ArithmeticException e) {
             return Long.MAX_VALUE;
@@ -220,7 +226,7 @@ class IntervalTree<E extends Entry<?>> {
         while (entry != null) {
             entry.maxHigh = Math.max(entry.high,
                     Math.max(entry.left != null ? entry.left.maxHigh
-                            : Long.MIN_VALUE,
+                                    : Long.MIN_VALUE,
                             entry.right != null ? entry.right.maxHigh
                                     : Long.MIN_VALUE));
             entry = entry.parent;

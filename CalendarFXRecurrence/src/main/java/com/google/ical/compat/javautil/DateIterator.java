@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -25,11 +25,11 @@ import java.util.Iterator;
 
 public interface DateIterator extends Iterator<Date> {
 
-  /**
-   * skips all dates in the series before the given date.
-   *
-   * @param newStartUtc non null.
-   */
-  void advanceTo(Date newStartUtc);
+    /**
+     * skips all dates in the series before the given date.
+     *
+     * @param newStartUtc non null.
+     */
+    void advanceTo(Date newStartUtc);
 
 }

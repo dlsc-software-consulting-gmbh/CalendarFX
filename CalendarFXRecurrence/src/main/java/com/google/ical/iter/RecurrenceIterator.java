@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -21,6 +21,7 @@
 package com.google.ical.iter;
 
 import com.google.ical.values.DateValue;
+
 import java.util.Iterator;
 
 /**
@@ -31,28 +32,28 @@ import java.util.Iterator;
  */
 public interface RecurrenceIterator extends Iterator<DateValue> {
 
-  /** true iff there are more dates in the series. */
-  boolean hasNext();
+    /** true iff there are more dates in the series. */
+    boolean hasNext();
 
-  /**
-   * returns the next date in the series, in UTC.
-   * If <code>!hasNext()</code>, then behavior is undefined.
-   *
-   * @return a DateValue that is strictly later than any date previously
-   *   returned by this iterator.
-   */
-  DateValue next();
+    /**
+     * returns the next date in the series, in UTC.
+     * If <code>!hasNext()</code>, then behavior is undefined.
+     *
+     * @return a DateValue that is strictly later than any date previously
+     *   returned by this iterator.
+     */
+    DateValue next();
 
-  /**
-   * skips all dates in the series before the given date.
-   *
-   * @param newStartUtc non null.
-   */
-  void advanceTo(DateValue newStartUtc);
+    /**
+     * skips all dates in the series before the given date.
+     *
+     * @param newStartUtc non null.
+     */
+    void advanceTo(DateValue newStartUtc);
 
-  /**
-   * unsupported.
-   * @throws UnsupportedOperationException always
-   */
-  void remove();
+    /**
+     * unsupported.
+     * @throws UnsupportedOperationException always
+     */
+    void remove();
 }

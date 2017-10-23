@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -35,10 +35,10 @@ package com.google.ical.iter;
  */
 abstract class ThrottledGenerator extends Generator {
 
-  /**
-   * called to reset any throttle after work is done.  This must be called in
-   * the outermost loop of any iterator.
-   */
-  abstract void workDone();
+    /**
+     * called to reset any throttle after work is done.  This must be called in
+     * the outermost loop of any iterator.
+     */
+    abstract void workDone();
 
 }

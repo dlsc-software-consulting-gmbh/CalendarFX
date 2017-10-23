@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.ical.view;
@@ -30,72 +40,72 @@ import java.net.MalformedURLException;
  */
 public final class ICalWebSourceFactory implements Callback<DateControl.CreateCalendarSourceParameter, CalendarSource> {
 
-	private final Window owner;
-	private ICalWebSourcePane pane;
-	private Stage dialog;
+    private final Window owner;
+    private ICalWebSourcePane pane;
+    private Stage dialog;
 
-	public ICalWebSourceFactory (Window owner) {
-		this.owner = owner;
-	}
+    public ICalWebSourceFactory(Window owner) {
+        this.owner = owner;
+    }
 
-	@Override
-	public CalendarSource call (DateControl.CreateCalendarSourceParameter param) {
-		if (dialog == null) {
-			pane = new ICalWebSourcePane();
-			pane.setOnCancelClicked(this::cancel);
-			pane.setOnAcceptClicked(this::accept);
-			pane.getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
+    @Override
+    public CalendarSource call(DateControl.CreateCalendarSourceParameter param) {
+        if (dialog == null) {
+            pane = new ICalWebSourcePane();
+            pane.setOnCancelClicked(this::cancel);
+            pane.setOnAcceptClicked(this::accept);
+            pane.getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
-			dialog = new Stage();
-			dialog.initOwner(owner);
-			dialog.setScene(new Scene(pane));
-			dialog.sizeToScene();
-			dialog.centerOnScreen();
-			dialog.setTitle("Add Web iCal");
-			dialog.initModality(Modality.APPLICATION_MODAL);
-		}
+            dialog = new Stage();
+            dialog.initOwner(owner);
+            dialog.setScene(new Scene(pane));
+            dialog.sizeToScene();
+            dialog.centerOnScreen();
+            dialog.setTitle("Add Web iCal");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+        }
 
-		dialog.showAndWait();
+        dialog.showAndWait();
 
-		return ICalRepository.getCommunityCalendarSource();
-	}
+        return ICalRepository.getCommunityCalendarSource();
+    }
 
-	private void cancel (ActionEvent evt) {
-		pane.clear();
-		dialog.hide();
-	}
+    private void cancel(ActionEvent evt) {
+        pane.clear();
+        dialog.hide();
+    }
 
-	private void accept (ActionEvent evt) {
-		String url = pane.getUrl();
-		String name = pane.getName();
-		Calendar.Style style = pane.getCalendarStyle();
+    private void accept(ActionEvent evt) {
+        String url = pane.getUrl();
+        String name = pane.getName();
+        Calendar.Style style = pane.getCalendarStyle();
 
-		if (ICalRepository.existsWebCalendar(url)) {
-			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setHeaderText("This calendar was already added!");
-			alert.show();
-			return;
-		}
+        if (ICalRepository.existsWebCalendar(url)) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("This calendar was already added!");
+            alert.show();
+            return;
+        }
 
-		try {
-			ICalRepository.createWebCalendar(url, name, style, ICalRepository.getCommunityCalendarSource());
-			pane.clear();
-			dialog.hide();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setHeaderText("The URL is not valid!");
-			alert.show();
-		} catch (ParserException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setHeaderText("Unable to parse the calendar data!");
-			alert.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setHeaderText("Unexpected error getting the calendar!");
-			alert.show();
-		}
-	}
+        try {
+            ICalRepository.createWebCalendar(url, name, style, ICalRepository.getCommunityCalendarSource());
+            pane.clear();
+            dialog.hide();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("The URL is not valid!");
+            alert.show();
+        } catch (ParserException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unable to parse the calendar data!");
+            alert.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Unexpected error getting the calendar!");
+            alert.show();
+        }
+    }
 
 }

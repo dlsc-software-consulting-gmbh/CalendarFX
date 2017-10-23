@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -36,49 +36,51 @@ import com.google.ical.util.DTBuilder;
  */
 abstract class Generator {
 
-  /**
-   * @param bldr both input and output.  non null.  modified in place.
-   * @return true iff there are more instances of the generator's field to
-   *   generate.  If a generator is exhausted, generating a new value of a
-   *   larger field may allow it to continue, so a month generator that runs
-   *   out of months at 12, may start over at 1 if called with a bldr with
-   *   a different year.
-   * @throws IteratorShortCircuitingException when an iterator reaches
-   *   a threshold past which it cannot generate any more dates.  This indicates
-   *   that the entire iteration process should end.
-   */
-  abstract boolean generate(DTBuilder bldr)
-      throws IteratorShortCircuitingException;
+    /**
+     * @param bldr both input and output.  non null.  modified in place.
+     * @return true iff there are more instances of the generator's field to
+     *   generate.  If a generator is exhausted, generating a new value of a
+     *   larger field may allow it to continue, so a month generator that runs
+     *   out of months at 12, may start over at 1 if called with a bldr with
+     *   a different year.
+     * @throws IteratorShortCircuitingException when an iterator reaches
+     *   a threshold past which it cannot generate any more dates.  This indicates
+     *   that the entire iteration process should end.
+     */
+    abstract boolean generate(DTBuilder bldr)
+            throws IteratorShortCircuitingException;
 
-  /**
-   * thrown when an iteration process should be ended completely due to an
-   * artificial system limit.  This allows us to make a distinction between
-   * normal exhaustion of iteration, and an artificial limit that may fall in
-   * a set, and so affect subsequent evaluation of BYSETPOS rules.
-   *
-   * <p>Since this class is meant to be thrown as a flow control construct to
-   * indicate an artificial limit has been reached, not really an exceptional
-   * condition, and since its clients have no need of the stacktrace, we use a
-   * singleton to avoid forcing the JVM to unoptimize and decompile the
-   * RecurrenceIterator's inner loop.</p>
-   */
-  static class IteratorShortCircuitingException extends Exception {
-    private IteratorShortCircuitingException() {
-      super();
-      setStackTrace(new StackTraceElement[0]);
+    /**
+     * thrown when an iteration process should be ended completely due to an
+     * artificial system limit.  This allows us to make a distinction between
+     * normal exhaustion of iteration, and an artificial limit that may fall in
+     * a set, and so affect subsequent evaluation of BYSETPOS rules.
+     *
+     * <p>Since this class is meant to be thrown as a flow control construct to
+     * indicate an artificial limit has been reached, not really an exceptional
+     * condition, and since its clients have no need of the stacktrace, we use a
+     * singleton to avoid forcing the JVM to unoptimize and decompile the
+     * RecurrenceIterator's inner loop.</p>
+     */
+    static class IteratorShortCircuitingException extends Exception {
+        private IteratorShortCircuitingException() {
+            super();
+            setStackTrace(new StackTraceElement[0]);
+        }
+
+        private static final IteratorShortCircuitingException INSTANCE =
+                new IteratorShortCircuitingException();
+
+        static IteratorShortCircuitingException instance() {
+            return INSTANCE;
+        }
     }
 
-    private static final IteratorShortCircuitingException INSTANCE =
-        new IteratorShortCircuitingException();
-
-    static IteratorShortCircuitingException instance() { return INSTANCE; }
-  }
-
-  static {
-    // suffer the stack trace generation on class load of Generator, which will
-    // happen before any of the recuriter stuff could possibly have been JIT
-    // compiled.
-    IteratorShortCircuitingException.instance();
-  }
+    static {
+        // suffer the stack trace generation on class load of Generator, which will
+        // happen before any of the recuriter stuff could possibly have been JIT
+        // compiled.
+        IteratorShortCircuitingException.instance();
+    }
 
 }
