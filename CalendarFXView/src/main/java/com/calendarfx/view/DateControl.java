@@ -6,10 +6,7 @@
 
 package com.calendarfx.view;
 
-import com.calendarfx.model.Calendar;
-import com.calendarfx.model.CalendarSource;
-import com.calendarfx.model.Entry;
-import com.calendarfx.model.Interval;
+import com.calendarfx.model.*;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
@@ -336,22 +333,24 @@ public abstract class DateControl extends CalendarFXControl {
             calendarMenu.setDisable(param.getCalendar().isReadOnly());
             contextMenu.getItems().add(calendarMenu);
 
-			/*
-             * Delete calendar entry.
-			 */
-            MenuItem delete = new MenuItem(Messages.getString("DateControl.MENU_ITEM_DELETE")); //$NON-NLS-1$
-            contextMenu.getItems().add(delete);
-            delete.setDisable(param.getCalendar().isReadOnly());
-            delete.setOnAction(evt -> {
-                Calendar calendar = entry.getCalendar();
-                if (!calendar.isReadOnly()) {
-                    if (entry.isRecurrence()) {
-                        entry.getRecurrenceSourceEntry().removeFromCalendar();
-                    } else {
-                        entry.removeFromCalendar();
+            if (getEntryEditPolicy().call(new EntryEditParameter(this, entry, EditOperation.DELETE))) {
+                /*
+                 * Delete calendar entry.
+                 */
+                MenuItem delete = new MenuItem(Messages.getString("DateControl.MENU_ITEM_DELETE")); //$NON-NLS-1$
+                contextMenu.getItems().add(delete);
+                delete.setDisable(param.getCalendar().isReadOnly());
+                delete.setOnAction(evt -> {
+                    Calendar calendar = entry.getCalendar();
+                    if (!calendar.isReadOnly()) {
+                        if (entry.isRecurrence()) {
+                            entry.getRecurrenceSourceEntry().removeFromCalendar();
+                        } else {
+                            entry.removeFromCalendar();
+                        }
                     }
-                }
-            });
+                });
+            }
 
             return contextMenu;
         });
@@ -1036,6 +1035,120 @@ public abstract class DateControl extends CalendarFXControl {
             return "EntryContextMenuParameter [entry=" + entryView //$NON-NLS-1$
                     + ", dateControl =" + getDateControl() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         }
+    }
+
+    /**
+     * Possible edit operations on an entry.
+     * This enum will be used as parameter of the callback set with {@link DateControl#setEntryEditPolicy}.
+     */
+    public enum EditOperation {
+
+        /**
+         * Checked if the start of an entry can be changed (e.g. using drag/drop).
+         */
+        CHANGE_START,
+
+        /**
+         * Checked if the end of an entry can be changed (e.g. using drag/drop).
+         */
+        CHANGE_END,
+
+        /**
+         * Checked if entry can be moved using drag/drop.
+         */
+        MOVE,
+
+        /**
+         * Checked if an entry can be deleted.
+         */
+        DELETE
+    }
+
+    /**
+     * Class used for parameter of {@link com.calendarfx.view.DateControl#entryEditPolicy} functional interface.
+     */
+    public static final class EntryEditParameter {
+
+        /**
+         * The date control the entity is associated with.
+         */
+        private final DateControl dateControl;
+
+        /**
+         * The entity the operation is operated on.
+         */
+        private final Entry<?> entry;
+
+        /**
+         * The operation.
+         */
+        private final DateControl.EditOperation editOperation;
+
+        public EntryEditParameter(DateControl dateControl, Entry<?> entry, DateControl.EditOperation editOperation) {
+            this.dateControl = dateControl;
+            this.entry = entry;
+            this.editOperation = editOperation;
+        }
+
+        /**
+         * The {@link DateControl} which is asking for a specific {@link com.calendarfx.view.DateControl.EditOperation} permission.
+         * @returns The date control.
+         */
+        public DateControl getDateControl() {
+            return dateControl;
+        }
+
+        /**
+         * The entry where the {@link com.calendarfx.view.DateControl.EditOperation} should be applied.
+         * @returns The entry.
+         */
+        public Entry<?> getEntry() {
+            return entry;
+        }
+
+        /**
+         * The actual edit operation.
+         * @returns The edit operation.
+         */
+        public DateControl.EditOperation getEditOperation() {
+            return editOperation;
+        }
+    }
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
+     *
+     * @see EditOperation
+     */
+    private final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicy = new SimpleObjectProperty<>(action -> true);
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
+     *
+     * @returns The entry edit policy callback
+     *
+     * @see EditOperation
+     */
+    public final Callback<EntryEditParameter, Boolean> getEntryEditPolicy() {
+        return entryEditPolicy.get();
+    }
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
+     *
+     * @returns The entry edit policy callback property
+     *
+     * @see EditOperation
+     */
+    public final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicyProperty() {
+        return entryEditPolicy;
+    }
+
+    /**
+     * If an action will be issued on an item the given instance will be asked if the action is allowed.
+     */
+    public final void setEntryEditPolicy(Callback<EntryEditParameter, Boolean> entryEditPolicy) {
+        this.entryEditPolicy.set(entryEditPolicy);
     }
 
     private final ObjectProperty<Callback<EntryContextMenuParameter, ContextMenu>> entryContextMenuCallback = new SimpleObjectProperty<>(this, "entryFactory"); //$NON-NLS-1$
@@ -2340,6 +2453,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.bindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
         Bindings.bindBidirectional(otherControl.entryDetailsPopOverContentCallbackProperty(), entryDetailsPopOverContentCallbackProperty());
+        Bindings.bindBidirectional(otherControl.entryEditPolicyProperty(), entryEditPolicyProperty());
     }
 
     /**
@@ -2389,6 +2503,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
+        Bindings.unbindBidirectional(otherControl.entryEditPolicyProperty(), entryEditPolicyProperty());
     }
 
     private final BooleanProperty suspendUpdates = new SimpleBooleanProperty(this, "suspendUpdates", false);

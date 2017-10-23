@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -49,24 +49,30 @@ class CreateDeleteHandler {
 
     private void deleteEntries(KeyEvent evt) {
         switch (evt.getCode()) {
-        case DELETE:
-        case BACK_SPACE:
-            for (Entry<?> entry : dateControl.getSelections()) {
-                if (entry.isRecurrence()) {
-                    entry = entry.getRecurrenceSourceEntry();
-                }
+            case DELETE:
+            case BACK_SPACE:
+                for (Entry<?> entry : dateControl.getSelections()) {
+                    if (!dateControl.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
+                        continue;
+                    }
+                    if (entry.isRecurrence()) {
+                        entry = entry.getRecurrenceSourceEntry();
+                    }
+                    if (!dateControl.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
+                        continue;
+                    }
 
-                Calendar calendar = entry.getCalendar();
-                if (calendar != null && !calendar.isReadOnly()) {
-                    entry.removeFromCalendar();
+                    Calendar calendar = entry.getCalendar();
+                    if (calendar != null && !calendar.isReadOnly()) {
+                        entry.removeFromCalendar();
+                    }
                 }
-            }
-            dateControl.clearSelection();
-            break;
-        case F5:
-            dateControl.refreshData();
-        default:
-            break;
+                dateControl.clearSelection();
+                break;
+            case F5:
+                dateControl.refreshData();
+            default:
+                break;
         }
     }
 }

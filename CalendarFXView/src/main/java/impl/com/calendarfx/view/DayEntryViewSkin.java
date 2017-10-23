@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -13,15 +13,20 @@ import com.calendarfx.view.DraggedEntry;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.SkinBase;
 import javafx.scene.shape.Rectangle;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+/**
+ * The default day entry view. <br />
+ * It displays a title and the start time of the entry.
+ */
 public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
-    private Entry<?> entry;
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
     private Label startTimeLabel;
@@ -46,15 +51,14 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
         getChildren().addAll(startTimeLabel, titleLabel);
 
-        entry = view.getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
+        Entry entry = getEntry();
 
         entry.intervalProperty().addListener(weakUpdateLabelsListener);
         entry.calendarProperty().addListener(weakUpdateStylesListener);
+        entry.titleProperty().addListener(weakUpdateLabelsListener);
 
-        view.positionProperty().addListener(weakUpdateLabelsListener);
+        getSkinnable().positionProperty().addListener(weakUpdateLabelsListener);
+        updateLabels();
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(view.widthProperty());
@@ -64,8 +68,23 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         updateStyles();
     }
 
-    private void updateStyles() {
+    /**
+     * @returns The entry.
+     */
+    protected Entry getEntry() {
+        Entry<?> entry = getSkinnable().getEntry();
+        if (entry.isRecurrence()) {
+            entry = entry.getRecurrenceSourceEntry();
+        }
+        return entry;
+    }
+
+    /**
+     * This methods updates the styles of the node according to the entry settings.
+     */
+    protected void updateStyles() {
         DayEntryView view = getSkinnable();
+        Entry entry = getEntry();
 
         Calendar calendar = entry.getCalendar();
         if (entry instanceof DraggedEntry) {
@@ -89,41 +108,53 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
                 calendar.getStyle() + "-entry-title-label");
     }
 
-    private Label createStartTimeLabel() {
+    /**
+     * The label used to show the start time.
+     * @returns The label component.
+     */
+    protected Label createStartTimeLabel() {
         Label label = new Label();
         label.setMinSize(0, 0);
-
-        Entry<?> entry = getSkinnable().getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
-
-        label.setText(formatter.format(entry.getStartTime()));
 
         return label;
     }
 
-    private Label createTitleLabel() {
-        Entry<?> entry = getSkinnable().getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
+    /**
+     * Convert the given time to a string.
+     * @returns The formatted time.
+     */
+    protected String formatTime(LocalTime time) {
+        return formatter.format(time);
+    }
 
+    /**
+     * Convert the given title. This method can be overridden for e.g. translating the title.
+     * @returns The formatted title.
+     */
+    protected String formatTitle(String title) {
+        return title;
+    }
+
+    /**
+     * The label used to show the title.
+     * @returns The title component.
+     */
+    protected Label createTitleLabel() {
         Label label = new Label();
         label.setWrapText(true);
         label.setMinSize(0, 0);
-        label.textProperty().bind(entry.titleProperty());
 
         return label;
     }
 
-    private void updateLabels() {
-        Entry<?> entry = getSkinnable().getEntry();
-        if (entry.isRecurrence()) {
-            entry = entry.getRecurrenceSourceEntry();
-        }
+    /**
+     * This method will be called if the labels need to be updated.
+     */
+    protected void updateLabels() {
+        Entry entry = getEntry();
 
-        startTimeLabel.setText(formatter.format(entry.getStartTime()));
+        startTimeLabel.setText(formatTime(entry.getStartTime()));
+        titleLabel.setText(formatTitle(entry.getTitle()));
     }
 
     @Override
