@@ -1,3 +1,14 @@
+Release 8.4.1
+-------------
+
+- Added a callback to control whether a calendar entry can be edited (change start time,
+  change end time, move, delete). See DateControl.setEntryEditPolicy.
+
+- Opened up DayEntryViewSkin to make it more reusable. Several private methods are now
+  protected.
+
+- Fixed issues related to "nervously" dragging entries inside DayView or WeekView.
+
 Release 8.4.0
 -------------
 
