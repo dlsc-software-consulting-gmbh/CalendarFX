@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.model;
@@ -36,40 +46,40 @@ public class EntryTest {
     @Test
     public void shouldNotHaveStyles() {
 
-    	// when
-    	boolean result = entry.hasStyleClass();
+        // when
+        boolean result = entry.hasStyleClass();
 
-    	// then
-    	assertThat(result, is(equalTo(false)));
+        // then
+        assertThat(result, is(equalTo(false)));
     }
 
     @Test
     public void shouldHaveStylesAfterAdding() {
 
-    	// when
-    	entry.getStyleClass().add("mystyle");
+        // when
+        entry.getStyleClass().add("mystyle");
 
-    	// then
-    	assertThat(entry.hasStyleClass(), is(equalTo(true)));
+        // then
+        assertThat(entry.hasStyleClass(), is(equalTo(true)));
     }
 
     @Test
     public void shouldNotHaveProperties() {
 
-    	// when
-    	boolean result = entry.hasProperties();
+        // when
+        boolean result = entry.hasProperties();
 
-    	// then
-    	assertThat(result, is(equalTo(false)));
+        // then
+        assertThat(result, is(equalTo(false)));
     }
 
     @Test
     public void shouldHaveProperties() {
-    	// when
-    	entry.getProperties().put("mykey", "myvalue");
+        // when
+        entry.getProperties().put("mykey", "myvalue");
 
-    	// then
-    	assertThat(entry.hasProperties(), is(equalTo(true)));
+        // then
+        assertThat(entry.hasProperties(), is(equalTo(true)));
     }
 
     @Test
@@ -88,7 +98,7 @@ public class EntryTest {
         assertThat(equal, is(true));
     }
 
-        @Test
+    @Test
     public void shouldBeEqualRecurrences() {
         // given
         Entry<String> entryA = new Entry<>();
@@ -363,12 +373,12 @@ public class EntryTest {
 
         // when
         Map<LocalDate, List<Entry<?>>> result = calendar.findEntries(
-                LocalDate.of(2015,1,1), LocalDate.of(2015,1,1).plusMonths(months),
+                LocalDate.of(2015, 1, 1), LocalDate.of(2015, 1, 1).plusMonths(months),
                 ZoneId.systemDefault());
 
         // then
         for (int currentMonth = 0; currentMonth < months; currentMonth++) {
-            LocalDate date = LocalDate.of(2015,1,1).plusMonths(currentMonth);
+            LocalDate date = LocalDate.of(2015, 1, 1).plusMonths(currentMonth);
             List<Entry<?>> entryList = result
                     .get(date);
 

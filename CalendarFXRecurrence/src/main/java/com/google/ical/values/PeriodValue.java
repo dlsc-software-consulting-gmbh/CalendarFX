@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -30,31 +30,31 @@ package com.google.ical.values;
  */
 public interface PeriodValue {
 
-  /**
-   * the start of the period.
-   * @return non null.
-   */
-  DateValue start();
+    /**
+     * the start of the period.
+     * @return non null.
+     */
+    DateValue start();
 
-  /**
-   * the end of the period.
-   * The end must be &gt;= {@link #start()}, and
-   * <tt>(start() instanceof {@link TimeValue}) ==
-   *     (end() instanceof TimeValue)</tt>.
-   * @return non null.
-   */
-  DateValue end();
+    /**
+     * the end of the period.
+     * The end must be &gt;= {@link #start()}, and
+     * <tt>(start() instanceof {@link TimeValue}) ==
+     *     (end() instanceof TimeValue)</tt>.
+     * @return non null.
+     */
+    DateValue end();
 
-  /**
-   * true iff this period overlaps the given period.
-   * @param pv not null.
-   */
-  boolean intersects(PeriodValue pv);
+    /**
+     * true iff this period overlaps the given period.
+     * @param pv not null.
+     */
+    boolean intersects(PeriodValue pv);
 
-  /**
-   * true iff this period completely contains the given period.
-   * @param pv not null.
-   */
-  boolean contains(PeriodValue pv);
+    /**
+     * true iff this period completely contains the given period.
+     * @param pv not null.
+     */
+    boolean contains(PeriodValue pv);
 
 }  // PeriodValue

@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -33,75 +33,83 @@ import java.util.TimeZone;
  */
 public class RDateList extends AbstractIcalObject {
 
-  private TimeZone tzid;
-  private DateValue[] datesUtc;
-  private IcalValueType valueType;
+    private TimeZone tzid;
+    private DateValue[] datesUtc;
+    private IcalValueType valueType;
 
-  public RDateList(String icalString, TimeZone tzid) throws ParseException {
-    setTzid(tzid);
-    parse(icalString, RRuleSchema.instance());
-  }
-
-  public RDateList(TimeZone tzid) {
-    setTzid(tzid);
-    setName("RDATE");
-    datesUtc = new DateValue[0];
-  }
-
-  public TimeZone getTzid() { return this.tzid; }
-  public void setTzid(TimeZone tzid) {
-    assert null != tzid;
-    this.tzid = tzid;
-  }
-
-  public DateValue[] getDatesUtc() {
-    return null != this.datesUtc ? this.datesUtc.clone() : null;
-  }
-  public void setDatesUtc(DateValue[] datesUtc) {
-    this.datesUtc = datesUtc.clone();
-    if (datesUtc.length > 0) {
-      setValueType((datesUtc[0] instanceof TimeValue)
-                   ? IcalValueType.DATE_TIME
-                   : IcalValueType.DATE);
+    public RDateList(String icalString, TimeZone tzid) throws ParseException {
+        setTzid(tzid);
+        parse(icalString, RRuleSchema.instance());
     }
-  }
 
-  /**
-   * the type of the values contained by this list as reported by the ical
-   * "VALUE" parameter, typically DATE or DATE-TIME.
-   */
-  public IcalValueType getValueType() {
-    return valueType;
-  }
+    public RDateList(TimeZone tzid) {
+        setTzid(tzid);
+        setName("RDATE");
+        datesUtc = new DateValue[0];
+    }
 
-  public void setValueType(IcalValueType valueType) {
-    this.valueType = valueType;
-  }
+    public TimeZone getTzid() {
+        return this.tzid;
+    }
 
-  /** returns a String containing ical content lines. */
-  public String toIcal() {
-    StringBuilder buf = new StringBuilder();
-    buf.append(this.getName().toUpperCase());
-    buf.append(";TZID=\"").append(tzid.getID()).append('"');
-    buf.append(";VALUE=").append(valueType.toIcal());
-    if (hasExtParams()) {
-      for (Map.Entry<String, String> param : getExtParams().entrySet()) {
-        String k = param.getKey(),
-               v = param.getValue();
-        if (ICAL_SPECIALS.matcher(v).find()) {
-          v = "\"" + v + "\"";
+    public void setTzid(TimeZone tzid) {
+        assert null != tzid;
+        this.tzid = tzid;
+    }
+
+    public DateValue[] getDatesUtc() {
+        return null != this.datesUtc ? this.datesUtc.clone() : null;
+    }
+
+    public void setDatesUtc(DateValue[] datesUtc) {
+        this.datesUtc = datesUtc.clone();
+        if (datesUtc.length > 0) {
+            setValueType((datesUtc[0] instanceof TimeValue)
+                    ? IcalValueType.DATE_TIME
+                    : IcalValueType.DATE);
         }
-        buf.append(';').append(k).append('=').append(v);
-      }
     }
-    buf.append(':');
-    for (int i = 0; i < datesUtc.length; ++i) {
-      if (0 != i) { buf.append(','); }
-      DateValue v = datesUtc[i];
-      buf.append(v);
-      if (v instanceof TimeValue) { buf.append('Z'); }
+
+    /**
+     * the type of the values contained by this list as reported by the ical
+     * "VALUE" parameter, typically DATE or DATE-TIME.
+     */
+    public IcalValueType getValueType() {
+        return valueType;
     }
-    return buf.toString();
-  }
+
+    public void setValueType(IcalValueType valueType) {
+        this.valueType = valueType;
+    }
+
+    /** returns a String containing ical content lines. */
+    public String toIcal() {
+        StringBuilder buf = new StringBuilder();
+        buf.append(this.getName().toUpperCase());
+        buf.append(";TZID=\"").append(tzid.getID()).append('"');
+        buf.append(";VALUE=").append(valueType.toIcal());
+        if (hasExtParams()) {
+            for (Map.Entry<String, String> param : getExtParams().entrySet()) {
+                String k = param.getKey(),
+                        v = param.getValue();
+                if (ICAL_SPECIALS.matcher(v).find()) {
+                    v = "\"" + v + "\"";
+                }
+                buf.append(';').append(k).append('=').append(v);
+            }
+        }
+        buf.append(':');
+        for (int i = 0; i < datesUtc.length; ++i) {
+            if (0 != i) {
+                buf.append(',');
+            }
+            DateValue v = datesUtc[i];
+            buf.append(v);
+            if (v instanceof TimeValue) {
+                buf.append('Z');
+            }
+        }
+        return buf.toString();
+    }
 
 }

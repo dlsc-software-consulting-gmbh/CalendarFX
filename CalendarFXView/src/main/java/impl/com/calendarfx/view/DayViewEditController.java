@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
- * <p>
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package impl.com.calendarfx.view;
@@ -10,25 +20,14 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.view.DateControl;
-import com.calendarfx.view.DayEntryView;
-import com.calendarfx.view.DayView;
-import com.calendarfx.view.DayViewBase;
-import com.calendarfx.view.DraggedEntry;
-import com.calendarfx.view.EntryViewBase;
-import com.calendarfx.view.VirtualGrid;
-import com.calendarfx.view.WeekView;
+import com.calendarfx.view.*;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.Objects;
 import java.util.logging.Logger;
 

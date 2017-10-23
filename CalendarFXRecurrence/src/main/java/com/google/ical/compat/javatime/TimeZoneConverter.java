@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -25,10 +25,10 @@ import java.util.TimeZone;
 
 final class TimeZoneConverter {
 
-  public static TimeZone toTimeZone(final ZoneId id) {
-      return TimeZone.getTimeZone(id);
-  }
+    public static TimeZone toTimeZone(final ZoneId id) {
+        return TimeZone.getTimeZone(id);
+    }
 
-  private TimeZoneConverter() {
-  }
+    private TimeZoneConverter() {
+    }
 }

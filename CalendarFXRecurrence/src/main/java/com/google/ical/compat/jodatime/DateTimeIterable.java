@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -29,6 +29,6 @@ import org.joda.time.DateTime;
  */
 public interface DateTimeIterable extends Iterable<DateTime> {
 
-  DateTimeIterator iterator();
+    DateTimeIterator iterator();
 
 }

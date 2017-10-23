@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.view.page;
@@ -105,17 +115,17 @@ public class DayPage extends PageBase {
         segmentedButton.visibleProperty().bind(showDayPageLayoutControlsProperty());
 
         switch (getDayPageLayout()) {
-        case AGENDA_ONLY:
-            agendaOnlyButton.setSelected(true);
-            break;
-        case DAY_ONLY:
-            dayOnlyButton.setSelected(true);
-            break;
-        case STANDARD:
-            standardButton.setSelected(true);
-            break;
-        default:
-            break;
+            case AGENDA_ONLY:
+                agendaOnlyButton.setSelected(true);
+                break;
+            case DAY_ONLY:
+                dayOnlyButton.setSelected(true);
+                break;
+            case STANDARD:
+                standardButton.setSelected(true);
+                break;
+            default:
+                break;
         }
 
         agendaOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_AGENDA_LIST"))); //$NON-NLS-1$
@@ -313,10 +323,10 @@ public class DayPage extends PageBase {
     public final void goBack() {
         setDate(getDate().minusDays(1));
     }
-    
+
     @Override
     public final ViewType getPrintViewType() {
-    	return ViewType.DAY_VIEW;
+        return ViewType.DAY_VIEW;
     }
 
     private static final String DAY_PAGE_CATEGORY = "Day Page"; //$NON-NLS-1$

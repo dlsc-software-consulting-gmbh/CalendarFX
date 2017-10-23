@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -22,15 +22,16 @@ package com.google.ical.compat.jodatime;
 
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
+
 import java.util.Iterator;
 
 public interface DateTimeIterator extends Iterator<DateTime> {
 
-  /**
-   * skips all dates in the series before the given date.
-   *
-   * @param newStart non null.
-   */
-  void advanceTo(ReadableDateTime newStart);
+    /**
+     * skips all dates in the series before the given date.
+     *
+     * @param newStart non null.
+     */
+    void advanceTo(ReadableDateTime newStart);
 
 }

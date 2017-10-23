@@ -1,12 +1,25 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.view;
 
-import com.calendarfx.model.*;
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarSource;
+import com.calendarfx.model.Entry;
+import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
@@ -43,11 +56,7 @@ import java.text.MessageFormat;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
@@ -164,10 +173,10 @@ public abstract class DateControl extends CalendarFXControl {
         getWeekendDays().add(SATURDAY);
         getWeekendDays().add(SUNDAY);
 
-		/*
+        /*
          * Every date control is initially populated with a default source and
-		 * calendar.
-		 */
+         * calendar.
+         */
         CalendarSource defaultCalendarSource = new CalendarSource(Messages.getString("DateControl.DEFAULT_CALENDAR_SOURCE_NAME")); //$NON-NLS-1$
         Calendar defaultCalendar = new Calendar(Messages.getString("DateControl.DEFAULT_CALENDAR_NAME")); //$NON-NLS-1$
         defaultCalendarSource.getCalendars().add(defaultCalendar);
@@ -179,16 +188,16 @@ public abstract class DateControl extends CalendarFXControl {
 
         getCalendarSources().addListener(weakUpdateCalendarListListener);
 
-		/*
+        /*
          * The popover content callback creates a content node that will make
-		 * out the content of the popover used to display entry details.
-		 */
+         * out the content of the popover used to display entry details.
+         */
         setEntryDetailsPopOverContentCallback(param -> new EntryPopOverContentPane(param.getPopOver(), param.getDateControl(), param.getEntry()));
 
-		/*
+        /*
          * The default calendar provider returns the first calendar from the
-		 * first source.
-		 */
+         * first source.
+         */
         setDefaultCalendarProvider(control -> {
             List<CalendarSource> sources = getCalendarSources();
             if (sources != null && !sources.isEmpty()) {
@@ -286,9 +295,9 @@ public abstract class DateControl extends CalendarFXControl {
 
             ContextMenu contextMenu = new ContextMenu();
 
-			/*
+            /*
              * Show dialog / popover with entry details.
-			 */
+             */
             MenuItem informationItem = new MenuItem(Messages.getString("DateControl.MENU_ITEM_INFORMATION")); //$NON-NLS-1$
             informationItem.setOnAction(evt -> {
                 Callback<EntryDetailsParameter, Boolean> detailsCallback = getEntryDetailsCallback();
@@ -303,9 +312,9 @@ public abstract class DateControl extends CalendarFXControl {
             String stylesheet = CalendarView.class.getResource("calendar.css") //$NON-NLS-1$
                     .toExternalForm();
 
-			/*
+            /*
              * Assign entry to different calendars.
-			 */
+             */
             Menu calendarMenu = new Menu(Messages.getString("DateControl.MENU_CALENDAR")); //$NON-NLS-1$
             for (Calendar calendar : getCalendars()) {
                 RadioMenuItem calendarItem = new RadioMenuItem(calendar.getName());
@@ -317,10 +326,10 @@ public abstract class DateControl extends CalendarFXControl {
                 StackPane graphic = new StackPane();
                 graphic.getStylesheets().add(stylesheet);
 
-				/*
+                /*
                  * Icon has to be wrapped in a stackpane so that a stylesheet
-				 * can be added to it.
-				 */
+                 * can be added to it.
+                 */
                 Rectangle icon = new Rectangle(10, 10);
                 icon.setArcHeight(2);
                 icon.setArcWidth(2);
@@ -365,10 +374,10 @@ public abstract class DateControl extends CalendarFXControl {
 
         addEventHandler(CONTEXT_MENU_REQUESTED, evt -> {
 
-			/*
+            /*
              * If a context menu was specified by calling setContextMenu() then
-			 * we will not use the callback to produce one.
-			 */
+             * we will not use the callback to produce one.
+             */
             if (null == usesOwnContextMenu) {
                 usesOwnContextMenu = getContextMenu() != null;
             }
@@ -587,19 +596,19 @@ public abstract class DateControl extends CalendarFXControl {
 
         if (calendar != null) {
             /*
-			 * We have to ensure that the calendar is visible, otherwise the new
-			 * entry would not be shown to the user.
-			 */
+             * We have to ensure that the calendar is visible, otherwise the new
+             * entry would not be shown to the user.
+             */
             setCalendarVisibility(calendar, true);
             CreateEntryParameter param = new CreateEntryParameter(this, calendar, time);
             Callback<CreateEntryParameter, Entry<?>> factory = getEntryFactory();
             Entry<?> entry = factory.call(param);
             if (entry != null) {
-				/*
-				 * This is OK. The factory can return NULL. In this case we
-				 * assume that the application does not allow to create an entry
-				 * at the given location.
-				 */
+                /*
+                 * This is OK. The factory can return NULL. In this case we
+                 * assume that the application does not allow to create an entry
+                 * at the given location.
+                 */
                 entry.setCalendar(calendar);
             }
 
@@ -657,10 +666,10 @@ public abstract class DateControl extends CalendarFXControl {
 
         if (startEditing) {
 
-			/*
-			 * The UI first needs to update itself so that the matching entry
-			 * view can be found.
-			 */
+            /*
+             * The UI first needs to update itself so that the matching entry
+             * view can be found.
+             */
             Platform.runLater(() -> doEditEntry(entry));
         } else {
             Platform.runLater(() -> doBounceEntry(entry));
@@ -895,9 +904,9 @@ public abstract class DateControl extends CalendarFXControl {
         entryFactoryProperty().set(factory);
     }
 
-	/*
-	 * Calendar source callback.
-	 */
+    /*
+     * Calendar source callback.
+     */
 
     /**
      * The parameter object passed to the calendar source factory.
@@ -976,9 +985,9 @@ public abstract class DateControl extends CalendarFXControl {
         calendarSourceFactoryProperty().set(callback);
     }
 
-	/*
-	 * Context menu callback for entries.
-	 */
+    /*
+     * Context menu callback for entries.
+     */
 
     /**
      * The parameter object passed to the context menu callback for entries.
@@ -1234,9 +1243,9 @@ public abstract class DateControl extends CalendarFXControl {
         entryContextMenuCallbackProperty().set(callback);
     }
 
-	/*
-	 * Context menu callback.
-	 */
+    /*
+     * Context menu callback.
+     */
 
     /**
      * The parameter object passed to the context menu callback.

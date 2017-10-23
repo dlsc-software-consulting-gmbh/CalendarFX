@@ -1,34 +1,43 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package impl.com.calendarfx.view.page;
 
 import com.calendarfx.view.DetailedWeekView;
+import com.calendarfx.view.page.WeekPage;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
-
-import com.calendarfx.view.page.WeekPage;
 
 @SuppressWarnings("javadoc")
 public class WeekPageSkin extends PageBaseSkin<WeekPage> {
 
-	public WeekPageSkin(WeekPage view) {
-		super(view);
-	}
+    public WeekPageSkin(WeekPage view) {
+        super(view);
+    }
 
-	@Override
-	protected Node createContent() {
-		WeekPage weekPage = getSkinnable();
-		DetailedWeekView detailedWeekView = weekPage.getDetailedWeekView();
+    @Override
+    protected Node createContent() {
+        WeekPage weekPage = getSkinnable();
+        DetailedWeekView detailedWeekView = weekPage.getDetailedWeekView();
 
-		weekPage.bind(detailedWeekView, true);
+        weekPage.bind(detailedWeekView, true);
 
-		Bindings.bindBidirectional(detailedWeekView.startTimeProperty(), weekPage.startTimeProperty());
-		Bindings.bindBidirectional(detailedWeekView.endTimeProperty(), weekPage.endTimeProperty());
+        Bindings.bindBidirectional(detailedWeekView.startTimeProperty(), weekPage.startTimeProperty());
+        Bindings.bindBidirectional(detailedWeekView.endTimeProperty(), weekPage.endTimeProperty());
 
-		return detailedWeekView;
-	}
+        return detailedWeekView;
+    }
 }

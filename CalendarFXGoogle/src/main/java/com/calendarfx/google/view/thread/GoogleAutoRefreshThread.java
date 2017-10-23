@@ -1,3 +1,19 @@
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 package com.calendarfx.google.view.thread;
 
 import com.calendarfx.google.service.SecurityService;
@@ -7,7 +23,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * Thread that performs the automatic refreshing.
- *
+ * <p>
  * Created by gdiaz on 5/05/2017.
  */
 public class GoogleAutoRefreshThread extends Thread {
@@ -18,7 +34,7 @@ public class GoogleAutoRefreshThread extends Thread {
     private RefreshCalendarsTask task;
     private long delay;
 
-    public GoogleAutoRefreshThread (IGoogleCalendarDataProvider provider) {
+    public GoogleAutoRefreshThread(IGoogleCalendarDataProvider provider) {
         this.provider = provider;
         this.delay = RefreshInterval.EVERY_5_MINUTES.getTime();
         setName("Google-Calendar-Auto refresh Thread");
@@ -37,7 +53,7 @@ public class GoogleAutoRefreshThread extends Thread {
         }
     }
 
-    public void restart () {
+    public void restart() {
         synchronized (LOCK) {
             if (task != null) {
                 task.cancel();
@@ -49,7 +65,7 @@ public class GoogleAutoRefreshThread extends Thread {
 
     @Override
     @SuppressWarnings("InfiniteLoopStatement")
-    public void run () {
+    public void run() {
         while (true) {
             try {
                 long wait;
@@ -61,8 +77,7 @@ public class GoogleAutoRefreshThread extends Thread {
                 if (wait > 0) {
                     sleep(wait);
                 }
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 // Do nothing
             }
 
@@ -95,7 +110,7 @@ public class GoogleAutoRefreshThread extends Thread {
         private long time;
         private String name;
 
-        RefreshInterval (long time, String name) {
+        RefreshInterval(long time, String name) {
             this.time = time;
             this.name = name;
         }

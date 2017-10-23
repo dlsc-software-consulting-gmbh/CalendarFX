@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -28,34 +28,42 @@ import com.google.ical.values.DateValue;
  * @author mikesamuel+svn@gmail.com (Mike Samuel)
  */
 final class RDateIteratorImpl implements RecurrenceIterator {
-  private int i;
-  private DateValue[] datesUtc;
+    private int i;
+    private DateValue[] datesUtc;
 
-  RDateIteratorImpl(DateValue[] datesUtc) {
-    this.datesUtc = datesUtc.clone();  // defensive copy
-    assert increasing(datesUtc);  // indirectly checks that not-null.
-  }
-
-  public boolean hasNext() { return i < datesUtc.length; }
-
-  public DateValue next() { return datesUtc[i++]; }
-
-  public void remove() { throw new UnsupportedOperationException(); }
-
-  public void advanceTo(DateValue newStartUtc) {
-    long startCmp = DateValueComparison.comparable(newStartUtc);
-    while (i < datesUtc.length
-           && startCmp > DateValueComparison.comparable(datesUtc[i])) {
-      ++i;
+    RDateIteratorImpl(DateValue[] datesUtc) {
+        this.datesUtc = datesUtc.clone();  // defensive copy
+        assert increasing(datesUtc);  // indirectly checks that not-null.
     }
-  }
 
-  /** monotonically. */
-  private static <C extends Comparable<C>> boolean increasing(C[] els) {
-    for (int i = els.length; --i >= 1;) {
-      if (els[i - 1].compareTo(els[i]) > 0) { return false; }
+    public boolean hasNext() {
+        return i < datesUtc.length;
     }
-    return true;
-  }
+
+    public DateValue next() {
+        return datesUtc[i++];
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void advanceTo(DateValue newStartUtc) {
+        long startCmp = DateValueComparison.comparable(newStartUtc);
+        while (i < datesUtc.length
+                && startCmp > DateValueComparison.comparable(datesUtc[i])) {
+            ++i;
+        }
+    }
+
+    /** monotonically. */
+    private static <C extends Comparable<C>> boolean increasing(C[] els) {
+        for (int i = els.length; --i >= 1; ) {
+            if (els[i - 1].compareTo(els[i]) > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

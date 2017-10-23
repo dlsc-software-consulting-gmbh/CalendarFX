@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -20,10 +20,9 @@
 
 package com.google.ical.iter;
 
+import com.google.ical.util.Predicate;
 import com.google.ical.values.DateValue;
 import com.google.ical.values.DateValueImpl;
-import com.google.ical.util.Predicate;
-
 import junit.framework.TestCase;
 
 /**
@@ -31,23 +30,23 @@ import junit.framework.TestCase;
  */
 public class ConditionsTest extends TestCase {
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-  @Override
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
 
-  public void testCountCondition() throws Exception {
-    Predicate<DateValue> cc = Conditions.countCondition(3);
-    assertTrue(cc.apply(new DateValueImpl(2006, 2, 1)));
-    assertTrue(cc.apply(new DateValueImpl(2006, 2, 2)));
-    assertTrue(cc.apply(new DateValueImpl(2006, 2, 3)));
-    assertTrue(!cc.apply(new DateValueImpl(2006, 2, 4)));
-  }
+    public void testCountCondition() throws Exception {
+        Predicate<DateValue> cc = Conditions.countCondition(3);
+        assertTrue(cc.apply(new DateValueImpl(2006, 2, 1)));
+        assertTrue(cc.apply(new DateValueImpl(2006, 2, 2)));
+        assertTrue(cc.apply(new DateValueImpl(2006, 2, 3)));
+        assertTrue(!cc.apply(new DateValueImpl(2006, 2, 4)));
+    }
 
 
 }

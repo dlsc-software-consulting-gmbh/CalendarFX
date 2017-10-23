@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package impl.com.calendarfx.view;
@@ -99,16 +109,16 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             @Override
             public String toString(Frequency frequency) {
                 switch (frequency) {
-                case DAILY:
-                    return Messages.getString("RecurrenceViewSkin.DAILY"); //$NON-NLS-1$
-                case MONTHLY:
-                    return Messages.getString("RecurrenceViewSkin.MONTHLY"); //$NON-NLS-1$
-                case WEEKLY:
-                    return Messages.getString("RecurrenceViewSkin.WEEKLY"); //$NON-NLS-1$
-                case YEARLY:
-                    return Messages.getString("RecurrenceViewSkin.YEARLY"); //$NON-NLS-1$
-                default:
-                    return ""; //$NON-NLS-1$
+                    case DAILY:
+                        return Messages.getString("RecurrenceViewSkin.DAILY"); //$NON-NLS-1$
+                    case MONTHLY:
+                        return Messages.getString("RecurrenceViewSkin.MONTHLY"); //$NON-NLS-1$
+                    case WEEKLY:
+                        return Messages.getString("RecurrenceViewSkin.WEEKLY"); //$NON-NLS-1$
+                    case YEARLY:
+                        return Messages.getString("RecurrenceViewSkin.YEARLY"); //$NON-NLS-1$
+                    default:
+                        return ""; //$NON-NLS-1$
                 }
             }
 
@@ -293,30 +303,30 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             }
             RRule rrule = new RRule(rule);
             switch (rrule.getFreq()) {
-            case DAILY:
-                frequencyBox.setValue(Frequency.DAILY);
-                repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.DAYS")); //$NON-NLS-1$
-                break;
-            case WEEKLY:
-                frequencyBox.setValue(Frequency.WEEKLY);
-                repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.32")); //$NON-NLS-1$
-                break;
-            case MONTHLY:
-                frequencyBox.setValue(Frequency.MONTHLY);
-                repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.MONTHS")); //$NON-NLS-1$
-                break;
-            case YEARLY:
-                frequencyBox.setValue(Frequency.YEARLY);
-                repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.YEARS")); //$NON-NLS-1$
-                break;
-            case SECONDLY:
-            case HOURLY:
-            case MINUTELY:
-                throw new IllegalArgumentException(
-                        "unsupported frequency: " + rrule.getFreq()); //$NON-NLS-1$
-            default:
-                throw new IllegalArgumentException(
-                        "unknown frequency: " + rrule.getFreq()); //$NON-NLS-1$
+                case DAILY:
+                    frequencyBox.setValue(Frequency.DAILY);
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.DAYS")); //$NON-NLS-1$
+                    break;
+                case WEEKLY:
+                    frequencyBox.setValue(Frequency.WEEKLY);
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.32")); //$NON-NLS-1$
+                    break;
+                case MONTHLY:
+                    frequencyBox.setValue(Frequency.MONTHLY);
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.MONTHS")); //$NON-NLS-1$
+                    break;
+                case YEARLY:
+                    frequencyBox.setValue(Frequency.YEARLY);
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.YEARS")); //$NON-NLS-1$
+                    break;
+                case SECONDLY:
+                case HOURLY:
+                case MINUTELY:
+                    throw new IllegalArgumentException(
+                            "unsupported frequency: " + rrule.getFreq()); //$NON-NLS-1$
+                default:
+                    throw new IllegalArgumentException(
+                            "unknown frequency: " + rrule.getFreq()); //$NON-NLS-1$
 
             }
 
@@ -374,20 +384,20 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
     private void updateRule() {
         RRule rule = new RRule();
         switch (frequencyBox.getValue()) {
-        case DAILY:
-            rule.setFreq(com.google.ical.values.Frequency.DAILY);
-            break;
-        case MONTHLY:
-            rule.setFreq(com.google.ical.values.Frequency.MONTHLY);
-            break;
-        case WEEKLY:
-            rule.setFreq(com.google.ical.values.Frequency.WEEKLY);
-            break;
-        case YEARLY:
-            rule.setFreq(com.google.ical.values.Frequency.YEARLY);
-            break;
-        default:
-            break;
+            case DAILY:
+                rule.setFreq(com.google.ical.values.Frequency.DAILY);
+                break;
+            case MONTHLY:
+                rule.setFreq(com.google.ical.values.Frequency.MONTHLY);
+                break;
+            case WEEKLY:
+                rule.setFreq(com.google.ical.values.Frequency.WEEKLY);
+                break;
+            case YEARLY:
+                rule.setFreq(com.google.ical.values.Frequency.YEARLY);
+                break;
+            default:
+                break;
         }
 
         int interval = repeatCountSpinner.getValue();
@@ -409,8 +419,8 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
         if (rule.getFreq().equals(com.google.ical.values.Frequency.MONTHLY)) {
             if (repeatByDayOfTheMonth.isSelected()) {
-                rule.setByMonthDay(new int[] {
-                        getSkinnable().getStartDate().getDayOfMonth() });
+                rule.setByMonthDay(new int[]{
+                        getSkinnable().getStartDate().getDayOfMonth()});
             } else {
                 LocalDate localDate = getSkinnable().getStartDate();
 
@@ -429,29 +439,29 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
                 List<WeekdayNum> weekdays = new ArrayList<>();
                 switch (zonedDateTime.getDayOfWeek()) {
-                case FRIDAY:
-                    weekdays.add(new WeekdayNum(hits, Weekday.FR));
-                    break;
-                case MONDAY:
-                    weekdays.add(new WeekdayNum(hits, Weekday.MO));
-                    break;
-                case SATURDAY:
-                    weekdays.add(new WeekdayNum(hits, Weekday.SA));
-                    break;
-                case SUNDAY:
-                    weekdays.add(new WeekdayNum(hits, Weekday.SU));
-                    break;
-                case THURSDAY:
-                    weekdays.add(new WeekdayNum(hits, Weekday.TH));
-                    break;
-                case TUESDAY:
-                    weekdays.add(new WeekdayNum(hits, Weekday.TU));
-                    break;
-                case WEDNESDAY:
-                    weekdays.add(new WeekdayNum(hits, Weekday.WE));
-                    break;
-                default:
-                    break;
+                    case FRIDAY:
+                        weekdays.add(new WeekdayNum(hits, Weekday.FR));
+                        break;
+                    case MONDAY:
+                        weekdays.add(new WeekdayNum(hits, Weekday.MO));
+                        break;
+                    case SATURDAY:
+                        weekdays.add(new WeekdayNum(hits, Weekday.SA));
+                        break;
+                    case SUNDAY:
+                        weekdays.add(new WeekdayNum(hits, Weekday.SU));
+                        break;
+                    case THURSDAY:
+                        weekdays.add(new WeekdayNum(hits, Weekday.TH));
+                        break;
+                    case TUESDAY:
+                        weekdays.add(new WeekdayNum(hits, Weekday.TU));
+                        break;
+                    case WEDNESDAY:
+                        weekdays.add(new WeekdayNum(hits, Weekday.WE));
+                        break;
+                    default:
+                        break;
                 }
 
                 rule.setByDay(weekdays);
@@ -510,7 +520,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
     }
 
     private void maybeAddWeekday(List<WeekdayNum> weekdays,
-            WeekdayNum weekdayNum, ToggleButton button) {
+                                 WeekdayNum weekdayNum, ToggleButton button) {
         if (button.isSelected()) {
             weekdays.add(weekdayNum);
         }

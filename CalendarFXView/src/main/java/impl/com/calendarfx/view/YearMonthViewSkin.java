@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package impl.com.calendarfx.view;
@@ -593,8 +603,8 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
     public LocalDate getLoadStartDate() {
         /*
          * The month view also shows the last couple of days of the previous
-		 * month.
-		 */
+         * month.
+         */
         return Util.adjustToFirstDayOfWeek(getSkinnable().getDate().withDayOfMonth(1), getSkinnable().getFirstDayOfWeek());
     }
 
@@ -602,7 +612,7 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
     public LocalDate getLoadEndDate() {
         /*
          * The month view also shows the first couple of days of the next month.
-		 */
+         */
         return getLoadStartDate().plusDays(41); // the view always shows 41 month days
     }
 

@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -13,12 +13,12 @@ package com.google.ical.util;
  */
 public interface Predicate<T> {
 
-  /**
-   * Applies this Predicate to the given object.
-   *
-   * @param t may be null.
-   * @return the value of this Predicate when applied to input {@code t}
-   */
-  boolean apply(T t);
+    /**
+     * Applies this Predicate to the given object.
+     *
+     * @param t may be null.
+     * @return the value of this Predicate when applied to input {@code t}
+     */
+    boolean apply(T t);
 }
 

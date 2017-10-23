@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package impl.com.calendarfx.view;
@@ -185,10 +195,10 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                 }
                 break;
             default:
-            /*
-             * Blank string is important for layout purposes (title and time
-             * might have different font sizes
-             */
+                /*
+                 * Blank string is important for layout purposes (title and time
+                 * might have different font sizes
+                 */
                 titleLabel.setText(" "); //$NON-NLS-1$
                 titleLabel.setGraphic(null);
                 break;
@@ -207,13 +217,13 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                                         .format(entry.getEndTime())));
                         break;
                     case FIRST:
-                    /*
-                     * Only show it if the view is the first and represents the
-                     * start date of the entry. Views can be on first but
-                     * represent a date between start and end date of the entry
-                     * (e.g. when not shown in the first week of the entry time
-                     * interval).
-                     */
+                        /*
+                         * Only show it if the view is the first and represents the
+                         * start date of the entry. Views can be on first but
+                         * represent a date between start and end date of the entry
+                         * (e.g. when not shown in the first week of the entry time
+                         * interval).
+                         */
                         if (view.getStartDate()
                                 .equals(entry.getStartDate())) {
                             timeLabel.setText(

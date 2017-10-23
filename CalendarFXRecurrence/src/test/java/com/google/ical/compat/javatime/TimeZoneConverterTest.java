@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -20,14 +20,10 @@
 
 package com.google.ical.compat.javatime;
 
-import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Random;
-import java.util.TimeZone;
-
 import junit.framework.TestCase;
+
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  *
@@ -35,135 +31,135 @@ import junit.framework.TestCase;
  */
 public class TimeZoneConverterTest extends TestCase {
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
-
-  @Override
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-
-  private static final long MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
-  private static final long MILLIS_PER_YEAR = (long) (365.25 * MILLIS_PER_DAY);
-
-  public void testConvertMonteCarlo() throws Exception {
-    long seed = 1161647988961L;
-    Random rand = new Random(seed);
-    System.out.println("seed=" + seed);
-
-    // DateTimeZone id, followed by TimeZone id (which is null if we
-    // are to reuse the DateTimeZone id)
-    String[] tzids = {
-      "America/Los_Angeles", null,  // one in the Western hemisphire
-                                    // with daylight
-      "America/Belize", null,
-      "UTC", null,                  // UTC
-      "-07:00", "GMT-07:00",
-      "+08:15", "GMT+08:15",
-      "Europe/Paris", null,         // one in the Eastern hemisphere with
-                                    // daylight savings
-      "Asia/Shanghai", null,        // has daylight savings
-      "Pacific/Tongatapu", null,    // outside [-12,+12]
-    };
-
-    long soon = System.currentTimeMillis() + (7 * MILLIS_PER_DAY);
-    for (int i = 0; i < tzids.length; i+=2) {
-      String tzid = tzids[i];
-      String timeZoneTzid = tzids[i+1] == null ? tzid : tzids[i+1];
-      TimeZone utilTz = TimeZone.getTimeZone(timeZoneTzid);
-      ZoneId jodaTz = ZoneId.of(tzid);
-      // make sure that the timezone is recognized and we're not just testing
-      // UTC over and over.
-      assertTrue(utilTz.getID(),
-                 "UTC".equals(utilTz.getID()) ||
-                 !utilTz.hasSameRules(TimeZone.getTimeZone("UTC")));
-
-      // check that we're working a week out.
-      assertOffsetsEqualForDate(utilTz, jodaTz, soon);
-
-      // generate a bunch of random times in 2006 and test that the offsets
-      // convert properly
-      for (int run = 5000; --run >= 0;) {
-        // pick a random time in 2006
-        long t = ((2000 - 1970) * MILLIS_PER_YEAR)
-                 + (rand.nextLong() % (10L * MILLIS_PER_YEAR));
-        assertOffsetsEqualForDate(utilTz, jodaTz, t);
-      }
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
     }
-  }
 
-  public void testEquality() {
-    TimeZone tz1 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("America/Los_Angeles"));
-    TimeZone tz2 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("America/Los_Angeles"));
-    checkEqualsAndHashCodeMethods(tz1, tz2, true);
-
-    // Try two timezones that should be different
-    tz1 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("America/Los_Angeles"));
-    tz2 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("America/Chicago"));
-    checkEqualsAndHashCodeMethods(tz1, tz2, false);
-
-    // Try two timezones that are similar but not the same (first has
-    // dst, second does not)
-    tz1 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("America/Los_Angeles"));
-    tz2 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("Etc/GMT+8"));
-    checkEqualsAndHashCodeMethods(tz1, tz2, false);
-
-    // Some more cases
-    tz1 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("UTC"));
-    tz2 = TimeZoneConverter.toTimeZone(
-        ZoneId.of("Etc/GMT+8"));
-    checkEqualsAndHashCodeMethods(tz1, tz2, false);
-  }
-
-  private static void assertOffsetsEqualForDate(
-      TimeZone utilTz, ZoneId jodaTz, long offset) {
-
-    TimeZone convertedTz = TimeZoneConverter.toTimeZone(jodaTz);
-
-    // Test that the util timezone and it's joda timezone are equivalent.
-    assertEquals("offset=" + offset + " in " + utilTz.getID(),
-                 utilTz.getOffset(offset), convertedTz.getOffset(offset));
-
-    // Test the complicated getOffset method.
-    // We don't care which tz the output fields are in since we're not
-    // concerned that the output from getOffset(...) == offset,
-    // just that the utilTz.getOffset(...) == jodaTz.getOffset(...) computed
-    // from it are equal for both timezones.
-    GregorianCalendar c = new GregorianCalendar();
-    c.setTime(new Date(offset));
-    assertEquals("offset=" + offset + " in " + utilTz.getID(),
-                 utilTz.getOffset(
-                     c.get(Calendar.ERA),
-                     c.get(Calendar.YEAR),
-                     c.get(Calendar.MONTH),
-                     c.get(Calendar.DAY_OF_MONTH),
-                     c.get(Calendar.DAY_OF_WEEK),
-                     (int) (offset % MILLIS_PER_DAY)),
-                 convertedTz.getOffset(
-                     c.get(Calendar.ERA),
-                     c.get(Calendar.YEAR),
-                     c.get(Calendar.MONTH),
-                     c.get(Calendar.DAY_OF_MONTH),
-                     c.get(Calendar.DAY_OF_WEEK),
-                     (int) (offset % MILLIS_PER_DAY)));
-  }
-
-  private static void checkEqualsAndHashCodeMethods(
-      TimeZone tz1, TimeZone tz2, boolean equal) {
-    if (equal) {
-      assertEquals(tz1, tz2);
-      assertEquals(tz1 + " == " + tz2, tz1.hashCode(), tz2.hashCode());
-    } else {
-      assertTrue(tz1 + " != " + tz2, !tz1.equals(tz2));
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
     }
-  }
+
+    private static final long MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
+    private static final long MILLIS_PER_YEAR = (long) (365.25 * MILLIS_PER_DAY);
+
+    public void testConvertMonteCarlo() throws Exception {
+        long seed = 1161647988961L;
+        Random rand = new Random(seed);
+        System.out.println("seed=" + seed);
+
+        // DateTimeZone id, followed by TimeZone id (which is null if we
+        // are to reuse the DateTimeZone id)
+        String[] tzids = {
+                "America/Los_Angeles", null,  // one in the Western hemisphire
+                // with daylight
+                "America/Belize", null,
+                "UTC", null,                  // UTC
+                "-07:00", "GMT-07:00",
+                "+08:15", "GMT+08:15",
+                "Europe/Paris", null,         // one in the Eastern hemisphere with
+                // daylight savings
+                "Asia/Shanghai", null,        // has daylight savings
+                "Pacific/Tongatapu", null,    // outside [-12,+12]
+        };
+
+        long soon = System.currentTimeMillis() + (7 * MILLIS_PER_DAY);
+        for (int i = 0; i < tzids.length; i += 2) {
+            String tzid = tzids[i];
+            String timeZoneTzid = tzids[i + 1] == null ? tzid : tzids[i + 1];
+            TimeZone utilTz = TimeZone.getTimeZone(timeZoneTzid);
+            ZoneId jodaTz = ZoneId.of(tzid);
+            // make sure that the timezone is recognized and we're not just testing
+            // UTC over and over.
+            assertTrue(utilTz.getID(),
+                    "UTC".equals(utilTz.getID()) ||
+                            !utilTz.hasSameRules(TimeZone.getTimeZone("UTC")));
+
+            // check that we're working a week out.
+            assertOffsetsEqualForDate(utilTz, jodaTz, soon);
+
+            // generate a bunch of random times in 2006 and test that the offsets
+            // convert properly
+            for (int run = 5000; --run >= 0; ) {
+                // pick a random time in 2006
+                long t = ((2000 - 1970) * MILLIS_PER_YEAR)
+                        + (rand.nextLong() % (10L * MILLIS_PER_YEAR));
+                assertOffsetsEqualForDate(utilTz, jodaTz, t);
+            }
+        }
+    }
+
+    public void testEquality() {
+        TimeZone tz1 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("America/Los_Angeles"));
+        TimeZone tz2 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("America/Los_Angeles"));
+        checkEqualsAndHashCodeMethods(tz1, tz2, true);
+
+        // Try two timezones that should be different
+        tz1 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("America/Los_Angeles"));
+        tz2 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("America/Chicago"));
+        checkEqualsAndHashCodeMethods(tz1, tz2, false);
+
+        // Try two timezones that are similar but not the same (first has
+        // dst, second does not)
+        tz1 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("America/Los_Angeles"));
+        tz2 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("Etc/GMT+8"));
+        checkEqualsAndHashCodeMethods(tz1, tz2, false);
+
+        // Some more cases
+        tz1 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("UTC"));
+        tz2 = TimeZoneConverter.toTimeZone(
+                ZoneId.of("Etc/GMT+8"));
+        checkEqualsAndHashCodeMethods(tz1, tz2, false);
+    }
+
+    private static void assertOffsetsEqualForDate(
+            TimeZone utilTz, ZoneId jodaTz, long offset) {
+
+        TimeZone convertedTz = TimeZoneConverter.toTimeZone(jodaTz);
+
+        // Test that the util timezone and it's joda timezone are equivalent.
+        assertEquals("offset=" + offset + " in " + utilTz.getID(),
+                utilTz.getOffset(offset), convertedTz.getOffset(offset));
+
+        // Test the complicated getOffset method.
+        // We don't care which tz the output fields are in since we're not
+        // concerned that the output from getOffset(...) == offset,
+        // just that the utilTz.getOffset(...) == jodaTz.getOffset(...) computed
+        // from it are equal for both timezones.
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(new Date(offset));
+        assertEquals("offset=" + offset + " in " + utilTz.getID(),
+                utilTz.getOffset(
+                        c.get(Calendar.ERA),
+                        c.get(Calendar.YEAR),
+                        c.get(Calendar.MONTH),
+                        c.get(Calendar.DAY_OF_MONTH),
+                        c.get(Calendar.DAY_OF_WEEK),
+                        (int) (offset % MILLIS_PER_DAY)),
+                convertedTz.getOffset(
+                        c.get(Calendar.ERA),
+                        c.get(Calendar.YEAR),
+                        c.get(Calendar.MONTH),
+                        c.get(Calendar.DAY_OF_MONTH),
+                        c.get(Calendar.DAY_OF_WEEK),
+                        (int) (offset % MILLIS_PER_DAY)));
+    }
+
+    private static void checkEqualsAndHashCodeMethods(
+            TimeZone tz1, TimeZone tz2, boolean equal) {
+        if (equal) {
+            assertEquals(tz1, tz2);
+            assertEquals(tz1 + " == " + tz2, tz1.hashCode(), tz2.hashCode());
+        } else {
+            assertTrue(tz1 + " != " + tz2, !tz1.equals(tz2));
+        }
+    }
 }

@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.model;
@@ -21,7 +31,8 @@ import java.text.ParseException;
 import java.time.*;
 import java.util.*;
 
-import static com.calendarfx.model.CalendarEvent.*;
+import static com.calendarfx.model.CalendarEvent.CALENDAR_CHANGED;
+import static com.calendarfx.model.CalendarEvent.ENTRY_CHANGED;
 import static com.calendarfx.util.LoggingDomain.MODEL;
 import static java.util.Objects.requireNonNull;
 import static java.util.logging.Level.FINE;
@@ -283,9 +294,9 @@ public class Calendar implements EventTarget {
 
             if (entry.isRecurring()) {
 
-				/*
+                /*
                  * The recurring entry / entries.
-				 */
+                 */
                 String recurrenceRule = entry.getRecurrenceRule();
                 if (recurrenceRule != null && !recurrenceRule.trim().equals("")) { //$NON-NLS-1$
 
@@ -296,15 +307,15 @@ public class Calendar implements EventTarget {
 
                         LocalDateIterator iterator = LocalDateIteratorFactory.createLocalDateIterator(recurrenceRule, utilStartDate, zoneId, true);
 
-						/*
+                        /*
                          * TODO: for performance reasons we should definitely
-						 * use the advanceTo() call, but unfortunately this
-						 * collides with the fact that e.g. the DetailedWeekView loads
-						 * data day by day. So a given day would not show
-						 * entries that start on the day before but intersect
-						 * with the given day. We have to find a solution for
-						 * this.
-						 */
+                         * use the advanceTo() call, but unfortunately this
+                         * collides with the fact that e.g. the DetailedWeekView loads
+                         * data day by day. So a given day would not show
+                         * entries that start on the day before but intersect
+                         * with the given day. We have to find a solution for
+                         * this.
+                         */
                         // iterator.advanceTo(org.joda.time.LocalDate.fromDateFields(Date.from(st.toInstant())));
 
                         while (iterator.hasNext()) {

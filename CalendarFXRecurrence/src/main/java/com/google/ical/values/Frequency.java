@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -41,13 +41,12 @@ package com.google.ical.values;
  * @author mikesamuel+svn@gmail.com (Mike Samuel)
  */
 public enum Frequency {
-  // in order of increasing length
-  SECONDLY,
-  MINUTELY,
-  HOURLY,
-  DAILY,
-  WEEKLY,
-  MONTHLY,
-  YEARLY,
-  ;
+    // in order of increasing length
+    SECONDLY,
+    MINUTELY,
+    HOURLY,
+    DAILY,
+    WEEKLY,
+    MONTHLY,
+    YEARLY,;
 }

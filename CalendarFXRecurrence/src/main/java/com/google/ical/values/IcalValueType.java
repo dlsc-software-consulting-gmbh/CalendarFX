@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
+ * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com)
+ * <p>
  * This file is part of CalendarFX.
  */
 
@@ -69,28 +69,29 @@ package com.google.ical.values;
  */
 public enum IcalValueType {
 
-  BINARY,
-  BOOLEAN,
-  CAL_ADDRESS,
-  DATE,
-  DATE_TIME,
-  DURATION,
-  FLOAT,
-  INTEGER,
-  PERIOD,
-  RECUR,
-  TEXT,
-  TIME,
-  URI,
-  UTC_OFFSET,
+    BINARY,
+    BOOLEAN,
+    CAL_ADDRESS,
+    DATE,
+    DATE_TIME,
+    DURATION,
+    FLOAT,
+    INTEGER,
+    PERIOD,
+    RECUR,
+    TEXT,
+    TIME,
+    URI,
+    UTC_OFFSET,
 
-  X_NAME,
-  OTHER,
-  ;
+    X_NAME,
+    OTHER,;
 
-  public static IcalValueType fromIcal(String icalValue) {
-    return valueOf(icalValue.toUpperCase().replace('-', '_'));
-  }
+    public static IcalValueType fromIcal(String icalValue) {
+        return valueOf(icalValue.toUpperCase().replace('-', '_'));
+    }
 
-  public String toIcal() { return name().replace('_', '-'); }
+    public String toIcal() {
+        return name().replace('_', '-');
+    }
 }

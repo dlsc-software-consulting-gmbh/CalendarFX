@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.view;
@@ -81,7 +91,7 @@ public class ContextMenuProvider
         WeekDayView weekDayView = (WeekDayView) param.getDateControl();
         WeekView weekView = weekDayView.getWeekView();
         Menu daysMenu = new Menu(Messages.getString("ContextMenuProvider.SHOW_DAYS")); //$NON-NLS-1$
-        int[] days = new int[] { 5, 7, 14, 21, 28 };
+        int[] days = new int[]{5, 7, 14, 21, 28};
         for (int d : days) {
             String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.DAYS"), d); //$NON-NLS-1$
             MenuItem item = new MenuItem(itemText);
@@ -126,17 +136,17 @@ public class ContextMenuProvider
                 showCompressedItem.setOnAction(evt -> dayView
                         .setEarlyLateHoursStrategy(SHOW_COMPRESSED));
                 switch (dayView.getEarlyLateHoursStrategy()) {
-                case HIDE:
-                    hideItem.setSelected(true);
-                    break;
-                case SHOW:
-                    showItem.setSelected(true);
-                    break;
-                case SHOW_COMPRESSED:
-                    showCompressedItem.setSelected(true);
-                    break;
-                default:
-                    break;
+                    case HIDE:
+                        hideItem.setSelected(true);
+                        break;
+                    case SHOW:
+                        showItem.setSelected(true);
+                        break;
+                    case SHOW_COMPRESSED:
+                        showCompressedItem.setSelected(true);
+                        break;
+                    default:
+                        break;
                 }
                 ToggleGroup group = new ToggleGroup();
                 group.getToggles().setAll(hideItem, showItem,
@@ -150,7 +160,7 @@ public class ContextMenuProvider
                 gridOff.setOnAction(evt -> control.setVirtualGrid(OFF));
                 gridMenu.getItems().add(gridOff);
                 gridMenu.getItems().add(new SeparatorMenuItem());
-                int[] grids = new int[] { 5, 10, 15, 30, 60 };
+                int[] grids = new int[]{5, 10, 15, 30, 60};
                 for (int grid : grids) {
                     String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES"), grid); //$NON-NLS-1$
                     String itemTextShort = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES_SHORT"), grid); //$NON-NLS-1$
@@ -179,7 +189,7 @@ public class ContextMenuProvider
                 hourHeight.setGraphic(sliderWrapper);
                 hoursMenu.getItems().add(hourHeight);
                 hoursMenu.getItems().add(new SeparatorMenuItem());
-                int[] hours = new int[] { 4, 6, 8, 10, 12, 18, 24 };
+                int[] hours = new int[]{4, 6, 8, 10, 12, 18, 24};
                 for (int h : hours) {
                     String labelText = MessageFormat.format(Messages.getString("ContextMenuProvider.HOURS"), h); //$NON-NLS-1$
                     Label wrapper = new Label(labelText);

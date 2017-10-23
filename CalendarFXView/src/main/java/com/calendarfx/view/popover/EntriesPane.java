@@ -1,7 +1,17 @@
-/**
- * Copyright (C) 2015, 2016 Dirk Lemmermann Software & Consulting (dlsc.com) 
- * 
- * This file is part of CalendarFX.
+/*
+ *  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package com.calendarfx.view.popover;
@@ -26,64 +36,64 @@ import java.util.List;
 
 class EntriesPane extends VBox {
 
-	public EntriesPane() {
-		setMinSize(0, 0);
-		entries.addListener((Observable evt) -> update());
-		getStyleClass().add("entries-pane");
-		setAlignment(Pos.CENTER);
-	}
+    public EntriesPane() {
+        setMinSize(0, 0);
+        entries.addListener((Observable evt) -> update());
+        getStyleClass().add("entries-pane");
+        setAlignment(Pos.CENTER);
+    }
 
-	private final ObservableList<Entry<?>> entries = FXCollections.observableArrayList();
+    private final ObservableList<Entry<?>> entries = FXCollections.observableArrayList();
 
-	public final ObservableList<Entry<?>> getEntries() {
-		return entries;
-	}
+    public final ObservableList<Entry<?>> getEntries() {
+        return entries;
+    }
 
-	private void update() {
+    private void update() {
 
-		if (!entries.isEmpty()) {
+        if (!entries.isEmpty()) {
 
-			List<Entry<?>> workingList = new ArrayList<>(entries);
+            List<Entry<?>> workingList = new ArrayList<>(entries);
 
-			/*
-			 * Individual calendars are already sorted, but now we are
-			 * displaying entries from several calendars, so let's resort.
-			 */
-			Collections.sort(workingList);
+            /*
+             * Individual calendars are already sorted, but now we are
+             * displaying entries from several calendars, so let's resort.
+             */
+            Collections.sort(workingList);
 
-			for (Entry<?> entry : workingList) {
-				Calendar calendar = entry.getCalendar();
+            for (Entry<?> entry : workingList) {
+                Calendar calendar = entry.getCalendar();
 
-				BorderPane borderPane = new BorderPane();
-				borderPane.getStyleClass().add("entry");
+                BorderPane borderPane = new BorderPane();
+                borderPane.getStyleClass().add("entry");
 
-				Label titleLabel = new Label(entry.getTitle());
-				BorderPane.setAlignment(titleLabel, Pos.CENTER_LEFT);
-				titleLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				titleLabel.getStyleClass().add("title"); //$NON-NLS-1$
-				borderPane.setCenter(titleLabel);
+                Label titleLabel = new Label(entry.getTitle());
+                BorderPane.setAlignment(titleLabel, Pos.CENTER_LEFT);
+                titleLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                titleLabel.getStyleClass().add("title"); //$NON-NLS-1$
+                borderPane.setCenter(titleLabel);
 
-				Circle colorDot = new Circle();
-				colorDot.setRadius(2.5);
-				colorDot.getStyleClass().add(
-						calendar.getStyle() + "-icon-small"); //$NON-NLS-1$
-				titleLabel.setGraphic(colorDot);
+                Circle colorDot = new Circle();
+                colorDot.setRadius(2.5);
+                colorDot.getStyleClass().add(
+                        calendar.getStyle() + "-icon-small"); //$NON-NLS-1$
+                titleLabel.setGraphic(colorDot);
 
-				Label timeLabel = new Label();
-				if (entry.isFullDay()) {
-					timeLabel.setText(Messages.getString("EntriesPane.FULL_DAY")); //$NON-NLS-1$
-				} else {
-					timeLabel.setText(DateTimeFormatter.ofLocalizedTime(
-							FormatStyle.SHORT).format(entry.getStartTime()));
-				}
+                Label timeLabel = new Label();
+                if (entry.isFullDay()) {
+                    timeLabel.setText(Messages.getString("EntriesPane.FULL_DAY")); //$NON-NLS-1$
+                } else {
+                    timeLabel.setText(DateTimeFormatter.ofLocalizedTime(
+                            FormatStyle.SHORT).format(entry.getStartTime()));
+                }
 
-				borderPane.setRight(timeLabel);
+                borderPane.setRight(timeLabel);
 
-				timeLabel.getStyleClass().add("time"); //$NON-NLS-1$
-				BorderPane.setAlignment(timeLabel, Pos.CENTER_RIGHT);
+                timeLabel.getStyleClass().add("time"); //$NON-NLS-1$
+                BorderPane.setAlignment(timeLabel, Pos.CENTER_RIGHT);
 
-				getChildren().add(borderPane);
-			}
-		}
-	}
+                getChildren().add(borderPane);
+            }
+        }
+    }
 }
