@@ -20,7 +20,11 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.view.CalendarSelector;
 import com.calendarfx.view.CalendarView;
 import javafx.beans.Observable;
-import javafx.scene.control.*;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SkinBase;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;

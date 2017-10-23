@@ -19,7 +19,11 @@ package com.calendarfx.model;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 

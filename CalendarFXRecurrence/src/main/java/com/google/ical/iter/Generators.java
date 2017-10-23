@@ -22,7 +22,11 @@ package com.google.ical.iter;
 
 import com.google.ical.util.DTBuilder;
 import com.google.ical.util.TimeUtils;
-import com.google.ical.values.*;
+import com.google.ical.values.DateValue;
+import com.google.ical.values.DateValueImpl;
+import com.google.ical.values.TimeValue;
+import com.google.ical.values.Weekday;
+import com.google.ical.values.WeekdayNum;
 
 import java.util.Arrays;
 

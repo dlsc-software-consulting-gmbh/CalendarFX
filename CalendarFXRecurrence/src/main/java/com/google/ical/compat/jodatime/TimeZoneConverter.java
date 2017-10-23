@@ -23,7 +23,11 @@ package com.google.ical.compat.jodatime;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

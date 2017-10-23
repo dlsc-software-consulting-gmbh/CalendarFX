@@ -19,14 +19,24 @@ package com.calendarfx.view;
 import com.calendarfx.view.DateControl.ContextMenuParameter;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.DayViewBase.HoursLayoutStrategy;
-import javafx.scene.control.*;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleGroup;
 import javafx.util.Callback;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-import static com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy.*;
+import static com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy.HIDE;
+import static com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy.SHOW;
+import static com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy.SHOW_COMPRESSED;
 import static com.calendarfx.view.VirtualGrid.OFF;
 
 /**

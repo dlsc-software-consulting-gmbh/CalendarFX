@@ -18,7 +18,11 @@ package com.calendarfx.util;
 
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
-import com.google.ical.values.*;
+import com.google.ical.values.DateValue;
+import com.google.ical.values.Frequency;
+import com.google.ical.values.RRule;
+import com.google.ical.values.Weekday;
+import com.google.ical.values.WeekdayNum;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.WeakListener;

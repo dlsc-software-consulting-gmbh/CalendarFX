@@ -20,7 +20,12 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.util.Util;
 import com.google.ical.values.RRule;
 import impl.com.calendarfx.view.RecurrenceViewSkin;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Skin;
 
 import java.text.ParseException;

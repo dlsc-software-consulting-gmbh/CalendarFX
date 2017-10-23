@@ -16,13 +16,26 @@
 
 package com.calendarfx.view.print;
 
-import com.calendarfx.view.*;
+import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DayViewBase;
+import com.calendarfx.view.DetailedDayView;
+import com.calendarfx.view.DetailedWeekView;
+import com.calendarfx.view.MonthView;
 import com.calendarfx.view.print.PaperView.MarginType;
 import impl.com.calendarfx.view.print.PrintablePageSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
 import javafx.event.WeakEventHandler;
 import javafx.print.PageOrientation;

@@ -17,7 +17,11 @@
 package com.calendarfx.google.service;
 
 import com.google.code.geocoder.Geocoder;
-import com.google.code.geocoder.model.*;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderGeometry;
+import com.google.code.geocoder.model.GeocoderRequest;
+import com.google.code.geocoder.model.GeocoderResult;
+import com.google.code.geocoder.model.GeocoderStatus;
 
 import java.io.IOException;
 import java.util.List;

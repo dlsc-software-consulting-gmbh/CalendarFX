@@ -16,7 +16,12 @@
 
 package com.calendarfx.model;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static java.util.Objects.requireNonNull;
 

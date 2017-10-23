@@ -20,14 +20,25 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.view.*;
+import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DayEntryView;
+import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase;
+import com.calendarfx.view.DraggedEntry;
+import com.calendarfx.view.EntryViewBase;
+import com.calendarfx.view.VirtualGrid;
+import com.calendarfx.view.WeekView;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 import java.util.logging.Logger;
 
