@@ -83,7 +83,7 @@ import static javafx.scene.control.SelectionMode.SINGLE;
 
 public class CalendarViewSkin extends SkinBase<CalendarView> {
 
-    private CustomMasterDetailPane leftMasterDetailPane;
+    private MasterDetailPane leftMasterDetailPane;
     private ToggleButton trayButton;
     private Button addCalendarButton;
     private Button printButton;
@@ -143,7 +143,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         monthPage.hiddenProperty().addListener(updateSwitcherListener);
         yearPage.hiddenProperty().addListener(updateSwitcherListener);
 
-        this.leftMasterDetailPane = new CustomMasterDetailPane(Side.LEFT);
+        this.leftMasterDetailPane = new MasterDetailPane(Side.LEFT);
         TrayPane trayPane = new TrayPane();
         this.trayButton = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY")); //$NON-NLS-1$
         this.trayButton.setId("show-tray-button");
@@ -307,7 +307,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
             DeveloperConsole developerConsole = view.getDeveloperConsole();
-            CustomMasterDetailPane developerConsoleMasterDetailPane = new CustomMasterDetailPane(Side.BOTTOM);
+            MasterDetailPane developerConsoleMasterDetailPane = new MasterDetailPane(Side.BOTTOM);
             developerConsoleMasterDetailPane.setDividerPosition(.6);
             developerConsoleMasterDetailPane.animatedProperty().bind(view.traysAnimatedProperty());
             developerConsoleMasterDetailPane.getStyleClass().add("developer-master-detail-pane"); //$NON-NLS-1$
@@ -337,78 +337,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
     private void closeTray() {
         leftMasterDetailPane.setShowDetailNode(false);
-    }
-
-    // TODO: remove once the resetDividerPosition() method has been added to ControlsFX
-    private class CustomMasterDetailPane extends MasterDetailPane {
-
-        public CustomMasterDetailPane(Side side) {
-            super(side);
-        }
-
-        /**
-         * Resets the divider position to a value that ensures that the detail node will be fully
-         * visible at its preferred width or height.
-         */
-        public final void resetDividerPosition() {
-            /*
-             * Store the current state in order to recreate it once the
-             * divider position has been updated.
-             */
-            boolean wasShowing = isShowDetailNode();
-            boolean wasAnimated = isAnimated();
-
-            Node node = getDetailNode();
-
-            if (!wasShowing) {
-                setAnimated(false);
-                setShowDetailNode(true);
-
-                /*
-                 * Force CSS pass to ensure that calls to prefWidth/Height will
-                 * return proper values.
-                 */
-                node.applyCss();
-            }
-
-            double ps;
-
-            switch (getDetailSide()) {
-                case LEFT:
-                case RIGHT:
-                    ps = node.prefWidth(-1) + 10;
-                    break;
-                case TOP:
-                case BOTTOM:
-                default:
-                    ps = node.prefHeight(-1) + 10;
-                    break;
-            }
-
-            double position = 0;
-
-            switch (getDetailSide()) {
-                case LEFT:
-                    position = ps / getWidth();
-                    break;
-                case RIGHT:
-                    position = 1 - (ps / getWidth());
-                    break;
-                case TOP:
-                    position = ps / getHeight();
-                    break;
-                case BOTTOM:
-                    position = 1 - (ps / getHeight());
-                    break;
-            }
-
-            setDividerPosition(position);
-
-            if (!wasShowing) {
-                setShowDetailNode(wasShowing);
-                setAnimated(wasAnimated);
-            }
-        }
     }
 
     private void buildSwitcher() {
