@@ -8,6 +8,7 @@ A Java framework for creating sophisticated calendar views based on JavaFX. A de
 # Repository Coordinates
 CalendarFX can be found on jcentral / bintray. Add the jcentral repository to your pom file and include the CalendarFX dependency.
 
+```javascript
 <repositories>
 	<repository>
 		<id>jcenter</id>
@@ -23,6 +24,7 @@ CalendarFX can be found on jcentral / bintray. Add the jcentral repository to yo
   		<type>pom</type>
 	</dependency>
 </dependencies>
+```
 
 # Modules
 
