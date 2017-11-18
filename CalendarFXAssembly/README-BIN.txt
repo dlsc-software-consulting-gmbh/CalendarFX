@@ -24,10 +24,6 @@ This is the CalendarFX distribution. It contains the following items:
 
 	The resource bundles used by CalendarFX.
 
--- legal
-
-	The available licensing options (development, runtime, source, research).
-	
 -- lib
 
 	The actual CalendarFX libraries.

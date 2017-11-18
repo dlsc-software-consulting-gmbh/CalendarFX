@@ -42,7 +42,6 @@
             <outputDirectory>ext</outputDirectory>
             <includes>
                 <include>org.controlsfx:controlsfx</include>
-                <include>com.smardec:license4j</include>
                 <include>de.jensd:fontawesomefx-commons</include>
                 <include>de.jensd:fontawesomefx-fontawesome</include>
             </includes>
