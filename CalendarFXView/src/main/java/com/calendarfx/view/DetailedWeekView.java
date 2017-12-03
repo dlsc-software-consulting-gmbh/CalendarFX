@@ -82,14 +82,17 @@ public class DetailedWeekView extends DayViewBase {
         weekDayHeaderView = new WeekDayHeaderView();
         bind(weekDayHeaderView, true);
         Bindings.bindBidirectional(weekDayHeaderView.numberOfDaysProperty(), numberOfDaysProperty());
+        Bindings.bindBidirectional(weekDayHeaderView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());
 
         allDayView = new AllDayView(getNumberOfDays());
         bind(allDayView, true);
         Bindings.bindBidirectional(allDayView.numberOfDaysProperty(), numberOfDaysProperty());
+        Bindings.bindBidirectional(allDayView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());
 
         weekView = new WeekView();
         bind(weekView, true);
         Bindings.bindBidirectional(weekView.numberOfDaysProperty(), numberOfDaysProperty());
+        Bindings.bindBidirectional(weekView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());
 
         timeScaleView = new WeekTimeScaleView();
         bind(timeScaleView, true);

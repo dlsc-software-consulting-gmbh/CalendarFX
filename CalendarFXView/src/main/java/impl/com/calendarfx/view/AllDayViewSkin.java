@@ -73,6 +73,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         view.numberOfDaysProperty().addListener(updateBackgroundsListener);
         view.showTodayProperty().addListener(updateBackgroundsListener);
         view.weekFieldsProperty().addListener(updateBackgroundsListener);
+        view.adjustToFirstDayOfWeekProperty().addListener(updateBackgroundsListener);
 
         // update entries
         InvalidationListener updateEntriesListener = evt -> updateEntries("a view property changed");
@@ -83,6 +84,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         view.rowSpacingProperty().addListener(updateEntriesListener);
         view.columnSpacingProperty().addListener(updateEntriesListener);
         view.weekFieldsProperty().addListener(updateEntriesListener);
+        view.adjustToFirstDayOfWeekProperty().addListener(updateEntriesListener);
 
         updateBackgrounds();
 
