@@ -12,7 +12,3 @@ by CalendarFX. The framework can not work without these.
 - fontawesomefx-fontawesome-xxx.jar
 
   The fontawesome font for JavaFX.
-
-- license4j-1.4.0.jar
-
-  Support for licensing keys.

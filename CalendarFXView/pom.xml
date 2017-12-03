@@ -26,6 +26,14 @@
         <version>8.4.1</version>
     </parent>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-dlsc-oss-repository</id>
+            <name>dlsc-oss-repository</name>
+            <url>https://api.bintray.com/maven/dlsc-oss/repository/CalendarFX/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <!-- repository>
             <id>oss-sonatype</id>
@@ -55,7 +63,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>8.40.11</version>
+            <version>8.40.13</version>
         </dependency>
 
         <dependency>

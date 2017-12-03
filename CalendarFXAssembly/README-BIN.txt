@@ -18,7 +18,7 @@ This is the CalendarFX distribution. It contains the following items:
    
 -- ext
 
-	Contains third party libraries that are needed for running CalendarFX (controlsfx, license4j, fontawesomefx).
+	Contains third party libraries that are needed for running CalendarFX (controlsfx, fontawesomefx).
 
 -- i18n
 
