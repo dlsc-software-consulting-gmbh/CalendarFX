@@ -922,7 +922,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 public void set(T newObject) {
                     T oldUserObject = get();
 
-                    if (!Util.equals(oldUserObject, newObject)) {
+                    // We do not use .equals() here to allow to reset the object even if is "looks" the same e.g. if it
+                    // has some .equals() method implemented which just compares an id/business key.
+                    if (oldUserObject != newObject) {
                         super.set(newObject);
 
                         Calendar calendar = getCalendar();

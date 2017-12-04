@@ -49,6 +49,7 @@ public class WeekDayHeaderViewSkin extends SkinBase<WeekDayHeaderView> {
         view.showTodayProperty().addListener(updateListener);
         view.weekFieldsProperty().addListener(updateListener);
         view.enableHyperlinksProperty().addListener(updateListener);
+        view.adjustToFirstDayOfWeekProperty().addListener(updateListener);
 
         updateControl();
     }
