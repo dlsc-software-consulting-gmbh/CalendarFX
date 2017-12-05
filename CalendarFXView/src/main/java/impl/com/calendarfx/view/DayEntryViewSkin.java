@@ -38,8 +38,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
-    private Label startTimeLabel;
-    private Label titleLabel;
+    protected Label startTimeLabel;
+    protected Label titleLabel;
 
     private final InvalidationListener updateStylesListener = it -> updateStyles();
     private final WeakInvalidationListener weakUpdateStylesListener = new WeakInvalidationListener(updateStylesListener);
