@@ -23,13 +23,11 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
-import javafx.scene.layout.BorderPane;
 
 @SuppressWarnings("javadoc")
 public class AllDayEntryViewSkin extends SkinBase<AllDayEntryView> {
 
-    private Label titleLabel;
-    private BorderPane borderPane;
+    protected Label titleLabel;
 
     public AllDayEntryViewSkin(AllDayEntryView view) {
         super(view);
@@ -55,7 +53,7 @@ public class AllDayEntryViewSkin extends SkinBase<AllDayEntryView> {
 
     private WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(updateViewListener);
 
-    private void updateView() {
+    protected void updateView() {
         final AllDayEntryView view = getSkinnable();
 
         Entry<?> entry = view.getEntry();
