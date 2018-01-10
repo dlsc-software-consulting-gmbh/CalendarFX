@@ -23,16 +23,8 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>8.4.1</version>
+        <version>8.4.2</version>
     </parent>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray-dlsc-oss-repository</id>
-            <name>dlsc-oss-repository</name>
-            <url>https://api.bintray.com/maven/dlsc-oss/repository/CalendarFX/;publish=1</url>
-        </repository>
-    </distributionManagement>
 
     <repositories>
         <!-- repository>
@@ -57,7 +49,7 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>recurrence</artifactId>
-            <version>8.4.1</version>
+            <version>8.4.2</version>
         </dependency>
 
         <dependency>
