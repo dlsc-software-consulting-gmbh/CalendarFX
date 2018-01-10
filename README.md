@@ -19,7 +19,7 @@ CalendarFX can be found on jcentral / bintray. Add the jcentral repository to yo
 <dependencies>
 	<dependency>
   		<groupId>com.calendarfx</groupId>
-  		<artifactId>calendar</artifactId>
+  		<artifactId>view</artifactId>
   		<version>8.4.2</version>
 	</dependency>
 </dependencies>
