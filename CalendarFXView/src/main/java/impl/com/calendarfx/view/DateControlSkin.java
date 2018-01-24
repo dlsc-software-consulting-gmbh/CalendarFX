@@ -200,7 +200,7 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
             infoShown = true;
 
             System.out.println("CalendarFX user interface framework for Java");
-            System.out.println("(c) 2014 - 2017 DLSC Software & Consulting");
+            System.out.println("(c) 2014 - 2018 DLSC Software & Consulting");
             System.out.println("Version: " + CalendarFX.getVersion());
             System.out.println("Website: http://www.dlsc.com");
         }
