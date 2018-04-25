@@ -100,44 +100,42 @@ public class RecurrenceIteratorFactory {
             throws ParseException {
         final IcalObject[] contentLines = parseContentLines(rdata, tzid, strict);
 
-        return new RecurrenceIterable() {
-            public RecurrenceIterator iterator() {
-                List<RecurrenceIterator> inclusions =
-                        new ArrayList<RecurrenceIterator>();
-                List<RecurrenceIterator> exclusions =
-                        new ArrayList<RecurrenceIterator>();
-                // always include DTStart
-                inclusions.add(new RDateIteratorImpl(
-                        new DateValue[]{TimeUtils.toUtc(dtStart, tzid)}));
-                for (IcalObject contentLine : contentLines) {
-                    try {
-                        String name = contentLine.getName();
-                        if ("rrule".equalsIgnoreCase(name)) {
-                            inclusions.add(createRecurrenceIterator(
-                                    (RRule) contentLine, dtStart, tzid));
-                        } else if ("rdate".equalsIgnoreCase(name)) {
-                            inclusions.add(
-                                    createRecurrenceIterator((RDateList) contentLine));
-                        } else if ("exrule".equalsIgnoreCase(name)) {
-                            exclusions.add(createRecurrenceIterator(
-                                    (RRule) contentLine, dtStart, tzid));
-                        } else if ("exdate".equalsIgnoreCase(name)) {
-                            exclusions.add(
-                                    createRecurrenceIterator((RDateList) contentLine));
-                        }
-                    } catch (IllegalArgumentException ex) {
-                        // bad frequency on rrule or exrule
-                        if (strict) {
-                            throw ex;
-                        }
-                        LOGGER.log(
-                                Level.SEVERE,
-                                "Dropping bad recurrence rule line: " + contentLine.toIcal(),
-                                ex);
+        return () -> {
+            List<RecurrenceIterator> inclusions =
+                    new ArrayList<>();
+            List<RecurrenceIterator> exclusions =
+                    new ArrayList<>();
+            // always include DTStart
+            inclusions.add(new RDateIteratorImpl(
+                    new DateValue[]{TimeUtils.toUtc(dtStart, tzid)}));
+            for (IcalObject contentLine : contentLines) {
+                try {
+                    String name = contentLine.getName();
+                    if ("rrule".equalsIgnoreCase(name)) {
+                        inclusions.add(createRecurrenceIterator(
+                                (RRule) contentLine, dtStart, tzid));
+                    } else if ("rdate".equalsIgnoreCase(name)) {
+                        inclusions.add(
+                                createRecurrenceIterator((RDateList) contentLine));
+                    } else if ("exrule".equalsIgnoreCase(name)) {
+                        exclusions.add(createRecurrenceIterator(
+                                (RRule) contentLine, dtStart, tzid));
+                    } else if ("exdate".equalsIgnoreCase(name)) {
+                        exclusions.add(
+                                createRecurrenceIterator((RDateList) contentLine));
                     }
+                } catch (IllegalArgumentException ex) {
+                    // bad frequency on rrule or exrule
+                    if (strict) {
+                        throw ex;
+                    }
+                    LOGGER.log(
+                            Level.SEVERE,
+                            "Dropping bad recurrence rule line: " + contentLine.toIcal(),
+                            ex);
                 }
-                return new CompoundIteratorImpl(inclusions, exclusions);
             }
+            return new CompoundIteratorImpl(inclusions, exclusions);
         };
     }
 
@@ -292,7 +290,7 @@ public class RecurrenceIteratorFactory {
         // more prolific generators as filters.
         // TODO(msamuel): don't need a list here
         List<Predicate<? super DateValue>> filters =
-                new ArrayList<Predicate<? super DateValue>>();
+                new ArrayList<>();
 
         switch (freq) {
             case SECONDLY:
@@ -458,14 +456,14 @@ public class RecurrenceIteratorFactory {
             }
             condition = Conditions.untilCondition(untilUtc);
         } else {
-            condition = Predicates.<DateValue>alwaysTrue();
+            condition = Predicates.alwaysTrue();
         }
 
         // combine filters into a single function
         Predicate<? super DateValue> filter;
         switch (filters.size()) {
             case 0:
-                filter = Predicates.<DateValue>alwaysTrue();
+                filter = Predicates.alwaysTrue();
                 break;
             case 1:
                 filter = filters.get(0);
@@ -510,11 +508,11 @@ public class RecurrenceIteratorFactory {
      */
     public static RecurrenceIterator join(
             RecurrenceIterator a, RecurrenceIterator... b) {
-        List<RecurrenceIterator> incl = new ArrayList<RecurrenceIterator>();
+        List<RecurrenceIterator> incl = new ArrayList<>();
         incl.add(a);
         incl.addAll(Arrays.asList(b));
         return new CompoundIteratorImpl(
-                incl, Collections.<RecurrenceIterator>emptyList());
+                incl, Collections.emptyList());
     }
 
     /**
@@ -560,14 +558,7 @@ public class RecurrenceIteratorFactory {
                 } else {
                     throw new ParseException(lines[i], i);
                 }
-            } catch (ParseException ex) {
-                if (strict) {
-                    throw ex;
-                }
-                LOGGER.log(Level.SEVERE,
-                        "Dropping bad recurrence rule line: " + line, ex);
-                ++nbad;
-            } catch (IllegalArgumentException ex) {
+            } catch (ParseException | IllegalArgumentException ex) {
                 if (strict) {
                     throw ex;
                 }

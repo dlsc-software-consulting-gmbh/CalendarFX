@@ -33,7 +33,7 @@ import javafx.stage.Stage;
 public class HelloGoogleEntryPopOverContentPane extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         Calendar calendar = new Calendar();
         calendar.setName("Google Calendar");
         calendar.setStyle(Calendar.Style.STYLE2);

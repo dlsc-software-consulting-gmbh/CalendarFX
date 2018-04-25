@@ -322,7 +322,7 @@ class IntervalTree<E extends Entry<?>> {
     }
 
     private static int compareLongs(long val1, long val2) {
-        return val1 < val2 ? -1 : (val1 == val2 ? 0 : 1);
+        return Long.compare(val1, val2);
     }
 
     // This part of code was copied from java.util.TreeMap

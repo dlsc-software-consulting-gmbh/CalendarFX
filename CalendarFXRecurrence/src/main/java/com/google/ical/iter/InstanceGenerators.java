@@ -215,7 +215,7 @@ class InstanceGenerators {
 
                     // (2) Build a set of the dates in the year/month/week that match
                     // the other rule.
-                    List<DateValue> dates = new ArrayList<DateValue>();
+                    List<DateValue> dates = new ArrayList<>();
                     if (null != d0) {
                         dates.add(d0);
                     }
@@ -288,8 +288,8 @@ class InstanceGenerators {
                         absSetPos = uSetPos;
                     } else {
                         IntSet uAbsSetPos = new IntSet();
-                        for (int j = 0; j < uSetPos.length; ++j) {
-                            int p = uSetPos[j];
+                        for (int uSetPo : uSetPos) {
+                            int p = uSetPo;
                             if (p < 0) {
                                 p = dates.size() + p + 1;
                             }
@@ -298,7 +298,7 @@ class InstanceGenerators {
                         absSetPos = uAbsSetPos.toIntArray();
                     }
 
-                    candidates = new ArrayList<DateValue>();
+                    candidates = new ArrayList<>();
                     for (int p : absSetPos) {
                         if (p >= 1 && p <= dates.size()) {  // p is 1-indexed
                             candidates.add(dates.get(p - 1));
@@ -308,7 +308,6 @@ class InstanceGenerators {
                     if (candidates.isEmpty()) {
                         // none in this region, so keep looking
                         candidates = null;
-                        continue;
                     }
                 }
                 // (5) Emit a date.  It will be checked against the end condition and

@@ -218,7 +218,7 @@ public class TimeRangeField extends ViewTypeControl {
 
     // value support
 
-    private final ObjectProperty<TimeRangeFieldValue> value = new SimpleObjectProperty<TimeRangeFieldValue>(this, "value") {
+    private final ObjectProperty<TimeRangeFieldValue> value = new SimpleObjectProperty<>(this, "value") {
         @Override
         public void set(TimeRangeFieldValue newValue) {
             super.set(requireNonNull(newValue));

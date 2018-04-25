@@ -32,7 +32,7 @@ import java.time.LocalTime;
 public class CalendarApp extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         CalendarView calendarView = new CalendarView();
 
         Calendar katja = new Calendar("Katja");

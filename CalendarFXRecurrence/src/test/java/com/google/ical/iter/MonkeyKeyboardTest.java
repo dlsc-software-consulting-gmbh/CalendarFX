@@ -64,11 +64,6 @@ public class MonkeyKeyboardTest extends TestCase {
                 .toDate();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     // @TODO: put back in, sometimes fails
 
 //  public void testTimeGoesForward() throws Throwable {
@@ -116,7 +111,7 @@ public class MonkeyKeyboardTest extends TestCase {
 //    }
 //  }
 
-    public void testNoExceptionsThrownOnWelformedRrules() throws Throwable {
+    public void testNoExceptionsThrownOnWelformedRrules() {
         final int nRuns = 1000;
         final int countLimit = 2000;
         int totalGened = 0;  // total number of instances generated.

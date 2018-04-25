@@ -249,10 +249,6 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
     }
 
     @Override
-    protected void entryFullDayChanged(CalendarEvent evt) {
-    }
-
-    @Override
     protected void entryRecurrenceRuleChanged(CalendarEvent evt) {
         Entry<?> entry = evt.getEntry();
 

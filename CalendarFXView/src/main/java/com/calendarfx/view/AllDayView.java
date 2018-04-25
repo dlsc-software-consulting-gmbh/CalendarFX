@@ -123,7 +123,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
      */
     public final ObjectProperty<Insets> extraPaddingProperty() {
         if (extraPadding == null) {
-            extraPadding = new StyleableObjectProperty<Insets>(new Insets(2, 0,
+            extraPadding = new StyleableObjectProperty<>(new Insets(2, 0,
                     9, 0)) {
 
                 @Override
@@ -433,7 +433,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
 
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
-        private static final CssMetaData<AllDayView, Number> ROW_HEIGHT = new CssMetaData<AllDayView, Number>(
+        private static final CssMetaData<AllDayView, Number> ROW_HEIGHT = new CssMetaData<>(
                 "-fx-row-height", StyleConverter.getSizeConverter(), 20d) { //$NON-NLS-1$
 
             @Override
@@ -453,7 +453,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
             }
         };
 
-        private static final CssMetaData<AllDayView, Number> ROW_SPACING = new CssMetaData<AllDayView, Number>(
+        private static final CssMetaData<AllDayView, Number> ROW_SPACING = new CssMetaData<>(
                 "-fx-row-spacing", StyleConverter.getSizeConverter(), 2d) { //$NON-NLS-1$
 
             @Override
@@ -473,7 +473,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
             }
         };
 
-        private static final CssMetaData<AllDayView, Number> COLUMN_SPACING = new CssMetaData<AllDayView, Number>(
+        private static final CssMetaData<AllDayView, Number> COLUMN_SPACING = new CssMetaData<>(
                 "-fx-column-spacing", StyleConverter.getSizeConverter(), 2d) { //$NON-NLS-1$
 
             @Override
@@ -493,7 +493,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
             }
         };
 
-        private static final CssMetaData<AllDayView, Insets> EXTRA_PADDING = new CssMetaData<AllDayView, Insets>(
+        private static final CssMetaData<AllDayView, Insets> EXTRA_PADDING = new CssMetaData<>(
                 "-fx-extra-padding", StyleConverter.getInsetsConverter(), //$NON-NLS-1$
                 Insets.EMPTY) {
 

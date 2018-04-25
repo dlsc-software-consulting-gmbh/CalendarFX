@@ -144,7 +144,7 @@ public class PaperView extends ViewTypeControl {
 
     // margin type support
 
-    private final ObjectProperty<MarginType> marginType = new SimpleObjectProperty<MarginType>(this, "marginType", MarginType.DEFAULT) {
+    private final ObjectProperty<MarginType> marginType = new SimpleObjectProperty<>(this, "marginType", MarginType.DEFAULT) {
         @Override
         public void set(MarginType newValue) {
             super.set(Objects.requireNonNull(newValue));

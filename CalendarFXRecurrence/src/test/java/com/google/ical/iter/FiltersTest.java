@@ -31,16 +31,6 @@ import junit.framework.TestCase;
  */
 public class FiltersTest extends TestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     public void testWeekIntervalFilter() throws Exception {
         // *s match those that are in the weeks that should pass the filter
 

@@ -1744,9 +1744,9 @@ public class MonthSheetView extends DateControl {
             double ps2 = dayOfWeekLabel.prefWidth(-1);
             double ps3 = weekNumberLabel.prefWidth(-1);
 
-            dayOfMonthLabel.resizeRelocate(snapPosition(left), snapPosition(top), snapSize(ps1), snapSize(availableHeight));
-            dayOfWeekLabel.resizeRelocate(snapPosition(left + ps1), snapPosition(top), snapSize(ps2), snapSize(availableHeight));
-            weekNumberLabel.resizeRelocate(snapPosition(w - right - ps3), snapPosition(top), snapSize(ps3), snapSize(availableHeight));
+            dayOfMonthLabel.resizeRelocate(snapPositionX(left), snapPositionY(top), snapSizeX(ps1), snapSizeY(availableHeight));
+            dayOfWeekLabel.resizeRelocate(snapPositionX(left + ps1), snapPositionY(top), snapSizeX(ps2), snapSizeY(availableHeight));
+            weekNumberLabel.resizeRelocate(snapPositionX(w - right - ps3), snapPositionY(top), snapSizeX(ps3), snapSizeY(availableHeight));
         }
 
         @Override

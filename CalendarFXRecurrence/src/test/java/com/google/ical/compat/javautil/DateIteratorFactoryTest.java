@@ -41,7 +41,7 @@ public class DateIteratorFactoryTest extends TestCase {
     private static final TimeZone PST =
             TimeZone.getTimeZone("America/Los_Angeles");
 
-    public void testDateValueToDate() throws Exception {
+    public void testDateValueToDate() {
         assertEquals(createDateUtc(2006, 10, 13, 0, 0, 0),
                 DateIteratorFactory.dateValueToDate(
                         new DateValueImpl(2006, 10, 13)));
@@ -50,7 +50,7 @@ public class DateIteratorFactoryTest extends TestCase {
                         new DateTimeValueImpl(2006, 10, 13, 12, 30, 1)));
     }
 
-    public void testDateToDateTimeValue() throws Exception {
+    public void testDateToDateTimeValue() {
         assertEquals(new DateTimeValueImpl(2006, 10, 13, 0, 0, 0),
                 DateIteratorFactory.dateToDateValue(
                         createDateUtc(2006, 10, 13, 0, 0, 0), false));
@@ -65,7 +65,7 @@ public class DateIteratorFactoryTest extends TestCase {
                         createDateUtc(2006, 10, 13, 12, 30, 1), true));
     }
 
-    public void testConsistency() throws Exception {
+    public void testConsistency() {
         DateValue dv = new DateValueImpl(2006, 10, 13),
                 dtv = new DateTimeValueImpl(2006, 10, 13, 12, 30, 1);
         assertEquals(dv, DateIteratorFactory.dateToDateValue(

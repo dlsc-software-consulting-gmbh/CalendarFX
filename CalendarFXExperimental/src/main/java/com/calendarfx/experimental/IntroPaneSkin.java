@@ -47,7 +47,7 @@ public class IntroPaneSkin extends SkinBase<IntroPane> {
         pane.widthProperty().addListener(updateViewListener);
         pane.heightProperty().addListener(updateViewListener);
 
-        Platform.runLater(() -> updateView());
+        Platform.runLater(this::updateView);
     }
 
     private void updateView() {

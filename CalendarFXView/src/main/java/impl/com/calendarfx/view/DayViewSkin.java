@@ -318,8 +318,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         double earlyHoursY = ViewHelper.getTimeLocation(dayView, startTime);
         double lateHoursY = ViewHelper.getTimeLocation(dayView, endTime);
 
-        earlyHoursRegion.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth), snapSize(earlyHoursY));
-        lateHoursRegion.resizeRelocate(snapPosition(contentX), snapPosition(lateHoursY), snapSize(contentWidth), snapSize(contentHeight - lateHoursY));
+        earlyHoursRegion.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth), snapSizeY(earlyHoursY));
+        lateHoursRegion.resizeRelocate(snapPositionX(contentX), snapPositionY(lateHoursY), snapSizeX(contentWidth), snapSizeY(contentHeight - lateHoursY));
 
         for (int i = 0; i < lineCount; i++) {
             Line line = lines.get(i);
@@ -334,11 +334,11 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
             LocalTime time = LocalTime.of(hour, minute);
 
-            double yy = snapPosition(contentY + ViewHelper.getTimeLocation(dayView, time));
+            double yy = snapPositionY(contentY + ViewHelper.getTimeLocation(dayView, time));
 
-            line.setStartX(snapPosition(contentX + 4));
+            line.setStartX(snapPositionX(contentX + 4));
             line.setStartY(yy);
-            line.setEndX(snapPosition(contentX + contentWidth - 4));
+            line.setEndX(snapPositionX(contentX + contentWidth - 4));
             line.setEndY(yy);
         }
 
@@ -360,14 +360,14 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         }
 
         LocalTime time = dayView.getTime();
-        double y = snapPosition(contentY + ViewHelper.getTimeLocation(dayView, time));
+        double y = snapPositionY(contentY + ViewHelper.getTimeLocation(dayView, time));
 
-        currentTimeLine.setStartX(snapPosition(contentX));
-        currentTimeLine.setStartY(snapPosition(y));
-        currentTimeLine.setEndX(snapPosition(contentX + contentWidth));
-        currentTimeLine.setEndY(snapPosition(y));
+        currentTimeLine.setStartX(snapPositionX(contentX));
+        currentTimeLine.setStartY(snapPositionY(y));
+        currentTimeLine.setEndX(snapPositionX(contentX + contentWidth));
+        currentTimeLine.setEndY(snapPositionY(y));
         currentTimeLine.toFront();
-        currentTimeCircle.setCenterX(snapPosition(contentX + currentTimeCircle.getRadius() + 4));
+        currentTimeCircle.setCenterX(snapPositionX(contentX + currentTimeCircle.getRadius() + 4));
         currentTimeCircle.setCenterY(y);
         currentTimeCircle.toFront();
     }
@@ -463,7 +463,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 /*
                  * -2 on height to always have a gap between entries
                  */
-                view.resizeRelocate(snapPosition(x), snapPosition(y1), snapSize(columnWidth), snapSize(Math.max(minHeight, y2 - y1 - 2)));
+                view.resizeRelocate(snapPositionX(x), snapPositionY(y1), snapSizeX(columnWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
             }
         }
     }

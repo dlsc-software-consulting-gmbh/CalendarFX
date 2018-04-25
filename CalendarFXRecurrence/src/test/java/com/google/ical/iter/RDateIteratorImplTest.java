@@ -43,11 +43,6 @@ public class RDateIteratorImplTest extends TestCase {
         assertEquals(0, UTC.getRawOffset());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     public void testOneDate() throws Exception {
         runRecurrenceIteratorTest("RDATE:20060412", PST, "20060412");
         runRecurrenceIteratorTest("RDATE:20060412", EST, "20060412");

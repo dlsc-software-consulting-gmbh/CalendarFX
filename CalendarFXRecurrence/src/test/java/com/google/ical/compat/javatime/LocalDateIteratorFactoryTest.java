@@ -38,7 +38,7 @@ public class LocalDateIteratorFactoryTest extends TestCase {
     private static final ZoneId PST =
             ZoneId.of("America/Los_Angeles");
 
-    public void testDateValueToLocalDate() throws Exception {
+    public void testDateValueToLocalDate() {
         assertEquals(date(2006, 10, 13),
                 LocalDateIteratorFactory.dateValueToLocalDate(
                         new DateValueImpl(2006, 10, 13)));
@@ -47,13 +47,13 @@ public class LocalDateIteratorFactoryTest extends TestCase {
                         new DateTimeValueImpl(2006, 10, 13, 12, 30, 1)));
     }
 
-    public void testLocalDateToDateTimeValue() throws Exception {
+    public void testLocalDateToDateTimeValue() {
         assertEquals(new DateValueImpl(2006, 10, 13),
                 LocalDateIteratorFactory.localDateToDateValue(
                         date(2006, 10, 13)));
     }
 
-    public void testConsistency() throws Exception {
+    public void testConsistency() {
         DateValue dv = new DateValueImpl(2006, 10, 13);
         assertEquals(dv, LocalDateIteratorFactory.localDateToDateValue(
                 LocalDateIteratorFactory.dateValueToLocalDate(dv)));

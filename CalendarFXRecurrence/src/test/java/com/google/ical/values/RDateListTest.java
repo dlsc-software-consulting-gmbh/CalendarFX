@@ -38,11 +38,6 @@ public class RDateListTest extends TestCase {
         assertEquals(-8 * 60 * 60 * 1000, PST.getRawOffset());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     public void testRDateListParsing() throws Exception {
         RDateList rd1 = new RDateList("RDATE:20060412", PST);
         RDateList rd2 = new RDateList("RDATE:20060412T120000", PST);

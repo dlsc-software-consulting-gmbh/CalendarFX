@@ -207,7 +207,7 @@ public class AgendaView extends DateControl {
         showStatusLabelProperty().set(showStatusLabel);
     }
 
-    private final ObjectProperty<Callback<AgendaView, ? extends AgendaEntryCell>> cellFactory = new SimpleObjectProperty<Callback<AgendaView, ? extends AgendaEntryCell>>(this, "cellFactory", view -> new AgendaEntryCell(this)) {
+    private final ObjectProperty<Callback<AgendaView, ? extends AgendaEntryCell>> cellFactory = new SimpleObjectProperty<>(this, "cellFactory", view -> new AgendaEntryCell(this)) {
         @Override
         public void set(Callback<AgendaView, ? extends AgendaEntryCell> newValue) {
             super.set(Objects.requireNonNull(newValue));

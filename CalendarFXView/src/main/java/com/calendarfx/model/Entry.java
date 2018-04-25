@@ -222,7 +222,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         return styleClass;
     }
 
-    private final ObjectProperty<Interval> interval = new SimpleObjectProperty<Interval>(this, "interval") { //$NON-NLS-1$
+    private final ObjectProperty<Interval> interval = new SimpleObjectProperty<>(this, "interval") { //$NON-NLS-1$
         @Override
         public void set(Interval newInterval) {
 
@@ -558,7 +558,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
      */
     public final ReadOnlyObjectProperty<Entry<T>> recurrenceSourceProperty() {
         if (recurrenceSource == null) {
-            recurrenceSource = new ReadOnlyObjectWrapper<Entry<T>>(this, "recurrenceSource") { //$NON-NLS-1$
+            recurrenceSource = new ReadOnlyObjectWrapper<>(this, "recurrenceSource") { //$NON-NLS-1$
                 @Override
                 public void set(Entry<T> newEntry) {
                     super.set(newEntry);
@@ -837,7 +837,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
     /*
      * Calendar support.
      */
-    private SimpleObjectProperty<Calendar> calendar = new SimpleObjectProperty<Calendar>(this, "calendar") { //$NON-NLS-1$
+    private SimpleObjectProperty<Calendar> calendar = new SimpleObjectProperty<>(this, "calendar") { //$NON-NLS-1$
 
         @Override
         public void set(Calendar newCalendar) {
@@ -917,7 +917,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
      */
     public final ObjectProperty<T> userObjectProperty() {
         if (userObject == null) {
-            userObject = new SimpleObjectProperty<T>(this, "userObject") { //$NON-NLS-1$
+            userObject = new SimpleObjectProperty<>(this, "userObject") { //$NON-NLS-1$
                 @Override
                 public void set(T newObject) {
                     T oldUserObject = get();

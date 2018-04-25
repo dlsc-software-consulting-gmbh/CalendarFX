@@ -185,11 +185,7 @@ public class DateSelectionModel {
         public void selectRange(LocalDate start, LocalDate end) {
             if (start == null && end == null) {
                 model.clear();
-            } else if (end != null) {
-                select(end);
-            } else {
-                select(start);
-            }
+            } else select(Objects.requireNonNullElse(end, start));
         }
 
         @Override
@@ -207,8 +203,7 @@ public class DateSelectionModel {
         public SingleDateRangeSelector(DateSelectionModel model) {
             super(model);
 
-            List<LocalDate> selection = new ArrayList<>();
-            selection.addAll(model.selectedDates);
+            List<LocalDate> selection = new ArrayList<>(model.selectedDates);
 
             if (!selection.isEmpty()) {
                 Collections.sort(selection);

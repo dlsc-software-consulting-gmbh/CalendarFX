@@ -57,7 +57,7 @@ final class CompoundIteratorImpl implements RecurrenceIterator {
     CompoundIteratorImpl(
             Collection<RecurrenceIterator> inclusions,
             Collection<RecurrenceIterator> exclusions) {
-        queue = new PriorityQueue<HeapElement>(
+        queue = new PriorityQueue<>(
                 inclusions.size() + exclusions.size(), HeapElement.CMP);
         for (RecurrenceIterator it : inclusions) {
             HeapElement el = new HeapElement(true, it);
@@ -247,12 +247,10 @@ final class HeapElement {
     }
 
     /** compares to heap elements by comparing their heads. */
-    static Comparator<HeapElement> CMP = new Comparator<HeapElement>() {
-        public int compare(HeapElement a, HeapElement b) {
-            long ac = a.comparable(),
-                    bc = b.comparable();
-            return ac < bc ? -1 : ac == bc ? 0 : 1;
-        }
+    static Comparator<HeapElement> CMP = (a, b) -> {
+        long ac = a.comparable(),
+                bc = b.comparable();
+        return ac < bc ? -1 : ac == bc ? 0 : 1;
     };
 
 }

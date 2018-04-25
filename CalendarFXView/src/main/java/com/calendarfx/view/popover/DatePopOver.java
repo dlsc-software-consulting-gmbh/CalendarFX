@@ -100,9 +100,7 @@ public class DatePopOver extends PopOver {
                     Map<LocalDate, List<Entry<?>>> entriesMap = calendar.findEntries(date, date, dateControl.getZoneId());
                     List<Entry<?>> entriesList = entriesMap.get(date);
                     if (entriesList != null) {
-                        for (Entry<?> entry : entriesList) {
-                            result.add(entry);
-                        }
+                        result.addAll(entriesList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

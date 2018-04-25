@@ -22,11 +22,6 @@ import javafx.stage.Stage;
 
 public class CalendarFXSampler extends FXSampler {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        super.start(primaryStage);
-    }
-
     public static void main(String[] args) {
         FXSampler.main(args);
     }

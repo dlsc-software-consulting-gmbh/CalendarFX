@@ -29,7 +29,7 @@ import java.time.LocalTime;
 public class GoogleCalendarApp extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         LoggingDomain.CONFIG.info("Java version: " + System.getProperty("java.version"));
 
         CalendarView calendarView = new CalendarView();

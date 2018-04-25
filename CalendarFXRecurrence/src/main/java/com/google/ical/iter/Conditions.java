@@ -32,7 +32,7 @@ final class Conditions {
 
     /** constructs a condition that fails after passing count dates. */
     static Predicate<DateValue> countCondition(final int count) {
-        return new Predicate<DateValue>() {
+        return new Predicate<>() {
             int count_ = count;
 
             public boolean apply(DateValue value) {
@@ -51,7 +51,7 @@ final class Conditions {
      * @param until non null.
      */
     static Predicate<DateValue> untilCondition(final DateValue until) {
-        return new Predicate<DateValue>() {
+        return new Predicate<>() {
             public boolean apply(DateValue date) {
                 return date.compareTo(until) <= 0;
             }

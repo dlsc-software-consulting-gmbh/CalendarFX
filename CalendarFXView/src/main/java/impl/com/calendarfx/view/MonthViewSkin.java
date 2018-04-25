@@ -181,11 +181,6 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
     }
 
     @Override
-    protected void entryFullDayChanged(CalendarEvent evt) {
-        // full day changes will be handled by the entry views
-    }
-
-    @Override
     protected void entryRecurrenceRuleChanged(CalendarEvent evt) {
         /*
          * We can hardly figure out whether the rule change has an impact
@@ -741,10 +736,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
                 double ph = child.prefHeight(-1);
                 if (y + ph < h - insets.getTop() - insets.getBottom()) {
                     child.resizeRelocate(
-                            snapPosition(insets.getLeft()),
-                            snapPosition(y),
-                            snapSize(w - insets.getRight() - insets.getLeft()),
-                            snapSize(ph));
+                            snapPositionX(insets.getLeft()),
+                            snapPositionY(y),
+                            snapSizeX(w - insets.getRight() - insets.getLeft()),
+                            snapSizeY(ph));
 
                     y += ph + 1; // +1 = gap
                     child.getProperties().put("hidden", false); //$NON-NLS-1$
@@ -765,10 +760,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
                 double ph = moreLabel.prefHeight(-1);
 
                 moreLabel.resizeRelocate(
-                        snapPosition(insets.getLeft()),
-                        snapPosition(h - insets.getTop() - insets.getBottom() - ph),
-                        snapSize(w - insets.getRight() - insets.getLeft()),
-                        snapSize(ph));
+                        snapPositionX(insets.getLeft()),
+                        snapPositionY(h - insets.getTop() - insets.getBottom() - ph),
+                        snapSizeX(w - insets.getRight() - insets.getLeft()),
+                        snapSizeY(ph));
             }
         }
     }

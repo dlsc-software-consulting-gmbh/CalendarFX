@@ -27,17 +27,7 @@ import junit.framework.TestCase;
  */
 public class VcalRewriterTest extends TestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    public void testRewriteRule() throws Exception {
+    public void testRewriteRule() {
         // Daily for the rest of 2002
         assertEquals("RRULE:FREQ=DAILY;UNTIL=20021231T000000Z",
                 VcalRewriter.rewriteRule("RRULE:D1 20021231T000000"));
@@ -97,7 +87,7 @@ public class VcalRewriterTest extends TestCase {
                 VcalRewriter.rewriteRule("RRULE:YD2 243 #0"));
     }
 
-    public void testRewriteDoesntInterfere() throws Exception {
+    public void testRewriteDoesntInterfere() {
         assertEquals("RRULE:FREQ=YEARLY;INTERVAL=2;BYYEARDAY=243",
                 VcalRewriter.rewriteRule(
                         "RRULE:FREQ=YEARLY;INTERVAL=2;BYYEARDAY=243"));

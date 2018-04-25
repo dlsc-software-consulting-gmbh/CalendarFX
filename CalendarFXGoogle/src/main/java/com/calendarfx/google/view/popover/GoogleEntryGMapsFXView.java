@@ -91,7 +91,7 @@ public class GoogleEntryGMapsFXView extends EntryPopOverPane implements MapCompo
 
         @Override
         protected Task<GeocoderGeometry> createTask() {
-            return new Task<GeocoderGeometry>() {
+            return new Task<>() {
                 @Override
                 protected GeocoderGeometry call() throws Exception {
                     Thread.sleep(1000);

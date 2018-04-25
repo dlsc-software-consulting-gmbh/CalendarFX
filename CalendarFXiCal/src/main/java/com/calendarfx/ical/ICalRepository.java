@@ -141,8 +141,7 @@ public final class ICalRepository {
 
         ICalCalendar cal = putWebCalendar(data, source);
 
-        List<WebCalendarData> webCalendarDatas = new ArrayList<>();
-        webCalendarDatas.addAll(webCalendars.keySet());
+        List<WebCalendarData> webCalendarDatas = new ArrayList<>(webCalendars.keySet());
         if (!webCalendarDatas.isEmpty()) {
             final File directory = new File(System.getProperty("user.home") + SETTINGS_DIR);
             boolean directoryExists = true;
@@ -195,9 +194,7 @@ public final class ICalRepository {
             webCalendars.put(data, cal);
 
             final ICalCalendar fcal = cal;
-            Platform.runLater(() -> {
-                        source.getCalendars().add(fcal);
-                    }
+            Platform.runLater(() -> source.getCalendars().add(fcal)
             );
         }
 

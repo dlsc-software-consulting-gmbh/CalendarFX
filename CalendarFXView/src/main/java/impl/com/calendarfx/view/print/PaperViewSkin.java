@@ -42,7 +42,7 @@ public class PaperViewSkin extends SkinBase<PaperView> {
         viewTypeComboBox.setMaxWidth(Double.MAX_VALUE);
         viewTypeComboBox.getItems().setAll(ViewType.values());
         viewTypeComboBox.valueProperty().bindBidirectional(control.viewTypeProperty());
-        viewTypeComboBox.setConverter(new StringConverter<ViewType>() {
+        viewTypeComboBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(ViewType object) {
                 return Messages.getString(object.getMessageKey());
@@ -65,7 +65,7 @@ public class PaperViewSkin extends SkinBase<PaperView> {
         paperComboBox.setMaxWidth(Double.MAX_VALUE);
         paperComboBox.setItems(control.getAvailablePapers());
         paperComboBox.valueProperty().bindBidirectional(control.paperProperty());
-        paperComboBox.setConverter(new StringConverter<Paper>() {
+        paperComboBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Paper object) {
                 return object.getName();
@@ -88,7 +88,7 @@ public class PaperViewSkin extends SkinBase<PaperView> {
         marginTypeComboBox.setMaxWidth(Double.MAX_VALUE);
         marginTypeComboBox.getItems().setAll(PaperView.MarginType.values());
         marginTypeComboBox.valueProperty().bindBidirectional(control.marginTypeProperty());
-        marginTypeComboBox.setConverter(new StringConverter<PaperView.MarginType>() {
+        marginTypeComboBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(PaperView.MarginType type) {
                 switch (type) {
