@@ -137,7 +137,7 @@ public class CalendarTest {
     }
 
     @Test
-    public void shouldReturnEntriesForSearch() throws Exception {
+    public void shouldReturnEntriesForSearch() {
         // given
         Entry<?> entry1 = new Entry<>("xxxAAA");
         Entry<?> entry2 = new Entry<>("AAAxXx");
@@ -167,7 +167,7 @@ public class CalendarTest {
     }
 
     @Test
-    public void shouldReturnEntriesForTimeInterval() throws Exception {
+    public void shouldReturnEntriesForTimeInterval() {
         // given
         Entry<?> entry1 = new Entry<>();
         Entry<?> entry2 = new Entry<>();

@@ -31,17 +31,7 @@ import junit.framework.TestCase;
  */
 public class UtilTest extends TestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    public void testDayNumToDateInMonth() throws Exception {
+    public void testDayNumToDateInMonth() {
         //        March 2006
         // Su Mo Tu We Th Fr Sa
         //           1  2  3  4
@@ -73,7 +63,7 @@ public class UtilTest extends TestCase {
         assertEquals(0, Util.dayNumToDate(dow0, nDays, -5, Weekday.TU, d0, nDays));
     }
 
-    public void testDayNumToDateInYear() throws Exception {
+    public void testDayNumToDateInYear() {
         //        January 2006
         //  # Su Mo Tu We Th Fr Sa
         //  1  1  2  3  4  5  6  7
@@ -140,13 +130,13 @@ public class UtilTest extends TestCase {
                 0, Util.dayNumToDate(dow0, nDays, -44, Weekday.TU, d0, nInMonth));
     }
 
-    public void testUniquify() throws Exception {
+    public void testUniquify() {
         int[] ints = new int[]{1, 4, 4, 2, 7, 3, 8, 0, 0, 3};
         ints = Util.uniquify(ints);
         assertEquals("0,1,2,3,4,7,8", arrToString(ints));
     }
 
-    public void testRollToNextWeekStart() throws Exception {
+    public void testRollToNextWeekStart() {
         DTBuilder builder;
 
         builder = new DTBuilder(2006, 1, 23);
@@ -178,7 +168,7 @@ public class UtilTest extends TestCase {
         assertEquals("20060206", builder.toDate().toString());
     }
 
-    public void testNextWeekStart() throws Exception {
+    public void testNextWeekStart() {
         assertEquals(new DateValueImpl(2006, 1, 24),
                 Util.nextWeekStart(new DateValueImpl(2006, 1, 23),
                         Weekday.TU));
@@ -208,7 +198,7 @@ public class UtilTest extends TestCase {
                         Weekday.MO));
     }
 
-    public void testCountInPeriod() throws Exception {
+    public void testCountInPeriod() {
         //        January 2006
         //  Su Mo Tu We Th Fr Sa
         //   1  2  3  4  5  6  7
@@ -240,7 +230,7 @@ public class UtilTest extends TestCase {
         assertEquals(4, Util.countInPeriod(Weekday.SA, Weekday.WE, 28));
     }
 
-    public void testInvertWeekdayNum() throws Exception {
+    public void testInvertWeekdayNum() {
 
         //        January 2006
         //  # Su Mo Tu We Th Fr Sa

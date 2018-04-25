@@ -74,7 +74,7 @@ abstract class AbstractIcalObject implements IcalObject {
         }
 
         // parse parameters
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         String rest = paramText;
         while (!"".equals(rest)) {
             Matcher m = PARAM_RE.matcher(rest);
@@ -112,7 +112,7 @@ abstract class AbstractIcalObject implements IcalObject {
      */
     public Map<String, String> getExtParams() {
         if (null == extParams) {
-            extParams = new LinkedHashMap<String, String>();
+            extParams = new LinkedHashMap<>();
         }
         return extParams;
     }

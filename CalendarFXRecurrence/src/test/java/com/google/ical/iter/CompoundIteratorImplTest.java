@@ -25,7 +25,7 @@ import com.google.ical.values.DateTimeValueImpl;
 import com.google.ical.values.DateValue;
 import com.google.ical.values.DateValueImpl;
 import com.google.ical.values.RDateList;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 
 import java.util.Collections;
@@ -42,16 +42,6 @@ public class CompoundIteratorImplTest extends TestCase {
     static final TimeZone EST = TimeZone.getTimeZone("America/New_York");
     static final TimeZone UTC = TimeUtils.utcTimezone();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     private void runRecurrenceIteratorTest(
             String rdata, DateValue dtStart, TimeZone tz, int limit,
             DateValue advanceTo, String golden)
@@ -62,8 +52,7 @@ public class CompoundIteratorImplTest extends TestCase {
     }
 
     private void runRecurrenceIteratorTest(
-            RecurrenceIterator ri, int limit, DateValue advanceTo, String golden)
-            throws Exception {
+            RecurrenceIterator ri, int limit, DateValue advanceTo, String golden) {
         if (null != advanceTo) {
             ri.advanceTo(advanceTo);
         }

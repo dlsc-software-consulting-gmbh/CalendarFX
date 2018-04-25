@@ -191,10 +191,10 @@ public class DayViewScrollPane extends Pane {
 
         final double ph = dayView.prefHeight(-1);
         dayView.resizeRelocate(
-                snapPosition(insets.getLeft()),
-                snapPosition(insets.getTop()),
-                snapSize(getWidth() - insets.getLeft() - insets.getRight()),
-                snapSize(Math.max(ph, getHeight() - insets.getTop() - insets.getBottom())));
+                snapPositionX(insets.getLeft()),
+                snapPositionY(insets.getTop()),
+                snapSizeX(getWidth() - insets.getLeft() - insets.getRight()),
+                snapSizeY(Math.max(ph, getHeight() - insets.getTop() - insets.getBottom())));
 
         switch (dayView.getHoursLayoutStrategy()) {
             case FIXED_HOUR_COUNT:

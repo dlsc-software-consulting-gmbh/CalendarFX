@@ -58,20 +58,10 @@ public class PeriodValueImplTest extends TestCase {
         Arrays.sort(DATE_TIME_VALUES);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         Random rnd = new Random();
         for (DateValue[] values :
-                Arrays.asList(new DateValue[][]{DATE_VALUES, DATE_TIME_VALUES})) {
+                Arrays.asList(DATE_VALUES, DATE_TIME_VALUES)) {
             for (int i = 0; i < 100; i++) {
                 int k = rnd.nextInt(values.length / 2);
                 DateValue start = values[k];
@@ -83,7 +73,7 @@ public class PeriodValueImplTest extends TestCase {
         }
         // check out of order failures
         for (DateValue[] values :
-                Arrays.asList(new DateValue[][]{DATE_VALUES, DATE_TIME_VALUES})) {
+                Arrays.asList(DATE_VALUES, DATE_TIME_VALUES)) {
             for (int i = 0; i < 100; i++) {
                 int k = rnd.nextInt(values.length / 2);
                 DateValue start = values[k + 1 + rnd.nextInt(values.length - k - 1)];
@@ -114,7 +104,7 @@ public class PeriodValueImplTest extends TestCase {
         }
     }
 
-    public void testDurationConstructor() throws Exception {
+    public void testDurationConstructor() {
         final DateValue DV = new DateValueImpl(2005, 2, 15);
         final DateTimeValue DTV0 = new DateTimeValueImpl(2005, 2, 15, 0, 0, 0),
                 DTV12 = new DateTimeValueImpl(2005, 2, 15, 12, 0, 0);
@@ -160,10 +150,10 @@ public class PeriodValueImplTest extends TestCase {
                 PeriodValueImpl.createFromDuration(DTV12, SAME_TIME));
     }
 
-    public void testContains() throws Exception {
+    public void testContains() {
         Random rnd = new Random();
         for (DateValue[] values :
-                Arrays.asList(new DateValue[][]{DATE_VALUES, DATE_TIME_VALUES})) {
+                Arrays.asList(DATE_VALUES, DATE_TIME_VALUES)) {
             int a = rnd.nextInt(4),
                     b = a + 1 + rnd.nextInt(4),
                     c = b + 1 + rnd.nextInt(4),
@@ -192,10 +182,10 @@ public class PeriodValueImplTest extends TestCase {
         }
     }
 
-    public void testIntersects() throws Exception {
+    public void testIntersects() {
         Random rnd = new Random();
         for (DateValue[] values :
-                Arrays.asList(new DateValue[][]{DATE_VALUES, DATE_TIME_VALUES})) {
+                Arrays.asList(DATE_VALUES, DATE_TIME_VALUES)) {
             int a = rnd.nextInt(4),
                     b = a + 1 + rnd.nextInt(4),
                     c = b + 1 + rnd.nextInt(4),
@@ -224,11 +214,11 @@ public class PeriodValueImplTest extends TestCase {
         }
     }
 
-    public void testEqualsAndHashcode() throws Exception {
+    public void testEqualsAndHashcode() {
         Random rnd = new Random();
         for (DateValue[] values :
-                Arrays.asList(new DateValue[][]{DATE_VALUES, DATE_TIME_VALUES})) {
-            Set<Integer> hashCodes = new HashSet<Integer>();
+                Arrays.asList(DATE_VALUES, DATE_TIME_VALUES)) {
+            Set<Integer> hashCodes = new HashSet<>();
             for (DateValue dv : values) {
                 hashCodes.add(dv.hashCode());
             }

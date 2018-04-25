@@ -26,9 +26,9 @@ public class Predicates {
      */
 
     private static final Predicate<?> ALWAYS_TRUE =
-            new AlwaysTruePredicate<Object>();
+            new AlwaysTruePredicate<>();
     private static final Predicate<?> ALWAYS_FALSE =
-            new AlwaysFalsePredicate<Object>();
+            new AlwaysFalsePredicate<>();
 
     /**
      * Returns a Predicate that always evaluates to true.
@@ -52,7 +52,7 @@ public class Predicates {
      */
     public static <T> Predicate<T> not(Predicate<? super T> predicate) {
         assert null != predicate;
-        return new NotPredicate<T>(predicate);
+        return new NotPredicate<>(predicate);
     }
 
     /**
@@ -86,7 +86,7 @@ public class Predicates {
             System.arraycopy(newComponents, 0, components, 0, n);
             components = newComponents;
         }
-        return new AndPredicate<T>(components);
+        return new AndPredicate<>(components);
     }
 
     /**
@@ -136,7 +136,7 @@ public class Predicates {
             System.arraycopy(newComponents, 0, components, 0, n);
             components = newComponents;
         }
-        return new OrPredicate<T>(components);
+        return new OrPredicate<>(components);
     }
 
     /** @see Predicates#alwaysTrue */
@@ -188,6 +188,7 @@ public class Predicates {
         private static final long serialVersionUID = 1022358602593297546L;
         private final Predicate<? super T>[] components;
 
+        @SafeVarargs
         private AndPredicate(Predicate<? super T>... components) {
             this.components = components;
         }
@@ -207,6 +208,7 @@ public class Predicates {
         private static final long serialVersionUID = -7942366790698074803L;
         private final Predicate<? super T>[] components;
 
+        @SafeVarargs
         private OrPredicate(Predicate<? super T>... components) {
             this.components = components;
         }

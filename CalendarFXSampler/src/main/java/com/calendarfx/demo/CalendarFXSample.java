@@ -60,7 +60,7 @@ public abstract class CalendarFXSample extends SampleBase {
 
     @Override
     public String getProjectVersion() {
-        return CalendarFX.getVersion().toString();
+        return CalendarFX.getVersion();
     }
 
     @Override
@@ -86,7 +86,7 @@ public abstract class CalendarFXSample extends SampleBase {
         return getSampleSourceBase() + getClass().getSimpleName() + ".java";
     }
 
-    private final String getSampleSourceBase() {
+    private String getSampleSourceBase() {
         return "http://dlsc.com/wp-content/html/calendarfx/sampler/";
     }
 

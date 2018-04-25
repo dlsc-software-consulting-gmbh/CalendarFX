@@ -35,20 +35,10 @@ import java.util.TimeZone;
  */
 public class TimeZoneConverterTest extends TestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     private static final long MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
     private static final long MILLIS_PER_YEAR = (long) (365.25 * MILLIS_PER_DAY);
 
-    public void testConvertMonteCarlo() throws Exception {
+    public void testConvertMonteCarlo() {
         long seed = 1161647988961L;
         Random rand = new Random(seed);
         System.out.println("seed=" + seed);

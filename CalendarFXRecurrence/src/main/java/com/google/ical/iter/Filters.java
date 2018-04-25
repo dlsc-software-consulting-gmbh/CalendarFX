@@ -53,65 +53,63 @@ class Filters {
      */
     static Predicate<DateValue> byDayFilter(
             final WeekdayNum[] days, final boolean weeksInYear, final Weekday wkst) {
-        return new Predicate<DateValue>() {
-            public boolean apply(DateValue date) {
-                Weekday dow = Weekday.valueOf(date);
+        return date -> {
+            Weekday dow = Weekday.valueOf(date);
 
-                int nDays;
-                // first day of the week in the given year or month
-                Weekday dow0;
-                // where does date appear in the year or month?
-                // in [0, lengthOfMonthOrYear - 1]
-                int instance;
-                if (weeksInYear) {
-                    nDays = TimeUtils.yearLength(date.year());
-                    dow0 = Weekday.firstDayOfWeekInMonth(date.year(), 1);
-                    instance = TimeUtils.dayOfYear(
-                            date.year(), date.month(), date.day());
-                } else {
-                    nDays = TimeUtils.monthLength(date.year(), date.month());
-                    dow0 = Weekday.firstDayOfWeekInMonth(date.year(), date.month());
-                    instance = date.day() - 1;
-                }
+            int nDays;
+            // first day of the week in the given year or month
+            Weekday dow0;
+            // where does date appear in the year or month?
+            // in [0, lengthOfMonthOrYear - 1]
+            int instance;
+            if (weeksInYear) {
+                nDays = TimeUtils.yearLength(date.year());
+                dow0 = Weekday.firstDayOfWeekInMonth(date.year(), 1);
+                instance = TimeUtils.dayOfYear(
+                        date.year(), date.month(), date.day());
+            } else {
+                nDays = TimeUtils.monthLength(date.year(), date.month());
+                dow0 = Weekday.firstDayOfWeekInMonth(date.year(), date.month());
+                instance = date.day() - 1;
+            }
 
-                // which week of the year or month does this date fall on?
-                // one-indexed
-                int dateWeekNo;
-                if (wkst.javaDayNum <= dow.javaDayNum) {
-                    dateWeekNo = 1 + (instance / 7);
-                } else {
-                    dateWeekNo = (instance / 7);
-                }
+            // which week of the year or month does this date fall on?
+            // one-indexed
+            int dateWeekNo;
+            if (wkst.javaDayNum <= dow.javaDayNum) {
+                dateWeekNo = 1 + (instance / 7);
+            } else {
+                dateWeekNo = (instance / 7);
+            }
 
-                // TODO(msamuel): according to section 4.3.10
-                //     Week number one of the calendar year is the first week which
-                //     contains at least four (4) days in that calendar year. This
-                //     rule part is only valid for YEARLY rules.
-                // That's mentioned under the BYWEEKNO rule, and there's no mention
-                // of it in the earlier discussion of the BYDAY rule.
-                // Does it apply to yearly week numbers calculated for BYDAY rules in
-                // a FREQ=YEARLY rule?
+            // TODO(msamuel): according to section 4.3.10
+            //     Week number one of the calendar year is the first week which
+            //     contains at least four (4) days in that calendar year. This
+            //     rule part is only valid for YEARLY rules.
+            // That's mentioned under the BYWEEKNO rule, and there's no mention
+            // of it in the earlier discussion of the BYDAY rule.
+            // Does it apply to yearly week numbers calculated for BYDAY rules in
+            // a FREQ=YEARLY rule?
 
-                for (int i = days.length; --i >= 0; ) {
-                    WeekdayNum day = days[i];
+            for (int i = days.length; --i >= 0; ) {
+                WeekdayNum day = days[i];
 
-                    if (day.wday == dow) {
-                        int weekNo = day.num;
-                        if (0 == weekNo) {
-                            return true;
-                        }
+                if (day.wday == dow) {
+                    int weekNo = day.num;
+                    if (0 == weekNo) {
+                        return true;
+                    }
 
-                        if (weekNo < 0) {
-                            weekNo = Util.invertWeekdayNum(day, dow0, nDays);
-                        }
+                    if (weekNo < 0) {
+                        weekNo = Util.invertWeekdayNum(day, dow0, nDays);
+                    }
 
-                        if (dateWeekNo == weekNo) {
-                            return true;
-                        }
+                    if (dateWeekNo == weekNo) {
+                        return true;
                     }
                 }
-                return false;
             }
+            return false;
         };
     }
 
@@ -120,20 +118,18 @@ class Filters {
      * @param monthDays days of the month in [-31, 31] != 0
      */
     static Predicate<DateValue> byMonthDayFilter(final int[] monthDays) {
-        return new Predicate<DateValue>() {
-            public boolean apply(DateValue date) {
-                int nDays = TimeUtils.monthLength(date.year(), date.month());
-                for (int i = monthDays.length; --i >= 0; ) {
-                    int day = monthDays[i];
-                    if (day < 0) {
-                        day += nDays + 1;
-                    }
-                    if (day == date.day()) {
-                        return true;
-                    }
+        return date -> {
+            int nDays = TimeUtils.monthLength(date.year(), date.month());
+            for (int i = monthDays.length; --i >= 0; ) {
+                int day = monthDays[i];
+                if (day < 0) {
+                    day += nDays + 1;
                 }
-                return false;
+                if (day == date.day()) {
+                    return true;
+                }
             }
+            return false;
         };
     }
 
@@ -146,7 +142,7 @@ class Filters {
      */
     static Predicate<DateValue> weekIntervalFilter(
             final int interval, final Weekday wkst, final DateValue dtStart) {
-        return new Predicate<DateValue>() {
+        return new Predicate<>() {
             DateValue wkStart;
 
             {
@@ -185,14 +181,12 @@ class Filters {
             return Predicates.alwaysTrue();
         }
         final int bitField = hoursByBit;
-        return new Predicate<DateValue>() {
-            public boolean apply(DateValue date) {
-                if (!(date instanceof TimeValue)) {
-                    return false;
-                }
-                TimeValue tv = (TimeValue) date;
-                return (bitField & (1 << tv.hour())) != 0;
+        return date -> {
+            if (!(date instanceof TimeValue)) {
+                return false;
             }
+            TimeValue tv = (TimeValue) date;
+            return (bitField & (1 << tv.hour())) != 0;
         };
     }
 
@@ -209,14 +203,12 @@ class Filters {
             return Predicates.alwaysTrue();
         }
         final long bitField = minutesByBit;
-        return new Predicate<DateValue>() {
-            public boolean apply(DateValue date) {
-                if (!(date instanceof TimeValue)) {
-                    return false;
-                }
-                TimeValue tv = (TimeValue) date;
-                return (bitField & (1L << tv.minute())) != 0;
+        return date -> {
+            if (!(date instanceof TimeValue)) {
+                return false;
             }
+            TimeValue tv = (TimeValue) date;
+            return (bitField & (1L << tv.minute())) != 0;
         };
     }
 
@@ -234,14 +226,12 @@ class Filters {
             return Predicates.alwaysTrue();
         }
         final long bitField = secondsByBit;
-        return new Predicate<DateValue>() {
-            public boolean apply(DateValue date) {
-                if (!(date instanceof TimeValue)) {
-                    return false;
-                }
-                TimeValue tv = (TimeValue) date;
-                return (bitField & (1L << tv.second())) != 0;
+        return date -> {
+            if (!(date instanceof TimeValue)) {
+                return false;
             }
+            TimeValue tv = (TimeValue) date;
+            return (bitField & (1L << tv.second())) != 0;
         };
     }
 

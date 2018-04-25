@@ -735,8 +735,8 @@ final class Generators {
             private void convertDatesToAbsolute() {
                 IntSet posDates = new IntSet();
                 int nDays = TimeUtils.monthLength(year, month);
-                for (int j = 0; j < udates.length; ++j) {
-                    int date = udates[j];
+                for (int udate : udates) {
+                    int date = udate;
                     if (date < 0) {
                         date += nDays + 1;
                     }
@@ -824,8 +824,7 @@ final class Generators {
                 // iterate through days and resolve each [week, day of week] pair to a
                 // day of the month
                 IntSet udates = new IntSet();
-                for (int j = 0; j < udays.length; ++j) {
-                    WeekdayNum day = udays[j];
+                for (WeekdayNum day : udays) {
                     if (0 != day.num) {
                         int date = Util.dayNumToDate(
                                 dow0, nDays, day.num, day.wday, d0, nDaysInMonth);
@@ -937,8 +936,8 @@ final class Generators {
 
                 // generate the dates in the month
                 IntSet udates = new IntSet();
-                for (int j = 0; j < uWeekNos.length; j++) {
-                    int weekNo = uWeekNos[j];
+                for (int uWeekNo : uWeekNos) {
+                    int weekNo = uWeekNo;
                     if (weekNo < 0) {
                         weekNo += weeksInYear + 1;
                     }
@@ -1009,8 +1008,8 @@ final class Generators {
                 int nDays = TimeUtils.monthLength(year, month);
                 int nYearDays = TimeUtils.yearLength(year);
                 IntSet udates = new IntSet();
-                for (int j = 0; j < uYearDays.length; j++) {
-                    int yearDay = uYearDays[j];
+                for (int uYearDay : uYearDays) {
+                    int yearDay = uYearDay;
                     if (yearDay < 0) {
                         yearDay += nYearDays + 1;
                     }

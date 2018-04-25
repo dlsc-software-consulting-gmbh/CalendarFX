@@ -61,7 +61,7 @@ public class IcalParseUtilTest extends TestCase {
                 IcalParseUtil.parseDateValue("20060225T123005Z", UTC));
     }
 
-    public void testBadDates() throws Exception {
+    public void testBadDates() {
         try {
             IcalParseUtil.parsePeriodValue("19700101/19700101T010000");
             fail("mismatched types");
@@ -99,7 +99,7 @@ public class IcalParseUtilTest extends TestCase {
                 IcalParseUtil.parseDateValue("20060229T120000Z", null));
     }
 
-    public void testUnfold() throws Exception {
+    public void testUnfold() {
         assertEquals("", IcalParseUtil.unfoldIcal(""));
         assertEquals("foo", IcalParseUtil.unfoldIcal("foo"));
         assertEquals("foo", IcalParseUtil.unfoldIcal("f\r\to\n o\r\n "));

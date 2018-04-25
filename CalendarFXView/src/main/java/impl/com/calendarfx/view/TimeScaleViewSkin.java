@@ -194,7 +194,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends
         y = Math.min(contentHeight - label.getFont().getSize(),
                 Math.max(0, ((int) (y - prefHeight / 2)) + .5));
 
-        label.resizeRelocate(snapPosition(contentX), snapPosition(y), snapSize(contentWidth), snapSize(prefHeight));
+        label.resizeRelocate(snapPositionX(contentX), snapPositionY(y), snapSizeX(contentWidth), snapSizeY(prefHeight));
     }
 
     @Override

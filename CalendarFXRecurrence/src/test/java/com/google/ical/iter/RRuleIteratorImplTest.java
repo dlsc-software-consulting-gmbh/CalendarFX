@@ -38,16 +38,6 @@ public class RRuleIteratorImplTest extends TestCase {
     static final TimeZone PST = TimeZone.getTimeZone("America/Los_Angeles");
     static final TimeZone UTC = TimeUtils.utcTimezone();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     private void runRecurrenceIteratorTest(
             String rruleText, DateValue dtStart, int limit, String golden)
             throws Exception {

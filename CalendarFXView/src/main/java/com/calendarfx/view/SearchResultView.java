@@ -280,9 +280,7 @@ public class SearchResultView extends CalendarFXControl {
                                         List<? extends Entry<?>> result = calendar
                                                 .findEntries(searchText);
                                         if (result != null) {
-                                            for (Entry<?> entry : result) {
-                                                totalResult.add(entry);
-                                            }
+                                            totalResult.addAll(result);
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();

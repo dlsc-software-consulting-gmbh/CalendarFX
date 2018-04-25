@@ -72,7 +72,7 @@ public class ZoomPane extends CalendarFXControl {
 
     // content support
 
-    private final ObjectProperty<Region> content = new SimpleObjectProperty<Region>(this, "content") {
+    private final ObjectProperty<Region> content = new SimpleObjectProperty<>(this, "content") {
         @Override
         public void set(Region newValue) {
             Objects.requireNonNull(newValue);

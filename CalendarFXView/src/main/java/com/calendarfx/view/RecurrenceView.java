@@ -55,7 +55,7 @@ public class RecurrenceView extends CalendarFXControl {
         return new RecurrenceViewSkin(this);
     }
 
-    private final ObjectProperty<LocalDate> startDate = new SimpleObjectProperty<LocalDate>(
+    private final ObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>(
             this, "startDate", LocalDate.now()) { //$NON-NLS-1$
         @Override
         public void set(LocalDate newValue) {

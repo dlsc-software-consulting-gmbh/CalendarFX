@@ -118,7 +118,7 @@ public class EntryDetailsView extends EntryPopOverPane {
 
         ComboBox<ZoneId> zoneBox = new ComboBox<>(zoneIds);
         zoneBox.disableProperty().bind(entry.getCalendar().readOnlyProperty());
-        zoneBox.setConverter(new StringConverter<ZoneId>() {
+        zoneBox.setConverter(new StringConverter<>() {
 
             @Override
             public String toString(ZoneId object) {

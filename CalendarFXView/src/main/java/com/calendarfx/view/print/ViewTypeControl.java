@@ -35,7 +35,7 @@ public abstract class ViewTypeControl extends CalendarFXControl {
 
     // view type support
 
-    private final ObjectProperty<ViewType> viewType = new SimpleObjectProperty<ViewType>(this, "viewType", ViewType.DAY_VIEW) {
+    private final ObjectProperty<ViewType> viewType = new SimpleObjectProperty<>(this, "viewType", ViewType.DAY_VIEW) {
         @Override
         public void set(ViewType newValue) {
             super.set(Objects.requireNonNull(newValue));

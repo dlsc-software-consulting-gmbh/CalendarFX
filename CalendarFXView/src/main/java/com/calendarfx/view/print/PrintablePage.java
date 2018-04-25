@@ -153,7 +153,7 @@ public class PrintablePage extends DateControl {
 
     // view type support
 
-    private final ObjectProperty<ViewType> viewType = new SimpleObjectProperty<ViewType>(this, "viewType", ViewType.DAY_VIEW) {
+    private final ObjectProperty<ViewType> viewType = new SimpleObjectProperty<>(this, "viewType", ViewType.DAY_VIEW) {
         @Override
         public void set(ViewType newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -174,7 +174,7 @@ public class PrintablePage extends DateControl {
 
     // current view support (read-only)
 
-    private final ReadOnlyObjectWrapper<DateControl> view = new ReadOnlyObjectWrapper<DateControl>(this, "view") {
+    private final ReadOnlyObjectWrapper<DateControl> view = new ReadOnlyObjectWrapper<>(this, "view") {
         @Override
         public void set(DateControl newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -197,7 +197,7 @@ public class PrintablePage extends DateControl {
 
     // margin type support
 
-    private final ObjectProperty<MarginType> marginType = new SimpleObjectProperty<MarginType>(this, "marginType", MarginType.DEFAULT) {
+    private final ObjectProperty<MarginType> marginType = new SimpleObjectProperty<>(this, "marginType", MarginType.DEFAULT) {
         @Override
         public void set(MarginType newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -389,7 +389,7 @@ public class PrintablePage extends DateControl {
 
     // print start date support
 
-    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<LocalDate>(this, "printStartDate", getToday()) {
+    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<>(this, "printStartDate", getToday()) {
         @Override
         public void set(LocalDate newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -409,7 +409,7 @@ public class PrintablePage extends DateControl {
     }
 
     // print end date support
-    private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<LocalDate>(this, "printEndDate", getToday()) {
+    private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<>(this, "printEndDate", getToday()) {
         @Override
         public void set(LocalDate newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -462,7 +462,7 @@ public class PrintablePage extends DateControl {
 
     // paper support
 
-    private final ObjectProperty<Paper> paper = new SimpleObjectProperty<Paper>(this, "paper", Paper.A4) {
+    private final ObjectProperty<Paper> paper = new SimpleObjectProperty<>(this, "paper", Paper.A4) {
         @Override
         public void set(Paper newValue) {
             super.set(Objects.requireNonNull(newValue));

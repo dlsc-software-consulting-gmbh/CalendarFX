@@ -37,7 +37,7 @@ public class RRule extends AbstractIcalObject {
     private DateValue until;
     private int count;
     private int interval;
-    private List<WeekdayNum> byDay = new ArrayList<WeekdayNum>();
+    private List<WeekdayNum> byDay = new ArrayList<>();
     private int[] byMonth = NO_INTS;  // in +/-[1-12]
     private int[] byMonthDay = NO_INTS;  // in +/-[1-31]
     private int[] byWeekNo = NO_INTS;  // in +/-[1-53]
@@ -251,7 +251,7 @@ public class RRule extends AbstractIcalObject {
     }
 
     public void setByDay(List<WeekdayNum> byDay) {
-        this.byDay = new ArrayList<WeekdayNum>(byDay);
+        this.byDay = new ArrayList<>(byDay);
     }
 
     public int[] getByMonth() {

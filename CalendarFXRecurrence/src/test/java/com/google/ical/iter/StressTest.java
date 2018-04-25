@@ -41,11 +41,6 @@ public class StressTest extends TestCase {
         }
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     public void testSpeed() throws Exception {
         long t0 = System.nanoTime();
         // cycle through 10 recurrence rules, advancing and pulling a few dates off

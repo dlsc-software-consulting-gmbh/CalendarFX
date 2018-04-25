@@ -491,9 +491,7 @@ public abstract class DateControl extends CalendarFXControl {
 
                 if (isMultiSelect(evt) && getSelections().contains(entry)) {
                     getSelections().remove(entry);
-                } else if (!getSelections().contains(entry)) {
-                    getSelections().add(entry);
-                }
+                } else getSelections().add(entry);
             }
 
             view.getProperties().remove(disableFocusHandlingKey);

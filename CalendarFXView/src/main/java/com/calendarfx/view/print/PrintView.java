@@ -454,7 +454,7 @@ public class PrintView extends ViewTypeControl {
         }
     }
 
-    private static final Util.Converter<Boolean, DateControl.Layout> LAYOUT_BOOLEAN_CONVERTER = new Util.Converter<Boolean, DateControl.Layout>() {
+    private static final Util.Converter<Boolean, DateControl.Layout> LAYOUT_BOOLEAN_CONVERTER = new Util.Converter<>() {
 
         @Override
         public Boolean toLeft(DateControl.Layout right) {

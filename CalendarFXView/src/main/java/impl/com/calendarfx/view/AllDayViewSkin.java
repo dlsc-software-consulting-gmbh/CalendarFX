@@ -390,7 +390,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
 
             view.setMaxHeight(rowHeight);
 
-            view.resizeRelocate(snapPosition(x), snapPosition(y), snapSize(w), snapSize(rowHeight));
+            view.resizeRelocate(snapPositionX(x), snapPositionY(y), snapSizeX(w), snapSizeY(rowHeight));
 
             height = Math.max(height, y + rowHeight);
         }

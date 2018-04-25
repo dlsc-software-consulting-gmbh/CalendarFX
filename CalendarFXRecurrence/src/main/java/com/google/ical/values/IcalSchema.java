@@ -49,7 +49,7 @@ class IcalSchema {
     private final Map<String, XformRule> xformRules;
 
     /** list of productions that we're processing for debugging. */
-    private final List<String> ruleStack = new ArrayList<String>();
+    private final List<String> ruleStack = new ArrayList<>();
 
     private static final Pattern EXTENSION_PARAM_NAME_RE =
             Pattern.compile("^X-[A-Z0-9\\-]+$", Pattern.CASE_INSENSITIVE);
@@ -100,8 +100,6 @@ class IcalSchema {
         try {
             try {
                 (contentRules.get(rule)).apply(this, content, out);
-            } catch (NumberFormatException ex) {
-                badContent(content);
             } catch (IllegalArgumentException ex) {
                 badContent(content);
             }
@@ -127,8 +125,6 @@ class IcalSchema {
         try {
             try {
                 return (xformRules.get(rule)).apply(this, content);
-            } catch (NumberFormatException ex) {
-                badContent(content);
             } catch (IllegalArgumentException ex) {
                 badContent(content);
             }

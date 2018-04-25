@@ -131,7 +131,7 @@ public class GoogleEntryDetailsView extends EntryDetailsView {
             methodCombo.getItems().setAll(RemindMethod.values());
             methodCombo.disableProperty().bind(entry.getCalendar().readOnlyProperty());
             methodCombo.valueProperty().bindBidirectional(reminder.methodProperty());
-            methodCombo.setConverter(new StringConverter<RemindMethod>() {
+            methodCombo.setConverter(new StringConverter<>() {
                 @Override
                 public String toString(RemindMethod object) {
                     return object.getName();

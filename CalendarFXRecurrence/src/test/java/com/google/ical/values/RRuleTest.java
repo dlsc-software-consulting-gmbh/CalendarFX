@@ -40,21 +40,19 @@ public class RRuleTest extends TestCase {
         final int nRuns = 10000;
 
         final List<Throwable> errorList
-                = Collections.synchronizedList(new ArrayList<Throwable>());
+                = Collections.synchronizedList(new ArrayList<>());
 
-        Runnable r = new Runnable() {
-            public void run() {
-                RRule rule = null;
-                for (int i = nRuns; --i >= 0; ) {
-                    try {
-                        rule = new RRule(
-                                "RRULE:FREQ=MONTHLY;INTERVAL=2;BYDAY=FR;BYSETPOS=-1");
-                    } catch (Error err) {
-                        throw err;
-                    } catch (Throwable th) {
-                        System.err.println("At run " + i + ", " + rule);
-                        errorList.add(th);
-                    }
+        Runnable r = () -> {
+            RRule rule = null;
+            for (int i = nRuns; --i >= 0; ) {
+                try {
+                    rule = new RRule(
+                            "RRULE:FREQ=MONTHLY;INTERVAL=2;BYDAY=FR;BYSETPOS=-1");
+                } catch (Error err) {
+                    throw err;
+                } catch (Throwable th) {
+                    System.err.println("At run " + i + ", " + rule);
+                    errorList.add(th);
                 }
             }
         };

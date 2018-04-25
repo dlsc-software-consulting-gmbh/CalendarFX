@@ -37,7 +37,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
     public TimeFieldSkin(TimeField field) {
         super(field);
 
-        StringConverter<String> valueConverter = new StringConverter<String>() {
+        StringConverter<String> valueConverter = new StringConverter<>() {
 
             @Override
             public String fromString(String text) {

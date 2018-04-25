@@ -115,7 +115,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
         frequencyBox.getItems().setAll(Frequency.values());
         frequencyBox.setValue(Frequency.DAILY);
-        frequencyBox.setConverter(new StringConverter<Frequency>() {
+        frequencyBox.setConverter(new StringConverter<>() {
 
             @Override
             public String toString(Frequency frequency) {

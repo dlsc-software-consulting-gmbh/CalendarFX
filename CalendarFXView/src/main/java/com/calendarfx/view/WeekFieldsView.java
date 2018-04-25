@@ -57,7 +57,7 @@ public class WeekFieldsView extends CalendarFXControl {
         return new WeekFieldsViewSkin(this);
     }
 
-    private final ObjectProperty<WeekFields> weekFieldsProperty = new SimpleObjectProperty<WeekFields>(this, "weekFields", WeekFields.ISO) {
+    private final ObjectProperty<WeekFields> weekFieldsProperty = new SimpleObjectProperty<>(this, "weekFields", WeekFields.ISO) {
         @Override
         public void setValue(WeekFields v) {
             if (v == null) {

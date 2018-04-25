@@ -87,11 +87,11 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
         if (contentWidth > 120) {
             pw = timeLabel.prefWidth(-1);
-            timeLabel.resizeRelocate(snapPosition(contentX + contentWidth - pw), snapPosition(contentY), snapSize(pw), snapSize(contentHeight));
-            titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth - pw), snapSize(contentHeight));
+            timeLabel.resizeRelocate(snapPositionX(contentX + contentWidth - pw), snapPositionY(contentY), snapSizeX(pw), snapSizeY(contentHeight));
+            titleLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth - pw), snapSizeY(contentHeight));
             timeLabel.setVisible(true);
         } else {
-            titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth - pw), snapSize(contentHeight));
+            titleLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth - pw), snapSizeY(contentHeight));
             timeLabel.setVisible(false);
         }
     }

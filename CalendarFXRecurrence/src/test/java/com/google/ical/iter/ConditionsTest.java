@@ -30,17 +30,7 @@ import junit.framework.TestCase;
  */
 public class ConditionsTest extends TestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    public void testCountCondition() throws Exception {
+    public void testCountCondition() {
         Predicate<DateValue> cc = Conditions.countCondition(3);
         assertTrue(cc.apply(new DateValueImpl(2006, 2, 1)));
         assertTrue(cc.apply(new DateValueImpl(2006, 2, 2)));

@@ -176,13 +176,13 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         double titleHeight = titleLabel.prefHeight(contentWidth);
 
         // it is guaranteed that we have enough height to display the title (see "computeMinHeight")
-        titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth), snapSize(titleHeight));
+        titleLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth), snapSizeY(titleHeight));
 
         // start time label
         double timeLabelHeight = startTimeLabel.prefHeight(contentWidth);
         if (contentHeight - titleHeight > timeLabelHeight) {
             startTimeLabel.setVisible(true);
-            startTimeLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY + titleHeight), snapSize(contentWidth), snapSize(timeLabelHeight));
+            startTimeLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY + titleHeight), snapSizeX(contentWidth), snapSizeY(timeLabelHeight));
         } else {
             startTimeLabel.setVisible(false);
         }
