@@ -475,16 +475,6 @@ public class RecurrenceIteratorFactory {
                 break;
         }
 
-        if (false) {
-            System.err.println("  start=" + start + "\ndtStart=" + dtStart);
-            System.err.println("  yearGenerator=" + yearGenerator);
-            System.err.println(" monthGenerator=" + monthGenerator);
-            System.err.println("   dayGenerator=" + dayGenerator);
-            System.err.println("  hourGenerator=" + hourGenerator);
-            System.err.println("minuteGenerator=" + minuteGenerator);
-            System.err.println("secondGenerator=" + secondGenerator);
-        }
-
         Generator instanceGenerator = null;
         if (0 != bySetPos.length) {
             instanceGenerator = InstanceGenerators.bySetPosInstanceGenerator(
