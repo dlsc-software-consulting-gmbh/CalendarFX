@@ -257,7 +257,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         showYear.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_YEAR"))); //$NON-NLS-1$
 
         // toolbar right
-
         Text searchIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.SEARCH);
         searchIcon.setId("search-icon"); //$NON-NLS-1$
 
