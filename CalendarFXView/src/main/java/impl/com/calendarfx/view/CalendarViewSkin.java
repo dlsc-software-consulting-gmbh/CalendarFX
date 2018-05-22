@@ -109,8 +109,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
             view.addEventFilter(KeyEvent.KEY_PRESSED, evt -> {
                 if (evt.isMetaDown() && evt.getCode().equals(KeyCode.D)) {
-                    view.setShowDeveloperConsole(
-                            !view.isShowDeveloperConsole());
+                    view.setShowDeveloperConsole(!view.isShowDeveloperConsole());
                 }
             });
         }
@@ -152,7 +151,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         this.addCalendarButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
         Text addIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.PLUS);
-        addIcon.getStyleClass().addAll("button-icon", "add-calendar-button-icon");  //$NON-NLS-1$ //$NON-NLS-2$
+        addIcon.getStyleClass().addAll("button-icon", "add-calendar-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
         this.addCalendarButton.setGraphic(addIcon);
 
         this.addCalendarButton.setOnAction(evt -> view.createCalendarSource());
@@ -219,10 +218,22 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         showMonth = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SHOW_MONTH")); //$NON-NLS-1$
         showYear = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SHOW_YEAR")); //$NON-NLS-1$
 
-        showDay.setOnAction(evt -> view.showDayPage());
-        showWeek.setOnAction(evt -> view.showWeekPage());
-        showMonth.setOnAction(evt -> view.showMonthPage());
-        showYear.setOnAction(evt -> view.showYearPage());
+        showDay.setOnAction(evt -> {
+            view.showDayPage();
+            updateToggleButtons();
+        });
+        showWeek.setOnAction(evt -> {
+            view.showWeekPage();
+            updateToggleButtons();
+        });
+        showMonth.setOnAction(evt -> {
+            view.showMonthPage();
+            updateToggleButtons();
+        });
+        showYear.setOnAction(evt -> {
+            view.showYearPage();
+            updateToggleButtons();
+        });
 
         switcher = new SegmentedButton();
         switcher.setId("switcher"); //$NON-NLS-1$
@@ -316,7 +327,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             developerConsoleMasterDetailPane.setDetailNode(developerConsole);
             developerConsoleMasterDetailPane.setShowDetailNode(true);
             developerConsoleMasterDetailPane.showDetailNodeProperty().bind(view.showDeveloperConsoleProperty());
-            developerConsoleMasterDetailPane.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
+            developerConsoleMasterDetailPane.getStylesheets()
+                    .add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
             getChildren().add(developerConsoleMasterDetailPane);
         } else {
             getChildren().add(borderPane);
@@ -328,6 +340,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         selectedPage.toFront();
 
         hideNonSelectedPages();
+        updateToggleButtons();
     }
 
     private void openTray() {
@@ -383,8 +396,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             PageBase page = getSkinnable().getSelectedPage();
             Node toolBarControls = page.getToolBarControls();
 
-            if (toolBarControls != null &&
-                    !((toolBarControls instanceof Pane) && ((Pane) toolBarControls).getChildrenUnmodifiable().isEmpty())) {
+            if (toolBarControls != null && !((toolBarControls instanceof Pane)
+                    && ((Pane) toolBarControls).getChildrenUnmodifiable().isEmpty())) {
                 if (!leftToolBarBox.getChildren().isEmpty()) {
                     leftToolBarBox.getChildren().add(new Separator(Orientation.VERTICAL));
                 }
@@ -425,7 +438,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         PageBase selectedPage = getSkinnable().getSelectedPage();
 
         pageList.forEach(page -> {
-            if (!(page == selectedPage)) {
+            if (page != selectedPage) {
                 page.setVisible(false);
                 page.setManaged(false);
             }
@@ -477,12 +490,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             zoomIn = pageList.indexOf(newPage) < pageList.indexOf(oldPage);
 
             KeyValue oldOpacity = new KeyValue(oldPage.opacityProperty(), 0);
-            KeyValue oldScaleX = new KeyValue(oldPage.scaleXProperty(),
-                    zoomIn ? large : small);
-            KeyValue oldScaleY = new KeyValue(oldPage.scaleYProperty(),
-                    zoomIn ? large : small);
-            KeyFrame frame1 = new KeyFrame(duration, oldOpacity, oldScaleX,
-                    oldScaleY);
+            KeyValue oldScaleX = new KeyValue(oldPage.scaleXProperty(), zoomIn ? large : small);
+            KeyValue oldScaleY = new KeyValue(oldPage.scaleYProperty(), zoomIn ? large : small);
+            KeyFrame frame1 = new KeyFrame(duration, oldOpacity, oldScaleX, oldScaleY);
             timeline.getKeyFrames().add(frame1);
 
             oldPage.setCache(true);
@@ -524,8 +534,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             children.add(newPage);
         }
 
-        KeyFrame frame2 = new KeyFrame(duration, newOpacity, newScaleX,
-                newScaleY);
+        KeyFrame frame2 = new KeyFrame(duration, newOpacity, newScaleX, newScaleY);
         timeline.getKeyFrames().add(frame2);
 
         timeline.play();
@@ -556,9 +565,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             yearMonthView.setClickBehaviour(PERFORM_SELECTION);
             yearMonthView.getSelectedDates().add(getSkinnable().getDate());
             yearMonthView.getSelectedDates().addListener((Observable evt) -> {
-                if (yearMonthView.getSelectedDates().size() > 0) {
-                    yearMonthView.setDate(
-                            yearMonthView.getSelectedDates().iterator().next());
+                if (!yearMonthView.getSelectedDates().isEmpty()) {
+                    yearMonthView.setDate(yearMonthView.getSelectedDates().iterator().next());
                 }
             });
 
@@ -567,10 +575,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
                 yearMonthView.getSelectedDates().add(getSkinnable().getDate());
             });
 
-            Bindings.bindBidirectional(yearMonthView.todayProperty(),
-                    getSkinnable().todayProperty());
-            Bindings.bindBidirectional(yearMonthView.dateProperty(),
-                    getSkinnable().dateProperty());
+            Bindings.bindBidirectional(yearMonthView.todayProperty(), getSkinnable().todayProperty());
+            Bindings.bindBidirectional(yearMonthView.dateProperty(), getSkinnable().dateProperty());
             yearMonthView.weekFieldsProperty().bind(getSkinnable().weekFieldsProperty());
 
             ScrollPane scrollPane = new ScrollPane(sourceView);
@@ -597,7 +603,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
     }
 
     @Override
-    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset,
+            double leftInset) {
         double dayHeight = dayPage.prefHeight(-1);
         double weekHeight = weekPage.prefHeight(-1);
         double monthHeight = monthPage.prefHeight(-1);
@@ -606,7 +613,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
     }
 
     @Override
-    protected double computePrefWidth(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefWidth(double width, double topInset, double rightInset, double bottomInset,
+            double leftInset) {
         double dayWidth = dayPage.prefWidth(-1);
         double weekWidth = weekPage.prefWidth(-1);
         double monthWidth = monthPage.prefWidth(-1);
