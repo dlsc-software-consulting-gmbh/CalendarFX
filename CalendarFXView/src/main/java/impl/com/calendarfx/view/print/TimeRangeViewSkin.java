@@ -18,6 +18,7 @@ package impl.com.calendarfx.view.print;
 
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.print.TimeRangeView;
+
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
@@ -31,15 +32,15 @@ public class TimeRangeViewSkin extends SkinBase<TimeRangeView> {
         super(control);
 
         Label overviewLabel = new Label();
-        overviewLabel.textProperty()
-                .bind(Bindings
-                        .createStringBinding(
-                                () -> control.getUnitsToPrint() == 0 ? ""
-                                        : Messages
-                                        .getString("TimeRangeViewSkin.PERIOD_LABEL", control.getUnitsToPrint(),
-                                                Messages.getString(
-                                                        control.getViewType().getPluralChronoMessageKey())),
-                                control.unitsToPrintProperty(), control.viewTypeProperty()));
+        overviewLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            if (control.getUnitsToPrint() == 0) {
+                return "";
+            }
+            return Messages.getString("TimeRangeViewSkin.PERIOD_LABEL", control.getUnitsToPrint(),
+                                      control.getUnitsToPrint() == 1
+                                              ? Messages.getString(control.getViewType().getSingularChronoMessageKey())
+                                              : Messages.getString(control.getViewType().getPluralChronoMessageKey()));
+        }, control.unitsToPrintProperty(), control.viewTypeProperty()));
 
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("container");

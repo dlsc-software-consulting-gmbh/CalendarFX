@@ -18,6 +18,7 @@ package impl.com.calendarfx.view.print;
 
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.print.TimeRangeField;
+
 import javafx.beans.InvalidationListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -70,7 +71,8 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         weekNumberSpinner.setPrefWidth(70);
 
         monthYearValueFactory = new IntegerSpinnerValueFactory(1972, 3000);
-        monthYearValueFactory.valueProperty().addListener(obs -> control.setMonthYear(monthYearValueFactory.getValue()));
+        monthYearValueFactory.valueProperty()
+                .addListener(obs -> control.setMonthYear(monthYearValueFactory.getValue()));
         control.monthYearProperty().addListener(obs -> {
             if (control.getMonthYear() != null) {
                 monthYearValueFactory.setValue(control.getMonthYear());
@@ -82,25 +84,30 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         monthYearSpinner.setValueFactory(monthYearValueFactory);
         monthYearSpinner.managedProperty().bind(monthYearSpinner.visibleProperty());
 
+        afterUnitsLabel = new Label();
+        afterUnitsLabel.managedProperty().bind(afterUnitsLabel.visibleProperty());
         afterUnitsValueFactory = new IntegerSpinnerValueFactory(1, 500);
-        afterUnitsValueFactory.valueProperty().addListener(obs -> control.setAfterUnits(afterUnitsValueFactory.getValue()));
+        afterUnitsValueFactory.valueProperty()
+                .addListener(obs -> control.setAfterUnits(afterUnitsValueFactory.getValue()));
         control.afterUnitsProperty().addListener(obs -> {
             if (control.getAfterUnits() != null) {
                 afterUnitsValueFactory.setValue(control.getAfterUnits());
+                afterUnitsLabel.setText(control.getAfterUnits().equals(1)
+                        ? Messages.getString(getSkinnable().getViewType().getSingularChronoMessageKey())
+                        : Messages.getString(getSkinnable().getViewType().getPluralChronoMessageKey()));
             }
         });
         afterUnitsSpinner = new Spinner<>();
         afterUnitsSpinner.getEditor().setPrefColumnCount(4);
         afterUnitsSpinner.setValueFactory(afterUnitsValueFactory);
         afterUnitsSpinner.managedProperty().bind(afterUnitsSpinner.visibleProperty());
-        afterUnitsLabel = new Label();
-        afterUnitsLabel.managedProperty().bind(afterUnitsLabel.visibleProperty());
 
         InvalidationListener listener = obs -> layout();
         control.viewTypeProperty().addListener(listener);
         control.valueProperty().addListener(listener);
 
-        HBox container = new HBox(5, valuesComboBox, datePicker, weekNumberSpinner, monthYearSpinner, afterUnitsSpinner, afterUnitsLabel);
+        HBox container = new HBox(5, valuesComboBox, datePicker, weekNumberSpinner, monthYearSpinner, afterUnitsSpinner,
+                afterUnitsLabel);
         container.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(valuesComboBox, Priority.ALWAYS);
         HBox.setHgrow(datePicker, Priority.SOMETIMES);
@@ -126,13 +133,14 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
             monthYearValueFactory.setValue(getSkinnable().getMonthYear());
         } else if (getSkinnable().getValue() == TimeRangeField.TimeRangeFieldValue.AFTER) {
             afterUnitsLabel.setVisible(true);
-            afterUnitsLabel.setText(Messages.getString(getSkinnable().getViewType().getPluralChronoMessageKey()));
+            afterUnitsLabel.setText(Messages.getString(getSkinnable().getViewType().getSingularChronoMessageKey()));
             afterUnitsSpinner.setVisible(true);
             afterUnitsValueFactory.setValue(getSkinnable().getAfterUnits());
         }
     }
 
-    private static class TimeRangeFieldValueStringConverter extends StringConverter<TimeRangeField.TimeRangeFieldValue> {
+    private static class TimeRangeFieldValueStringConverter
+            extends StringConverter<TimeRangeField.TimeRangeFieldValue> {
 
         @Override
         public String toString(TimeRangeField.TimeRangeFieldValue object) {
