@@ -16,16 +16,7 @@
 
 package com.calendarfx.view.print;
 
-import com.calendarfx.util.Util;
-import impl.com.calendarfx.view.print.TimeRangeViewSkin;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.Skin;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -36,13 +27,24 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
+import com.calendarfx.util.Util;
+
+import impl.com.calendarfx.view.print.TimeRangeViewSkin;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.Skin;
 
 /**
- * A control for specifying the start and end time of a time range. This control is used
- * as part of the print preview functionality. It allows the user to specify the time range
- * that has to be printed. The control supports day ranges, week rangers, or month ranges.
- * The default style class used by this control is "time-range-view".
+ * A control for specifying the start and end time of a time range. This control
+ * is used as part of the print preview functionality. It allows the user to
+ * specify the time range that has to be printed. The control supports day
+ * ranges, week rangers, or month ranges. The default style class used by this
+ * control is "time-range-view".
  *
  * <center><img src="doc-files/time-range-view.png"></center>
  */
@@ -130,7 +132,8 @@ public class TimeRangeView extends ViewTypeControl {
         return todayProperty().get();
     }
 
-    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
+    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", //$NON-NLS-1$
+            WeekFields.ISO);
 
     /**
      * Week fields are used to determine the first day of a week (e.g. "Monday"
@@ -207,7 +210,8 @@ public class TimeRangeView extends ViewTypeControl {
                     startField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
                     endField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
                 } else {
-                    TimeRangeField.TimeRangeFieldValue month = TimeRangeField.TimeRangeFieldValue.getFromMonth(date.getMonth());
+                    TimeRangeField.TimeRangeFieldValue month = TimeRangeField.TimeRangeFieldValue
+                            .getFromMonth(date.getMonth());
                     int year = date.getYear();
                     endField.setValue(month);
                     endField.setMonthYear(year);
@@ -315,7 +319,8 @@ public class TimeRangeView extends ViewTypeControl {
             case ON_WEEK_NUMBER:
                 int startWeekNumber = getToday().get(getWeekFields().weekOfWeekBasedYear());
                 int diff = startField.getOnWeekNumber() - startWeekNumber;
-                setStartDate(getToday().plusWeeks(diff).with(ChronoField.DAY_OF_WEEK, getWeekFields().getFirstDayOfWeek().getValue()));
+                setStartDate(getToday().plusWeeks(diff).with(ChronoField.DAY_OF_WEEK,
+                        getWeekFields().getFirstDayOfWeek().getValue()));
                 break;
 
             case THIS_MONTH:

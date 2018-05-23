@@ -16,17 +16,7 @@
 
 package com.calendarfx.view.print;
 
-import impl.com.calendarfx.view.print.TimeRangeFieldSkin;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.Skin;
-import org.controlsfx.control.PropertySheet.Item;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -39,14 +29,26 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+import org.controlsfx.control.PropertySheet.Item;
+
+import impl.com.calendarfx.view.print.TimeRangeFieldSkin;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Skin;
 
 /**
- * A control for specifying the start or end time of a time range. This control is used
- * by the {@link TimeRangeView} as part of the print preview functionality. It allows the
- * user to specify the time range that has to be printed. The control supports defining
- * time points for day ranges, week rangers, or month ranges. The default style class used
- * by this control is "time-range-field".
+ * A control for specifying the start or end time of a time range. This control
+ * is used by the {@link TimeRangeView} as part of the print preview
+ * functionality. It allows the user to specify the time range that has to be
+ * printed. The control supports defining time points for day ranges, week
+ * rangers, or month ranges. The default style class used by this control is
+ * "time-range-field".
  *
  * <center><img src="doc-files/time-range-field.png"></center>
  */
@@ -303,14 +305,14 @@ public class TimeRangeField extends ViewTypeControl {
 
     public enum TimeRangeFieldValue {
 
-        TODAY(1, "TimeRangeFieldValue.TODAY_LABEL") {
+        TODAY(1, "TimeRangeFieldValue.THIS_DAY_LABEL") {
             @Override
             public Collection<ViewType> getViewTypes() {
                 return Collections.singletonList(ViewType.DAY_VIEW);
             }
         },
 
-        TOMORROW(2, "TimeRangeFieldValue.TOMORROW_LABEL") {
+        TOMORROW(2, "TimeRangeFieldValue.NEXT_DAY_LABEL") {
             @Override
             public Collection<ViewType> getViewTypes() {
                 return Collections.singletonList(ViewType.DAY_VIEW);
@@ -448,7 +450,6 @@ public class TimeRangeField extends ViewTypeControl {
             }
         },
 
-
         SEPTEMBER(16, "TimeRangeFieldValue.SEPTEMBER_LABEL") {
             @Override
             public boolean isMonthValue() {
@@ -460,7 +461,6 @@ public class TimeRangeField extends ViewTypeControl {
                 return Collections.singletonList(ViewType.MONTH_VIEW);
             }
         },
-
 
         OCTOBER(17, "TimeRangeFieldValue.OCTOBER_LABEL") {
             @Override
@@ -474,7 +474,6 @@ public class TimeRangeField extends ViewTypeControl {
             }
         },
 
-
         NOVEMBER(18, "TimeRangeFieldValue.NOVEMBER_LABEL") {
             @Override
             public boolean isMonthValue() {
@@ -486,7 +485,6 @@ public class TimeRangeField extends ViewTypeControl {
                 return Collections.singletonList(ViewType.MONTH_VIEW);
             }
         },
-
 
         DECEMBER(19, "TimeRangeFieldValue.DECEMBER_LABEL") {
             @Override

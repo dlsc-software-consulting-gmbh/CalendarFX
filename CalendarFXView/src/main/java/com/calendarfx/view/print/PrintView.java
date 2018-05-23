@@ -16,12 +16,19 @@
 
 package com.calendarfx.view.print;
 
+import static java.util.Objects.requireNonNull;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.Util;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.SourceView;
+
 import impl.com.calendarfx.view.print.PrintViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -43,17 +50,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.WeekFields;
-
-import static java.util.Objects.requireNonNull;
-
 /**
- * A print preview pane / dialog for CalendarFX. This view manages a {@link PrintablePage}
- * and binds it to the settingsView / properties that are made available via the {@link SettingsView}.
- * The default style class used by this view is "print-view".
- * <center><img width="100%" src="doc-files/print-view.png"></center>
+ * A print preview pane / dialog for CalendarFX. This view manages a {@link PrintablePage} and binds it to the
+ * settingsView / properties that are made available via the {@link SettingsView}. The default style class used by this
+ * view is "print-view". <center><img width="100%" src="doc-files/print-view.png"></center>
  */
 public class PrintView extends ViewTypeControl {
 
@@ -119,12 +119,11 @@ public class PrintView extends ViewTypeControl {
         return calendarSources;
     }
 
-
     private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now()); //$NON-NLS-1$
 
     /**
-     * Stores the date that is considered to represent "today". This property is
-     * initialized with {@link LocalDate#now()} but can be any date.
+     * Stores the date that is considered to represent "today". This property is initialized with
+     * {@link LocalDate#now()} but can be any date.
      *
      * @return the date representing "today"
      */
@@ -190,10 +189,9 @@ public class PrintView extends ViewTypeControl {
     private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
 
     /**
-     * Week fields are used to determine the first day of a week (e.g. "Monday"
-     * in Germany or "Sunday" in the US). It is also used to calculate the week
-     * number as the week fields determine how many days are needed in the first
-     * week of a year. This property is initialized with {@link WeekFields#ISO}.
+     * Week fields are used to determine the first day of a week (e.g. "Monday" in Germany or "Sunday" in the US). It is
+     * also used to calculate the week number as the week fields determine how many days are needed in the first week of
+     * a year. This property is initialized with {@link WeekFields#ISO}.
      *
      * @return the week fields
      */
@@ -221,9 +219,8 @@ public class PrintView extends ViewTypeControl {
     }
 
     /**
-     * A convenience method to lookup the first day of the week ("Monday" in
-     * Germany, "Sunday" in the US). This method delegates to
-     * {@link WeekFields#getFirstDayOfWeek()}.
+     * A convenience method to lookup the first day of the week ("Monday" in Germany, "Sunday" in the US). This method
+     * delegates to {@link WeekFields#getFirstDayOfWeek()}.
      *
      * @return the first day of the week
      * @see #weekFieldsProperty()
@@ -262,8 +259,8 @@ public class PrintView extends ViewTypeControl {
     private final ObjectProperty<EventHandler<ActionEvent>> onContinue = new SimpleObjectProperty<>(this, "onContinue", evt -> doPrint());
 
     /**
-     * Stores an event handler that will be invoked when the user clicks on the "continue" button.
-     * The default event handler invokes the {@link #doPrint()} method.
+     * Stores an event handler that will be invoked when the user clicks on the "continue" button. The default event
+     * handler invokes the {@link #doPrint()} method.
      *
      * @return the event handler used by the "continue" button
      */
@@ -292,8 +289,8 @@ public class PrintView extends ViewTypeControl {
     private final ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(this, "onCancel", evt -> hide());
 
     /**
-     * Stores an event handler that will be invoked when the user clicks on the "cancel" button.
-     * The default event handler invokes the {@link #hide()} method.
+     * Stores an event handler that will be invoked when the user clicks on the "cancel" button. The default event
+     * handler invokes the {@link #hide()} method.
      *
      * @return the event handler used by the "cancel" button
      */
@@ -329,7 +326,8 @@ public class PrintView extends ViewTypeControl {
     public final void show(Window owner) {
         if (dialog != null) {
             dialog.show();
-        } else {
+        }
+        else {
             Scene scene = new Scene(this);
             dialog = new Stage();
             dialog.initOwner(owner);
@@ -376,20 +374,16 @@ public class PrintView extends ViewTypeControl {
             LoggingDomain.PRINTING.fine("paper = " + paper);
             LoggingDomain.PRINTING.fine("pageOrientation = " + pageOrientation);
             LoggingDomain.PRINTING.fine("marginType = " + marginType);
-            LoggingDomain.PRINTING.fine("custom margins = left: " + pageInView.getLeftMargin() + ", right: " + pageInView.getRightMargin() + ", top: " + pageInView.getTopMargin() + ", bottom: " + pageInView.getBottomMargin());
+            LoggingDomain.PRINTING.fine(
+                    "custom margins = left: " + pageInView.getLeftMargin() + ", right: " + pageInView.getRightMargin() + ", top: " + pageInView.getTopMargin()
+                            + ", bottom: " + pageInView.getBottomMargin());
 
             switch (marginType) {
                 case DEFAULT:
-                    layout = printer.createPageLayout(
-                            paper,
-                            pageOrientation,
-                            Printer.MarginType.DEFAULT);
+                    layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.DEFAULT);
                     break;
                 case MINIMUM:
-                    layout = printer.createPageLayout(
-                            paper,
-                            pageOrientation,
-                            Printer.MarginType.HARDWARE_MINIMUM);
+                    layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.HARDWARE_MINIMUM);
                     break;
                 case CUSTOM:
                     layout = printer.createPageLayout(
@@ -401,7 +395,6 @@ public class PrintView extends ViewTypeControl {
                             pageInView.getBottomMargin());
                     break;
             }
-
 
             // sizes of print page and physical page
             double pageWidth = pageToPrint.prefWidth(-1);
