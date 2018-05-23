@@ -46,7 +46,6 @@ public class YearViewSkin extends DateControlSkin<YearView> {
         view.dateProperty().addListener(evt -> updateMonths());
 
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.getStyleClass().add("sp-container");
         
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("container");

@@ -220,10 +220,13 @@ public class TimeRangeField extends ViewTypeControl {
 
     // value support
 
-    private final ObjectProperty<TimeRangeFieldValue> value = new SimpleObjectProperty<TimeRangeFieldValue>(this, "value") {
+    private final ObjectProperty<TimeRangeFieldValue> value = new SimpleObjectProperty<TimeRangeFieldValue>(this,
+            "value") {
         @Override
         public void set(TimeRangeFieldValue newValue) {
-            super.set(requireNonNull(newValue));
+            if (newValue == null)
+                return;
+            super.set(newValue);
         }
     };
 
@@ -554,41 +557,41 @@ public class TimeRangeField extends ViewTypeControl {
 
         public static TimeRangeFieldValue getFromMonth(Month month) {
             switch (month) {
-                case JANUARY:
-                    return TimeRangeFieldValue.JANUARY;
+            case JANUARY:
+                return TimeRangeFieldValue.JANUARY;
 
-                case FEBRUARY:
-                    return TimeRangeFieldValue.FEBRUARY;
+            case FEBRUARY:
+                return TimeRangeFieldValue.FEBRUARY;
 
-                case MARCH:
-                    return TimeRangeFieldValue.MARCH;
+            case MARCH:
+                return TimeRangeFieldValue.MARCH;
 
-                case APRIL:
-                    return TimeRangeFieldValue.APRIL;
+            case APRIL:
+                return TimeRangeFieldValue.APRIL;
 
-                case MAY:
-                    return TimeRangeFieldValue.MAY;
+            case MAY:
+                return TimeRangeFieldValue.MAY;
 
-                case JUNE:
-                    return TimeRangeFieldValue.JUNE;
+            case JUNE:
+                return TimeRangeFieldValue.JUNE;
 
-                case JULY:
-                    return TimeRangeFieldValue.JULY;
+            case JULY:
+                return TimeRangeFieldValue.JULY;
 
-                case AUGUST:
-                    return TimeRangeFieldValue.AUGUST;
+            case AUGUST:
+                return TimeRangeFieldValue.AUGUST;
 
-                case SEPTEMBER:
-                    return TimeRangeFieldValue.SEPTEMBER;
+            case SEPTEMBER:
+                return TimeRangeFieldValue.SEPTEMBER;
 
-                case OCTOBER:
-                    return TimeRangeFieldValue.OCTOBER;
+            case OCTOBER:
+                return TimeRangeFieldValue.OCTOBER;
 
-                case NOVEMBER:
-                    return TimeRangeFieldValue.NOVEMBER;
+            case NOVEMBER:
+                return TimeRangeFieldValue.NOVEMBER;
 
-                default:
-                    return TimeRangeFieldValue.DECEMBER;
+            default:
+                return TimeRangeFieldValue.DECEMBER;
             }
         }
     }
