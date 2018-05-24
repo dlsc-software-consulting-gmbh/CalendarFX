@@ -67,15 +67,20 @@ import static java.util.Objects.requireNonNull;
 public class AgendaView extends DateControl {
 
     private static final String DEFAULT_STYLE_CLASS = "agenda-view"; //$NON-NLS-1$
+    private static final String AGENDA_CATEGORY = "Agenda View"; //$NON-NLS-1$
 
     private final ListView<AgendaEntry> listView = new ListView<>();
+    private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
+            this,
+            "formatter", //$NON-NLS-1$
+            DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
 
     /**
      * Constructs a new agenda view.
      */
     public AgendaView() {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
-        listView.setCellFactory(listView -> getCellFactory().call(this));
+        listView.setCellFactory(cbListView -> getCellFactory().call(this));
         setContextMenu(buildContextMenu());
     }
 
@@ -225,6 +230,35 @@ public class AgendaView extends DateControl {
     public final void setCellFactory(Callback<AgendaView, ? extends AgendaEntryCell> cellFactory) {
         cellFactoryProperty().set(cellFactory);
     }
+    
+    /**
+     * Gets the DateTimeFormatter property, which is use to provide the format on the TimeScale Labels. By default it
+     * has a value of {@link FormatStyle#LONG}
+     * 
+     * @return the date formatter.
+     */
+    public final ObjectProperty<DateTimeFormatter> dateTimeFormatterProperty() {
+        return formatter;
+    }
+
+    /**
+     * Returns the value of {@link #dateTimeFormatterProperty()}
+     * 
+     * @return a date time formatter
+     */
+    public final DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatterProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #dateTimeFormatterProperty()}
+     * 
+     * @param formatter a date time formatter, not {@code null}
+     */
+    public final void setDateTimeFormatter(DateTimeFormatter formatter) {
+        requireNonNull(formatter);
+        dateTimeFormatterProperty().set(formatter);
+    }
 
     /**
      * Agenda entries are model objects that reference a collection of calendar
@@ -277,10 +311,10 @@ public class AgendaView extends DateControl {
         private static final String AGENDA_VIEW_HEADER_TODAY = "today"; //$NON-NLS-1$
         private static final String AGENDA_VIEW_BODY_SEPARATOR = "separator";
 
-        private final DateTimeFormatter weekdayFormatter = DateTimeFormatter.ofPattern(Messages.getString("AgendaEntryCell.WEEKDAY_FORMAT")); //$NON-NLS-1$
-        private final DateTimeFormatter mediumDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
-        private final DateTimeFormatter shortDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-        private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+        private DateTimeFormatter weekdayFormatter = DateTimeFormatter.ofPattern(Messages.getString("AgendaEntryCell.WEEKDAY_FORMAT")); //$NON-NLS-1$
+        private DateTimeFormatter mediumDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+        private DateTimeFormatter shortDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+        private DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
         private Label weekdayLabel;
         private Label dateLabel;
@@ -520,9 +554,42 @@ public class AgendaView extends DateControl {
 
             return text;
         }
-    }
+        
+        /**
+         * Sets the Week Formatter, the value by default is 'EEEE' Format.
+         * @param weekdayFormatter sets the week date time format.
+         */
+        public void setWeekdayFormatter(DateTimeFormatter weekdayFormatter){
+            this.weekdayFormatter = weekdayFormatter;
+        }
+        
+        /**
+         * Sets the Medium Date Formatter, the value by default is {@link FormatStyle#MEDIUM}. <br> 
+         * Is used to set a format text on the Date Label.
+         * @param mediumDateFormatter sets medium date time format.
+         */
+        public void setMediumDateFormatter(DateTimeFormatter mediumDateFormatter){
+            this.mediumDateFormatter = mediumDateFormatter;
+        }
 
-    private final String AGENDA_CATEGORY = "Agenda View"; //$NON-NLS-1$
+        /**
+         * Sets the Short Date Formatter, the value by default is {@link FormatStyle#SHORT}. <br> 
+         * Is be used to set a Date format text in {@link #getTimeText(Entry)}
+         * @param shortDateFormatter sets the short date time format.
+         */
+        public void setShortDateFormatter(DateTimeFormatter shortDateFormatter){
+            this.shortDateFormatter = shortDateFormatter;
+        }
+
+        /**
+         * Sets the Time Formatter, the value by default is {@link FormatStyle#SHORT}. <br> 
+         * Is used to set a Time format text in {@link #getTimeText(Entry)}
+         * @param timeFormatter sets the time format.
+         */
+        public void setTimeFormatter(DateTimeFormatter timeFormatter){
+            this.timeFormatter = timeFormatter;
+        }
+    }
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
