@@ -49,7 +49,8 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         ComboBox<TimeRangeField.TimeRangeFieldValue> valuesComboBox = new ComboBox<>();
         valuesComboBox.setConverter(new TimeRangeFieldValueStringConverter());
         valuesComboBox.setItems(control.getValues());
-        valuesComboBox.valueProperty().bindBidirectional(control.valueProperty());
+        valuesComboBox.valueProperty()
+                .bindBidirectional(control.valueProperty());
         valuesComboBox.setVisibleRowCount(5);
 
         datePicker = new DatePicker();
@@ -59,7 +60,8 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         datePicker.setEditable(false);
 
         weekValueFactory = new IntegerSpinnerValueFactory(1, 52);
-        weekValueFactory.valueProperty().addListener(obs -> control.setOnWeekNumber(weekValueFactory.getValue()));
+        weekValueFactory.valueProperty().addListener(
+                obs -> control.setOnWeekNumber(weekValueFactory.getValue()));
         control.onWeekNumberProperty().addListener(obs -> {
             if (control.getOnWeekNumber() != null) {
                 weekValueFactory.setValue(control.getOnWeekNumber());
@@ -67,12 +69,13 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         });
         weekNumberSpinner = new Spinner<>();
         weekNumberSpinner.setValueFactory(weekValueFactory);
-        weekNumberSpinner.managedProperty().bind(weekNumberSpinner.visibleProperty());
+        weekNumberSpinner.managedProperty()
+                .bind(weekNumberSpinner.visibleProperty());
         weekNumberSpinner.setPrefWidth(70);
 
         monthYearValueFactory = new IntegerSpinnerValueFactory(1972, 3000);
-        monthYearValueFactory.valueProperty()
-                .addListener(obs -> control.setMonthYear(monthYearValueFactory.getValue()));
+        monthYearValueFactory.valueProperty().addListener(
+                obs -> control.setMonthYear(monthYearValueFactory.getValue()));
         control.monthYearProperty().addListener(obs -> {
             if (control.getMonthYear() != null) {
                 monthYearValueFactory.setValue(control.getMonthYear());
@@ -82,31 +85,37 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         monthYearSpinner = new Spinner<>();
         monthYearSpinner.getEditor().setPrefColumnCount(6);
         monthYearSpinner.setValueFactory(monthYearValueFactory);
-        monthYearSpinner.managedProperty().bind(monthYearSpinner.visibleProperty());
+        monthYearSpinner.managedProperty()
+                .bind(monthYearSpinner.visibleProperty());
 
         afterUnitsLabel = new Label();
-        afterUnitsLabel.managedProperty().bind(afterUnitsLabel.visibleProperty());
+        afterUnitsLabel.managedProperty()
+                .bind(afterUnitsLabel.visibleProperty());
         afterUnitsValueFactory = new IntegerSpinnerValueFactory(1, 500);
-        afterUnitsValueFactory.valueProperty()
-                .addListener(obs -> control.setAfterUnits(afterUnitsValueFactory.getValue()));
+        afterUnitsValueFactory.valueProperty().addListener(obs -> control
+                .setAfterUnits(afterUnitsValueFactory.getValue()));
         control.afterUnitsProperty().addListener(obs -> {
             if (control.getAfterUnits() != null) {
                 afterUnitsValueFactory.setValue(control.getAfterUnits());
                 afterUnitsLabel.setText(control.getAfterUnits().equals(1)
-                        ? Messages.getString(getSkinnable().getViewType().getSingularChronoMessageKey())
-                        : Messages.getString(getSkinnable().getViewType().getPluralChronoMessageKey()));
+                        ? Messages.getString(getSkinnable().getViewType()
+                                .getSingularChronoMessageKey())
+                        : Messages.getString(getSkinnable().getViewType()
+                                .getPluralChronoMessageKey()));
             }
         });
         afterUnitsSpinner = new Spinner<>();
         afterUnitsSpinner.getEditor().setPrefColumnCount(4);
         afterUnitsSpinner.setValueFactory(afterUnitsValueFactory);
-        afterUnitsSpinner.managedProperty().bind(afterUnitsSpinner.visibleProperty());
+        afterUnitsSpinner.managedProperty()
+                .bind(afterUnitsSpinner.visibleProperty());
 
         InvalidationListener listener = obs -> layout();
         control.viewTypeProperty().addListener(listener);
         control.valueProperty().addListener(listener);
 
-        HBox container = new HBox(5, valuesComboBox, datePicker, weekNumberSpinner, monthYearSpinner, afterUnitsSpinner,
+        HBox container = new HBox(5, valuesComboBox, datePicker,
+                weekNumberSpinner, monthYearSpinner, afterUnitsSpinner,
                 afterUnitsLabel);
         container.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(valuesComboBox, Priority.ALWAYS);
@@ -123,17 +132,21 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         afterUnitsSpinner.setVisible(false);
         afterUnitsLabel.setVisible(false);
 
-        if (getSkinnable().getValue() == TimeRangeField.TimeRangeFieldValue.ON_DATE) {
+        if (getSkinnable()
+                .getValue() == TimeRangeField.TimeRangeFieldValue.ON_DATE) {
             datePicker.setVisible(true);
-        } else if (getSkinnable().getValue() == TimeRangeField.TimeRangeFieldValue.ON_WEEK_NUMBER) {
+        } else if (getSkinnable()
+                .getValue() == TimeRangeField.TimeRangeFieldValue.ON_WEEK_NUMBER) {
             weekNumberSpinner.setVisible(true);
             weekValueFactory.setValue(getSkinnable().getOnWeekNumber());
         } else if (getSkinnable().getValue().isMonthValue()) {
             monthYearSpinner.setVisible(true);
             monthYearValueFactory.setValue(getSkinnable().getMonthYear());
-        } else if (getSkinnable().getValue() == TimeRangeField.TimeRangeFieldValue.AFTER) {
+        } else if (getSkinnable()
+                .getValue() == TimeRangeField.TimeRangeFieldValue.AFTER) {
             afterUnitsLabel.setVisible(true);
-            afterUnitsLabel.setText(Messages.getString(getSkinnable().getViewType().getSingularChronoMessageKey()));
+            afterUnitsLabel.setText(Messages.getString(getSkinnable()
+                    .getViewType().getSingularChronoMessageKey()));
             afterUnitsSpinner.setVisible(true);
             afterUnitsValueFactory.setValue(getSkinnable().getAfterUnits());
         }
@@ -150,8 +163,10 @@ public class TimeRangeFieldSkin extends SkinBase<TimeRangeField> {
         @Override
         public TimeRangeField.TimeRangeFieldValue fromString(String string) {
             if (string != null) {
-                for (TimeRangeField.TimeRangeFieldValue type : TimeRangeField.TimeRangeFieldValue.values()) {
-                    if (string.equals(Messages.getString(type.getMessageKey()))) {
+                for (TimeRangeField.TimeRangeFieldValue type : TimeRangeField.TimeRangeFieldValue
+                        .values()) {
+                    if (string
+                            .equals(Messages.getString(type.getMessageKey()))) {
                         return type;
                     }
                 }

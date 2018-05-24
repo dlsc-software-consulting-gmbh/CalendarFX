@@ -102,7 +102,8 @@ public class TimeRangeView extends ViewTypeControl {
         updateUnitsToPrint();
     }
 
-    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now()); //$NON-NLS-1$
+    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(
+            this, "today", LocalDate.now()); //$NON-NLS-1$
 
     /**
      * Stores the date that is considered to represent "today". This property is
@@ -117,7 +118,8 @@ public class TimeRangeView extends ViewTypeControl {
     /**
      * Sets the value of {@link #todayProperty()}.
      *
-     * @param date the date representing "today"
+     * @param date
+     *            the date representing "today"
      */
     public final void setToday(LocalDate date) {
         requireNonNull(date);
@@ -133,7 +135,8 @@ public class TimeRangeView extends ViewTypeControl {
         return todayProperty().get();
     }
 
-    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", //$NON-NLS-1$
+    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(
+            this, "weekFields", //$NON-NLS-1$
             WeekFields.ISO);
 
     /**
@@ -151,7 +154,8 @@ public class TimeRangeView extends ViewTypeControl {
     /**
      * Sets the value of {@link #weekFieldsProperty()}.
      *
-     * @param fields the new week fields
+     * @param fields
+     *            the new week fields
      */
     public final void setWeekFields(WeekFields fields) {
         requireNonNull(fields);
@@ -173,56 +177,64 @@ public class TimeRangeView extends ViewTypeControl {
         }
 
         switch (getViewType()) {
-            case DAY_VIEW:
-                if (date.equals(getToday())) {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
-                } else if (date.equals(getTomorrow())) {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
-                } else {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                    startField.setOnDate(date);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                    endField.setOnDate(date);
-                }
-                break;
+        case DAY_VIEW:
+            if (date.equals(getToday())) {
+                startField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
+                endField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
+            } else if (date.equals(getTomorrow())) {
+                startField
+                        .setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
+                endField.setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
+            } else {
+                startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
+                startField.setOnDate(date);
+                endField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
+                endField.setOnDate(date);
+            }
+            break;
 
-            case WEEK_VIEW:
-                if (date.equals(getThisWeekDate())) {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
-                } else if (date.equals(getNextWeekDate())) {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
-                } else {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                    startField.setOnDate(date);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                    endField.setOnDate(date);
-                }
-                break;
+        case WEEK_VIEW:
+            if (date.equals(getThisWeekDate())) {
+                startField
+                        .setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
+                endField.setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
+            } else if (date.equals(getNextWeekDate())) {
+                startField
+                        .setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
+                endField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
+            } else {
+                startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
+                startField.setOnDate(date);
+                endField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
+                endField.setOnDate(date);
+            }
+            break;
 
-            case MONTH_VIEW:
-                if (date.equals(getThisMonthDate())) {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
-                } else if (date.equals(getNextMonthDate())) {
-                    startField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
-                    endField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
-                } else {
-                    TimeRangeField.TimeRangeFieldValue month = TimeRangeField.TimeRangeFieldValue
-                            .getFromMonth(date.getMonth());
-                    int year = date.getYear();
-                    endField.setValue(month);
-                    endField.setMonthYear(year);
-                    startField.setValue(month);
-                    startField.setMonthYear(year);
-                }
-                break;
+        case MONTH_VIEW:
+            if (date.equals(getThisMonthDate())) {
+                startField.setValue(
+                        TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
+                endField.setValue(
+                        TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
+            } else if (date.equals(getNextMonthDate())) {
+                startField.setValue(
+                        TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
+                endField.setValue(
+                        TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
+            } else {
+                TimeRangeField.TimeRangeFieldValue month = TimeRangeField.TimeRangeFieldValue
+                        .getFromMonth(date.getMonth());
+                int year = date.getYear();
+                endField.setValue(month);
+                endField.setMonthYear(year);
+                startField.setValue(month);
+                startField.setMonthYear(year);
+            }
+            break;
 
-            default:
-                throw new UnsupportedOperationException("Not supported yet!: " + getViewType());
+        default:
+            throw new UnsupportedOperationException(
+                    "Not supported yet!: " + getViewType());
         }
     }
 
@@ -239,7 +251,8 @@ public class TimeRangeView extends ViewTypeControl {
         return endField;
     }
 
-    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(this, "startDate");
+    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(
+            this, "startDate");
 
     public final ReadOnlyObjectProperty<LocalDate> startDateProperty() {
         return startDate.getReadOnlyProperty();
@@ -268,11 +281,13 @@ public class TimeRangeView extends ViewTypeControl {
     }
 
     private LocalDate getStartOfWeek(LocalDate date) {
-        return Util.adjustToFirstDayOfWeek(date, getWeekFields().getFirstDayOfWeek());
+        return Util.adjustToFirstDayOfWeek(date,
+                getWeekFields().getFirstDayOfWeek());
     }
 
     private LocalDate getEndOfWeek(LocalDate date) {
-        return Util.adjustToLastDayOfWeek(date, getWeekFields().getFirstDayOfWeek());
+        return Util.adjustToLastDayOfWeek(date,
+                getWeekFields().getFirstDayOfWeek());
     }
 
     private LocalDate getThisMonthDate() {
@@ -288,104 +303,132 @@ public class TimeRangeView extends ViewTypeControl {
     }
 
     private LocalDate getEndOfMonth(LocalDate date) {
-        return YearMonth.of(date.getYear(), date.getMonthValue()).atEndOfMonth();
+        return YearMonth.of(date.getYear(), date.getMonthValue())
+                .atEndOfMonth();
     }
 
     private void updateStartDate() {
         switch (startField.getValue()) {
-            case TODAY:
-                setStartDate(getToday());
-                break;
+        case TODAY:
+            setStartDate(getToday());
+            break;
 
-            case TOMORROW:
-                setStartDate(getTomorrow());
-                break;
+        case TOMORROW:
+            setStartDate(getTomorrow());
+            break;
 
-            case ON_DATE:
-                if (getViewType() == ViewType.DAY_VIEW) {
-                    setStartDate(startField.getOnDate());
-                } else {
-                    setStartDate(getStartOfWeek(startField.getOnDate()));
-                }
-                break;
+        case ON_DATE:
+            if (getViewType() == ViewType.DAY_VIEW) {
+                setStartDate(startField.getOnDate());
+            } else {
+                setStartDate(getStartOfWeek(startField.getOnDate()));
+            }
+            break;
 
-            case THIS_WEEK:
-                setStartDate(getThisWeekDate());
-                break;
+        case THIS_WEEK:
+            setStartDate(getThisWeekDate());
+            break;
 
-            case NEXT_WEEK:
-                setStartDate(getNextWeekDate());
-                break;
+        case NEXT_WEEK:
+            setStartDate(getNextWeekDate());
+            break;
 
-            case ON_WEEK_NUMBER:
-                int startWeekNumber = getToday().get(getWeekFields().weekOfWeekBasedYear());
-                int diff = startField.getOnWeekNumber() - startWeekNumber;
-                setStartDate(getToday().plusWeeks(diff).with(ChronoField.DAY_OF_WEEK,
-                        getWeekFields().getFirstDayOfWeek().getValue()));
-                break;
+        case ON_WEEK_NUMBER:
+            int startWeekNumber = getToday()
+                    .get(getWeekFields().weekOfWeekBasedYear());
+            int diff = startField.getOnWeekNumber() - startWeekNumber;
+            setStartDate(
+                    getToday().plusWeeks(diff).with(ChronoField.DAY_OF_WEEK,
+                            getWeekFields().getFirstDayOfWeek().getValue()));
+            break;
 
-            case THIS_MONTH:
-                setStartDate(getThisMonthDate());
-                break;
+        case THIS_MONTH:
+            setStartDate(getThisMonthDate());
+            break;
 
-            case NEXT_MONTH:
-                setStartDate(getNextMonthDate());
-                break;
+        case NEXT_MONTH:
+            setStartDate(getNextMonthDate());
+            break;
 
-            case JANUARY:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.JANUARY.getValue()).atDay(1));
-                break;
+        case JANUARY:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.JANUARY.getValue())
+                    .atDay(1));
+            break;
 
-            case FEBRUARY:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.FEBRUARY.getValue()).atDay(1));
-                break;
+        case FEBRUARY:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.FEBRUARY.getValue())
+                    .atDay(1));
+            break;
 
-            case MARCH:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.MARCH.getValue()).atDay(1));
-                break;
+        case MARCH:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.MARCH.getValue())
+                    .atDay(1));
+            break;
 
-            case APRIL:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.APRIL.getValue()).atDay(1));
-                break;
+        case APRIL:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.APRIL.getValue())
+                    .atDay(1));
+            break;
 
-            case MAY:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.MAY.getValue()).atDay(1));
-                break;
+        case MAY:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.MAY.getValue())
+                    .atDay(1));
+            break;
 
-            case JUNE:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.JUNE.getValue()).atDay(1));
-                break;
+        case JUNE:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.JUNE.getValue())
+                    .atDay(1));
+            break;
 
-            case JULY:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.JULY.getValue()).atDay(1));
-                break;
+        case JULY:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.JULY.getValue())
+                    .atDay(1));
+            break;
 
-            case AUGUST:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.AUGUST.getValue()).atDay(1));
-                break;
+        case AUGUST:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.AUGUST.getValue())
+                    .atDay(1));
+            break;
 
-            case SEPTEMBER:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.SEPTEMBER.getValue()).atDay(1));
-                break;
+        case SEPTEMBER:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.SEPTEMBER.getValue())
+                    .atDay(1));
+            break;
 
-            case OCTOBER:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.OCTOBER.getValue()).atDay(1));
-                break;
+        case OCTOBER:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.OCTOBER.getValue())
+                    .atDay(1));
+            break;
 
-            case NOVEMBER:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.NOVEMBER.getValue()).atDay(1));
-                break;
+        case NOVEMBER:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.NOVEMBER.getValue())
+                    .atDay(1));
+            break;
 
-            case DECEMBER:
-                setStartDate(YearMonth.of(startField.getMonthYear(), Month.DECEMBER.getValue()).atDay(1));
-                break;
+        case DECEMBER:
+            setStartDate(YearMonth
+                    .of(startField.getMonthYear(), Month.DECEMBER.getValue())
+                    .atDay(1));
+            break;
 
-            default:
-                throw new UnsupportedOperationException("Value not supported!");
+        default:
+            throw new UnsupportedOperationException("Value not supported!");
         }
     }
 
-    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(this, "endDate");
+    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(
+            this, "endDate");
 
     public final ReadOnlyObjectProperty<LocalDate> endDateProperty() {
         return endDate.getReadOnlyProperty();
@@ -403,106 +446,132 @@ public class TimeRangeView extends ViewTypeControl {
 
     private void updateEndDate() {
         switch (endField.getValue()) {
-            case TODAY:
-                setEndDate(getToday());
-                break;
+        case TODAY:
+            setEndDate(getToday());
+            break;
 
-            case TOMORROW:
-                setEndDate(getTomorrow());
-                break;
+        case TOMORROW:
+            setEndDate(getTomorrow());
+            break;
 
-            case ON_DATE:
-                if (getViewType() == ViewType.DAY_VIEW) {
-                    setEndDate(endField.getOnDate());
-                } else {
-                    setEndDate(getEndOfWeek(endField.getOnDate()));
-                }
-                break;
+        case ON_DATE:
+            if (getViewType() == ViewType.DAY_VIEW) {
+                setEndDate(endField.getOnDate());
+            } else {
+                setEndDate(getEndOfWeek(endField.getOnDate()));
+            }
+            break;
 
-            case THIS_WEEK:
-                setEndDate(getEndOfWeek(getToday()));
-                break;
+        case THIS_WEEK:
+            setEndDate(getEndOfWeek(getToday()));
+            break;
 
-            case NEXT_WEEK:
-                setEndDate(getEndOfWeek(getToday()).plusWeeks(1));
-                break;
+        case NEXT_WEEK:
+            setEndDate(getEndOfWeek(getToday()).plusWeeks(1));
+            break;
 
-            case ON_WEEK_NUMBER:
-                int startWeekNumber = getToday().get(getWeekFields().weekOfWeekBasedYear());
-                int difference = endField.getOnWeekNumber() - startWeekNumber;
-                setEndDate(getToday().plusWeeks(difference).with(ChronoField.DAY_OF_WEEK,
-                        getWeekFields().getFirstDayOfWeek().plus(6).getValue()));
-                break;
+        case ON_WEEK_NUMBER:
+            int startWeekNumber = getToday()
+                    .get(getWeekFields().weekOfWeekBasedYear());
+            int difference = endField.getOnWeekNumber() - startWeekNumber;
+            setEndDate(getToday().plusWeeks(difference).with(
+                    ChronoField.DAY_OF_WEEK,
+                    getWeekFields().getFirstDayOfWeek().plus(6).getValue()));
+            break;
 
-            case THIS_MONTH:
-                setEndDate(getEndOfMonth(getToday()));
-                break;
+        case THIS_MONTH:
+            setEndDate(getEndOfMonth(getToday()));
+            break;
 
-            case NEXT_MONTH:
-                setEndDate(getEndOfMonth(getToday()).plusMonths(1));
-                break;
+        case NEXT_MONTH:
+            setEndDate(getEndOfMonth(getToday()).plusMonths(1));
+            break;
 
-            case JANUARY:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.JANUARY.getValue()).atEndOfMonth());
-                break;
+        case JANUARY:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.JANUARY.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case FEBRUARY:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.FEBRUARY.getValue()).atEndOfMonth());
-                break;
+        case FEBRUARY:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.FEBRUARY.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case MARCH:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.MARCH.getValue()).atEndOfMonth());
-                break;
+        case MARCH:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.MARCH.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case APRIL:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.APRIL.getValue()).atEndOfMonth());
-                break;
+        case APRIL:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.APRIL.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case MAY:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.MAY.getValue()).atEndOfMonth());
-                break;
+        case MAY:
+            setEndDate(
+                    YearMonth.of(endField.getMonthYear(), Month.MAY.getValue())
+                            .atEndOfMonth());
+            break;
 
-            case JUNE:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.JUNE.getValue()).atEndOfMonth());
-                break;
+        case JUNE:
+            setEndDate(
+                    YearMonth.of(endField.getMonthYear(), Month.JUNE.getValue())
+                            .atEndOfMonth());
+            break;
 
-            case JULY:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.JULY.getValue()).atEndOfMonth());
-                break;
+        case JULY:
+            setEndDate(
+                    YearMonth.of(endField.getMonthYear(), Month.JULY.getValue())
+                            .atEndOfMonth());
+            break;
 
-            case AUGUST:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.AUGUST.getValue()).atEndOfMonth());
-                break;
+        case AUGUST:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.AUGUST.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case SEPTEMBER:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.SEPTEMBER.getValue()).atEndOfMonth());
-                break;
+        case SEPTEMBER:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.SEPTEMBER.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case OCTOBER:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.OCTOBER.getValue()).atEndOfMonth());
-                break;
+        case OCTOBER:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.OCTOBER.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case NOVEMBER:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.NOVEMBER.getValue()).atEndOfMonth());
-                break;
+        case NOVEMBER:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.NOVEMBER.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case DECEMBER:
-                setEndDate(YearMonth.of(endField.getMonthYear(), Month.DECEMBER.getValue()).atEndOfMonth());
-                break;
+        case DECEMBER:
+            setEndDate(YearMonth
+                    .of(endField.getMonthYear(), Month.DECEMBER.getValue())
+                    .atEndOfMonth());
+            break;
 
-            case AFTER:
-                int units = endField.getAfterUnits();
-                if (getViewType() == ViewType.DAY_VIEW) {
-                    setEndDate(getStartDate().plusDays(units));
-                } else if (getViewType() == ViewType.WEEK_VIEW) {
-                    setEndDate(getEndOfWeek(getStartDate()).plusWeeks(units));
-                } else {
-                    setEndDate(getEndOfMonth(getStartDate()).plusMonths(units));
-                }
-                break;
+        case AFTER:
+            int units = endField.getAfterUnits();
+            if (getViewType() == ViewType.DAY_VIEW) {
+                setEndDate(getStartDate().plusDays(units));
+            } else if (getViewType() == ViewType.WEEK_VIEW) {
+                setEndDate(getEndOfWeek(getStartDate()).plusWeeks(units));
+            } else {
+                setEndDate(getEndOfMonth(getStartDate()).plusMonths(units));
+            }
+            break;
 
-            default:
-                throw new UnsupportedOperationException("Value not supported!");
+        default:
+            throw new UnsupportedOperationException("Value not supported!");
         }
     }
 
@@ -513,8 +582,9 @@ public class TimeRangeView extends ViewTypeControl {
         if (mStartDate == null || mEndDate == null) {
             return;
         }
-        
-        mEndDate = endField.getValue() == TimeRangeFieldValue.AFTER ? mStartDate : mEndDate;
+
+        mEndDate = endField.getValue() == TimeRangeFieldValue.AFTER ? mStartDate
+                : mEndDate;
 
         if (mEndDate.isBefore(mStartDate)) {
             endField.setValue(startField.getValue());
@@ -554,7 +624,8 @@ public class TimeRangeView extends ViewTypeControl {
         }
     }
 
-    private final ReadOnlyIntegerWrapper unitsToPrint = new ReadOnlyIntegerWrapper(this, "unitsToPrint");
+    private final ReadOnlyIntegerWrapper unitsToPrint = new ReadOnlyIntegerWrapper(
+            this, "unitsToPrint");
 
     public final ReadOnlyIntegerProperty unitsToPrintProperty() {
         return unitsToPrint.getReadOnlyProperty();
@@ -576,25 +647,27 @@ public class TimeRangeView extends ViewTypeControl {
             return;
         }
 
-        Duration duration = Duration.between(mStartDate.atTime(LocalTime.MIN), mEndDate.atStartOfDay().plusDays(1));
+        Duration duration = Duration.between(mStartDate.atTime(LocalTime.MIN),
+                mEndDate.atStartOfDay().plusDays(1));
         long days = duration.toDays();
 
         if (days > 0) {
             switch (getViewType()) {
-                case DAY_VIEW:
-                    setUnitsToPrint((int) days);
-                    break;
+            case DAY_VIEW:
+                setUnitsToPrint((int) days);
+                break;
 
-                case WEEK_VIEW:
-                    setUnitsToPrint((int) Math.round((double) days / 7));
-                    break;
+            case WEEK_VIEW:
+                setUnitsToPrint((int) Math.round((double) days / 7));
+                break;
 
-                case MONTH_VIEW:
-                    setUnitsToPrint((int) Math.round((double) days / 30));
-                    break;
+            case MONTH_VIEW:
+                setUnitsToPrint((int) Math.round((double) days / 30));
+                break;
 
-                default:
-                    throw new UnsupportedOperationException("Not supported yet!: " + getViewType());
+            default:
+                throw new UnsupportedOperationException(
+                        "Not supported yet!: " + getViewType());
             }
         } else {
             setUnitsToPrint(0);
