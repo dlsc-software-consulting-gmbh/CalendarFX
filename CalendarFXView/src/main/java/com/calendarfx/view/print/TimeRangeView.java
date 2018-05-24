@@ -495,9 +495,9 @@ public class TimeRangeView extends ViewTypeControl {
                 if (getViewType() == ViewType.DAY_VIEW) {
                     setEndDate(getStartDate().plusDays(units));
                 } else if (getViewType() == ViewType.WEEK_VIEW) {
-                    setEndDate(getStartOfWeek(getStartDate()).plusWeeks(units));
+                    setEndDate(getEndOfWeek(getStartDate()).plusWeeks(units));
                 } else {
-                    setEndDate(getStartOfMonth(getStartDate()).plusMonths(units));
+                    setEndDate(getEndOfMonth(getStartDate()).plusMonths(units));
                 }
                 break;
 
@@ -586,11 +586,11 @@ public class TimeRangeView extends ViewTypeControl {
                     break;
 
                 case WEEK_VIEW:
-                    setUnitsToPrint((int) (days / 7));
+                    setUnitsToPrint((int) Math.round((double) days / 7));
                     break;
 
                 case MONTH_VIEW:
-                    setUnitsToPrint((int) days / 30);
+                    setUnitsToPrint((int) Math.round((double) days / 30));
                     break;
 
                 default:
