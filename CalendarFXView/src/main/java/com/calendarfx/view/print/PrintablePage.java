@@ -59,8 +59,8 @@ public class PrintablePage extends DateControl {
 
     private final PrintPeriodSplitter periodSplitter;
 
-    private final DetailedDayView detailedDayView;
-    private final DetailedWeekView detailedWeekView;
+	private final DetailedDayView detailedDayView;
+	private final DetailedWeekView detailedWeekView;
     private final MonthView monthView;
 
     private final WeakEventHandler<MouseEvent> weakMouseHandler = new WeakEventHandler<>(Event::consume);
