@@ -30,7 +30,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
 import javafx.util.Duration;
 
-public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<T> {
+public class TimeScaleViewSkin<T extends TimeScaleView>
+        extends DayViewBaseSkin<T> {
 
     private static final String EARLY_HOUR_LATER = "early-hour-label";//$NON-NLS-1$
     private static final String LATE_HOUR_LATER = "late-hour-label";//$NON-NLS-1$
@@ -63,12 +64,14 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         currentTimeLabel.setAlignment(Pos.CENTER_RIGHT);
         currentTimeLabel.setOpacity(0);
         currentTimeLabel.setTextOverrun(OverrunStyle.CLIP);
-        currentTimeLabel.visibleProperty().bind(view.enableCurrentTimeMarkerProperty());
+        currentTimeLabel.visibleProperty()
+                .bind(view.enableCurrentTimeMarkerProperty());
 
         getChildren().add(currentTimeLabel);
 
         updateCurrentTimeMarkerVisibility();
-        view.showCurrentTimeMarkerProperty().addListener(it -> updateCurrentTimeMarkerVisibility());
+        view.showCurrentTimeMarkerProperty()
+                .addListener(it -> updateCurrentTimeMarkerVisibility());
         setupCurrentTimeMarkerSupport();
         updateShowMarkers();
     }
@@ -76,13 +79,14 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
     private void updateCurrentTimeMarkerVisibility() {
         double opacity = getSkinnable().isShowCurrentTimeMarker() ? 1 : 0;
 
-        FadeTransition lineTransition = new FadeTransition(Duration.millis(600), currentTimeLabel);
+        FadeTransition lineTransition = new FadeTransition(Duration.millis(600),
+                currentTimeLabel);
         lineTransition.setToValue(opacity);
         lineTransition.play();
 
         /*
-         * Need to re-layout as regular time labels might be invisible because they were intersecting with the current
-         * time label.
+         * Need to re-layout as regular time labels might be invisible because
+         * they were intersecting with the current time label.
          */
         getSkinnable().requestLayout();
     }
@@ -96,8 +100,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
     private void updateShowMarkers() {
         T view = getSkinnable();
-        view.getProperties().put(
-                "show.current.time.marker", //$NON-NLS-1$
+        view.getProperties().put("show.current.time.marker", //$NON-NLS-1$
                 isShowingTimeMarker());
     }
 
@@ -106,15 +109,18 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
     }
 
     @Override
-    protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
+    protected void layoutChildren(double contentX, double contentY,
+            double contentWidth, double contentHeight) {
         super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
 
         int labelCount = labels.size();
 
         // now label
         LocalTime now = getSkinnable().getTime();
-        currentTimeLabel.setText(now.format(getSkinnable().getDateTimeFormatter()));
-        placeLabel(currentTimeLabel, now, contentX, contentY, contentWidth, contentHeight);
+        currentTimeLabel
+                .setText(now.format(getSkinnable().getDateTimeFormatter()));
+        placeLabel(currentTimeLabel, now, contentX, contentY, contentWidth,
+                contentHeight);
 
         // hour labels
         LocalTime startTime = getSkinnable().getStartTime();
@@ -126,38 +132,44 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
             label.getStyleClass().removeAll(EARLY_HOUR_LATER, LATE_HOUR_LATER);
 
-            placeLabel(label, time, contentX, contentY, contentWidth, contentHeight);
+            placeLabel(label, time, contentX, contentY, contentWidth,
+                    contentHeight);
 
-            Bounds localToParent1 = currentTimeLabel.localToParent(currentTimeLabel.getLayoutBounds());
-            Bounds localToParent2 = label.localToParent(label.getLayoutBounds());
+            Bounds localToParent1 = currentTimeLabel
+                    .localToParent(currentTimeLabel.getLayoutBounds());
+            Bounds localToParent2 = label
+                    .localToParent(label.getLayoutBounds());
 
-            if (currentTimeLabel.isVisible() && getSkinnable().isShowCurrentTimeMarker() && localToParent1.intersects(localToParent2)) {
+            if (currentTimeLabel.isVisible()
+                    && getSkinnable().isShowCurrentTimeMarker()
+                    && localToParent1.intersects(localToParent2)) {
                 label.setVisible(false);
-            }
-            else {
+            } else {
                 label.setVisible(true);
             }
 
-            if (time.isBefore(startTime) && !label.getStyleClass().contains(EARLY_HOUR_LATER)) {
+            if (time.isBefore(startTime)
+                    && !label.getStyleClass().contains(EARLY_HOUR_LATER)) {
                 label.getStyleClass().add(EARLY_HOUR_LATER);
             }
-            if (time.isAfter(endTime) && !label.getStyleClass().contains(LATE_HOUR_LATER)) {
+            if (time.isAfter(endTime)
+                    && !label.getStyleClass().contains(LATE_HOUR_LATER)) {
                 label.getStyleClass().add(LATE_HOUR_LATER);
             }
 
             if (label.isVisible()) {
                 switch (getSkinnable().getEarlyLateHoursStrategy()) {
-                    case HIDE:
-                    case SHOW_COMPRESSED:
-                        if (time.isBefore(startTime) || time.isAfter(endTime)) {
-                            label.setVisible(false);
-                        }
-                        break;
-                    case SHOW:
-                        label.setVisible(true);
-                        break;
-                    default:
-                        break;
+                case HIDE:
+                case SHOW_COMPRESSED:
+                    if (time.isBefore(startTime) || time.isAfter(endTime)) {
+                        label.setVisible(false);
+                    }
+                    break;
+                case SHOW:
+                    label.setVisible(true);
+                    break;
+                default:
+                    break;
 
                 }
             }
@@ -166,22 +178,28 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         currentTimeLabel.toFront();
     }
 
-    private void placeLabel(Label label, LocalTime time, double contentX, double contentY, double contentWidth, double contentHeight) {
+    private void placeLabel(Label label, LocalTime time, double contentX,
+            double contentY, double contentWidth, double contentHeight) {
 
         double prefHeight = label.prefHeight(contentWidth);
 
-        double y = contentY + ViewHelper.getTimeLocation(getSkinnable(), time, true);
+        double y = contentY
+                + ViewHelper.getTimeLocation(getSkinnable(), time, true);
 
         /*
-         * Min and max calculations to ensure text is completely visible at the top and the bottom.
+         * Min and max calculations to ensure text is completely visible at the
+         * top and the bottom.
          */
-        y = Math.min(contentHeight - label.getFont().getSize(), Math.max(0, ((int) (y - prefHeight / 2)) + .5));
+        y = Math.min(contentHeight - label.getFont().getSize(),
+                Math.max(0, ((int) (y - prefHeight / 2)) + .5));
 
-        label.resizeRelocate(snapPosition(contentX), snapPosition(y), snapSize(contentWidth), snapSize(prefHeight));
+        label.resizeRelocate(snapPosition(contentX), snapPosition(y),
+                snapSize(contentWidth), snapSize(prefHeight));
     }
 
     @Override
-    protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefWidth(double height, double topInset,
+            double rightInset, double bottomInset, double leftInset) {
 
         double width = 0;
 
@@ -193,8 +211,10 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
     }
 
     @Override
-    protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-        return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+    protected double computeMinWidth(double height, double topInset,
+            double rightInset, double bottomInset, double leftInset) {
+        return computePrefWidth(height, topInset, rightInset, bottomInset,
+                leftInset);
     }
 
 }

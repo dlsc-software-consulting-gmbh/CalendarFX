@@ -36,17 +36,24 @@ public class TimeRangeViewSkin extends SkinBase<TimeRangeView> {
             if (control.getUnitsToPrint() == 0) {
                 return "";
             }
-            return Messages.getString("TimeRangeViewSkin.PERIOD_LABEL", control.getUnitsToPrint(),
-                                      control.getUnitsToPrint() == 1
-                                              ? Messages.getString(control.getViewType().getSingularChronoMessageKey())
-                                              : Messages.getString(control.getViewType().getPluralChronoMessageKey()));
+            return Messages.getString("TimeRangeViewSkin.PERIOD_LABEL",
+                    control.getUnitsToPrint(),
+                    control.getUnitsToPrint() == 1
+                            ? Messages.getString(control.getViewType()
+                                    .getSingularChronoMessageKey())
+                            : Messages.getString(control.getViewType()
+                                    .getPluralChronoMessageKey()));
         }, control.unitsToPrintProperty(), control.viewTypeProperty()));
 
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("container");
-        gridPane.add(new Label(Messages.getString("TimeRangeViewSkin.START_LABEL")), 0, 0);
+        gridPane.add(
+                new Label(Messages.getString("TimeRangeViewSkin.START_LABEL")),
+                0, 0);
         gridPane.add(control.getStartField(), 1, 0);
-        gridPane.add(new Label(Messages.getString("TimeRangeViewSkin.END_LABEL")), 0, 1);
+        gridPane.add(
+                new Label(Messages.getString("TimeRangeViewSkin.END_LABEL")), 0,
+                1);
         gridPane.add(control.getEndField(), 1, 1);
         gridPane.add(overviewLabel, 1, 2);
 

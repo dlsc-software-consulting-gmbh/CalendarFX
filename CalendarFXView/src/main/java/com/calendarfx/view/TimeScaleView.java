@@ -35,8 +35,7 @@ import javafx.scene.control.Skin;
 public class TimeScaleView extends DayViewBase {
 
     private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
-            this,
-            "formatter", //$NON-NLS-1$
+            this, "formatter", //$NON-NLS-1$
             DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
 
     /**
@@ -52,8 +51,9 @@ public class TimeScaleView extends DayViewBase {
     }
 
     /**
-     * Gets the DateTimeFormatter property, which is use to provide the format on the TimeScale Labels. By default it
-     * has a value of {@link FormatStyle#SHORT}
+     * Gets the DateTimeFormatter property, which is use to provide the format
+     * on the TimeScale Labels. By default it has a value of
+     * {@link FormatStyle#SHORT}
      * 
      * @return the date formatter.
      */
@@ -73,7 +73,8 @@ public class TimeScaleView extends DayViewBase {
     /**
      * Sets the value of {@link #dateTimeFormatterProperty()}
      * 
-     * @param formatter a date time formatter, not {@code null}
+     * @param formatter
+     *            a date time formatter, not {@code null}
      */
     public final void setDateTimeFormatter(DateTimeFormatter formatter) {
         requireNonNull(formatter);

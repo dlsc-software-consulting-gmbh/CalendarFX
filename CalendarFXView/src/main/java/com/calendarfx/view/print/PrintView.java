@@ -51,9 +51,11 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 /**
- * A print preview pane / dialog for CalendarFX. This view manages a {@link PrintablePage} and binds it to the
- * settingsView / properties that are made available via the {@link SettingsView}. The default style class used by this
- * view is "print-view". <center><img width="100%" src="doc-files/print-view.png"></center>
+ * A print preview pane / dialog for CalendarFX. This view manages a
+ * {@link PrintablePage} and binds it to the settingsView / properties that are
+ * made available via the {@link SettingsView}. The default style class used by
+ * this view is "print-view".
+ * <center><img width="100%" src="doc-files/print-view.png"></center>
  */
 public class PrintView extends ViewTypeControl {
 
@@ -81,34 +83,48 @@ public class PrintView extends ViewTypeControl {
         paperView.viewTypeProperty().bindBidirectional(viewTypeProperty());
         timeRangeView.weekFieldsProperty().bind(weekFieldsProperty());
         timeRangeView.todayProperty().bind(todayProperty());
-        Util.bindBidirectional(optionsView.showSwimlaneLayoutProperty(), layoutProperty(), LAYOUT_BOOLEAN_CONVERTER);
+        Util.bindBidirectional(optionsView.showSwimlaneLayoutProperty(),
+                layoutProperty(), LAYOUT_BOOLEAN_CONVERTER);
 
         printablePage.weekFieldsProperty().bind(weekFieldsProperty());
 
         printablePage.viewTypeProperty().bind(paperView.viewTypeProperty());
         printablePage.paperProperty().bind(paperView.paperProperty());
         printablePage.marginTypeProperty().bind(paperView.marginTypeProperty());
-        printablePage.bottomMarginProperty().bind(paperView.bottomMarginProperty());
+        printablePage.bottomMarginProperty()
+                .bind(paperView.bottomMarginProperty());
         printablePage.leftMarginProperty().bind(paperView.leftMarginProperty());
-        printablePage.rightMarginProperty().bind(paperView.rightMarginProperty());
+        printablePage.rightMarginProperty()
+                .bind(paperView.rightMarginProperty());
         printablePage.topMarginProperty().bind(paperView.topMarginProperty());
 
-        printablePage.printStartDateProperty().bind(timeRangeView.startDateProperty());
-        printablePage.printEndDateProperty().bind(timeRangeView.endDateProperty());
-        printablePage.showAllDayEntriesProperty().bind(optionsView.showAllDayEntriesProperty());
-        printablePage.showMiniCalendarsProperty().bind(optionsView.showMiniCalendarsProperty());
-        printablePage.showCalendarKeysProperty().bind(optionsView.showCalendarKeysProperty());
-        printablePage.showTimedEntriesProperty().bind(optionsView.showTimedEntriesProperty());
-        printablePage.showEntryDetailsProperty().bind(optionsView.showEntryDetailsProperty());
+        printablePage.printStartDateProperty()
+                .bind(timeRangeView.startDateProperty());
+        printablePage.printEndDateProperty()
+                .bind(timeRangeView.endDateProperty());
+        printablePage.showAllDayEntriesProperty()
+                .bind(optionsView.showAllDayEntriesProperty());
+        printablePage.showMiniCalendarsProperty()
+                .bind(optionsView.showMiniCalendarsProperty());
+        printablePage.showCalendarKeysProperty()
+                .bind(optionsView.showCalendarKeysProperty());
+        printablePage.showTimedEntriesProperty()
+                .bind(optionsView.showTimedEntriesProperty());
+        printablePage.showEntryDetailsProperty()
+                .bind(optionsView.showEntryDetailsProperty());
         printablePage.layoutProperty().bindBidirectional(layoutProperty());
 
-        Bindings.bindContent(sourceView.getCalendarSources(), getCalendarSources());
-        Bindings.bindContent(sourceView.getCalendarVisibilityMap(), printablePage.getCalendarVisibilityMap());
+        Bindings.bindContent(sourceView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.bindContent(sourceView.getCalendarVisibilityMap(),
+                printablePage.getCalendarVisibilityMap());
 
-        Bindings.bindContent(printablePage.getCalendarSources(), getCalendarSources());
+        Bindings.bindContent(printablePage.getCalendarSources(),
+                getCalendarSources());
     }
 
-    private final ObservableList<CalendarSource> calendarSources = FXCollections.observableArrayList();
+    private final ObservableList<CalendarSource> calendarSources = FXCollections
+            .observableArrayList();
 
     /**
      * The list of all calendar sources attached to this control.
@@ -119,11 +135,12 @@ public class PrintView extends ViewTypeControl {
         return calendarSources;
     }
 
-    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now()); //$NON-NLS-1$
+    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(
+            this, "today", LocalDate.now()); //$NON-NLS-1$
 
     /**
-     * Stores the date that is considered to represent "today". This property is initialized with
-     * {@link LocalDate#now()} but can be any date.
+     * Stores the date that is considered to represent "today". This property is
+     * initialized with {@link LocalDate#now()} but can be any date.
      *
      * @return the date representing "today"
      */
@@ -134,7 +151,8 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of {@link #todayProperty()}.
      *
-     * @param date the date representing "today"
+     * @param date
+     *            the date representing "today"
      */
     public final void setToday(LocalDate date) {
         requireNonNull(date);
@@ -150,16 +168,17 @@ public class PrintView extends ViewTypeControl {
         return todayProperty().get();
     }
 
-    private final ObjectProperty<DateControl.Layout> layout = new SimpleObjectProperty<>(this, "layout", DateControl.Layout.STANDARD); //$NON-NLS-1$
+    private final ObjectProperty<DateControl.Layout> layout = new SimpleObjectProperty<>(
+            this, "layout", DateControl.Layout.STANDARD); //$NON-NLS-1$
 
     /**
      * Stores the strategy used by the view to layout the entries of several
      * calendars at once. The standard layout ignores the source calendar of an
      * entry and finds the next available place in the UI that satisfies the
-     * time bounds of the entry. The {@link DateControl.Layout#SWIMLANE} strategy allocates
-     * a separate column for each calendar and resolves overlapping entry
-     * conflicts within that column. Swim lanes are especially useful for
-     * resource booking systems (rooms, people, trucks).
+     * time bounds of the entry. The {@link DateControl.Layout#SWIMLANE}
+     * strategy allocates a separate column for each calendar and resolves
+     * overlapping entry conflicts within that column. Swim lanes are especially
+     * useful for resource booking systems (rooms, people, trucks).
      *
      * @return the layout strategy of the view
      */
@@ -170,7 +189,8 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of {@link #layoutProperty()}.
      *
-     * @param layout the layout
+     * @param layout
+     *            the layout
      */
     public final void setLayout(DateControl.Layout layout) {
         requireNonNull(layout);
@@ -186,12 +206,14 @@ public class PrintView extends ViewTypeControl {
         return layoutProperty().get();
     }
 
-    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
+    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(
+            this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
 
     /**
-     * Week fields are used to determine the first day of a week (e.g. "Monday" in Germany or "Sunday" in the US). It is
-     * also used to calculate the week number as the week fields determine how many days are needed in the first week of
-     * a year. This property is initialized with {@link WeekFields#ISO}.
+     * Week fields are used to determine the first day of a week (e.g. "Monday"
+     * in Germany or "Sunday" in the US). It is also used to calculate the week
+     * number as the week fields determine how many days are needed in the first
+     * week of a year. This property is initialized with {@link WeekFields#ISO}.
      *
      * @return the week fields
      */
@@ -202,7 +224,8 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of {@link #weekFieldsProperty()}.
      *
-     * @param weekFields the new week fields
+     * @param weekFields
+     *            the new week fields
      */
     public final void setWeekFields(WeekFields weekFields) {
         requireNonNull(weekFields);
@@ -219,8 +242,9 @@ public class PrintView extends ViewTypeControl {
     }
 
     /**
-     * A convenience method to lookup the first day of the week ("Monday" in Germany, "Sunday" in the US). This method
-     * delegates to {@link WeekFields#getFirstDayOfWeek()}.
+     * A convenience method to lookup the first day of the week ("Monday" in
+     * Germany, "Sunday" in the US). This method delegates to
+     * {@link WeekFields#getFirstDayOfWeek()}.
      *
      * @return the first day of the week
      * @see #weekFieldsProperty()
@@ -256,11 +280,13 @@ public class PrintView extends ViewTypeControl {
         return settingsView;
     }
 
-    private final ObjectProperty<EventHandler<ActionEvent>> onContinue = new SimpleObjectProperty<>(this, "onContinue", evt -> doPrint());
+    private final ObjectProperty<EventHandler<ActionEvent>> onContinue = new SimpleObjectProperty<>(
+            this, "onContinue", evt -> doPrint());
 
     /**
-     * Stores an event handler that will be invoked when the user clicks on the "continue" button. The default event
-     * handler invokes the {@link #doPrint()} method.
+     * Stores an event handler that will be invoked when the user clicks on the
+     * "continue" button. The default event handler invokes the
+     * {@link #doPrint()} method.
      *
      * @return the event handler used by the "continue" button
      */
@@ -280,17 +306,20 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of the {@link #onContinueProperty()}.
      *
-     * @param handler the event handler invoked by the "continue" button.
+     * @param handler
+     *            the event handler invoked by the "continue" button.
      */
     public final void setOnContinue(EventHandler<ActionEvent> handler) {
         onContinueProperty().set(handler);
     }
 
-    private final ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(this, "onCancel", evt -> hide());
+    private final ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(
+            this, "onCancel", evt -> hide());
 
     /**
-     * Stores an event handler that will be invoked when the user clicks on the "cancel" button. The default event
-     * handler invokes the {@link #hide()} method.
+     * Stores an event handler that will be invoked when the user clicks on the
+     * "cancel" button. The default event handler invokes the {@link #hide()}
+     * method.
      *
      * @return the event handler used by the "cancel" button
      */
@@ -310,7 +339,8 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of the {@link #onCancelProperty()}.
      *
-     * @param handler the event handler invoked by the "cancel" button.
+     * @param handler
+     *            the event handler invoked by the "cancel" button.
      */
     public final void setOnCancel(EventHandler<ActionEvent> handler) {
         onCancelProperty().set(handler);
@@ -319,15 +349,16 @@ public class PrintView extends ViewTypeControl {
     private Stage dialog;
 
     /**
-     * Creates an application-modal dialog and shows it after adding the print view to it.
+     * Creates an application-modal dialog and shows it after adding the print
+     * view to it.
      *
-     * @param owner the owner window of the dialog
+     * @param owner
+     *            the owner window of the dialog
      */
     public final void show(Window owner) {
         if (dialog != null) {
             dialog.show();
-        }
-        else {
+        } else {
             Scene scene = new Scene(this);
             dialog = new Stage();
             dialog.initOwner(owner);
@@ -368,32 +399,34 @@ public class PrintView extends ViewTypeControl {
             PageLayout layout = null;
 
             final Paper paper = pageInView.getPaper();
-            final PageOrientation pageOrientation = pageInView.getViewType().getPageOrientation();
+            final PageOrientation pageOrientation = pageInView.getViewType()
+                    .getPageOrientation();
             final PaperView.MarginType marginType = pageInView.getMarginType();
 
             LoggingDomain.PRINTING.fine("paper = " + paper);
             LoggingDomain.PRINTING.fine("pageOrientation = " + pageOrientation);
             LoggingDomain.PRINTING.fine("marginType = " + marginType);
-            LoggingDomain.PRINTING.fine(
-                    "custom margins = left: " + pageInView.getLeftMargin() + ", right: " + pageInView.getRightMargin() + ", top: " + pageInView.getTopMargin()
+            LoggingDomain.PRINTING
+                    .fine("custom margins = left: " + pageInView.getLeftMargin()
+                            + ", right: " + pageInView.getRightMargin()
+                            + ", top: " + pageInView.getTopMargin()
                             + ", bottom: " + pageInView.getBottomMargin());
 
             switch (marginType) {
-                case DEFAULT:
-                    layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.DEFAULT);
-                    break;
-                case MINIMUM:
-                    layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.HARDWARE_MINIMUM);
-                    break;
-                case CUSTOM:
-                    layout = printer.createPageLayout(
-                            paper,
-                            pageOrientation,
-                            pageInView.getLeftMargin(),
-                            pageInView.getRightMargin(),
-                            pageInView.getTopMargin(),
-                            pageInView.getBottomMargin());
-                    break;
+            case DEFAULT:
+                layout = printer.createPageLayout(paper, pageOrientation,
+                        Printer.MarginType.DEFAULT);
+                break;
+            case MINIMUM:
+                layout = printer.createPageLayout(paper, pageOrientation,
+                        Printer.MarginType.HARDWARE_MINIMUM);
+                break;
+            case CUSTOM:
+                layout = printer.createPageLayout(paper, pageOrientation,
+                        pageInView.getLeftMargin(), pageInView.getRightMargin(),
+                        pageInView.getTopMargin(),
+                        pageInView.getBottomMargin());
+                break;
             }
 
             // sizes of print page and physical page
@@ -408,9 +441,12 @@ public class PrintView extends ViewTypeControl {
             double scaleY = printableHeight / pageHeight;
             double scale = Math.min(scaleX, scaleY);
 
-            LoggingDomain.PRINTING.fine("pageWidth / pageHeight = " + pageWidth + " / " + pageHeight);
-            LoggingDomain.PRINTING.fine("printableWidth / printableHeight = " + printableWidth + " / " + printableHeight);
-            LoggingDomain.PRINTING.fine("scaleX / scaleY = " + scaleX + " / " + scaleY);
+            LoggingDomain.PRINTING.fine("pageWidth / pageHeight = " + pageWidth
+                    + " / " + pageHeight);
+            LoggingDomain.PRINTING.fine("printableWidth / printableHeight = "
+                    + printableWidth + " / " + printableHeight);
+            LoggingDomain.PRINTING
+                    .fine("scaleX / scaleY = " + scaleX + " / " + scaleY);
             LoggingDomain.PRINTING.fine("scale = " + scale);
 
             pageToPrint.applyCss();
@@ -418,10 +454,13 @@ public class PrintView extends ViewTypeControl {
             pageToPrint.getTransforms().add(new Scale(scale, scale));
 
             // transformation = center
-            final double translateX = (printableWidth - (pageWidth * scale)) / 2;
-            final double translateY = (printableHeight - (pageHeight * scale)) / 2;
+            final double translateX = (printableWidth - (pageWidth * scale))
+                    / 2;
+            final double translateY = (printableHeight - (pageHeight * scale))
+                    / 2;
 
-            LoggingDomain.PRINTING.fine("translateX / translateY = " + translateX + " / " + translateY);
+            LoggingDomain.PRINTING.fine("translateX / translateY = "
+                    + translateX + " / " + translateY);
 
             pageToPrint.setTranslateX(translateX);
             pageToPrint.setTranslateY(translateY);
@@ -437,8 +476,7 @@ public class PrintView extends ViewTypeControl {
                     if (!success) {
                         break;
                     }
-                }
-                while (pageToPrint.next());
+                } while (pageToPrint.next());
 
                 job.endJob();
             }
@@ -456,7 +494,8 @@ public class PrintView extends ViewTypeControl {
 
         @Override
         public DateControl.Layout toRight(Boolean left) {
-            return Boolean.TRUE.equals(left) ? DateControl.Layout.SWIMLANE : DateControl.Layout.STANDARD;
+            return Boolean.TRUE.equals(left) ? DateControl.Layout.SWIMLANE
+                    : DateControl.Layout.STANDARD;
         }
     };
 
