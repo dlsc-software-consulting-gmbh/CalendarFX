@@ -16,19 +16,20 @@
 
 package impl.com.calendarfx.view;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DraggedEntry;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.shape.Rectangle;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 /**
  * The default day entry view. <br />
@@ -60,7 +61,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
         getChildren().addAll(startTimeLabel, titleLabel);
 
-        Entry entry = getEntry();
+        Entry<?> entry = getEntry();
 
         entry.intervalProperty().addListener(weakUpdateLabelsListener);
         entry.calendarProperty().addListener(weakUpdateStylesListener);
@@ -80,7 +81,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     /**
      * @returns The entry.
      */
-    protected Entry getEntry() {
+    protected Entry<?> getEntry() {
         Entry<?> entry = getSkinnable().getEntry();
         if (entry.isRecurrence()) {
             entry = entry.getRecurrenceSourceEntry();
@@ -93,7 +94,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
      */
     protected void updateStyles() {
         DayEntryView view = getSkinnable();
-        Entry entry = getEntry();
+        Entry<?> entry = getEntry();
 
         Calendar calendar = entry.getCalendar();
         if (entry instanceof DraggedEntry) {
@@ -111,10 +112,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
             view.getStyleClass().add("recurrence"); //$NON-NLS-1$
         }
 
-        startTimeLabel.getStyleClass().setAll("start-time-label", "default-style-entry-time-label",
-                calendar.getStyle() + "-entry-time-label");
-        titleLabel.getStyleClass().setAll("title-label", "default-style-entry-title-label",
-                calendar.getStyle() + "-entry-title-label");
+        startTimeLabel.getStyleClass().setAll("start-time-label", "default-style-entry-time-label", calendar.getStyle() + "-entry-time-label");
+        titleLabel.getStyleClass().setAll("title-label", "default-style-entry-title-label", calendar.getStyle() + "-entry-title-label");
     }
 
     /**
@@ -164,7 +163,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
      * This method will be called if the labels need to be updated.
      */
     protected void updateLabels() {
-        Entry entry = getEntry();
+        Entry<?> entry = getEntry();
 
         startTimeLabel.setText(formatTime(entry.getStartTime()));
         titleLabel.setText(formatTitle(entry.getTitle()));
@@ -183,7 +182,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         if (contentHeight - titleHeight > timeLabelHeight) {
             startTimeLabel.setVisible(true);
             startTimeLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY + titleHeight), snapSize(contentWidth), snapSize(timeLabelHeight));
-        } else {
+        }
+        else {
             startTimeLabel.setVisible(false);
         }
     }

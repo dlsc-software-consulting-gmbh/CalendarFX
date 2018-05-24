@@ -16,22 +16,23 @@
 
 package com.calendarfx.view;
 
+import java.util.Optional;
+
+import org.controlsfx.control.PropertySheet.Item;
+
 import com.calendarfx.view.AgendaView.AgendaEntryCell;
+
 import impl.com.calendarfx.view.DetailedDayViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Skin;
-import org.controlsfx.control.PropertySheet.Item;
-
-import java.util.Optional;
 
 /**
- * The detailed day view is a composite control consisting of a {@link DayView},
- * an {@link AllDayView}, an {@link CalendarHeaderView}, and a {@link TimeScaleView}.
- * The image below shows the standard appearance of the view. The second image shows
- * the same view with the optional agenda view made visible.
+ * The detailed day view is a composite control consisting of a {@link DayView}, an {@link AllDayView}, an
+ * {@link CalendarHeaderView}, and a {@link TimeScaleView}. The image below shows the standard appearance of the view.
+ * The second image shows the same view with the optional agenda view made visible.
  * <p/>
  * <center><img src="doc-files/detailed-day-view.png"></center>
  * <p/>
@@ -80,6 +81,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the all day view sub control.
+     * 
      * @return the all day child node
      */
     public final AllDayView getAllDayView() {
@@ -88,6 +90,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the day view sub control.
+     * 
      * @return the day view child node
      */
     public final DayView getDayView() {
@@ -96,6 +99,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the time scale sub control.
+     * 
      * @return the time scale child node
      */
     public final TimeScaleView getTimeScaleView() {
@@ -104,6 +108,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the calendar header sub control.
+     * 
      * @return the calendar header child node
      */
     public final CalendarHeaderView getCalendarHeaderView() {
@@ -112,6 +117,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the agenda view sub control.
+     * 
      * @return the agenda view child node
      */
     public final AgendaView getAgendaView() {
