@@ -28,6 +28,7 @@ import java.time.temporal.WeekFields;
 import java.util.Objects;
 
 import com.calendarfx.util.Util;
+import com.calendarfx.view.print.TimeRangeField.TimeRangeFieldValue;
 
 import impl.com.calendarfx.view.print.TimeRangeViewSkin;
 import javafx.beans.InvalidationListener;
@@ -492,11 +493,11 @@ public class TimeRangeView extends ViewTypeControl {
             case AFTER:
                 int units = endField.getAfterUnits();
                 if (getViewType() == ViewType.DAY_VIEW) {
-                    setEndDate(getStartDate().plusDays(units - 1));
+                    setEndDate(getStartDate().plusDays(units));
                 } else if (getViewType() == ViewType.WEEK_VIEW) {
-                    setEndDate(getStartOfWeek(getStartDate()).plusWeeks(units).minusDays(1));
+                    setEndDate(getStartOfWeek(getStartDate()).plusWeeks(units));
                 } else {
-                    setEndDate(getStartOfMonth(getStartDate()).plusMonths(units).minusDays(1));
+                    setEndDate(getStartOfMonth(getStartDate()).plusMonths(units));
                 }
                 break;
 
@@ -512,6 +513,8 @@ public class TimeRangeView extends ViewTypeControl {
         if (mStartDate == null || mEndDate == null) {
             return;
         }
+        
+        mEndDate = endField.getValue() == TimeRangeFieldValue.AFTER ? mStartDate : mEndDate;
 
         if (mEndDate.isBefore(mStartDate)) {
             endField.setValue(startField.getValue());

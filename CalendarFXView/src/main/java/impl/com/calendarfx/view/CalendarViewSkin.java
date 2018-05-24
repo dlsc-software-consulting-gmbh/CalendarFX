@@ -592,7 +592,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         if (printView == null) {
             printView = getSkinnable().getPrintView();
         }
-        printView.setToday(getSkinnable().getToday());
+        printView.setToday(getSkinnable().getDate());
         printView.setWeekFields(getSkinnable().getWeekFields());
         printView.getCalendarSources().setAll(getSkinnable().getCalendarSources());
         printView.setLayout(getSkinnable().getSelectedPage().getLayout());
