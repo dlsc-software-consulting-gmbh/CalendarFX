@@ -53,11 +53,11 @@ public class TimeScaleView extends DayViewBase {
     /**
      * Gets the DateTimeFormatter property, which is use to provide the format
      * on the TimeScale Labels. By default it has a value of
-     * {@link FormatStyle#SHORT}
+     * {@link FormatStyle#SHORT}, can be Overriden.
      * 
      * @return the date formatter.
      */
-    public final ObjectProperty<DateTimeFormatter> dateTimeFormatterProperty() {
+    protected ObjectProperty<DateTimeFormatter> dateTimeFormatterProperty() {
         return formatter;
     }
 
@@ -76,7 +76,7 @@ public class TimeScaleView extends DayViewBase {
      * @param formatter
      *            a date time formatter, not {@code null}
      */
-    public final void setDateTimeFormatter(DateTimeFormatter formatter) {
+    public void setDateTimeFormatter(DateTimeFormatter formatter) {
         requireNonNull(formatter);
         dateTimeFormatterProperty().set(formatter);
     }
