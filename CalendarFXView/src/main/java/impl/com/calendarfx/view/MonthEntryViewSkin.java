@@ -252,7 +252,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
      * 
      * @return the date time formatter.
      */
-    protected final DateTimeFormatter getDateTimeFormatter() {
+    protected DateTimeFormatter getDateTimeFormatter() {
         return formatter;
     }
 }
