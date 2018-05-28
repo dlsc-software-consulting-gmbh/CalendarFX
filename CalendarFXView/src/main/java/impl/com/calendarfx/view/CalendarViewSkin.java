@@ -16,6 +16,7 @@
 
 package impl.com.calendarfx.view;
 
+import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarFXControl;
 import com.calendarfx.view.CalendarView;
@@ -30,12 +31,16 @@ import com.calendarfx.view.page.PageBase;
 import com.calendarfx.view.page.WeekPage;
 import com.calendarfx.view.page.YearPage;
 import com.calendarfx.view.print.PrintView;
+import com.calendarfx.view.print.PrintablePage;
+import com.calendarfx.view.print.ViewType;
+
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -102,6 +107,10 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 	private ToggleButton showDay;
 	private HBox leftToolBarBox;
 	private SegmentedButton switcher;
+
+	private SourceView sourceView;
+	private final InvalidationListener entriesVisibilityListener = obs -> updateCalendarVisibility();
+	private final InvalidationListener printEntriesVisibilityListener = obs -> updatePrintVisibility();
 
 	public CalendarViewSkin(CalendarView view) {
 		super(view);
@@ -189,6 +198,15 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 				closeTray();
 			}
 		});
+
+		Platform.runLater(() -> {
+			sourceView.getCalendarVisibilityMap().keySet()
+					.forEach(calendar -> sourceView
+							.getCalendarVisibilityProperty(calendar)
+							.addListener(entriesVisibilityListener));
+		});
+
+		view.selectedPageProperty().addListener(entriesVisibilityListener);
 
 		ColumnConstraints leftColumn = new ColumnConstraints();
 		ColumnConstraints centerColumn = new ColumnConstraints();
@@ -388,6 +406,36 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
 	private void closeTray() {
 		leftMasterDetailPane.setShowDetailNode(false);
+	}
+
+	/**
+	 * Refresh entries from specific page <b>(Selected Page)</b>. It is called
+	 * after change selected Page (ButtonSwitcher) or check/uncheck any
+	 * CalendarSource.
+	 */
+	private void updateCalendarVisibility() {
+		CalendarView view = getSkinnable();
+
+		if (view.getSelectedPage() == view.getDayPage()) {
+			view.getDayPage().refreshData();
+		} else if (view.getSelectedPage() == view.getWeekPage()) {
+			view.getWeekPage().refreshData();
+		}
+	}
+
+	/**
+	 * Refresh entries in <b>PrintablePage</b>. It is called after change type
+	 * of view or check/uncheck any CalendarSource in Print dialog.
+	 */
+	private void updatePrintVisibility() {
+		PrintablePage printablePage = printView.getPreviewPane()
+				.getPrintablePage();
+
+		if (printablePage.getViewType() == ViewType.DAY_VIEW) {
+			printablePage.getDayView().refreshData();
+		} else if (printablePage.getViewType() == ViewType.WEEK_VIEW) {
+			printablePage.getWeekView().refreshData();
+		}
 	}
 
 	private void buildSwitcher() {
@@ -594,7 +642,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 	}
 
 	class TrayPane extends BorderPane {
-		private SourceView sourceView;
+
 		private YearMonthView yearMonthView;
 
 		public TrayPane() {
@@ -643,7 +691,11 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 		if (printView == null) {
 			printView = getSkinnable().getPrintView();
 		}
+
 		printView.setToday(getSkinnable().getDate());
+		printView.getPreviewPane().getPrintablePage()
+				.setPageStartDate(getSkinnable().getDate());
+
 		printView.setWeekFields(getSkinnable().getWeekFields());
 		printView.getCalendarSources()
 				.setAll(getSkinnable().getCalendarSources());
@@ -652,6 +704,21 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 				getSkinnable().getSelectedPage().getPrintViewType());
 		printView.requestStartDate(getSkinnable().getDate());
 		printView.show(getSkinnable().getScene().getWindow());
+
+		Platform.runLater(() -> {
+
+			SourceView printSource = printView.getSettingsView()
+					.getSourceView();
+
+			for (Calendar calendar : printSource.getCalendarVisibilityMap()
+					.keySet()) {
+				printSource.getCalendarVisibilityProperty(calendar)
+						.removeListener(printEntriesVisibilityListener);
+				printSource.getCalendarVisibilityProperty(calendar)
+						.addListener(printEntriesVisibilityListener);
+			}
+
+		});
 	}
 
 	@Override

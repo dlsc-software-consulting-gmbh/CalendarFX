@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import javax.swing.text.View;
+
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DetailedDayView;
@@ -429,7 +431,7 @@ public class PrintablePage extends DateControl {
         return pageStartDate.get();
     }
 
-    private void setPageStartDate(LocalDate date) {
+    public void setPageStartDate(LocalDate date) {
         this.pageStartDate.set(date);
     }
 
