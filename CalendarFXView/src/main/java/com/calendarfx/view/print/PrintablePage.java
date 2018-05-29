@@ -18,9 +18,10 @@ package com.calendarfx.view.print;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-
-import javax.swing.text.View;
 
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
@@ -65,6 +66,8 @@ public class PrintablePage extends DateControl {
     private final DetailedDayView detailedDayView;
     private final DetailedWeekView detailedWeekView;
     private final MonthView monthView;
+    private final ObjectProperty<Map<ViewType, DateTimeFormatter>> formatterMapProperty = new SimpleObjectProperty<>(
+            this, "formatterMapProperty");;
 
     private final WeakEventHandler<MouseEvent> weakMouseHandler = new WeakEventHandler<>(
             Event::consume);
@@ -104,6 +107,7 @@ public class PrintablePage extends DateControl {
         viewTypeProperty().addListener(obs -> updateView());
 
         periodSplitter = new PrintPeriodSplitter(this);
+        formatterMapProperty.set(new HashMap<>());
     }
 
     @Override
@@ -205,6 +209,74 @@ public class PrintablePage extends DateControl {
      */
     public final void setMarginType(MarginType type) {
         marginTypeProperty().set(type);
+    }
+
+    /**
+     * Object property which contains a Map with the Custom Date Time
+     * Formatters. Depending on which {@link ViewType} a Date Time Formatter is
+     * send.
+     * 
+     * @return the ObjectProperty
+     */
+    public ObjectProperty<Map<ViewType, DateTimeFormatter>> formatterMapProperty() {
+        return formatterMapProperty;
+    }
+
+    /**
+     * Gets the Formatter Map from the property.
+     * 
+     * @return the Formatter Map.
+     */
+    public Map<ViewType, DateTimeFormatter> getFormatterMap() {
+        return formatterMapProperty.get();
+    }
+
+    /**
+     * Sets the DateTimeFormatter on the Day Label located in the day page.
+     * Notice that this is also affecting the page that is going to be printed.
+     * 
+     * @param formatter
+     *            the DateTimeFormatter
+     */
+    public void setDayDateTimeFormatter(DateTimeFormatter formatter) {
+        // Require no null
+        if (formatter != null) {
+            if (getFormatterMap().get(ViewType.DAY_VIEW) == null) {
+                getFormatterMap().put(ViewType.DAY_VIEW, formatter);
+            } else {
+                getFormatterMap().replace(ViewType.DAY_VIEW, formatter);
+            }
+        }
+    }
+
+    /**
+     * Sets the DateTimeFormatter on the Week Label located in the week page.
+     * Notice that this is also affecting the page that is going to be printed.
+     * 
+     * @param formatter
+     *            the DateTimeFormatter
+     */
+    public void setWeekDateTimeFormatter(DateTimeFormatter formatter) {
+        if (getFormatterMap().get(ViewType.WEEK_VIEW) == null) {
+            getFormatterMap().put(ViewType.WEEK_VIEW, formatter);
+        } else {
+            getFormatterMap().replace(ViewType.WEEK_VIEW, formatter);
+        }
+    }
+
+    /**
+     * Sets the DateTimeFormatter on the Month Label located in the month page.
+     * Notice that this is also affecting the page that is going to be printed.
+     * 
+     * @param formatter
+     *            the DateTimeFormatter
+     */
+    public void setMonthDateTimeFormatter(DateTimeFormatter formatter) {
+        if (getFormatterMap().get(ViewType.MONTH_VIEW) == null) {
+            getFormatterMap().put(ViewType.MONTH_VIEW, formatter);
+        } else {
+            getFormatterMap().replace(ViewType.MONTH_VIEW, formatter);
+        }
     }
 
     // top margin support
@@ -611,6 +683,8 @@ public class PrintablePage extends DateControl {
                 printStartDateProperty());
         Bindings.bindBidirectional(otherPage.printEndDateProperty(),
                 printEndDateProperty());
+        Bindings.bindBidirectional(otherPage.formatterMapProperty(),
+                formatterMapProperty());
     }
 
     public final void unbindPage(PrintablePage otherPage) {
@@ -632,6 +706,8 @@ public class PrintablePage extends DateControl {
                 printStartDateProperty());
         Bindings.unbindBidirectional(otherPage.printEndDateProperty(),
                 printEndDateProperty());
+        Bindings.unbindBidirectional(otherPage.formatterMapProperty(),
+                formatterMapProperty());
     }
 
     private void updateView() {

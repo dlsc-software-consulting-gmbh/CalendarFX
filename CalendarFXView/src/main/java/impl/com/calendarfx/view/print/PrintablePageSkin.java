@@ -16,15 +16,26 @@
 
 package impl.com.calendarfx.view.print;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.SourceGridView;
 import com.calendarfx.view.YearMonthView;
 import com.calendarfx.view.print.PrintablePage;
+import com.calendarfx.view.print.ViewType;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
@@ -33,11 +44,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PrintablePageSkin extends SkinBase<PrintablePage> {
 
@@ -63,7 +69,10 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
         calendarTwo.setShowWeekNumbers(false);
         calendarTwo.setShowToday(false);
         calendarTwo.weekFieldsProperty().bind(control.weekFieldsProperty());
-        calendarTwo.dateProperty().bind(Bindings.createObjectBinding(() -> calendarOne.getDate().plusMonths(1), calendarOne.dateProperty()));
+        calendarTwo.dateProperty()
+                .bind(Bindings.createObjectBinding(
+                        () -> calendarOne.getDate().plusMonths(1),
+                        calendarOne.dateProperty()));
         calendarTwo.visibleProperty().bind(control.showMiniCalendarsProperty());
         calendarTwo.managedProperty().bind(calendarTwo.visibleProperty());
 
@@ -72,7 +81,10 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
         sourceView.managedProperty().bind(sourceView.visibleProperty());
         sourceView.bind(control);
 
-        PrintPagePeriodFormatter formatter = new PrintPagePeriodFormatter(control);
+        PrintPagePeriodFormatter formatter = new PrintPagePeriodFormatter(
+                control);
+        formatter.dateTimeFormatterMapProperty()
+                .bind(getSkinnable().formatterMapProperty());
         Label periodLabel = new Label();
         periodLabel.textProperty().bind(formatter.textProperty());
         periodLabel.getStyleClass().add("period-label");
@@ -117,8 +129,8 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
         do {
             dates.add(start);
             start = start.plusDays(1);
-        }
-        while (start.isBefore(getSkinnable().getPageEndDate()) || start.isEqual(getSkinnable().getPageEndDate()));
+        } while (start.isBefore(getSkinnable().getPageEndDate())
+                || start.isEqual(getSkinnable().getPageEndDate()));
 
         calendarOne.getSelectedDates().clear();
         calendarOne.getSelectedDates().addAll(dates);
@@ -127,9 +139,12 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
         calendarTwo.getSelectedDates().addAll(dates);
     }
 
-    private static final class PrintPagePeriodFormatter implements InvalidationListener {
+    private static final class PrintPagePeriodFormatter
+            implements InvalidationListener {
 
         private final PrintablePage page;
+        private final ObjectProperty<Map<ViewType, DateTimeFormatter>> formatterMapProperty = new SimpleObjectProperty<>(
+                this, "formatterMapProperty");
 
         private PrintPagePeriodFormatter(PrintablePage page) {
             this.page = page;
@@ -139,7 +154,8 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
             format();
         }
 
-        private final ReadOnlyStringWrapper text = new ReadOnlyStringWrapper(this, "text");
+        private final ReadOnlyStringWrapper text = new ReadOnlyStringWrapper(
+                this, "text");
 
         public final ReadOnlyStringProperty textProperty() {
             return text.getReadOnlyProperty();
@@ -150,29 +166,30 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
         }
 
         private void format() {
-            DateTimeFormatter formatter = page.getViewType().getDateTimeFormatter();
+            DateTimeFormatter formatter = getFormatterMap()
+                    .get(page.getViewType());
+            if (formatter == null) {
+                formatter = page.getViewType().getDateTimeFormatter();
+            }
 
             switch (page.getViewType()) {
-                case DAY_VIEW:
-                case MONTH_VIEW:
-                    setText(formatter.format(page.getPageStartDate()));
-                    break;
+            case DAY_VIEW:
+            case MONTH_VIEW:
+                setText(formatter.format(page.getPageStartDate()));
+                break;
 
-                case WEEK_VIEW:
-                    StringBuilder sb = new StringBuilder();
-                    if (page.getPageStartDate().getYear() == page.getPageEndDate().getYear()) {
-                        sb.append(formatter.format(page.getPageStartDate()));
-                        sb.append(" ").append(Messages.getString("PrintViewType.TO_LABEL")).append(" ");
-                    } else {
-                        sb.append(formatter.format(page.getPageStartDate()));
-                        sb.append(" ").append(Messages.getString("PrintViewType.TO_LABEL")).append(" ");
-                    }
-                    sb.append(formatter.format(page.getPageEndDate()));
-                    setText(sb.toString());
-                    break;
-                default:
-                    setText("");
-                    break;
+            case WEEK_VIEW:
+                StringBuilder sb = new StringBuilder();
+                sb.append(formatter.format(page.getPageStartDate()));
+                sb.append(" ")
+                        .append(Messages.getString("PrintViewType.TO_LABEL"))
+                        .append(" ");
+                sb.append(formatter.format(page.getPageEndDate()));
+                setText(sb.toString());
+                break;
+            default:
+                setText("");
+                break;
             }
         }
 
@@ -181,7 +198,17 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
             format();
         }
 
-    }
+        public ObjectProperty<Map<ViewType, DateTimeFormatter>> dateTimeFormatterMapProperty() {
+            return formatterMapProperty;
+        }
 
+        private Map<ViewType, DateTimeFormatter> getFormatterMap() {
+            if (dateTimeFormatterMapProperty().get() == null) {
+                formatterMapProperty.set(new HashMap<>());
+            }
+            return dateTimeFormatterMapProperty().get();
+        }
+
+    }
 
 }
