@@ -60,6 +60,7 @@ import javafx.scene.input.MouseEvent;
 public class PrintablePage extends DateControl {
 
     public static final String DEFAULT_STYLE = "print-page";
+    public static final String INVALID_MARGIN = "The margin is invalid: ";
 
     private final PrintPeriodSplitter periodSplitter;
 
@@ -67,7 +68,7 @@ public class PrintablePage extends DateControl {
     private final DetailedWeekView detailedWeekView;
     private final MonthView monthView;
     private final ObjectProperty<Map<ViewType, DateTimeFormatter>> formatterMapProperty = new SimpleObjectProperty<>(
-            this, "formatterMapProperty");;
+            this, "formatterMapProperty");
 
     private final WeakEventHandler<MouseEvent> weakMouseHandler = new WeakEventHandler<>(
             Event::consume);
@@ -239,13 +240,10 @@ public class PrintablePage extends DateControl {
      *            the DateTimeFormatter
      */
     public void setDayDateTimeFormatter(DateTimeFormatter formatter) {
-        // Require no null
-        if (formatter != null) {
-            if (getFormatterMap().get(ViewType.DAY_VIEW) == null) {
-                getFormatterMap().put(ViewType.DAY_VIEW, formatter);
-            } else {
-                getFormatterMap().replace(ViewType.DAY_VIEW, formatter);
-            }
+        if (getFormatterMap().get(ViewType.DAY_VIEW) == null) {
+            getFormatterMap().put(ViewType.DAY_VIEW, formatter);
+        } else {
+            getFormatterMap().replace(ViewType.DAY_VIEW, formatter);
         }
     }
 
@@ -286,8 +284,7 @@ public class PrintablePage extends DateControl {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException(
-                        "The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
@@ -328,8 +325,7 @@ public class PrintablePage extends DateControl {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException(
-                        "The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
@@ -370,8 +366,7 @@ public class PrintablePage extends DateControl {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException(
-                        "The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
@@ -412,8 +407,7 @@ public class PrintablePage extends DateControl {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException(
-                        "The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
