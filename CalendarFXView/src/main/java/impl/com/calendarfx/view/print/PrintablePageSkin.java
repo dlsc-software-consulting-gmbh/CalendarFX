@@ -83,8 +83,7 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
 
         PrintPagePeriodFormatter formatter = new PrintPagePeriodFormatter(
                 control);
-        formatter.dateTimeFormatterMapProperty()
-                .bind(getSkinnable().formatterMapProperty());
+        
         Label periodLabel = new Label();
         periodLabel.textProperty().bind(formatter.textProperty());
         periodLabel.getStyleClass().add("period-label");
@@ -151,6 +150,7 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
             page.viewTypeProperty().addListener(this);
             page.pageStartDateProperty().addListener(this);
             page.pageEndDateProperty().addListener(this);
+            formatterMapProperty.bind(page.formatterMapProperty());
             format();
         }
 
