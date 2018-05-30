@@ -36,7 +36,10 @@ public class TimeRangeViewSkin extends SkinBase<TimeRangeView> {
             if (control.getUnitsToPrint() == 0) {
                 return "";
             }
-            return Messages.getString("TimeRangeViewSkin.PERIOD_LABEL",
+            return Messages.getString(
+                    control.getUnitsToPrint() == 1
+                            ? "TimeRangeViewSkin.PERIOD_LABEL_SINGULAR"
+                            : "TimeRangeViewSkin.PERIOD_LABEL_PLURAL",
                     control.getUnitsToPrint(),
                     control.getUnitsToPrint() == 1
                             ? Messages.getString(control.getViewType()
