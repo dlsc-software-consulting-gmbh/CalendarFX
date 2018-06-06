@@ -321,14 +321,14 @@ public class TimeRangeField extends ViewTypeControl {
 
     public enum TimeRangeFieldValue {
 
-        TODAY(1, "TimeRangeFieldValue.THIS_DAY_LABEL") {
+        TODAY(1, "TimeRangeFieldValue.TODAY_LABEL") {
             @Override
             public Collection<ViewType> getViewTypes() {
                 return Collections.singletonList(ViewType.DAY_VIEW);
             }
         },
 
-        TOMORROW(2, "TimeRangeFieldValue.NEXT_DAY_LABEL") {
+        TOMORROW(2, "TimeRangeFieldValue.TOMORROW") {
             @Override
             public Collection<ViewType> getViewTypes() {
                 return Collections.singletonList(ViewType.DAY_VIEW);
