@@ -761,7 +761,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
             if (conflictFound) {
                 moreLabel.setVisible(true);
-                moreLabel.setText(MessageFormat.format(Messages.getString("MonthViewSkin.MORE_ENTRIES"), children.size() - childrenAdded));
+                moreLabel.setText(MessageFormat.format(Messages.getString("MonthViewSkin.MORE_ENTRIES"), (childrenAdded == 0) ? children.size()-1 : children.size() - childrenAdded));
                 double ph = moreLabel.prefHeight(-1);
 
                 moreLabel.resizeRelocate(
@@ -770,9 +770,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
                         snapSize(w - insets.getRight() - insets.getLeft()),
                         snapSize(ph));
             }
-        }
+        }           
     }
 
+    
     public ZonedDateTime getZonedDateTimeAt(double x, double y) {
         Point2D location = getSkinnable().localToScreen(x, y);
         for (MonthDayView view : controlsMap.values()) {
