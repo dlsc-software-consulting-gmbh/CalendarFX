@@ -556,7 +556,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
             setPrefSize(50, 50);
 
             addEventHandler(MouseEvent.MOUSE_CLICKED, evt -> {
-                if (evt.getClickCount() == 1) {
+                if (evt.getClickCount() == 1 && evt.getButton() == MouseButton.PRIMARY ) {
                     // ENTRY selection
                     monthView.getSelections().clear();
 
