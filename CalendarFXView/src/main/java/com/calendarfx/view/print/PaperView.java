@@ -16,9 +16,14 @@
 
 package com.calendarfx.view.print;
 
+import java.util.Objects;
+import java.util.Set;
+
 import impl.com.calendarfx.view.print.PaperViewSkin;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -27,9 +32,6 @@ import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterAttributes;
 import javafx.scene.control.Skin;
-
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * A control for specifying the paper size, the view type (day, week, month),
@@ -333,4 +335,35 @@ public class PaperView extends ViewTypeControl {
     public final void setLeftMargin(double margin) {
         leftMarginProperty().set(margin);
     }
+
+    private final BooleanProperty showMargin = new SimpleBooleanProperty(this,
+            "showMargin", true);
+
+    /**
+     * Stores the flag that indicates if margin combo will be displayed.
+     *
+     * @return showMargin
+     */
+    public BooleanProperty showMarginProperty() {
+        return showMargin;
+    }
+
+    /**
+     * Sets the value of the {@link #showMarginProperty()}.
+     *
+     * @param show boolean value
+     */
+    public void setShowMargin(boolean show) {
+        showMarginProperty().set(show);
+    }
+
+    /**
+     * Returns the value of the {@link #showMarginProperty()}.
+     *
+     * @return The flag to show/hide Margin combo.
+     */
+    public boolean isShowMargin() {
+        return showMarginProperty().get();
+    }
+
 }

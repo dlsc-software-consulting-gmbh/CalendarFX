@@ -16,6 +16,23 @@
 
 package impl.com.calendarfx.view;
 
+import static com.calendarfx.view.RequestEvent.REQUEST_DATE;
+import static com.calendarfx.view.RequestEvent.REQUEST_DATE_TIME;
+import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
+import static com.calendarfx.view.RequestEvent.REQUEST_WEEK;
+import static com.calendarfx.view.RequestEvent.REQUEST_YEAR;
+import static com.calendarfx.view.RequestEvent.REQUEST_YEAR_MONTH;
+import static com.calendarfx.view.YearMonthView.ClickBehaviour.PERFORM_SELECTION;
+import static javafx.geometry.Side.RIGHT;
+import static javafx.scene.control.SelectionMode.SINGLE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.SegmentedButton;
+import org.controlsfx.control.textfield.CustomTextField;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarFXControl;
@@ -32,6 +49,7 @@ import com.calendarfx.view.page.WeekPage;
 import com.calendarfx.view.page.YearPage;
 import com.calendarfx.view.print.PrintView;
 import com.calendarfx.view.print.PrintablePage;
+import com.calendarfx.view.print.TimeRangeView;
 import com.calendarfx.view.print.ViewType;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -69,22 +87,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.controlsfx.control.MasterDetailPane;
-import org.controlsfx.control.SegmentedButton;
-import org.controlsfx.control.textfield.CustomTextField;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.calendarfx.view.RequestEvent.REQUEST_DATE;
-import static com.calendarfx.view.RequestEvent.REQUEST_DATE_TIME;
-import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
-import static com.calendarfx.view.RequestEvent.REQUEST_WEEK;
-import static com.calendarfx.view.RequestEvent.REQUEST_YEAR;
-import static com.calendarfx.view.RequestEvent.REQUEST_YEAR_MONTH;
-import static com.calendarfx.view.YearMonthView.ClickBehaviour.PERFORM_SELECTION;
-import static javafx.geometry.Side.RIGHT;
-import static javafx.scene.control.SelectionMode.SINGLE;
 
 public class CalendarViewSkin extends SkinBase<CalendarView> {
 
@@ -703,8 +705,12 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 		printView.setViewType(
 				getSkinnable().getSelectedPage().getPrintViewType());
 		printView.requestStartDate(getSkinnable().getDate());
+		
 		printView.show(getSkinnable().getScene().getWindow());
-
+		
+		TimeRangeView timeRange = printView.getSettingsView().getTimeRangeView();
+		timeRange.viewTypeProperty().addListener(obs -> timeRange.requestStartDate(getSkinnable().getDate()));
+		
 		Platform.runLater(() -> {
 
 			SourceView printSource = printView.getSettingsView()

@@ -19,6 +19,7 @@ package impl.com.calendarfx.view.print;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.print.PaperView;
 import com.calendarfx.view.print.ViewType;
+
 import impl.com.calendarfx.view.NumericTextField;
 import javafx.print.Paper;
 import javafx.scene.control.ComboBox;
@@ -118,8 +119,11 @@ public class PaperViewSkin extends SkinBase<PaperView> {
         gridPane.add(viewTypeComboBox, 1, 0);
         gridPane.add(new Label(Messages.getString("PaperViewSkin.PAPER_LABEL")), 0, 1);
         gridPane.add(paperComboBox, 1, 1);
-        gridPane.add(new Label(Messages.getString("PaperViewSkin.MARGIN_LABEL")), 0, 2);
-        gridPane.add(marginTypeComboBox, 1, 2);
+        
+        if (control.isShowMargin()){
+            gridPane.add(new Label(Messages.getString("PaperViewSkin.MARGIN_LABEL")), 0, 2);
+            gridPane.add(marginTypeComboBox, 1, 2);
+        }
 
         ColumnConstraints col1 = new ColumnConstraints();
         ColumnConstraints col2 = new ColumnConstraints();

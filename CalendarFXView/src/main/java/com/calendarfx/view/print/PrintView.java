@@ -47,6 +47,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Skin;
+import javafx.scene.image.Image;
 import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -350,6 +351,39 @@ public class PrintView extends ViewTypeControl {
 
     private Stage dialog;
 
+    private final ObjectProperty<Image> printIcon = new SimpleObjectProperty<Image>(
+            this, "printIcon", null);
+
+    /**
+     * Stores the image of Print dialog. This property is null by default, but
+     * if custom icon is required it will be saved here .
+     *
+     * @return the date representing "today"
+     */
+    public final ObjectProperty<Image> printIconProperty() {
+        return printIcon;
+    }
+
+    /**
+     * Sets the value of the {@link #printIconProperty()}.
+     *
+     * @param image
+     *            will be the icon of window/dialog.
+     */
+    public final void setPrintIcon(Image image) {
+        requireNonNull(image);
+        printIconProperty().set(image);
+    }
+
+    /**
+     * Returns the value of {@link #printIconProperty()}.
+     *
+     * @return the icon of Print dialog if is set, null otherwise.
+     */
+    public final Image getPrintIcon() {
+        return printIconProperty().get();
+    }
+
     /**
      * Creates an application-modal dialog and shows it after adding the print
      * view to it.
@@ -357,7 +391,7 @@ public class PrintView extends ViewTypeControl {
      * @param owner
      *            the owner window of the dialog
      */
-    public final void show(Window owner) {
+    public void show(Window owner) {
         if (dialog != null) {
             dialog.show();
         } else {
@@ -369,6 +403,8 @@ public class PrintView extends ViewTypeControl {
             dialog.centerOnScreen();
             dialog.setTitle(Messages.getString("PrintView.TITLE_LABEL"));
             dialog.initModality(Modality.APPLICATION_MODAL);
+            if (getPrintIcon() != null)
+                dialog.getIcons().add(getPrintIcon());
             dialog.show();
         }
     }
@@ -385,7 +421,7 @@ public class PrintView extends ViewTypeControl {
     /**
      * Performs the actual printing of the calendars.
      */
-    protected final void doPrint() {
+    protected void doPrint() {
 
         PrintablePage pageInView = previewPane.getPrintablePage();
         PrintablePage pageToPrint = new PrintablePage();
