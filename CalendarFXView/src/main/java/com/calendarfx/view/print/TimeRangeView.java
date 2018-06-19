@@ -180,56 +180,45 @@ public class TimeRangeView extends ViewTypeControl {
         case DAY_VIEW:
             if (date.equals(getToday())) {
                 startField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
-                endField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
             } else if (date.equals(getTomorrow())) {
                 startField
                         .setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
-                endField.setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
             } else {
                 startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
                 startField.setOnDate(date);
-                endField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                endField.setOnDate(date);
             }
+            endField.setValue(TimeRangeField.TimeRangeFieldValue.AFTER);
             break;
 
         case WEEK_VIEW:
-            if (date.equals(getThisWeekDate())) {
+            if (isCurrentWeek(date)) {
                 startField
                         .setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
-                endField.setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
-            } else if (date.equals(getNextWeekDate())) {
+            } else if (isNextWeek(date)) {
                 startField
                         .setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
-                endField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
             } else {
                 startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
                 startField.setOnDate(date);
-                endField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                endField.setOnDate(date);
             }
+            endField.setValue(TimeRangeFieldValue.AFTER);
             break;
 
         case MONTH_VIEW:
-            if (date.equals(getThisMonthDate())) {
+            if (isCurrentMonth(date)) {
                 startField.setValue(
                         TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
-                endField.setValue(
-                        TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
-            } else if (date.equals(getNextMonthDate())) {
+            } else if (isNextMonth(date)) {
                 startField.setValue(
-                        TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
-                endField.setValue(
                         TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
             } else {
                 TimeRangeField.TimeRangeFieldValue month = TimeRangeField.TimeRangeFieldValue
                         .getFromMonth(date.getMonth());
                 int year = date.getYear();
-                endField.setValue(month);
-                endField.setMonthYear(year);
                 startField.setValue(month);
                 startField.setMonthYear(year);
             }
+            endField.setValue(TimeRangeFieldValue.AFTER);
             break;
 
         default:
@@ -290,6 +279,16 @@ public class TimeRangeView extends ViewTypeControl {
                 getWeekFields().getFirstDayOfWeek());
     }
 
+    private boolean isCurrentWeek(LocalDate date) {
+        return date.compareTo(getStartOfWeek(getToday())) >= 0
+                && date.compareTo(getEndOfWeek(getToday())) <= 0;
+    }
+
+    private boolean isNextWeek(LocalDate date) {
+        return date.compareTo(getStartOfWeek(getNextWeekDate())) >= 0
+                && date.compareTo(getEndOfWeek(getNextWeekDate())) <= 0;
+    }
+
     private LocalDate getThisMonthDate() {
         return getStartOfMonth(getToday());
     }
@@ -305,6 +304,16 @@ public class TimeRangeView extends ViewTypeControl {
     private LocalDate getEndOfMonth(LocalDate date) {
         return YearMonth.of(date.getYear(), date.getMonthValue())
                 .atEndOfMonth();
+    }
+
+    private boolean isCurrentMonth(LocalDate date) {
+        return date.getYear() == getToday().getYear()
+                && date.getMonth().equals(getToday().getMonth());
+    }
+
+    private boolean isNextMonth(LocalDate date) {
+        return date.getYear() == getToday().getYear()
+                && date.getMonth().equals(getNextMonthDate().getMonth());
     }
 
     private void updateStartDate() {
@@ -562,11 +571,12 @@ public class TimeRangeView extends ViewTypeControl {
         case AFTER:
             int units = endField.getAfterUnits();
             if (getViewType() == ViewType.DAY_VIEW) {
-                setEndDate(getStartDate().plusDays(units));
+                setEndDate(getStartDate().plusDays(units - 1L));
             } else if (getViewType() == ViewType.WEEK_VIEW) {
-                setEndDate(getEndOfWeek(getStartDate()).plusWeeks(units));
+                setEndDate(
+                        getEndOfMonth(getStartDate()).plusMonths(units - 1L));
+                setEndDate(getEndOfWeek(getStartDate()).plusWeeks(units - 1L));
             } else {
-                setEndDate(getEndOfMonth(getStartDate()).plusMonths(units));
             }
             break;
 
