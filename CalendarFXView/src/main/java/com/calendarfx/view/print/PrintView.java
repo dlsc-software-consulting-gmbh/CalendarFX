@@ -25,11 +25,13 @@ import java.time.temporal.WeekFields;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.Util;
+import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.SourceView;
 
 import impl.com.calendarfx.view.print.PrintViewSkin;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -171,6 +173,27 @@ public class PrintView extends ViewTypeControl {
         return todayProperty().get();
     }
 
+    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now()); 
+    
+    /**
+     * Stores the Calendar selected date. It's needed for some process in TimeRangeView.
+     * Initialized with {@link LocalDate#now()} but It wil be binded to {@link CalendarView #dateProperty()}.
+     *
+     * @return The Calendar date
+     */
+    public final ObjectProperty<LocalDate> dateProperty(){
+        return date;
+    }
+    
+    /**
+     * Returns the value of {@link #dateProperty()}.
+     *
+     * @return the date representing "Calendar date"
+     */
+    public final LocalDate getDate(){
+       return dateProperty().get();
+    }
+    
     private final ObjectProperty<DateControl.Layout> layout = new SimpleObjectProperty<>(
             this, "layout", DateControl.Layout.STANDARD); //$NON-NLS-1$
 
@@ -256,8 +279,8 @@ public class PrintView extends ViewTypeControl {
         return getWeekFields().getFirstDayOfWeek();
     }
 
-    public final void requestStartDate(LocalDate date) {
-        settingsView.getTimeRangeView().requestStartDate(date);
+    public final void loadDropDownValues(LocalDate date) {
+        settingsView.getTimeRangeView().loadDropDownValues(date);
     }
 
     @Override
@@ -392,9 +415,12 @@ public class PrintView extends ViewTypeControl {
      *            the owner window of the dialog
      */
     public void show(Window owner) {
+        InvalidationListener viewTypeListener = obs -> loadDropDownValues(getDate());
+        
         if (dialog != null) {
             dialog.show();
         } else {
+            TimeRangeView timeRange = getSettingsView().getTimeRangeView();
             Scene scene = new Scene(this);
             dialog = new Stage();
             dialog.initOwner(owner);
@@ -405,6 +431,14 @@ public class PrintView extends ViewTypeControl {
             dialog.initModality(Modality.APPLICATION_MODAL);
             if (getPrintIcon() != null)
                 dialog.getIcons().add(getPrintIcon());
+            
+            dialog.setOnHidden(obs -> {
+                timeRange.cleanOldValues();
+                timeRange.viewTypeProperty().removeListener(viewTypeListener);
+            }); 
+            
+            dialog.setOnShown(obs -> timeRange.viewTypeProperty().addListener(viewTypeListener));
+            
             dialog.show();
         }
     }

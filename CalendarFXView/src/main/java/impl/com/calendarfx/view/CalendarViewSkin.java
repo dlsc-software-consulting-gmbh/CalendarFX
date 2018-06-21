@@ -49,7 +49,6 @@ import com.calendarfx.view.page.WeekPage;
 import com.calendarfx.view.page.YearPage;
 import com.calendarfx.view.print.PrintView;
 import com.calendarfx.view.print.PrintablePage;
-import com.calendarfx.view.print.TimeRangeView;
 import com.calendarfx.view.print.ViewType;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -692,6 +691,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 	private void print() {
 		if (printView == null) {
 			printView = getSkinnable().getPrintView();
+			printView.dateProperty().bind(getSkinnable().dateProperty());
 		}
 
 		printView.setToday(getSkinnable().getToday());
@@ -704,12 +704,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 		printView.setLayout(getSkinnable().getSelectedPage().getLayout());
 		printView.setViewType(
 				getSkinnable().getSelectedPage().getPrintViewType());
-		printView.requestStartDate(getSkinnable().getDate());
+		printView.loadDropDownValues(getSkinnable().getDate());
 		
 		printView.show(getSkinnable().getScene().getWindow());
-		
-		TimeRangeView timeRange = printView.getSettingsView().getTimeRangeView();
-		timeRange.viewTypeProperty().addListener(obs -> timeRange.requestStartDate(getSkinnable().getDate()));
 		
 		Platform.runLater(() -> {
 
