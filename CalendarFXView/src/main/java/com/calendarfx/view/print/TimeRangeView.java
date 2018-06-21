@@ -25,9 +25,12 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 
 import com.calendarfx.util.Util;
+import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.print.TimeRangeField.TimeRangeFieldValue;
 
 import impl.com.calendarfx.view.print.TimeRangeViewSkin;
@@ -57,10 +60,21 @@ public class TimeRangeView extends ViewTypeControl {
 
     private final TimeRangeField endField = new TimeRangeField(true);
 
+    public final Map<ViewType, TimeRangeOldValues> oldValuesMap = new EnumMap<>(
+            ViewType.class);
+
+    public final InvalidationListener OldValuesListener = obs -> catchOldValues();
+
     /**
      * Constructs a new time range view.
      */
     public TimeRangeView() {
+
+        viewTypeProperty().addListener(obse -> {
+            startDate.removeListener(OldValuesListener);
+            endDate.removeListener(OldValuesListener);
+        });
+
         startField.viewTypeProperty().bind(viewTypeProperty());
         startField.todayProperty().bind(todayProperty());
         startField.weekFieldsProperty().bind(weekFieldsProperty());
@@ -95,6 +109,10 @@ public class TimeRangeView extends ViewTypeControl {
             fixStartField();
             updateUnitsToPrint();
         });
+
+        oldValuesMap.put(ViewType.DAY_VIEW, null);
+        oldValuesMap.put(ViewType.WEEK_VIEW, null);
+        oldValuesMap.put(ViewType.MONTH_VIEW, null);
 
         getStyleClass().add(DEFAULT_STYLE);
         updateStartDate();
@@ -171,60 +189,138 @@ public class TimeRangeView extends ViewTypeControl {
         return weekFieldsProperty().get();
     }
 
-    public final void requestStartDate(LocalDate date) {
+    
+    /**
+     * Set the expected values for TimeRange combos. <br>
+     * If dialog is opened for the first time or user hasn't made any change 
+     * It will calculate the values based on {@link CalendarView#dateProperty()}.
+     * Otherwise, It will search on OldValuesMap in order to mantain in combos 
+     * what user does while dialog is opened. <br>
+     * 
+     * When dialog get closed, old values get cleaned.
+     * 
+     * @param date Used to calculate values of combos when dialog is 
+     * opened for the first time.
+     */
+    public final void loadDropDownValues(LocalDate date) {
+        TimeRangeOldValues oldValue = oldValuesMap.get(getViewType());
         if (date == null) {
             return;
         }
 
         switch (getViewType()) {
         case DAY_VIEW:
-            if (date.equals(getToday())) {
-                startField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
-            } else if (date.equals(getTomorrow())) {
-                startField
-                        .setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
+
+            // Will enter here if user has made some changes in Time range
+            // combos for DAY_VIEW type.
+            if (oldValue != null) {
+
+                startField.setValue(oldValue.startField.getValue());
+                endField.setValue(oldValue.endField.getValue());
+
+                if (startField.getValue() == TimeRangeFieldValue.ON_DATE) {
+                    startField.setOnDate(oldValue.startField.getOnDate());
+                }
+
+                if (endField.getValue() == TimeRangeFieldValue.ON_DATE) {
+                    endField.setOnDate(oldValue.endField.getOnDate());
+                } else if (endField.getValue() == TimeRangeFieldValue.AFTER) {
+                    endField.setAfterUnits(oldValue.endField.getAfterUnits());
+                }
             } else {
-                startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                startField.setOnDate(date);
+
+                if (date.equals(getToday())) {
+                    startField.setValue(TimeRangeField.TimeRangeFieldValue.TODAY);
+                } else if (date.equals(getTomorrow())) {
+                    startField.setValue(TimeRangeField.TimeRangeFieldValue.TOMORROW);
+                } else {
+                    startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
+                    startField.setOnDate(date);
+                }
+                endField.setValue(TimeRangeField.TimeRangeFieldValue.AFTER);
             }
-            endField.setValue(TimeRangeField.TimeRangeFieldValue.AFTER);
             break;
 
         case WEEK_VIEW:
-            if (isCurrentWeek(date)) {
-                startField
-                        .setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
-            } else if (isNextWeek(date)) {
-                startField
-                        .setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
-            } else {
-                startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
-                startField.setOnDate(date);
+            
+            // Will enter here if user has made some changes in Time range
+            // combos for WEEK_VIEW type.
+            if (oldValue != null){
+                
+                startField.setValue(oldValue.startField.getValue());
+                endField.setValue(oldValue.endField.getValue());
+                
+                if (startField.getValue() == TimeRangeFieldValue.ON_DATE) {
+                    startField.setOnDate(oldValue.startField.getOnDate());
+                } else if (startField.getValue() == TimeRangeFieldValue.ON_WEEK_NUMBER) {
+                    startField.setOnWeekNumber(oldValue.startField.getOnWeekNumber());
+                }
+                
+                if (endField.getValue() == TimeRangeFieldValue.ON_DATE) {
+                    endField.setOnDate(oldValue.endField.getOnDate());
+                } else if (endField.getValue() == TimeRangeFieldValue.ON_WEEK_NUMBER) {
+                    endField.setOnWeekNumber(oldValue.endField.getOnWeekNumber());
+                } else if (endField.getValue() == TimeRangeFieldValue.AFTER) {
+                    endField.setAfterUnits(oldValue.endField.getAfterUnits());
+                }
+            }else {
+                if (isCurrentWeek(date)) {
+                    startField
+                            .setValue(TimeRangeField.TimeRangeFieldValue.THIS_WEEK);
+                } else if (isNextWeek(date)) {
+                    startField
+                            .setValue(TimeRangeField.TimeRangeFieldValue.NEXT_WEEK);
+                } else {
+                    startField.setValue(TimeRangeField.TimeRangeFieldValue.ON_DATE);
+                    startField.setOnDate(date);
+                }
+                endField.setValue(TimeRangeFieldValue.AFTER);    
             }
-            endField.setValue(TimeRangeFieldValue.AFTER);
             break;
 
         case MONTH_VIEW:
-            if (isCurrentMonth(date)) {
-                startField.setValue(
-                        TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
-            } else if (isNextMonth(date)) {
-                startField.setValue(
-                        TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
-            } else {
-                TimeRangeField.TimeRangeFieldValue month = TimeRangeField.TimeRangeFieldValue
-                        .getFromMonth(date.getMonth());
-                int year = date.getYear();
-                startField.setValue(month);
-                startField.setMonthYear(year);
+            
+            // Will enter here if user has made some changes in Time range
+            // combos for MONTH_VIEW type.
+            if(oldValue != null){
+                
+                startField.setValue(oldValue.startField.getValue());
+                endField.setValue(oldValue.endField.getValue());
+                
+                if (startField.getValue() != TimeRangeField.TimeRangeFieldValue.THIS_MONTH
+                        && startField.getValue() != TimeRangeField.TimeRangeFieldValue.NEXT_MONTH) {
+                    startField.setMonthYear(oldValue.startField.getMonthYear());
+                }
+                
+                if (endField.getValue() == TimeRangeFieldValue.AFTER) {
+                    endField.setAfterUnits(oldValue.endField.getAfterUnits());
+                } else if (endField.getValue() != TimeRangeField.TimeRangeFieldValue.THIS_MONTH
+                        && startField.getValue() != TimeRangeField.TimeRangeFieldValue.NEXT_MONTH) {
+                    endField.setMonthYear(oldValue.endField.getMonthYear());
+                }
+            }else {
+                if (isCurrentMonth(date)) {
+                    startField.setValue(TimeRangeField.TimeRangeFieldValue.THIS_MONTH);
+                } else if (isNextMonth(date)) {
+                    startField.setValue(TimeRangeField.TimeRangeFieldValue.NEXT_MONTH);
+                } else {
+                    TimeRangeField.TimeRangeFieldValue month = TimeRangeField.TimeRangeFieldValue
+                            .getFromMonth(date.getMonth());
+                    int year = date.getYear();
+                    startField.setValue(month);
+                    startField.setMonthYear(year);
+                }
+                endField.setValue(TimeRangeFieldValue.AFTER);
             }
-            endField.setValue(TimeRangeFieldValue.AFTER);
             break;
 
         default:
             throw new UnsupportedOperationException(
                     "Not supported yet!: " + getViewType());
         }
+
+        startDate.addListener(OldValuesListener);
+        endDate.addListener(OldValuesListener);
     }
 
     @Override
@@ -573,10 +669,9 @@ public class TimeRangeView extends ViewTypeControl {
             if (getViewType() == ViewType.DAY_VIEW) {
                 setEndDate(getStartDate().plusDays(units - 1L));
             } else if (getViewType() == ViewType.WEEK_VIEW) {
-                setEndDate(
-                        getEndOfMonth(getStartDate()).plusMonths(units - 1L));
                 setEndDate(getEndOfWeek(getStartDate()).plusWeeks(units - 1L));
             } else {
+                setEndDate(getEndOfMonth(getStartDate()).plusMonths(units - 1L));
             }
             break;
 
@@ -681,6 +776,46 @@ public class TimeRangeView extends ViewTypeControl {
             }
         } else {
             setUnitsToPrint(0);
+        }
+    }
+
+    public void cleanOldValues() {
+        oldValuesMap.replace(ViewType.DAY_VIEW, null);
+        oldValuesMap.replace(ViewType.WEEK_VIEW, null);
+        oldValuesMap.replace(ViewType.MONTH_VIEW, null);
+        startDate.removeListener(OldValuesListener);
+        endDate.removeListener(OldValuesListener);
+    }
+
+    private void catchOldValues() {
+
+        TimeRangeOldValues value = oldValuesMap.get(getViewType());
+        if (value == null) {
+            value = new TimeRangeOldValues();
+        }
+
+        value.startField.setValue(startField.getValue());
+        value.startField.setOnDate(startField.getOnDate());
+        value.startField.setOnWeekNumber(startField.getOnWeekNumber());
+        value.startField.setMonthYear(startField.getMonthYear());
+
+        value.endField.setValue(endField.getValue());
+        value.endField.setOnDate(endField.getOnDate());
+        value.endField.setOnWeekNumber(endField.getOnWeekNumber());
+        value.endField.setMonthYear(endField.getMonthYear());
+        value.endField.setAfterUnits(endField.getAfterUnits());
+
+        oldValuesMap.replace(getViewType(), value);
+    }
+
+    private class TimeRangeOldValues {
+
+        private TimeRangeField startField;
+        private TimeRangeField endField;
+
+        public TimeRangeOldValues() {
+            startField = new TimeRangeField();
+            endField = new TimeRangeField();
         }
     }
 
