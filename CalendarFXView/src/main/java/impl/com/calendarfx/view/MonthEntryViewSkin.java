@@ -37,9 +37,9 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
     private DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedTime(FormatStyle.SHORT);
-    private Label titleLabel;
-    private Label timeLabel;
-    private Circle colorDot;
+    protected Label titleLabel;
+    protected Label timeLabel;
+    protected Circle colorDot;
 
     public MonthEntryViewSkin(MonthEntryView view) {
         super(view);
@@ -117,7 +117,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
     private WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(
             updateViewListener);
 
-    private void updateView() {
+    protected void updateView() {
         final MonthEntryView view = getSkinnable();
         Entry<?> entry = view.getEntry();
         final Calendar calendar = entry.getCalendar();
