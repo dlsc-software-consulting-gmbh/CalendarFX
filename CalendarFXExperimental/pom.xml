@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>10.5.0</version>
+        <version>11.4.2</version>
     </parent>
 
     <properties>
@@ -34,12 +34,12 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
-            <version>10.5.0</version>
+            <version>11.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>sampler</artifactId>
-            <version>10.5.0</version>
+            <version>11.4.2</version>
         </dependency>
     </dependencies>
 </project> 

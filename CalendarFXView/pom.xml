@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>10.5.0</version>
+        <version>11.4.2</version>
     </parent>
 
     <repositories>
@@ -49,19 +49,13 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>recurrence</artifactId>
-            <version>10.5.0</version>
+            <version>11.4.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>8.40.13</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>9.0.1-SNAPSHOT</version>
+            <version>9.0.0</version>
         </dependency>
 
         <dependency>
