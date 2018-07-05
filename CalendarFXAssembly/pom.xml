@@ -45,11 +45,11 @@
             <version>11.4.2</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>google</artifactId>
             <version>11.4.2</version>
-        </dependency>
+        </dependency-->
 
     </dependencies>
 

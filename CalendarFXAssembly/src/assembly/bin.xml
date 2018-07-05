@@ -92,10 +92,10 @@
             <outputDirectory>demos</outputDirectory>
         </file>
 
-        <file>
+        <!--file>
             <source>../CalendarFXGoogle/target/google-demo.jar</source>
             <outputDirectory>demos</outputDirectory>
-        </file>
+        </file-->
 
         <file>
             <source>../CalendarFXView/src/main/resources/com/calendarfx/view/calendar.css</source>
