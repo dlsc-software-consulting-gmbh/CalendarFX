@@ -2,7 +2,7 @@
 A Java framework for creating sophisticated calendar views based on JavaFX. A detailed developer manual can be found online: http://dlsc.com/wp-content/html/calendarfx/manual.html
 
 [ ![Download](https://api.bintray.com/packages/dlsc-oss/repository/CalendarFX/images/download.svg) ](https://bintray.com/dlsc-oss/repository/CalendarFX/_latestVersion)
-[ ![Build](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master) ](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master)
+[ ![Build](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master-11) ](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master)
 
 
 
