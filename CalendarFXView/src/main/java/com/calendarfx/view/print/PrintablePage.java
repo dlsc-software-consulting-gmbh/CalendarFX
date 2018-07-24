@@ -769,7 +769,7 @@ public class PrintablePage extends DateControl {
      * 
      * @return
      */
-    private DetailedDayView createDetailedDayView() {
+    protected DetailedDayView createDetailedDayView() {
         DetailedDayView newDetailedDayView = new DetailedDayView();
         newDetailedDayView.setShowScrollBar(false);
         newDetailedDayView.setShowToday(false);
@@ -797,7 +797,7 @@ public class PrintablePage extends DateControl {
      * @param trimTimeBounds
      *            define if trim or not the hours in the day view
      */
-    private void configureDetailedDayView(DetailedDayView newDetailedDayView,
+    protected void configureDetailedDayView(DetailedDayView newDetailedDayView,
             boolean trimTimeBounds) {
         newDetailedDayView.getDayView().setStartTime(LocalTime.MIN);
         newDetailedDayView.getDayView().setEndTime(LocalTime.MAX);
@@ -814,7 +814,7 @@ public class PrintablePage extends DateControl {
      * 
      * @return
      */
-    private DetailedWeekView createDetailedWeekView() {
+    protected DetailedWeekView createDetailedWeekView() {
         DetailedWeekView newDetailedWeekView = new DetailedWeekView();
         newDetailedWeekView.setShowScrollBar(false);
         newDetailedWeekView.layoutProperty().bind(layoutProperty());
@@ -846,7 +846,7 @@ public class PrintablePage extends DateControl {
      * @param trimTimeBounds
      *            define if trim or not the hours in the week view
      */
-    private void configureDetailedWeekView(
+    protected void configureDetailedWeekView(
             DetailedWeekView newDetailedWeekView, boolean trimTimeBounds) {
         newDetailedWeekView.getWeekView().setShowToday(false);
         newDetailedWeekView.getWeekView().setTrimTimeBounds(trimTimeBounds);
@@ -857,7 +857,7 @@ public class PrintablePage extends DateControl {
      * 
      * @return
      */
-    private MonthView createMonthView() {
+    protected MonthView createMonthView() {
         MonthView newMonthView = new MonthView();
         newMonthView.setShowToday(false);
         newMonthView.setShowCurrentWeek(false);
