@@ -769,7 +769,7 @@ public class PrintablePage extends DateControl {
      * 
      * @return
      */
-    protected DetailedDayView createDetailedDayView() {
+    private DetailedDayView createDetailedDayView() {
         DetailedDayView newDetailedDayView = new DetailedDayView();
         newDetailedDayView.setShowScrollBar(false);
         newDetailedDayView.setShowToday(false);
@@ -814,7 +814,7 @@ public class PrintablePage extends DateControl {
      * 
      * @return
      */
-    protected DetailedWeekView createDetailedWeekView() {
+    private DetailedWeekView createDetailedWeekView() {
         DetailedWeekView newDetailedWeekView = new DetailedWeekView();
         newDetailedWeekView.setShowScrollBar(false);
         newDetailedWeekView.layoutProperty().bind(layoutProperty());

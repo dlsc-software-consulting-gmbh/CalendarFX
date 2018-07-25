@@ -33,68 +33,77 @@ import java.time.LocalDate;
  */
 public class PreviewPane extends CalendarFXControl {
 
-	public static final String DEFAULT_STYLE = "print-preview";
+    public static final String DEFAULT_STYLE = "print-preview";
 
-	private final PrintablePage printablePage = new PrintablePage();
+    protected PrintablePage printablePage;
+    private ZoomPane zoomPane;
 
-	private final ZoomPane zoomPane = new ZoomPane(printablePage);
+    /**
+     * Constructs a new preview pane.
+     */
+    public PreviewPane() {
+        PrintablePage printableP = new PrintablePage();
+        initialize(printableP);
+    }
 
-	/**
-	 * Constructs a new preview pane.
-	 */
-	public PreviewPane() {
-		getStyleClass().add(DEFAULT_STYLE);
+    public void initialize(PrintablePage printablePage) {
 
-		final InvalidationListener layoutListener = obs -> zoomPane
-				.requestLayout();
-		printablePage.viewTypeProperty().addListener(layoutListener);
-		printablePage.paperProperty().addListener(layoutListener);
-	}
+        this.printablePage = printablePage;
+        zoomPane = new ZoomPane(printablePage);
+        getStyleClass().add(DEFAULT_STYLE);
 
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new PreviewPaneSkin(this);
-	}
+        final InvalidationListener layoutListener = obs -> zoomPane
+                .requestLayout();
+        printablePage.viewTypeProperty().addListener(layoutListener);
+        printablePage.paperProperty().addListener(layoutListener);
 
-	public final PrintablePage getPrintablePage() {
-		return printablePage;
-	}
+    }
 
-	public final ZoomPane getZoomPane() {
-		return zoomPane;
-	}
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new PreviewPaneSkin(this);
+    }
 
-	// print start date
+    public final PrintablePage getPrintablePage() {
+        return printablePage;
+    }
 
-	private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<>(
-			this, "printStartDate");
+    public final ZoomPane getZoomPane() {
+        return zoomPane;
+    }
 
-	public final ObjectProperty<LocalDate> printStartDateProperty() {
-		return printStartDate;
-	}
+    // print start date
 
-	public final LocalDate getPrintStartDate() {
-		return printStartDateProperty().get();
-	}
+    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<>(
+            this, "printStartDate");
 
-	public final void setPrintStartDate(LocalDate date) {
-		printStartDateProperty().set(date);
-	}
+    public final ObjectProperty<LocalDate> printStartDateProperty() {
+        return printStartDate;
+    }
 
-	// print end date
+    public final LocalDate getPrintStartDate() {
+        return printStartDateProperty().get();
+    }
 
-	private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<>(
-			this, "printEndDate");
+    public final void setPrintStartDate(LocalDate date) {
+        printStartDateProperty().set(date);
+    }
 
-	public final ObjectProperty<LocalDate> printEndDateProperty() {
-		return printEndDate;
-	}
+    // print end date
 
-	public final LocalDate getPrintEndDate() {
-		return printEndDateProperty().get();
-	}
+    private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<>(
+            this, "printEndDate");
 
-	public final void setPrintEndDate(LocalDate date) {
-		printEndDateProperty().set(date);
-	}
+    public final ObjectProperty<LocalDate> printEndDateProperty() {
+        return printEndDate;
+    }
+
+    public final LocalDate getPrintEndDate() {
+        return printEndDateProperty().get();
+    }
+
+    public final void setPrintEndDate(LocalDate date) {
+        printEndDateProperty().set(date);
+    }
+
 }
