@@ -20,8 +20,6 @@ import com.calendarfx.view.YearMonthView;
 import com.calendarfx.view.YearView;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -32,10 +30,6 @@ import javafx.scene.layout.RowConstraints;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.Set;
-
-import org.hamcrest.core.IsInstanceOf;
-
 import static java.lang.Double.MAX_VALUE;
 
 public class YearViewSkin extends DateControlSkin<YearView> {
