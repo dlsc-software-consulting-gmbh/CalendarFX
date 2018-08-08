@@ -13,6 +13,16 @@
         <name>Dirk Lemmermann Software &amp; Consulting</name>
     </organization>
 
+    <url>https://github.com/dlemmermann/CalendarFX</url>
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/dlemmermann/CalendarFX</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
