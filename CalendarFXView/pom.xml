@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>11.4.2</version>
+        <version>8.5.0</version>
     </parent>
 
     <repositories>
@@ -47,33 +47,27 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>11-ea+25</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>recurrence</artifactId>
-            <version>11.4.2</version>
+            <version>8.5.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>9.0.0</version>
+            <version>8.40.13</version>
         </dependency>
 
         <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-commons</artifactId>
-            <version>9.1.2</version>
+            <version>8.13</version>
         </dependency>
 
         <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-fontawesome</artifactId>
-            <version>4.7.0-9.1.2</version>
+            <version>4.7.0-1</version>
         </dependency>
 
     </dependencies>
@@ -126,7 +120,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.0.0-M1</version>
                 <configuration>
                     <failOnError>false</failOnError>
                     <force>true</force>
