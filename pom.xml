@@ -23,6 +23,14 @@
         <url>https://github.com/dlemmermann/CalendarFX</url>
     </scm>
 
+    <developers>
+        <developer>
+            <name>Dirk Lemmermann</name>
+            <email>dlemmermann@gmail.com</email>
+            <organization>DLSC</organization>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
