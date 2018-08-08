@@ -125,23 +125,10 @@ class InstanceGenerators {
 
         final boolean allPositive;
         final int maxPos;
-        if (false) {
-            int mp = 0;
-            boolean ap = true;
-            for (int i = setPos.length; --i >= 0; ) {
-                if (setPos[i] < 0) {
-                    ap = false;
-                    break;
-                }
-                mp = Math.max(setPos[i], mp);
-            }
-            maxPos = mp;
-            allPositive = ap;
-        } else {
+
             // TODO(msamuel): does this work?
             maxPos = uSetPos[uSetPos.length - 1];
             allPositive = uSetPos[0] > 0;
-        }
 
         return new Generator() {
             DateValue pushback = null;

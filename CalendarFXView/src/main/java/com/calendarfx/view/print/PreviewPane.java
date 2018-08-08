@@ -27,26 +27,36 @@ import java.time.LocalDate;
 
 /**
  * The preview pane wraps around the zoom pane which again wraps around the
- * printable printablePage. The preview pane features a zoom slider and printablePage flipping
- * controls that come in handy when the user requested to print several pages.
+ * printable printablePage. The preview pane features a zoom slider and
+ * printablePage flipping controls that come in handy when the user requested to
+ * print several pages.
  */
 public class PreviewPane extends CalendarFXControl {
 
     public static final String DEFAULT_STYLE = "print-preview";
 
-    private final PrintablePage printablePage = new PrintablePage();
-
-    private final ZoomPane zoomPane = new ZoomPane(printablePage);
+    protected PrintablePage printablePage;
+    private ZoomPane zoomPane;
 
     /**
      * Constructs a new preview pane.
      */
     public PreviewPane() {
+        PrintablePage printableP = new PrintablePage();
+        initialize(printableP);
+    }
+
+    public void initialize(PrintablePage printablePage) {
+
+        this.printablePage = printablePage;
+        zoomPane = new ZoomPane(printablePage);
         getStyleClass().add(DEFAULT_STYLE);
 
-        final InvalidationListener layoutListener = obs -> zoomPane.requestLayout();
+        final InvalidationListener layoutListener = obs -> zoomPane
+                .requestLayout();
         printablePage.viewTypeProperty().addListener(layoutListener);
         printablePage.paperProperty().addListener(layoutListener);
+
     }
 
     @Override
@@ -64,7 +74,8 @@ public class PreviewPane extends CalendarFXControl {
 
     // print start date
 
-    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<>(this, "printStartDate");
+    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<>(
+            this, "printStartDate");
 
     public final ObjectProperty<LocalDate> printStartDateProperty() {
         return printStartDate;
@@ -80,7 +91,8 @@ public class PreviewPane extends CalendarFXControl {
 
     // print end date
 
-    private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<>(this, "printEndDate");
+    private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<>(
+            this, "printEndDate");
 
     public final ObjectProperty<LocalDate> printEndDateProperty() {
         return printEndDate;
@@ -93,4 +105,5 @@ public class PreviewPane extends CalendarFXControl {
     public final void setPrintEndDate(LocalDate date) {
         printEndDateProperty().set(date);
     }
+
 }

@@ -326,9 +326,8 @@
  * Styles needed by the year view.
  */
 
-.year-view > .container {
-    -fx-hgap: 20px;
-    -fx-vgap: 20px;
+.year-view .container {
+    -fx-background-color:white;
 }
 
 /*

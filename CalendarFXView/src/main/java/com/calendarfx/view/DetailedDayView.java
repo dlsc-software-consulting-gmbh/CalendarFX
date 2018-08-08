@@ -16,22 +16,25 @@
 
 package com.calendarfx.view;
 
+import java.util.Optional;
+
+import org.controlsfx.control.PropertySheet.Item;
+
 import com.calendarfx.view.AgendaView.AgendaEntryCell;
+
 import impl.com.calendarfx.view.DetailedDayViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Skin;
-import org.controlsfx.control.PropertySheet.Item;
-
-import java.util.Optional;
 
 /**
  * The detailed day view is a composite control consisting of a {@link DayView},
- * an {@link AllDayView}, an {@link CalendarHeaderView}, and a {@link TimeScaleView}.
- * The image below shows the standard appearance of the view. The second image shows
- * the same view with the optional agenda view made visible.
+ * an {@link AllDayView}, an {@link CalendarHeaderView}, and a
+ * {@link TimeScaleView}. The image below shows the standard appearance of the
+ * view. The second image shows the same view with the optional agenda view made
+ * visible.
  * <p/>
  * <center><img src="doc-files/detailed-day-view.png"></center>
  * <p/>
@@ -80,6 +83,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the all day view sub control.
+     * 
      * @return the all day child node
      */
     public final AllDayView getAllDayView() {
@@ -88,6 +92,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the day view sub control.
+     * 
      * @return the day view child node
      */
     public final DayView getDayView() {
@@ -96,6 +101,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the time scale sub control.
+     * 
      * @return the time scale child node
      */
     public final TimeScaleView getTimeScaleView() {
@@ -104,6 +110,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the calendar header sub control.
+     * 
      * @return the calendar header child node
      */
     public final CalendarHeaderView getCalendarHeaderView() {
@@ -112,6 +119,7 @@ public class DetailedDayView extends DayViewBase {
 
     /**
      * Returns the agenda view sub control.
+     * 
      * @return the agenda view child node
      */
     public final AgendaView getAgendaView() {
@@ -120,7 +128,8 @@ public class DetailedDayView extends DayViewBase {
 
     // show all day view support
 
-    private final BooleanProperty showAllDayView = new SimpleBooleanProperty(this, "showAllDayView", true);
+    private final BooleanProperty showAllDayView = new SimpleBooleanProperty(
+            this, "showAllDayView", true);
 
     /**
      * A property used to toggle the visibility of the all day view.
@@ -143,7 +152,8 @@ public class DetailedDayView extends DayViewBase {
     /**
      * Sets the value of {@link #showAllDayViewProperty()}.
      *
-     * @param show true if the all day view will be visible
+     * @param show
+     *            true if the all day view will be visible
      */
     public final void setShowAllDayView(boolean show) {
         showAllDayViewProperty().set(show);
@@ -151,7 +161,8 @@ public class DetailedDayView extends DayViewBase {
 
     // show agenda view support
 
-    private final BooleanProperty showAgendaView = new SimpleBooleanProperty(this, "showAgendaView", false);
+    private final BooleanProperty showAgendaView = new SimpleBooleanProperty(
+            this, "showAgendaView", false);
 
     /**
      * A property used to toggle the visibility of the agenda view.
@@ -174,7 +185,8 @@ public class DetailedDayView extends DayViewBase {
     /**
      * Sets the value of {@link #showAgendaViewProperty()}.
      *
-     * @param show if true the agenda view will be visible
+     * @param show
+     *            if true the agenda view will be visible
      */
     public final void setShowAgendaView(boolean show) {
         showAgendaViewProperty().set(show);
@@ -182,7 +194,8 @@ public class DetailedDayView extends DayViewBase {
 
     // show time scale view support
 
-    private final BooleanProperty showTimeScaleView = new SimpleBooleanProperty(this, "showTimeScaleView", true);
+    private final BooleanProperty showTimeScaleView = new SimpleBooleanProperty(
+            this, "showTimeScaleView", true);
 
     /**
      * A property used to toggle the visibility of the time scale view.
@@ -205,7 +218,8 @@ public class DetailedDayView extends DayViewBase {
     /**
      * Sets the value of {@link #showTimeScaleViewProperty()}.
      *
-     * @param show if true the time scale view will be visible
+     * @param show
+     *            if true the time scale view will be visible
      */
     public final void setShowTimeScaleView(boolean show) {
         showTimeScaleViewProperty().set(show);
@@ -213,7 +227,8 @@ public class DetailedDayView extends DayViewBase {
 
     // show scrollbar support
 
-    private final BooleanProperty showScrollBar = new SimpleBooleanProperty(this, "showScrollBar", true);
+    private final BooleanProperty showScrollBar = new SimpleBooleanProperty(
+            this, "showScrollBar", true);
 
     /**
      * A property used to control the visibility of the vertial scrollbar.
@@ -227,7 +242,8 @@ public class DetailedDayView extends DayViewBase {
     /**
      * Sets the value of {@link #showScrollBarProperty()}.
      *
-     * @param showScrollBar if true the scrollbar will be visible
+     * @param showScrollBar
+     *            if true the scrollbar will be visible
      */
     public final void setShowScrollBar(boolean showScrollBar) {
         this.showScrollBar.set(showScrollBar);

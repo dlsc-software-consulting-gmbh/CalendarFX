@@ -16,15 +16,15 @@
 
 package com.calendarfx.view.print;
 
-import javafx.print.PageOrientation;
-
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 
+import javafx.print.PageOrientation;
+
 /**
- * An enumerator listing the different views that are supported
- * by the print preview functionality.
+ * An enumerator listing the different views that are supported by the print
+ * preview functionality.
  */
 public enum ViewType {
 
@@ -32,6 +32,11 @@ public enum ViewType {
         @Override
         public String getMessageKey() {
             return "PrintViewType.DAY_VIEW";
+        }
+
+        @Override
+        public String getSingularChronoMessageKey() {
+            return "PrintViewType.DAY_SINGULAR_CHRONO";
         }
 
         @Override
@@ -63,6 +68,11 @@ public enum ViewType {
         }
 
         @Override
+        public String getSingularChronoMessageKey() {
+            return "PrintViewType.WEEK_SINGULAR_CHRONO";
+        }
+
+        @Override
         public String getPluralChronoMessageKey() {
             return "PrintViewType.WEEK_PLURAL_CHRONO";
         }
@@ -90,6 +100,11 @@ public enum ViewType {
         }
 
         @Override
+        public String getSingularChronoMessageKey() {
+            return "PrintViewType.MONTH_SINGULAR_CHRONO";
+        }
+
+        @Override
         public String getPluralChronoMessageKey() {
             return "PrintViewType.MONTH_PLURAL_CHRONO";
         }
@@ -111,6 +126,8 @@ public enum ViewType {
     };
 
     public abstract String getMessageKey();
+
+    public abstract String getSingularChronoMessageKey();
 
     public abstract String getPluralChronoMessageKey();
 

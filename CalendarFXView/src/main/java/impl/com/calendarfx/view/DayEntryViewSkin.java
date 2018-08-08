@@ -16,19 +16,20 @@
 
 package impl.com.calendarfx.view;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DraggedEntry;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.shape.Rectangle;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 /**
  * The default day entry view. <br />
@@ -36,16 +37,19 @@ import java.time.format.FormatStyle;
  */
 public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+    private DateTimeFormatter formatter = DateTimeFormatter
+            .ofLocalizedTime(FormatStyle.SHORT);
 
     protected Label startTimeLabel;
     protected Label titleLabel;
 
     private final InvalidationListener updateStylesListener = it -> updateStyles();
-    private final WeakInvalidationListener weakUpdateStylesListener = new WeakInvalidationListener(updateStylesListener);
+    private final WeakInvalidationListener weakUpdateStylesListener = new WeakInvalidationListener(
+            updateStylesListener);
 
     private final InvalidationListener updateLabelsListener = it -> updateLabels();
-    private final WeakInvalidationListener weakUpdateLabelsListener = new WeakInvalidationListener(updateLabelsListener);
+    private final WeakInvalidationListener weakUpdateLabelsListener = new WeakInvalidationListener(
+            updateLabelsListener);
 
     public DayEntryViewSkin(DayEntryView view) {
         super(view);
@@ -60,7 +64,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
         getChildren().addAll(startTimeLabel, titleLabel);
 
-        Entry entry = getEntry();
+        Entry<?> entry = getEntry();
 
         entry.intervalProperty().addListener(weakUpdateLabelsListener);
         entry.calendarProperty().addListener(weakUpdateStylesListener);
@@ -80,7 +84,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     /**
      * @returns The entry.
      */
-    protected Entry getEntry() {
+    protected Entry<?> getEntry() {
         Entry<?> entry = getSkinnable().getEntry();
         if (entry.isRecurrence()) {
             entry = entry.getRecurrenceSourceEntry();
@@ -89,31 +93,36 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * This methods updates the styles of the node according to the entry settings.
+     * This methods updates the styles of the node according to the entry
+     * settings.
      */
     protected void updateStyles() {
         DayEntryView view = getSkinnable();
-        Entry entry = getEntry();
+        Entry<?> entry = getEntry();
 
         Calendar calendar = entry.getCalendar();
         if (entry instanceof DraggedEntry) {
             calendar = ((DraggedEntry) entry).getOriginalCalendar();
         }
 
-        // when the entry gets removed from its calendar then the calendar can be null
+        // when the entry gets removed from its calendar then the calendar can
+        // be null
         if (calendar == null) {
             return;
         }
 
-        view.getStyleClass().setAll("default-style-entry", calendar.getStyle() + "-entry");
+        view.getStyleClass().setAll("default-style-entry",
+                calendar.getStyle() + "-entry");
 
         if (entry.isRecurrence()) {
             view.getStyleClass().add("recurrence"); //$NON-NLS-1$
         }
 
-        startTimeLabel.getStyleClass().setAll("start-time-label", "default-style-entry-time-label",
+        startTimeLabel.getStyleClass().setAll("start-time-label",
+                "default-style-entry-time-label",
                 calendar.getStyle() + "-entry-time-label");
-        titleLabel.getStyleClass().setAll("title-label", "default-style-entry-title-label",
+        titleLabel.getStyleClass().setAll("title-label",
+                "default-style-entry-title-label",
                 calendar.getStyle() + "-entry-title-label");
     }
 
@@ -139,7 +148,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * Convert the given title. This method can be overridden for e.g. translating the title.
+     * Convert the given title. This method can be overridden for e.g.
+     * translating the title.
      *
      * @returns The formatted title.
      */
@@ -164,38 +174,47 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
      * This method will be called if the labels need to be updated.
      */
     protected void updateLabels() {
-        Entry entry = getEntry();
+        Entry<?> entry = getEntry();
 
         startTimeLabel.setText(formatTime(entry.getStartTime()));
         titleLabel.setText(formatTitle(entry.getTitle()));
     }
 
     @Override
-    protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
+    protected void layoutChildren(double contentX, double contentY,
+            double contentWidth, double contentHeight) {
         // title label
         double titleHeight = titleLabel.prefHeight(contentWidth);
 
-        // it is guaranteed that we have enough height to display the title (see "computeMinHeight")
-        titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth), snapSize(titleHeight));
+        // it is guaranteed that we have enough height to display the title (see
+        // "computeMinHeight")
+        titleLabel.resizeRelocate(snapPosition(contentX),
+                snapPosition(contentY), snapSize(contentWidth),
+                snapSize(titleHeight));
 
         // start time label
         double timeLabelHeight = startTimeLabel.prefHeight(contentWidth);
         if (contentHeight - titleHeight > timeLabelHeight) {
             startTimeLabel.setVisible(true);
-            startTimeLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY + titleHeight), snapSize(contentWidth), snapSize(timeLabelHeight));
+            startTimeLabel.resizeRelocate(snapPosition(contentX),
+                    snapPosition(contentY + titleHeight),
+                    snapSize(contentWidth), snapSize(timeLabelHeight));
         } else {
             startTimeLabel.setVisible(false);
         }
     }
 
     @Override
-    protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    protected double computeMinHeight(double width, double topInset,
+            double rightInset, double bottomInset, double leftInset) {
         if (titleLabel != null) {
-            // For this pref height calculation we do not consider the available width because
+            // For this pref height calculation we do not consider the available
+            // width because
             // we only want to show a single line of text anyways.
             return titleLabel.prefHeight(-1) + topInset + bottomInset;
         }
 
-        return super.computeMinHeight(width, topInset, rightInset, bottomInset, leftInset);
+        return super.computeMinHeight(width, topInset, rightInset, bottomInset,
+                leftInset);
     }
 }

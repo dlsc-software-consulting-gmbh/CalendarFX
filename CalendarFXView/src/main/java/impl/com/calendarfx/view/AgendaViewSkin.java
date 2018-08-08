@@ -16,6 +16,16 @@
 
 package impl.com.calendarfx.view;
 
+import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
@@ -24,6 +34,7 @@ import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.AgendaView;
 import com.calendarfx.view.AgendaView.AgendaEntry;
 import com.calendarfx.view.Messages;
+
 import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -33,19 +44,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
-import java.text.MessageFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadDataSettingsProvider {
+public class AgendaViewSkin extends DateControlSkin<AgendaView>
+        implements LoadDataSettingsProvider {
 
     private static final String AGENDA_VIEW_PLACEHOLDER_LABEL = "placeholder-label"; //$NON-NLS-1$
 
@@ -70,7 +70,8 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
         statusLabel.visibleProperty().bind(view.showStatusLabelProperty());
         statusLabel.managedProperty().bind(statusLabel.visibleProperty());
 
-        Label placeholderLabel = new Label(Messages.getString("AgendaViewSkin.NO_ENTRIES")); //$NON-NLS-1$
+        Label placeholderLabel = new Label(
+                Messages.getString("AgendaViewSkin.NO_ENTRIES")); //$NON-NLS-1$
         placeholderLabel.getStyleClass().add(AGENDA_VIEW_PLACEHOLDER_LABEL);
         listView.setPlaceholder(placeholderLabel);
 
@@ -81,7 +82,8 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
         borderPane.setCenter(listView);
         borderPane.setTop(statusLabel);
 
-        InvalidationListener reloadListener = it -> updateList("a view property has changed, property = " + it.toString());
+        InvalidationListener reloadListener = it -> updateList(
+                "a view property has changed, property = " + it.toString());
         view.lookAheadPeriodInDaysProperty().addListener(reloadListener);
         view.lookBackPeriodInDaysProperty().addListener(reloadListener);
         view.enableHyperlinksProperty().addListener(reloadListener);
@@ -91,18 +93,22 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
         listenToCalendars();
 
-        view.getCalendars().addListener((Observable observable) -> listenToCalendars());
+        view.getCalendars()
+                .addListener((Observable observable) -> listenToCalendars());
 
         view.dateProperty().addListener(reloadListener);
     }
 
-    private InvalidationListener calendarVisibilityChanged = it -> updateList("calendar visibility changed");
+    private InvalidationListener calendarVisibilityChanged = it -> updateList(
+            "calendar visibility changed");
 
-    private WeakInvalidationListener weakCalendarVisibilityChanged = new WeakInvalidationListener(calendarVisibilityChanged);
+    private WeakInvalidationListener weakCalendarVisibilityChanged = new WeakInvalidationListener(
+            calendarVisibilityChanged);
 
     private void listenToCalendars() {
         for (Calendar c : getSkinnable().getCalendars()) {
-            getSkinnable().getCalendarVisibilityProperty(c).addListener(weakCalendarVisibilityChanged);
+            getSkinnable().getCalendarVisibilityProperty(c)
+                    .addListener(weakCalendarVisibilityChanged);
         }
     }
 
@@ -118,12 +124,14 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
     @Override
     protected void entryRecurrenceRuleChanged(CalendarEvent evt) {
-        updateList(evt, "entry recurrence rule changed, entry = " + evt.getEntry());
+        updateList(evt,
+                "entry recurrence rule changed, entry = " + evt.getEntry());
     }
 
     @Override
     protected void entryFullDayChanged(CalendarEvent evt) {
-        updateList(evt, "entry full day changed changed, entry = " + evt.getEntry());
+        updateList(evt,
+                "entry full day changed changed, entry = " + evt.getEntry());
     }
 
     @Override
@@ -147,7 +155,8 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
     private void updateList(String reason) {
         if (LoggingDomain.VIEW.isLoggable(Level.FINE)) {
-            LoggingDomain.VIEW.fine("updating list inside agenda view, reason = " + reason);
+            LoggingDomain.VIEW.fine(
+                    "updating list inside agenda view, reason = " + reason);
         }
 
         Map<LocalDate, List<Entry<?>>> dataMap = new HashMap<>();
@@ -164,11 +173,14 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
         Collections.sort(listEntries);
         listView.getItems().setAll(listEntries);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-        String startTime = formatter.format(getLoadStartDate());
-        String endTime = formatter.format(getLoadEndDate());
+        String startTime = getSkinnable().getDateTimeFormatter()
+                .format(getLoadStartDate());
+        String endTime = getSkinnable().getDateTimeFormatter()
+                .format(getLoadEndDate());
 
-        statusLabel.setText(MessageFormat.format(Messages.getString("AgendaViewSkin.AGENDA_TIME_RANGE"), startTime, endTime)); //$NON-NLS-1$
+        statusLabel.setText(MessageFormat.format(
+                Messages.getString("AgendaViewSkin.AGENDA_TIME_RANGE"), //$NON-NLS-1$
+                startTime, endTime));
     }
 
     @Override
@@ -178,14 +190,14 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
     @Override
     public LocalDate getLoadStartDate() {
-        return getSkinnable().getDate().minusDays(
-                getSkinnable().getLookBackPeriodInDays());
+        return getSkinnable().getDate()
+                .minusDays(getSkinnable().getLookBackPeriodInDays());
     }
 
     @Override
     public LocalDate getLoadEndDate() {
-        return getSkinnable().getDate().plusDays(
-                getSkinnable().getLookAheadPeriodInDays());
+        return getSkinnable().getDate()
+                .plusDays(getSkinnable().getLookAheadPeriodInDays());
     }
 
     @Override
@@ -207,4 +219,5 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
     public boolean isCalendarVisible(Calendar calendar) {
         return getSkinnable().isCalendarVisible(calendar);
     }
+
 }

@@ -20,6 +20,7 @@ import com.calendarfx.view.YearMonthView;
 import com.calendarfx.view.YearView;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -29,7 +30,6 @@ import javafx.scene.layout.RowConstraints;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-
 import static java.lang.Double.MAX_VALUE;
 
 public class YearViewSkin extends DateControlSkin<YearView> {
@@ -39,6 +39,8 @@ public class YearViewSkin extends DateControlSkin<YearView> {
 
         view.dateProperty().addListener(evt -> updateMonths());
 
+        ScrollPane scrollPane = new ScrollPane();
+        
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("container");
         gridPane.setMaxSize(MAX_VALUE, MAX_VALUE);
@@ -79,7 +81,10 @@ public class YearViewSkin extends DateControlSkin<YearView> {
             }
         }
 
-        getChildren().add(gridPane);
+        scrollPane.setContent(gridPane);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        getChildren().add(scrollPane);
 
         updateMonths();
     }

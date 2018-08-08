@@ -16,7 +16,14 @@
 
 package com.calendarfx.view;
 
+import static java.util.Objects.requireNonNull;
+
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 import impl.com.calendarfx.view.TimeScaleViewSkin;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Skin;
 
 /**
@@ -26,6 +33,10 @@ import javafx.scene.control.Skin;
  * <p/>
  */
 public class TimeScaleView extends DayViewBase {
+
+    private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
+            this, "formatter", //$NON-NLS-1$
+            DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
 
     /**
      * Constructs a new scale view.
@@ -37,5 +48,36 @@ public class TimeScaleView extends DayViewBase {
     @Override
     protected Skin<?> createDefaultSkin() {
         return new TimeScaleViewSkin<>(this);
+    }
+
+    /**
+     * Gets the DateTimeFormatter property, which is use to provide the format
+     * on the TimeScale Labels. By default it has a value of
+     * {@link FormatStyle#SHORT}, can be Overriden.
+     * 
+     * @return the date formatter.
+     */
+    protected ObjectProperty<DateTimeFormatter> dateTimeFormatterProperty() {
+        return formatter;
+    }
+
+    /**
+     * Returns the value of {@link #dateTimeFormatterProperty()}
+     * 
+     * @return a date time formatter
+     */
+    public final DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatterProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #dateTimeFormatterProperty()}
+     * 
+     * @param formatter
+     *            a date time formatter, not {@code null}
+     */
+    public void setDateTimeFormatter(DateTimeFormatter formatter) {
+        requireNonNull(formatter);
+        dateTimeFormatterProperty().set(formatter);
     }
 }

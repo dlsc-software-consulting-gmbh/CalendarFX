@@ -16,17 +16,7 @@
 
 package com.calendarfx.view.print;
 
-import impl.com.calendarfx.view.print.TimeRangeFieldSkin;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.Skin;
-import org.controlsfx.control.PropertySheet.Item;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -39,14 +29,26 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+import org.controlsfx.control.PropertySheet.Item;
+
+import impl.com.calendarfx.view.print.TimeRangeFieldSkin;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Skin;
 
 /**
- * A control for specifying the start or end time of a time range. This control is used
- * by the {@link TimeRangeView} as part of the print preview functionality. It allows the
- * user to specify the time range that has to be printed. The control supports defining
- * time points for day ranges, week rangers, or month ranges. The default style class used
- * by this control is "time-range-field".
+ * A control for specifying the start or end time of a time range. This control
+ * is used by the {@link TimeRangeView} as part of the print preview
+ * functionality. It allows the user to specify the time range that has to be
+ * printed. The control supports defining time points for day ranges, week
+ * rangers, or month ranges. The default style class used by this control is
+ * "time-range-field".
  *
  * <center><img src="doc-files/time-range-field.png"></center>
  */
@@ -86,7 +88,8 @@ public class TimeRangeField extends ViewTypeControl {
         return new TimeRangeFieldSkin(this);
     }
 
-    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now()); //$NON-NLS-1$
+    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(
+            this, "today", LocalDate.now()); //$NON-NLS-1$
 
     /**
      * Stores the date that is considered to represent "today". This property is
@@ -101,7 +104,8 @@ public class TimeRangeField extends ViewTypeControl {
     /**
      * Sets the value of {@link #todayProperty()}.
      *
-     * @param date the date representing "today"
+     * @param date
+     *            the date representing "today"
      */
     public final void setToday(LocalDate date) {
         requireNonNull(date);
@@ -117,7 +121,8 @@ public class TimeRangeField extends ViewTypeControl {
         return todayProperty().get();
     }
 
-    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
+    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(
+            this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
 
     /**
      * Week fields are used to determine the first day of a week (e.g. "Monday"
@@ -134,7 +139,8 @@ public class TimeRangeField extends ViewTypeControl {
     /**
      * Sets the value of {@link #weekFieldsProperty()}.
      *
-     * @param fields the new week fields
+     * @param fields
+     *            the new week fields
      */
     public final void setWeekFields(WeekFields fields) {
         requireNonNull(fields);
@@ -151,7 +157,8 @@ public class TimeRangeField extends ViewTypeControl {
     }
 
     private void updateValues() {
-        values.setAll(TimeRangeFieldValue.getSelectablesForView(getViewType(), isEndField()));
+        values.setAll(TimeRangeFieldValue.getSelectablesForView(getViewType(),
+                isEndField()));
         setValue(values.get(0));
     }
 
@@ -165,7 +172,8 @@ public class TimeRangeField extends ViewTypeControl {
             setAfterUnits(null);
         } else if (getValue() == TimeRangeFieldValue.ON_WEEK_NUMBER) {
             if (getOnWeekNumber() == null) {
-                setOnWeekNumber(getToday().get(getWeekFields().weekOfWeekBasedYear()));
+                setOnWeekNumber(
+                        getToday().get(getWeekFields().weekOfWeekBasedYear()));
             }
             setOnDate(null);
             setMonthYear(null);
@@ -194,7 +202,8 @@ public class TimeRangeField extends ViewTypeControl {
 
     // end field support
 
-    private final BooleanProperty endField = new SimpleBooleanProperty(this, "endField");
+    private final BooleanProperty endField = new SimpleBooleanProperty(this,
+            "endField");
 
     public final BooleanProperty endFieldProperty() {
         return endField;
@@ -208,9 +217,11 @@ public class TimeRangeField extends ViewTypeControl {
         endFieldProperty().set(endField);
     }
 
-    private final ObservableList<TimeRangeFieldValue> values = FXCollections.observableArrayList();
+    private final ObservableList<TimeRangeFieldValue> values = FXCollections
+            .observableArrayList();
 
-    private final ObservableList<TimeRangeFieldValue> valuesUnmodifiable = FXCollections.unmodifiableObservableList(values);
+    private final ObservableList<TimeRangeFieldValue> valuesUnmodifiable = FXCollections
+            .unmodifiableObservableList(values);
 
     public ObservableList<TimeRangeFieldValue> getValues() {
         return valuesUnmodifiable;
@@ -218,10 +229,13 @@ public class TimeRangeField extends ViewTypeControl {
 
     // value support
 
-    private final ObjectProperty<TimeRangeFieldValue> value = new SimpleObjectProperty<TimeRangeFieldValue>(this, "value") {
+    private final ObjectProperty<TimeRangeFieldValue> value = new SimpleObjectProperty<TimeRangeFieldValue>(
+            this, "value") {
         @Override
         public void set(TimeRangeFieldValue newValue) {
-            super.set(requireNonNull(newValue));
+            if (newValue == null)
+                return;
+            super.set(newValue);
         }
     };
 
@@ -239,7 +253,8 @@ public class TimeRangeField extends ViewTypeControl {
 
     // on date support
 
-    private final ObjectProperty<LocalDate> onDate = new SimpleObjectProperty<>(this, "onDate");
+    private final ObjectProperty<LocalDate> onDate = new SimpleObjectProperty<>(
+            this, "onDate");
 
     public final ObjectProperty<LocalDate> onDateProperty() {
         return onDate;
@@ -255,7 +270,8 @@ public class TimeRangeField extends ViewTypeControl {
 
     // on week support
 
-    private final ObjectProperty<Integer> onWeekNumber = new SimpleObjectProperty<>(this, "onWeekNumber");
+    private final ObjectProperty<Integer> onWeekNumber = new SimpleObjectProperty<>(
+            this, "onWeekNumber");
 
     public final ObjectProperty<Integer> onWeekNumberProperty() {
         return onWeekNumber;
@@ -271,7 +287,8 @@ public class TimeRangeField extends ViewTypeControl {
 
     // month year support
 
-    private final ObjectProperty<Integer> monthYear = new SimpleObjectProperty<>(this, "monthYear");
+    private final ObjectProperty<Integer> monthYear = new SimpleObjectProperty<>(
+            this, "monthYear");
 
     public final ObjectProperty<Integer> monthYearProperty() {
         return monthYear;
@@ -287,7 +304,8 @@ public class TimeRangeField extends ViewTypeControl {
 
     // after units support
 
-    private final ObjectProperty<Integer> afterUnits = new SimpleObjectProperty<>(this, "afterUnits");
+    private final ObjectProperty<Integer> afterUnits = new SimpleObjectProperty<>(
+            this, "afterUnits");
 
     public final ObjectProperty<Integer> afterUnitsProperty() {
         return afterUnits;
@@ -310,7 +328,7 @@ public class TimeRangeField extends ViewTypeControl {
             }
         },
 
-        TOMORROW(2, "TimeRangeFieldValue.TOMORROW_LABEL") {
+        TOMORROW(2, "TimeRangeFieldValue.TOMORROW") {
             @Override
             public Collection<ViewType> getViewTypes() {
                 return Collections.singletonList(ViewType.DAY_VIEW);
@@ -448,7 +466,6 @@ public class TimeRangeField extends ViewTypeControl {
             }
         },
 
-
         SEPTEMBER(16, "TimeRangeFieldValue.SEPTEMBER_LABEL") {
             @Override
             public boolean isMonthValue() {
@@ -460,7 +477,6 @@ public class TimeRangeField extends ViewTypeControl {
                 return Collections.singletonList(ViewType.MONTH_VIEW);
             }
         },
-
 
         OCTOBER(17, "TimeRangeFieldValue.OCTOBER_LABEL") {
             @Override
@@ -474,7 +490,6 @@ public class TimeRangeField extends ViewTypeControl {
             }
         },
 
-
         NOVEMBER(18, "TimeRangeFieldValue.NOVEMBER_LABEL") {
             @Override
             public boolean isMonthValue() {
@@ -486,7 +501,6 @@ public class TimeRangeField extends ViewTypeControl {
                 return Collections.singletonList(ViewType.MONTH_VIEW);
             }
         },
-
 
         DECEMBER(19, "TimeRangeFieldValue.DECEMBER_LABEL") {
             @Override
@@ -510,7 +524,8 @@ public class TimeRangeField extends ViewTypeControl {
         AFTER(21, "TimeRangeFieldValue.AFTER_LABEL") {
             @Override
             public Collection<ViewType> getViewTypes() {
-                return Arrays.asList(ViewType.DAY_VIEW, ViewType.WEEK_VIEW, ViewType.MONTH_VIEW);
+                return Arrays.asList(ViewType.DAY_VIEW, ViewType.WEEK_VIEW,
+                        ViewType.MONTH_VIEW);
             }
         };
 
@@ -536,7 +551,8 @@ public class TimeRangeField extends ViewTypeControl {
 
         public abstract Collection<ViewType> getViewTypes();
 
-        public static List<TimeRangeFieldValue> getSelectablesForView(ViewType viewType, boolean endField) {
+        public static List<TimeRangeFieldValue> getSelectablesForView(
+                ViewType viewType, boolean endField) {
             List<TimeRangeFieldValue> allowedValues = new ArrayList<>();
 
             for (TimeRangeFieldValue value : values()) {
@@ -556,41 +572,41 @@ public class TimeRangeField extends ViewTypeControl {
 
         public static TimeRangeFieldValue getFromMonth(Month month) {
             switch (month) {
-                case JANUARY:
-                    return TimeRangeFieldValue.JANUARY;
+            case JANUARY:
+                return TimeRangeFieldValue.JANUARY;
 
-                case FEBRUARY:
-                    return TimeRangeFieldValue.FEBRUARY;
+            case FEBRUARY:
+                return TimeRangeFieldValue.FEBRUARY;
 
-                case MARCH:
-                    return TimeRangeFieldValue.MARCH;
+            case MARCH:
+                return TimeRangeFieldValue.MARCH;
 
-                case APRIL:
-                    return TimeRangeFieldValue.APRIL;
+            case APRIL:
+                return TimeRangeFieldValue.APRIL;
 
-                case MAY:
-                    return TimeRangeFieldValue.MAY;
+            case MAY:
+                return TimeRangeFieldValue.MAY;
 
-                case JUNE:
-                    return TimeRangeFieldValue.JUNE;
+            case JUNE:
+                return TimeRangeFieldValue.JUNE;
 
-                case JULY:
-                    return TimeRangeFieldValue.JULY;
+            case JULY:
+                return TimeRangeFieldValue.JULY;
 
-                case AUGUST:
-                    return TimeRangeFieldValue.AUGUST;
+            case AUGUST:
+                return TimeRangeFieldValue.AUGUST;
 
-                case SEPTEMBER:
-                    return TimeRangeFieldValue.SEPTEMBER;
+            case SEPTEMBER:
+                return TimeRangeFieldValue.SEPTEMBER;
 
-                case OCTOBER:
-                    return TimeRangeFieldValue.OCTOBER;
+            case OCTOBER:
+                return TimeRangeFieldValue.OCTOBER;
 
-                case NOVEMBER:
-                    return TimeRangeFieldValue.NOVEMBER;
+            case NOVEMBER:
+                return TimeRangeFieldValue.NOVEMBER;
 
-                default:
-                    return TimeRangeFieldValue.DECEMBER;
+            default:
+                return TimeRangeFieldValue.DECEMBER;
             }
         }
     }

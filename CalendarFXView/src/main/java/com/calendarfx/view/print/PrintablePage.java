@@ -16,12 +16,20 @@
 
 package com.calendarfx.view.print;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DetailedDayView;
 import com.calendarfx.view.DetailedWeekView;
 import com.calendarfx.view.MonthView;
 import com.calendarfx.view.print.PaperView.MarginType;
+
 import impl.com.calendarfx.view.print.PrintablePageSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -44,25 +52,26 @@ import javafx.scene.control.Skin;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Objects;
-
 /**
- * A control that is designed and laid out in such a way that it can be nicely printed.
- * The control is capable of switching between a day view, a week view, or a month view.
+ * A control that is designed and laid out in such a way that it can be nicely
+ * printed. The control is capable of switching between a day view, a week view,
+ * or a month view.
  */
 public class PrintablePage extends DateControl {
 
     public static final String DEFAULT_STYLE = "print-page";
+    public static final String INVALID_MARGIN = "The margin is invalid: ";
 
     private final PrintPeriodSplitter periodSplitter;
 
     private final DetailedDayView detailedDayView;
     private final DetailedWeekView detailedWeekView;
     private final MonthView monthView;
+    private final ObjectProperty<Map<ViewType, DateTimeFormatter>> formatterMapProperty = new SimpleObjectProperty<>(
+            this, "formatterMapProperty");
 
-    private final WeakEventHandler<MouseEvent> weakMouseHandler = new WeakEventHandler<>(Event::consume);
+    private final WeakEventHandler<MouseEvent> weakMouseHandler = new WeakEventHandler<>(
+            Event::consume);
 
     public PrintablePage() {
         getStyleClass().add(DEFAULT_STYLE);
@@ -72,58 +81,25 @@ public class PrintablePage extends DateControl {
         setFocusTraversable(false);
 
         // day view
-        detailedDayView = new DetailedDayView();
-        detailedDayView.setShowScrollBar(false);
-        detailedDayView.setShowToday(false);
-        detailedDayView.setEnableCurrentTimeMarker(false);
-        detailedDayView.weekFieldsProperty().bind(weekFieldsProperty());
-        detailedDayView.showAllDayViewProperty().bind(showAllDayEntriesProperty());
-        detailedDayView.showAgendaViewProperty().bind(showEntryDetailsProperty());
-        detailedDayView.layoutProperty().bind(layoutProperty());
-        detailedDayView.getDayView().setStartTime(LocalTime.MIN);
-        detailedDayView.getDayView().setEndTime(LocalTime.MAX);
-        detailedDayView.getDayView().setEarlyLateHoursStrategy(DayViewBase.EarlyLateHoursStrategy.HIDE);
-        detailedDayView.getDayView().setHoursLayoutStrategy(DayViewBase.HoursLayoutStrategy.FIXED_HOUR_COUNT);
-        detailedDayView.getDayView().setVisibleHours(24);
-        detailedDayView.dateProperty().bind(pageStartDateProperty());
-        detailedDayView.addEventFilter(MouseEvent.ANY, weakMouseHandler);
-        detailedDayView.getDayView().setTrimTimeBounds(true);
-
-        Bindings.bindContent(detailedDayView.getCalendarSources(), getCalendarSources());
-        Bindings.bindContent(detailedDayView.getCalendarVisibilityMap(), getCalendarVisibilityMap());
+        detailedDayView = createDetailedDayView();
+        Bindings.bindContent(detailedDayView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.bindContent(detailedDayView.getCalendarVisibilityMap(),
+                getCalendarVisibilityMap());
 
         // week view
-        detailedWeekView = new DetailedWeekView();
-        detailedWeekView.setShowScrollBar(false);
-        detailedWeekView.getWeekView().setShowToday(false);
-        detailedWeekView.layoutProperty().bind(layoutProperty());
-        detailedWeekView.setEnableCurrentTimeMarker(false);
-        detailedWeekView.showAllDayViewProperty().bind(showAllDayEntriesProperty());
-        detailedWeekView.weekFieldsProperty().bind(weekFieldsProperty());
-        detailedWeekView.setStartTime(LocalTime.MIN);
-        detailedWeekView.setEndTime(LocalTime.MAX);
-        detailedWeekView.setEarlyLateHoursStrategy(DayViewBase.EarlyLateHoursStrategy.HIDE);
-        detailedWeekView.setHoursLayoutStrategy(DayViewBase.HoursLayoutStrategy.FIXED_HOUR_COUNT);
-        detailedWeekView.setVisibleHours(24);
-        detailedWeekView.addEventFilter(MouseEvent.ANY, weakMouseHandler);
-        detailedWeekView.dateProperty().bind(pageStartDateProperty());
-        detailedWeekView.getWeekView().setTrimTimeBounds(true);
-
-        Bindings.bindContent(detailedWeekView.getCalendarSources(), getCalendarSources());
-        Bindings.bindContent(detailedWeekView.getCalendarVisibilityMap(), getCalendarVisibilityMap());
+        detailedWeekView = createDetailedWeekView();
+        Bindings.bindContent(detailedWeekView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.bindContent(detailedWeekView.getCalendarVisibilityMap(),
+                getCalendarVisibilityMap());
 
         // month view
-        monthView = new MonthView();
-        monthView.setShowToday(false);
-        monthView.setShowCurrentWeek(false);
-        monthView.weekFieldsProperty().bind(weekFieldsProperty());
-        monthView.showFullDayEntriesProperty().bind(showAllDayEntriesProperty());
-        monthView.showTimedEntriesProperty().bind(showTimedEntriesProperty());
-        monthView.addEventFilter(MouseEvent.ANY, weakMouseHandler);
-        monthView.dateProperty().bind(pageStartDateProperty());
-
-        Bindings.bindContent(monthView.getCalendarSources(), getCalendarSources());
-        Bindings.bindContentBidirectional(monthView.getCalendarVisibilityMap(), getCalendarVisibilityMap());
+        monthView = createMonthView();
+        Bindings.bindContent(monthView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.bindContentBidirectional(monthView.getCalendarVisibilityMap(),
+                getCalendarVisibilityMap());
 
         updateView();
         updateDimension();
@@ -132,6 +108,7 @@ public class PrintablePage extends DateControl {
         viewTypeProperty().addListener(obs -> updateView());
 
         periodSplitter = new PrintPeriodSplitter(this);
+        formatterMapProperty.set(new HashMap<>());
     }
 
     @Override
@@ -153,7 +130,8 @@ public class PrintablePage extends DateControl {
 
     // view type support
 
-    private final ObjectProperty<ViewType> viewType = new SimpleObjectProperty<ViewType>(this, "viewType", ViewType.DAY_VIEW) {
+    private final ObjectProperty<ViewType> viewType = new SimpleObjectProperty<ViewType>(
+            this, "viewType", ViewType.DAY_VIEW) {
         @Override
         public void set(ViewType newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -174,7 +152,8 @@ public class PrintablePage extends DateControl {
 
     // current view support (read-only)
 
-    private final ReadOnlyObjectWrapper<DateControl> view = new ReadOnlyObjectWrapper<DateControl>(this, "view") {
+    private final ReadOnlyObjectWrapper<DateControl> view = new ReadOnlyObjectWrapper<DateControl>(
+            this, "view") {
         @Override
         public void set(DateControl newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -194,10 +173,10 @@ public class PrintablePage extends DateControl {
         this.view.set(view);
     }
 
-
     // margin type support
 
-    private final ObjectProperty<MarginType> marginType = new SimpleObjectProperty<MarginType>(this, "marginType", MarginType.DEFAULT) {
+    private final ObjectProperty<MarginType> marginType = new SimpleObjectProperty<MarginType>(
+            this, "marginType", MarginType.DEFAULT) {
         @Override
         public void set(MarginType newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -205,7 +184,8 @@ public class PrintablePage extends DateControl {
     };
 
     /**
-     * A property used to store the currently requested margin type (custom, minimum, or default).
+     * A property used to store the currently requested margin type (custom,
+     * minimum, or default).
      *
      * @return the requested margin types
      */
@@ -225,19 +205,86 @@ public class PrintablePage extends DateControl {
     /**
      * Sets the value of {@link #marginTypeProperty()}.
      *
-     * @param type the margin type (custom, default, minimum)
+     * @param type
+     *            the margin type (custom, default, minimum)
      */
     public final void setMarginType(MarginType type) {
         marginTypeProperty().set(type);
     }
 
+    /**
+     * Object property which contains a Map with the Custom Date Time
+     * Formatters. Depending on which {@link ViewType} a Date Time Formatter is
+     * send.
+     * 
+     * @return the ObjectProperty
+     */
+    public ObjectProperty<Map<ViewType, DateTimeFormatter>> formatterMapProperty() {
+        return formatterMapProperty;
+    }
+
+    /**
+     * Gets the Formatter Map from the property.
+     * 
+     * @return the Formatter Map.
+     */
+    public Map<ViewType, DateTimeFormatter> getFormatterMap() {
+        return formatterMapProperty.get();
+    }
+
+    /**
+     * Sets the DateTimeFormatter on the Day Label located in the day page.
+     * Notice that this is also affecting the page that is going to be printed.
+     * 
+     * @param formatter
+     *            the DateTimeFormatter
+     */
+    public void setDayDateTimeFormatter(DateTimeFormatter formatter) {
+        if (getFormatterMap().get(ViewType.DAY_VIEW) == null) {
+            getFormatterMap().put(ViewType.DAY_VIEW, formatter);
+        } else {
+            getFormatterMap().replace(ViewType.DAY_VIEW, formatter);
+        }
+    }
+
+    /**
+     * Sets the DateTimeFormatter on the Week Label located in the week page.
+     * Notice that this is also affecting the page that is going to be printed.
+     * 
+     * @param formatter
+     *            the DateTimeFormatter
+     */
+    public void setWeekDateTimeFormatter(DateTimeFormatter formatter) {
+        if (getFormatterMap().get(ViewType.WEEK_VIEW) == null) {
+            getFormatterMap().put(ViewType.WEEK_VIEW, formatter);
+        } else {
+            getFormatterMap().replace(ViewType.WEEK_VIEW, formatter);
+        }
+    }
+
+    /**
+     * Sets the DateTimeFormatter on the Month Label located in the month page.
+     * Notice that this is also affecting the page that is going to be printed.
+     * 
+     * @param formatter
+     *            the DateTimeFormatter
+     */
+    public void setMonthDateTimeFormatter(DateTimeFormatter formatter) {
+        if (getFormatterMap().get(ViewType.MONTH_VIEW) == null) {
+            getFormatterMap().put(ViewType.MONTH_VIEW, formatter);
+        } else {
+            getFormatterMap().replace(ViewType.MONTH_VIEW, formatter);
+        }
+    }
+
     // top margin support
 
-    private final DoubleProperty topMargin = new SimpleDoubleProperty(this, "topMargin") {
+    private final DoubleProperty topMargin = new SimpleDoubleProperty(this,
+            "topMargin") {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException("The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
@@ -264,7 +311,8 @@ public class PrintablePage extends DateControl {
     /**
      * Sets the value of the {@link #topMarginProperty()}.
      *
-     * @param margin the top margin
+     * @param margin
+     *            the top margin
      */
     public final void setTopMargin(double margin) {
         topMarginProperty().set(margin);
@@ -272,11 +320,12 @@ public class PrintablePage extends DateControl {
 
     // right margin support
 
-    private final DoubleProperty rightMargin = new SimpleDoubleProperty(this, "rightMargin") {
+    private final DoubleProperty rightMargin = new SimpleDoubleProperty(this,
+            "rightMargin") {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException("The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
@@ -303,7 +352,8 @@ public class PrintablePage extends DateControl {
     /**
      * Sets the value of the {@link #rightMarginProperty()}.
      *
-     * @param margin the right margin
+     * @param margin
+     *            the right margin
      */
     public final void setRightMargin(double margin) {
         rightMarginProperty().set(margin);
@@ -311,11 +361,12 @@ public class PrintablePage extends DateControl {
 
     // bottom margin support
 
-    private final DoubleProperty bottomMargin = new SimpleDoubleProperty(this, "bottomMargin") {
+    private final DoubleProperty bottomMargin = new SimpleDoubleProperty(this,
+            "bottomMargin") {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException("The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
@@ -342,7 +393,8 @@ public class PrintablePage extends DateControl {
     /**
      * Sets the value of the {@link #bottomMarginProperty()}.
      *
-     * @param margin the bottom margin
+     * @param margin
+     *            the bottom margin
      */
     public final void setBottomMargin(double margin) {
         bottomMarginProperty().set(margin);
@@ -350,11 +402,12 @@ public class PrintablePage extends DateControl {
 
     // left margin support
 
-    private final DoubleProperty leftMargin = new SimpleDoubleProperty(this, "leftMargin") {
+    private final DoubleProperty leftMargin = new SimpleDoubleProperty(this,
+            "leftMargin") {
         @Override
         public void set(double newValue) {
             if (newValue < 0) {
-                throw new IllegalArgumentException("The margin is invalid: " + newValue);
+                throw new IllegalArgumentException(INVALID_MARGIN + newValue);
             }
             super.set(newValue);
         }
@@ -381,7 +434,8 @@ public class PrintablePage extends DateControl {
     /**
      * Sets the value of the {@link #leftMarginProperty()}.
      *
-     * @param margin the left margin
+     * @param margin
+     *            the left margin
      */
     public final void setLeftMargin(double margin) {
         leftMarginProperty().set(margin);
@@ -389,7 +443,8 @@ public class PrintablePage extends DateControl {
 
     // print start date support
 
-    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<LocalDate>(this, "printStartDate", getToday()) {
+    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<LocalDate>(
+            this, "printStartDate", getToday()) {
         @Override
         public void set(LocalDate newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -409,7 +464,8 @@ public class PrintablePage extends DateControl {
     }
 
     // print end date support
-    private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<LocalDate>(this, "printEndDate", getToday()) {
+    private final ObjectProperty<LocalDate> printEndDate = new SimpleObjectProperty<LocalDate>(
+            this, "printEndDate", getToday()) {
         @Override
         public void set(LocalDate newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -430,7 +486,8 @@ public class PrintablePage extends DateControl {
 
     // page start date support
 
-    private final ReadOnlyObjectWrapper<LocalDate> pageStartDate = new ReadOnlyObjectWrapper<>(this, "pageStartDate", getToday());
+    private final ReadOnlyObjectWrapper<LocalDate> pageStartDate = new ReadOnlyObjectWrapper<>(
+            this, "pageStartDate", getToday());
 
     public final ReadOnlyObjectProperty<LocalDate> pageStartDateProperty() {
         return pageStartDate.getReadOnlyProperty();
@@ -440,13 +497,14 @@ public class PrintablePage extends DateControl {
         return pageStartDate.get();
     }
 
-    private void setPageStartDate(LocalDate date) {
+    public void setPageStartDate(LocalDate date) {
         this.pageStartDate.set(date);
     }
 
     // page end date support
 
-    private final ReadOnlyObjectWrapper<LocalDate> pageEndDate = new ReadOnlyObjectWrapper<>(this, "pageEndDate", getToday());
+    private final ReadOnlyObjectWrapper<LocalDate> pageEndDate = new ReadOnlyObjectWrapper<>(
+            this, "pageEndDate", getToday());
 
     public final ReadOnlyObjectProperty<LocalDate> pageEndDateProperty() {
         return pageEndDate.getReadOnlyProperty();
@@ -462,7 +520,8 @@ public class PrintablePage extends DateControl {
 
     // paper support
 
-    private final ObjectProperty<Paper> paper = new SimpleObjectProperty<Paper>(this, "paper", Paper.A4) {
+    private final ObjectProperty<Paper> paper = new SimpleObjectProperty<Paper>(
+            this, "paper", Paper.A4) {
         @Override
         public void set(Paper newValue) {
             super.set(Objects.requireNonNull(newValue));
@@ -483,7 +542,8 @@ public class PrintablePage extends DateControl {
 
     // show all day entries support
 
-    private final BooleanProperty showAllDayEntries = new SimpleBooleanProperty(this, "showAllDayEntries", true);
+    private final BooleanProperty showAllDayEntries = new SimpleBooleanProperty(
+            this, "showAllDayEntries", true);
 
     public final BooleanProperty showAllDayEntriesProperty() {
         return showAllDayEntries;
@@ -499,7 +559,8 @@ public class PrintablePage extends DateControl {
 
     // show mini calendars support
 
-    private final BooleanProperty showMiniCalendars = new SimpleBooleanProperty(this, "showMiniCalendars", true);
+    private final BooleanProperty showMiniCalendars = new SimpleBooleanProperty(
+            this, "showMiniCalendars", true);
 
     public final BooleanProperty showMiniCalendarsProperty() {
         return showMiniCalendars;
@@ -515,7 +576,8 @@ public class PrintablePage extends DateControl {
 
     // show calendar keys support
 
-    private final BooleanProperty showCalendarKeys = new SimpleBooleanProperty(this, "showCalendarKeys", true);
+    private final BooleanProperty showCalendarKeys = new SimpleBooleanProperty(
+            this, "showCalendarKeys", true);
 
     public final BooleanProperty showCalendarKeysProperty() {
         return showCalendarKeys;
@@ -529,7 +591,8 @@ public class PrintablePage extends DateControl {
         showCalendarKeysProperty().set(show);
     }
 
-    private final BooleanProperty showTimedEntries = new SimpleBooleanProperty(this, "showTimedEntries", true);
+    private final BooleanProperty showTimedEntries = new SimpleBooleanProperty(
+            this, "showTimedEntries", true);
 
     public final BooleanProperty showTimedEntriesProperty() {
         return showTimedEntries;
@@ -543,7 +606,8 @@ public class PrintablePage extends DateControl {
         showTimedEntriesProperty().set(show);
     }
 
-    private final BooleanProperty showEntryDetails = new SimpleBooleanProperty(this, "showEntryDetails", true);
+    private final BooleanProperty showEntryDetails = new SimpleBooleanProperty(
+            this, "showEntryDetails", true);
 
     public final BooleanProperty showEntryDetailsProperty() {
         return showEntryDetails;
@@ -557,7 +621,8 @@ public class PrintablePage extends DateControl {
         showEntryDetailsProperty().set(show);
     }
 
-    private final ReadOnlyIntegerWrapper pageNumber = new ReadOnlyIntegerWrapper(this, "pageNumber");
+    private final ReadOnlyIntegerWrapper pageNumber = new ReadOnlyIntegerWrapper(
+            this, "pageNumber");
 
     public final ReadOnlyIntegerProperty pageNumberProperty() {
         return pageNumber.getReadOnlyProperty();
@@ -571,7 +636,8 @@ public class PrintablePage extends DateControl {
         this.pageNumber.set(number);
     }
 
-    private final ReadOnlyIntegerWrapper totalPages = new ReadOnlyIntegerWrapper(this, "totalPages");
+    private final ReadOnlyIntegerWrapper totalPages = new ReadOnlyIntegerWrapper(
+            this, "totalPages");
 
     public final ReadOnlyIntegerProperty totalPagesProperty() {
         return totalPages.getReadOnlyProperty();
@@ -596,48 +662,95 @@ public class PrintablePage extends DateControl {
     public final void bindPage(PrintablePage otherPage) {
         super.bind(otherPage, true);
 
-        Bindings.bindBidirectional(otherPage.viewTypeProperty(), viewTypeProperty());
+        Bindings.bindBidirectional(otherPage.viewTypeProperty(),
+                viewTypeProperty());
         Bindings.bindBidirectional(otherPage.paperProperty(), paperProperty());
-        Bindings.bindBidirectional(otherPage.showAllDayEntriesProperty(), showAllDayEntriesProperty());
-        Bindings.bindBidirectional(otherPage.showCalendarKeysProperty(), showCalendarKeysProperty());
-        Bindings.bindBidirectional(otherPage.showMiniCalendarsProperty(), showMiniCalendarsProperty());
-        Bindings.bindBidirectional(otherPage.showTimedEntriesProperty(), showTimedEntriesProperty());
-        Bindings.bindBidirectional(otherPage.printStartDateProperty(), printStartDateProperty());
-        Bindings.bindBidirectional(otherPage.printEndDateProperty(), printEndDateProperty());
+        Bindings.bindBidirectional(otherPage.showAllDayEntriesProperty(),
+                showAllDayEntriesProperty());
+        Bindings.bindBidirectional(otherPage.showCalendarKeysProperty(),
+                showCalendarKeysProperty());
+        Bindings.bindBidirectional(otherPage.showMiniCalendarsProperty(),
+                showMiniCalendarsProperty());
+        Bindings.bindBidirectional(otherPage.showTimedEntriesProperty(),
+                showTimedEntriesProperty());
+        Bindings.bindBidirectional(otherPage.printStartDateProperty(),
+                printStartDateProperty());
+        Bindings.bindBidirectional(otherPage.printEndDateProperty(),
+                printEndDateProperty());
+        Bindings.bindBidirectional(otherPage.formatterMapProperty(),
+                formatterMapProperty());
     }
 
     public final void unbindPage(PrintablePage otherPage) {
         super.unbind(otherPage);
 
-        Bindings.unbindBidirectional(otherPage.viewTypeProperty(), viewTypeProperty());
-        Bindings.unbindBidirectional(otherPage.paperProperty(), paperProperty());
-        Bindings.unbindBidirectional(otherPage.showAllDayEntriesProperty(), showAllDayEntriesProperty());
-        Bindings.unbindBidirectional(otherPage.showCalendarKeysProperty(), showCalendarKeysProperty());
-        Bindings.unbindBidirectional(otherPage.showMiniCalendarsProperty(), showMiniCalendarsProperty());
-        Bindings.unbindBidirectional(otherPage.showTimedEntriesProperty(), showTimedEntriesProperty());
-        Bindings.unbindBidirectional(otherPage.printStartDateProperty(), printStartDateProperty());
-        Bindings.unbindBidirectional(otherPage.printEndDateProperty(), printEndDateProperty());
+        Bindings.unbindBidirectional(otherPage.viewTypeProperty(),
+                viewTypeProperty());
+        Bindings.unbindBidirectional(otherPage.paperProperty(),
+                paperProperty());
+        Bindings.unbindBidirectional(otherPage.showAllDayEntriesProperty(),
+                showAllDayEntriesProperty());
+        Bindings.unbindBidirectional(otherPage.showCalendarKeysProperty(),
+                showCalendarKeysProperty());
+        Bindings.unbindBidirectional(otherPage.showMiniCalendarsProperty(),
+                showMiniCalendarsProperty());
+        Bindings.unbindBidirectional(otherPage.showTimedEntriesProperty(),
+                showTimedEntriesProperty());
+        Bindings.unbindBidirectional(otherPage.printStartDateProperty(),
+                printStartDateProperty());
+        Bindings.unbindBidirectional(otherPage.printEndDateProperty(),
+                printEndDateProperty());
+        Bindings.unbindBidirectional(otherPage.formatterMapProperty(),
+                formatterMapProperty());
     }
 
     private void updateView() {
         DateControl newView;
+        removeDataBindings();
 
         switch (getViewType()) {
-            case DAY_VIEW:
-                newView = detailedDayView;
-                break;
-            case WEEK_VIEW:
-                newView = detailedWeekView;
-                break;
-            case MONTH_VIEW:
-                newView = monthView;
-                break;
-            default:
-                throw new UnsupportedOperationException("unsupported view type: " + getViewType());
+        case DAY_VIEW:
+            newView = detailedDayView;
+            break;
+        case WEEK_VIEW:
+            newView = detailedWeekView;
+            break;
+        case MONTH_VIEW:
+            newView = monthView;
+            break;
+        default:
+            throw new UnsupportedOperationException(
+                    "unsupported view type: " + getViewType());
         }
 
+        Bindings.bindContent(newView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.bindContentBidirectional(newView.getCalendarVisibilityMap(),
+                getCalendarVisibilityMap());
         setView(newView);
         updateDimension();
+    }
+
+    /**
+     * Removes all bindings related with the calendar sources and visibility
+     * map.
+     */
+    private void removeDataBindings() {
+        Bindings.unbindContent(detailedDayView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.unbindContentBidirectional(
+                detailedDayView.getCalendarVisibilityMap(),
+                getCalendarVisibilityMap());
+        Bindings.unbindContent(detailedWeekView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.unbindContentBidirectional(
+                detailedWeekView.getCalendarVisibilityMap(),
+                getCalendarVisibilityMap());
+        Bindings.unbindContent(monthView.getCalendarSources(),
+                getCalendarSources());
+        Bindings.unbindContentBidirectional(
+                monthView.getCalendarVisibilityMap(),
+                getCalendarVisibilityMap());
     }
 
     private void updateDimension() {
@@ -651,7 +764,115 @@ public class PrintablePage extends DateControl {
         }
     }
 
-    private static final class PrintPeriodSplitter implements InvalidationListener {
+    /**
+     * Default configuration for Detailed Day view in the preview Pane.
+     * 
+     * @return
+     */
+    private DetailedDayView createDetailedDayView() {
+        DetailedDayView newDetailedDayView = new DetailedDayView();
+        newDetailedDayView.setShowScrollBar(false);
+        newDetailedDayView.setShowToday(false);
+        newDetailedDayView.setEnableCurrentTimeMarker(false);
+        newDetailedDayView.weekFieldsProperty().bind(weekFieldsProperty());
+        newDetailedDayView.showAllDayViewProperty()
+                .bind(showAllDayEntriesProperty());
+        newDetailedDayView.showAgendaViewProperty()
+                .bind(showEntryDetailsProperty());
+        newDetailedDayView.layoutProperty().bind(layoutProperty());
+        newDetailedDayView.dateProperty().bind(pageStartDateProperty());
+        newDetailedDayView.addEventFilter(MouseEvent.ANY, weakMouseHandler);
+        configureDetailedDayView(newDetailedDayView, true);
+        return newDetailedDayView;
+    }
+
+    /**
+     * The idea of this method is to be able to change the default configuration
+     * of the detailed day view in the preview pane.
+     * 
+     * Especially being able to show all the hours in the the print view
+     * 
+     * @param newDetailedDayView
+     *            view.
+     * @param trimTimeBounds
+     *            define if trim or not the hours in the day view
+     */
+    protected void configureDetailedDayView(DetailedDayView newDetailedDayView,
+            boolean trimTimeBounds) {
+        newDetailedDayView.getDayView().setStartTime(LocalTime.MIN);
+        newDetailedDayView.getDayView().setEndTime(LocalTime.MAX);
+        newDetailedDayView.getDayView().setEarlyLateHoursStrategy(
+                DayViewBase.EarlyLateHoursStrategy.HIDE);
+        newDetailedDayView.getDayView().setHoursLayoutStrategy(
+                DayViewBase.HoursLayoutStrategy.FIXED_HOUR_COUNT);
+        newDetailedDayView.getDayView().setVisibleHours(24);
+        newDetailedDayView.getDayView().setTrimTimeBounds(trimTimeBounds);
+    }
+
+    /**
+     * Default configuration for Detailed Week view in the preview Pane.
+     * 
+     * @return
+     */
+    private DetailedWeekView createDetailedWeekView() {
+        DetailedWeekView newDetailedWeekView = new DetailedWeekView();
+        newDetailedWeekView.setShowScrollBar(false);
+        newDetailedWeekView.layoutProperty().bind(layoutProperty());
+        newDetailedWeekView.setEnableCurrentTimeMarker(false);
+        newDetailedWeekView.showAllDayViewProperty()
+                .bind(showAllDayEntriesProperty());
+        newDetailedWeekView.weekFieldsProperty().bind(weekFieldsProperty());
+        newDetailedWeekView.setStartTime(LocalTime.MIN);
+        newDetailedWeekView.setEndTime(LocalTime.MAX);
+        newDetailedWeekView.setEarlyLateHoursStrategy(
+                DayViewBase.EarlyLateHoursStrategy.HIDE);
+        newDetailedWeekView.setHoursLayoutStrategy(
+                DayViewBase.HoursLayoutStrategy.FIXED_HOUR_COUNT);
+        newDetailedWeekView.setVisibleHours(24);
+        newDetailedWeekView.addEventFilter(MouseEvent.ANY, weakMouseHandler);
+        newDetailedWeekView.dateProperty().bind(pageStartDateProperty());
+        configureDetailedWeekView(newDetailedWeekView, true);
+        return newDetailedWeekView;
+    }
+
+    /**
+     * The idea of this method is to be able to change the default configuration
+     * of the detailed week view in the preview pane.
+     * 
+     * Especially being able to show all the hours in the the print view
+     * 
+     * @param newDetailedWeekView
+     *            view.
+     * @param trimTimeBounds
+     *            define if trim or not the hours in the week view
+     */
+    protected void configureDetailedWeekView(
+            DetailedWeekView newDetailedWeekView, boolean trimTimeBounds) {
+        newDetailedWeekView.getWeekView().setShowToday(false);
+        newDetailedWeekView.getWeekView().setTrimTimeBounds(trimTimeBounds);
+    }
+
+    /**
+     * Default configuration for Month view in the preview Pane.
+     * 
+     * @return
+     */
+    protected MonthView createMonthView() {
+        MonthView newMonthView = new MonthView();
+        newMonthView.setShowToday(false);
+        newMonthView.setShowCurrentWeek(false);
+        newMonthView.weekFieldsProperty().bind(weekFieldsProperty());
+        newMonthView.showFullDayEntriesProperty()
+                .bind(showAllDayEntriesProperty());
+        newMonthView.showTimedEntriesProperty()
+                .bind(showTimedEntriesProperty());
+        newMonthView.addEventFilter(MouseEvent.ANY, weakMouseHandler);
+        newMonthView.dateProperty().bind(pageStartDateProperty());
+        return newMonthView;
+    }
+
+    private static final class PrintPeriodSplitter
+            implements InvalidationListener {
 
         private PrintablePage page;
         private PageSlice slice;
@@ -673,7 +894,8 @@ public class PrintablePage extends DateControl {
             LocalDate printStart = page.getPrintStartDate();
             LocalDate printEnd = page.getPrintEndDate();
 
-            if (printStart == null || printEnd == null || printStart.isAfter(printEnd)) {
+            if (printStart == null || printEnd == null
+                    || printStart.isAfter(printEnd)) {
                 // Just in case, should never happen!
                 return;
             }
@@ -684,9 +906,12 @@ public class PrintablePage extends DateControl {
             int count = 0;
 
             do {
-                LocalDate pageEndDate = pageStartDate.plus(1, page.getViewType().getChronoUnit()).minusDays(1);
+                LocalDate pageEndDate = pageStartDate
+                        .plus(1, page.getViewType().getChronoUnit())
+                        .minusDays(1);
 
-                PageSlice next = new PageSlice(++count, pageStartDate, pageEndDate);
+                PageSlice next = new PageSlice(++count, pageStartDate,
+                        pageEndDate);
 
                 if (first == null) {
                     first = next;
@@ -698,8 +923,8 @@ public class PrintablePage extends DateControl {
 
                 pivot = next;
                 pageStartDate = pageEndDate.plusDays(1);
-            }
-            while (pageStartDate.isBefore(printEnd) || pageStartDate.isEqual(printEnd));
+            } while (pageStartDate.isBefore(printEnd)
+                    || pageStartDate.isEqual(printEnd));
 
             setSlice(first);
             page.setTotalPages(count);
@@ -786,5 +1011,5 @@ public class PrintablePage extends DateControl {
         }
 
     }
-}
 
+}

@@ -16,10 +16,15 @@
 
 package impl.com.calendarfx.view;
 
+import java.text.MessageFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.MonthEntryView;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.collections.ObservableList;
@@ -27,17 +32,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.shape.Circle;
 
-import java.text.MessageFormat;
-import java.time.format.DateTimeFormatter;
-
-import static java.time.format.FormatStyle.SHORT;
-
 @SuppressWarnings("javadoc")
 public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
-    private Label titleLabel;
-    private Label timeLabel;
-    private Circle colorDot;
+    private DateTimeFormatter formatter = DateTimeFormatter
+            .ofLocalizedTime(FormatStyle.SHORT);
+    protected Label titleLabel;
+    protected Label timeLabel;
+    protected Circle colorDot;
 
     public MonthEntryViewSkin(MonthEntryView view) {
         super(view);
@@ -82,30 +84,40 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
     }
 
     @Override
-    protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
+    protected void layoutChildren(double contentX, double contentY,
+            double contentWidth, double contentHeight) {
         double pw = 0;
 
         if (contentWidth > 120) {
             pw = timeLabel.prefWidth(-1);
-            timeLabel.resizeRelocate(snapPosition(contentX + contentWidth - pw), snapPosition(contentY), snapSize(pw), snapSize(contentHeight));
-            titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth - pw), snapSize(contentHeight));
+            timeLabel.resizeRelocate(snapPosition(contentX + contentWidth - pw),
+                    snapPosition(contentY), snapSize(pw),
+                    snapSize(contentHeight));
+            titleLabel.resizeRelocate(snapPosition(contentX),
+                    snapPosition(contentY), snapSize(contentWidth - pw),
+                    snapSize(contentHeight));
             timeLabel.setVisible(true);
         } else {
-            titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth - pw), snapSize(contentHeight));
+            titleLabel.resizeRelocate(snapPosition(contentX),
+                    snapPosition(contentY), snapSize(contentWidth - pw),
+                    snapSize(contentHeight));
             timeLabel.setVisible(false);
         }
     }
 
     @Override
-    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        return Math.max(titleLabel.prefHeight(-1), timeLabel.prefHeight(-1)) + topInset + bottomInset;
+    protected double computePrefHeight(double width, double topInset,
+            double rightInset, double bottomInset, double leftInset) {
+        return Math.max(titleLabel.prefHeight(-1), timeLabel.prefHeight(-1))
+                + topInset + bottomInset;
     }
 
     private InvalidationListener updateViewListener = it -> updateView();
 
-    private WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(updateViewListener);
+    private WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(
+            updateViewListener);
 
-    private void updateView() {
+    protected void updateView() {
         final MonthEntryView view = getSkinnable();
         Entry<?> entry = view.getEntry();
         final Calendar calendar = entry.getCalendar();
@@ -158,10 +170,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                                 + "-entry-small-time-label-full-day"); //$NON-NLS-1$
             }
         } else {
-            /*
-             * Calendar might be null when the entry is a "dummy" entry.
-             */
-
+            // Calendar might be null when the entry is a "dummy" entry.
             // color dot style
             colorDot.getStyleClass().setAll("default-style-icon-small"); //$NON-NLS-1$
 
@@ -187,57 +196,63 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
         }
 
         switch (view.getPosition()) {
-            case FIRST:
-            case ONLY:
-                titleLabel.setText(entry.getTitle());
-                if (!(entry.isFullDay() || entry.isMultiDay())) {
-                    titleLabel.setGraphic(colorDot);
-                }
-                break;
-            default:
-                /*
-                 * Blank string is important for layout purposes (title and time
-                 * might have different font sizes
-                 */
-                titleLabel.setText(" "); //$NON-NLS-1$
-                titleLabel.setGraphic(null);
-                break;
+        case FIRST:
+        case ONLY:
+            titleLabel.setText(entry.getTitle());
+            if (!(entry.isFullDay() || entry.isMultiDay())) {
+                titleLabel.setGraphic(colorDot);
+            }
+            break;
+        default:
+            // Blank string is important for layout purposes (title and time
+            // might have different font sizes
+            titleLabel.setText(" "); //$NON-NLS-1$
+            titleLabel.setGraphic(null);
+            break;
         }
 
-        styleClass.add("default-style-entry-small-" + view.getPosition().toString().toLowerCase());
+        styleClass.add("default-style-entry-small-"
+                + view.getPosition().toString().toLowerCase());
 
         // time label text
         if (!entry.isFullDay()) {
             if (entry.isMultiDay()) {
                 switch (view.getPosition()) {
-                    case LAST:
-                        timeLabel.setText(MessageFormat.format(
-                                Messages.getString("MonthEntryViewSkin.ENDS_AT"), //$NON-NLS-1$
-                                DateTimeFormatter.ofLocalizedTime(SHORT)
-                                        .format(entry.getEndTime())));
-                        break;
-                    case FIRST:
-                        /*
-                         * Only show it if the view is the first and represents the
-                         * start date of the entry. Views can be on first but
-                         * represent a date between start and end date of the entry
-                         * (e.g. when not shown in the first week of the entry time
-                         * interval).
-                         */
-                        if (view.getStartDate()
-                                .equals(entry.getStartDate())) {
-                            timeLabel.setText(
-                                    DateTimeFormatter.ofLocalizedTime(SHORT)
-                                            .format(entry.getStartTime()));
-                        }
-                        break;
-                    default:
-                        timeLabel.setText(""); //$NON-NLS-1$
-                        break;
+                case LAST:
+                    timeLabel.setText(MessageFormat.format(
+                            Messages.getString("MonthEntryViewSkin.ENDS_AT"), //$NON-NLS-1$
+                            getDateTimeFormatter().format(entry.getEndTime())));
+                    break;
+                case FIRST:
+                    /*
+                     * Only show it if the view is the first and represents the
+                     * start date of the entry. Views can be on first but
+                     * represent a date between start and end date of the entry
+                     * (e.g. when not shown in the first week of the entry time
+                     * interval).
+                     */
+                    if (view.getStartDate().equals(entry.getStartDate())) {
+                        timeLabel.setText(getDateTimeFormatter()
+                                .format(entry.getStartTime()));
+                    }
+                    break;
+                default:
+                    timeLabel.setText(""); //$NON-NLS-1$
+                    break;
                 }
             } else {
-                timeLabel.setText(DateTimeFormatter.ofLocalizedTime(SHORT).format(entry.getStartTime()));
+                timeLabel.setText(
+                        getDateTimeFormatter().format(entry.getStartTime()));
             }
         }
+    }
+
+    /**
+     * Sets the Date Time Format on the Label that shows the time.
+     * 
+     * @return the date time formatter.
+     */
+    protected DateTimeFormatter getDateTimeFormatter() {
+        return formatter;
     }
 }

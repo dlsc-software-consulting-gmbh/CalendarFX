@@ -16,7 +16,9 @@
 
 package impl.com.calendarfx.view.print;
 
+import com.calendarfx.view.Messages;
 import com.calendarfx.view.print.SettingsView;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -38,25 +40,40 @@ public class SettingsViewSkin extends SkinBase<SettingsView> {
         ScrollPane scrollPane = new ScrollPane(control.getSourceView());
         scrollPane.setPrefViewportHeight(180);
 
-        container.getChildren().addAll(
-                new SectionTitle("Paper"),
-                control.getPaperView(),
-                new SectionTitle("Time Range"),
-                control.getTimeRangeView(),
-                new SectionTitle("Calendars"),
-                scrollPane,
-                new SectionTitle("Options"),
-                control.getOptionsView());
+        container.getChildren()
+                .addAll(new SectionTitle(
+                        Messages.getString("PrintViewType.PAPER_TITLE_LABEL")),
+                        control.getPaperView(),
+                        new SectionTitle(Messages.getString(
+                                "PrintViewType.TIME_RANGE_TITLE_LABEL")),
+                        control.getTimeRangeView(),
+                        new SectionTitle(Messages.getString(
+                                "PrintViewType.SOURCE_VIEW_TITLE_LABEL")),
+                        scrollPane,
+                        new SectionTitle(Messages.getString(
+                                "PrintViewType.OPTIONS_TITLE_LABEL")),
+                        control.getOptionsView());
+
+        container.getChildren().removeIf(x -> {
+            if(!control.getOptionsView().isVisible()){
+                if (x instanceof SectionTitle){
+                    return ((SectionTitle) x).titleLabel.getText().equals(Messages.getString("PrintViewType.OPTIONS_TITLE_LABEL"));
+                }
+            }
+            return false;
+        });
 
         getChildren().add(container);
     }
 
     private static class SectionTitle extends HBox {
 
+        private Label titleLabel;
+
         public SectionTitle(String name) {
             getStyleClass().add("section-title");
 
-            Label titleLabel = new Label(name);
+            titleLabel = new Label(name);
             Separator separator = new Separator();
             separator.setPadding(new Insets(5, 0, 0, 0));
 
