@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.calendarfx</groupId>
     <artifactId>calendar</artifactId>
-    <version>8.4.2</version>
+    <version>8.5.0</version>
     <packaging>pom</packaging>
     <name>CalendarFX</name>
     <description>The parent project for the various CalendarFX modules.
@@ -12,6 +12,24 @@
     <organization>
         <name>Dirk Lemmermann Software &amp; Consulting</name>
     </organization>
+
+    <url>https://github.com/dlemmermann/CalendarFX</url>
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/dlemmermann/CalendarFX</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Dirk Lemmermann</name>
+            <email>dlemmermann@gmail.com</email>
+            <organization>DLSC</organization>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

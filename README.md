@@ -2,6 +2,9 @@
 A Java framework for creating sophisticated calendar views based on JavaFX. A detailed developer manual can be found online: http://dlsc.com/wp-content/html/calendarfx/manual.html
 
 [ ![Download](https://api.bintray.com/packages/dlsc-oss/repository/CalendarFX/images/download.svg) ](https://bintray.com/dlsc-oss/repository/CalendarFX/_latestVersion)
+[ ![Build](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master) ](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master)
+
+
 
 ![alt text](screenshot.png "Screenshot")
 
@@ -20,7 +23,7 @@ CalendarFX can be found on jcentral / bintray. Add the jcentral repository to yo
 	<dependency>
   		<groupId>com.calendarfx</groupId>
   		<artifactId>view</artifactId>
-  		<version>8.4.2</version>
+  		<version>8.5.0</version>
 	</dependency>
 </dependencies>
 ```
