@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
-import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayEntryView;
@@ -314,12 +313,11 @@ public class DayViewEditController {
 
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        if (isMinimumDuration(entry, entry.getEndAsLocalDateTime(), locationTime)) {
+        if (isMinimumDuration(entry, entry.getEndAsLocalDateTime(),
+                locationTime)) {
 
-            Interval interval = draggedEntry.getInterval();
-
-            LocalDate startDate = interval.getStartDate();
-            LocalDate endDate = interval.getEndDate();
+            LocalDate startDate;
+            LocalDate endDate;
 
             LocalTime startTime;
             LocalTime endTime;
@@ -360,12 +358,10 @@ public class DayViewEditController {
         if (isMinimumDuration(entry, entry.getStartAsLocalDateTime(),
                 locationTime)) {
 
-            Interval interval = draggedEntry.getInterval();
-
             LOGGER.finer("dragged entry: " + draggedEntry.getInterval());
 
-            LocalDate startDate = interval.getStartDate();
-            LocalDate endDate = interval.getEndDate();
+            LocalDate startDate;
+            LocalDate endDate;
 
             LocalTime startTime;
             LocalTime endTime;
