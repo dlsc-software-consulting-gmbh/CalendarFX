@@ -968,15 +968,15 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
             
             DateControl control = getDateControl();
             
-            if (!isMultiSelect(evt)) {
+            if (!isMultiSelect(evt) && !control.getSelections().contains(entry)) {
                 control.clearSelection();
-                control.getSelections().add(entry);
-            }else{
-                if(control.getSelections().contains(entry))
-                    control.deselect(entry);
-                else 
-                    control.getSelections().add(entry);
             }
+            
+            if(isMultiSelect(evt) && control.getSelections().contains(entry))
+                control.deselect(entry);
+            else if (!control.getSelections().contains(entry))
+                control.getSelections().add(entry);
+            
             getProperties().remove(disableFocusHandlingKey);
         }
     }
