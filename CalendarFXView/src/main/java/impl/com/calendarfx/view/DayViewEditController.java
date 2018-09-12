@@ -16,9 +16,16 @@
 
 package impl.com.calendarfx.view;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Objects;
+import java.util.logging.Logger;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
-import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayEntryView;
@@ -28,19 +35,12 @@ import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.WeekView;
+
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 public class DayViewEditController {
 
@@ -275,33 +275,29 @@ public class DayViewEditController {
         }
 
         switch (dragMode) {
-            case START_TIME:
-                switch (handle) {
-                    case TOP:
-                        changeStartTime(evt);
-                        break;
-                    case BOTTOM:
-                        changeStartTime(evt);
-                        break;
-                    case CENTER:
-                        break;
-                }
+        case START_TIME:
+            switch (handle) {
+            case TOP:
+            case BOTTOM:
+                changeStartTime(evt);
                 break;
-            case END_TIME:
-                switch (handle) {
-                    case TOP:
-                        changeEndTime(evt);
-                        break;
-                    case BOTTOM:
-                        changeEndTime(evt);
-                        break;
-                    case CENTER:
-                        break;
-                }
+            case CENTER:
                 break;
-            case START_AND_END_TIME:
-                changeStartAndEndTime(evt);
+            }
+            break;
+        case END_TIME:
+            switch (handle) {
+            case TOP:
+            case BOTTOM:
+                changeEndTime(evt);
                 break;
+            case CENTER:
+                break;
+            }
+            break;
+        case START_AND_END_TIME:
+            changeStartAndEndTime(evt);
+            break;
         }
     }
 
@@ -309,31 +305,37 @@ public class DayViewEditController {
         LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
         LocalDateTime time = grid(locationTime);
 
+        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
+            time = LocalDateTime.of(entry.getStartDate(), time.toLocalTime());
+        }
+
         LOGGER.finer("changing start time, time = " + time); //$NON-NLS-1$
 
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        if (isMinimumDuration(entry, entry.getEndAsLocalDateTime(), locationTime)) {
+        if (isMinimumDuration(entry, entry.getEndAsLocalDateTime(),
+                locationTime)) {
 
-            Interval interval = draggedEntry.getInterval();
-
-            LocalDate startDate = interval.getStartDate();
-            LocalDate endDate = interval.getEndDate();
+            LocalDate startDate;
+            LocalDate endDate;
 
             LocalTime startTime;
             LocalTime endTime;
 
-            if (locationTime.isAfter(entry.getEndAsLocalDateTime())) {
+            if (time.isAfter(entry.getEndAsLocalDateTime())) {
                 startTime = entry.getEndTime();
+                startDate = entry.getEndDate();
                 endTime = time.toLocalTime();
                 endDate = time.toLocalDate();
             } else {
                 startDate = time.toLocalDate();
                 startTime = time.toLocalTime();
                 endTime = entry.getEndTime();
+                endDate = entry.getEndDate();
             }
 
-            LOGGER.finer("new interval: sd = " + startDate + ", st = " + startTime + ", ed = " + endDate + ", et = " + endTime);
+            LOGGER.finer("new interval: sd = " + startDate + ", st = "
+                    + startTime + ", ed = " + endDate + ", et = " + endTime);
 
             draggedEntry.setInterval(startDate, startTime, endDate, endTime);
 
@@ -345,33 +347,39 @@ public class DayViewEditController {
         LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
         LocalDateTime time = grid(locationTime);
 
-        LOGGER.finer("changing end time, time = " + time); //$NON-NLS-1$
-
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        if (isMinimumDuration(entry, entry.getStartAsLocalDateTime(), locationTime)) {
+        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
+            time = LocalDateTime.of(entry.getEndDate(), time.toLocalTime());
+        }
 
-            Interval interval = draggedEntry.getInterval();
+        LOGGER.finer("changing end time, time = " + time); //$NON-NLS-1$
+
+        if (isMinimumDuration(entry, entry.getStartAsLocalDateTime(),
+                locationTime)) {
 
             LOGGER.finer("dragged entry: " + draggedEntry.getInterval());
 
-            LocalDate startDate = interval.getStartDate();
-            LocalDate endDate = interval.getEndDate();
+            LocalDate startDate;
+            LocalDate endDate;
 
             LocalTime startTime;
             LocalTime endTime;
 
-            if (locationTime.isBefore(entry.getStartAsLocalDateTime())) {
+            if (time.isBefore(entry.getStartAsLocalDateTime())) {
                 endTime = entry.getStartTime();
+                endDate = entry.getStartDate();
                 startTime = time.toLocalTime();
                 startDate = time.toLocalDate();
             } else {
                 startTime = entry.getStartTime();
+                startDate = entry.getStartDate();
                 endTime = time.toLocalTime();
                 endDate = time.toLocalDate();
             }
 
-            LOGGER.finer("new interval: sd = " + startDate + ", st = " + startTime + ", ed = " + endDate + ", et = " + endTime);
+            LOGGER.finer("new interval: sd = " + startDate + ", st = "
+                    + startTime + ", ed = " + endDate + ", et = " + endTime);
 
             draggedEntry.setInterval(startDate, startTime, endDate, endTime);
 

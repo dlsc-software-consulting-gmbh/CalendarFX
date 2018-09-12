@@ -16,6 +16,30 @@
 
 package com.calendarfx.view;
 
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
+import static java.util.Objects.requireNonNull;
+import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
+
+import java.text.MessageFormat;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
+import org.controlsfx.control.PropertySheet.Item;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -24,6 +48,7 @@ import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
 import com.calendarfx.view.popover.EntryPopOverContentPane;
+
 import impl.com.calendarfx.view.ViewHelper;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -59,31 +84,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PopOver.ArrowLocation;
-import org.controlsfx.control.PropertySheet.Item;
-
-import java.text.MessageFormat;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-import static java.util.Objects.requireNonNull;
-import static javafx.scene.control.SelectionMode.MULTIPLE;
-import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
-import static javafx.scene.input.MouseButton.PRIMARY;
 
 /**
  * The superclass for all controls that are showing calendar information. This
@@ -425,7 +425,6 @@ public abstract class DateControl extends CalendarFXControl {
 
         addEventFilter(MouseEvent.MOUSE_PRESSED, evt -> {
             maybeHidePopOvers();
-            performSelection(evt);
         });
     }
 
@@ -462,48 +461,6 @@ public abstract class DateControl extends CalendarFXControl {
         getBoundDateControls().forEach(DateControl::refreshData);
     }
 
-    private void performSelection(MouseEvent evt) {
-        if ((evt.getButton().equals(PRIMARY) || evt.isPopupTrigger()) && evt.getClickCount() == 1) {
-
-            Entry<?> entry;
-            EntryViewBase<?> view = null;
-
-            if (evt.getTarget() instanceof EntryViewBase) {
-                view = (EntryViewBase<?>) evt.getTarget();
-            }
-
-            if (view == null) {
-                return;
-            }
-
-            String disableFocusHandlingKey = "disable-focus-handling"; //$NON-NLS-1$
-
-            view.getProperties().put(disableFocusHandlingKey, true);
-            view.requestFocus();
-
-            entry = view.getEntry();
-
-            if (entry != null) {
-
-                if (!isMultiSelect(evt) && !getSelections().contains(entry)) {
-                    clearSelection();
-                }
-
-                if (isMultiSelect(evt) && getSelections().contains(entry)) {
-                    getSelections().remove(entry);
-                } else if (!getSelections().contains(entry)) {
-                    getSelections().add(entry);
-                }
-            }
-
-            view.getProperties().remove(disableFocusHandlingKey);
-
-        }
-    }
-
-    private boolean isMultiSelect(MouseEvent evt) {
-        return (evt.isShiftDown() || evt.isShortcutDown()) && getSelectionMode().equals(MULTIPLE);
-    }
 
     /**
      * Creates a new calendar source that will be added to the list of calendar

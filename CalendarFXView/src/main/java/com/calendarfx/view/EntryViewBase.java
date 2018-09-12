@@ -16,10 +16,22 @@
 
 package com.calendarfx.view;
 
+import static java.util.Objects.requireNonNull;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
+import static javafx.scene.input.MouseButton.PRIMARY;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
+
+import org.controlsfx.control.PropertySheet;
+import org.controlsfx.control.PropertySheet.Item;
+
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.EntryContextMenuParameter;
 import com.calendarfx.view.DateControl.EntryDetailsParameter;
+
 import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
@@ -45,14 +57,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.control.PropertySheet.Item;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * The base class for all views that are representing calendar entries. There
@@ -212,6 +216,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
             boolean contains = selections.contains(entry);
             selected.set(contains);
         });
+        
+        addEventHandler(MouseEvent.MOUSE_PRESSED, this::performSelection);
 
         bindEntry(entry);
     }
@@ -953,4 +959,30 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         return items;
     }
+
+    private void performSelection(MouseEvent evt) {
+        if ((evt.getButton().equals(PRIMARY) || evt.isPopupTrigger()) && evt.getClickCount() == 1) {
+            String disableFocusHandlingKey = "disable-focus-handling";
+            getProperties().put(disableFocusHandlingKey, true);
+            requestFocus();
+            
+            DateControl control = getDateControl();
+            
+            if (!isMultiSelect(evt) && !control.getSelections().contains(entry)) {
+                control.clearSelection();
+            }
+            
+            if(isMultiSelect(evt) && control.getSelections().contains(entry))
+                control.deselect(entry);
+            else if (!control.getSelections().contains(entry))
+                control.getSelections().add(entry);
+            
+            getProperties().remove(disableFocusHandlingKey);
+        }
+    }
+    
+    private boolean isMultiSelect(MouseEvent evt) {
+        return (evt.isShiftDown() || evt.isShortcutDown()) && getDateControl().getSelectionMode().equals(MULTIPLE);
+    }
+    
 }
