@@ -100,10 +100,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
+                <version>3.0.1</version>
                 <configuration>
                     <windowtitle>CalendarFX API</windowtitle>
-                    <aggregate>true</aggregate>
                     <show>protected</show>
                     <failOnError>false</failOnError>
                 </configuration>
