@@ -9,7 +9,7 @@ A Java framework for creating sophisticated calendar views based on JavaFX. A de
 ![alt text](screenshot.png "Screenshot")
 
 # Repository Coordinates
-CalendarFX can be found on jcentral / bintray. Add the jcentral repository to your pom file and include the CalendarFX dependency.
+CalendarFX can be found on jcenter / bintray and also on maven central. For maven central you simply have to add the dependency to the CalendarFX "view" artifact. For jcenter you also need to add the jcenter repository to your pom file.
 
 ```XML
 <repositories>
