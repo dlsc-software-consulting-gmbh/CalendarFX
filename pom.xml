@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.calendarfx</groupId>
     <artifactId>calendar</artifactId>
-    <version>8.5.0</version>
+    <version>10.5.0</version>
     <packaging>pom</packaging>
     <name>CalendarFX</name>
     <description>The parent project for the various CalendarFX modules.
@@ -60,10 +60,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>10</source>
+                    <target>10</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -100,7 +100,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
+                <version>2.10.3</version>
                 <configuration>
                     <windowtitle>CalendarFX API</windowtitle>
                     <aggregate>true</aggregate>
