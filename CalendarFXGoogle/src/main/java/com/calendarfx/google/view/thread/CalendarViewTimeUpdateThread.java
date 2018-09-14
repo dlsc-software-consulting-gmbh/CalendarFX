@@ -29,7 +29,7 @@ import java.time.LocalTime;
  */
 public class CalendarViewTimeUpdateThread extends Thread {
 
-    private static final int TEN_SECONDS = 10_1000;
+    private static final int TEN_SECONDS = 10000;
 
     private final CalendarView calendarView;
 
