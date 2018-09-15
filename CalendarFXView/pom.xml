@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>11.4.2</version>
+        <version>11.5.0</version>
     </parent>
 
     <repositories>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>recurrence</artifactId>
-            <version>11.4.2</version>
+            <version>11.5.0</version>
         </dependency>
 
         <dependency>
@@ -129,7 +129,6 @@
                 <version>3.0.1</version>
                 <configuration>
                     <windowtitle>CalendarFX API</windowtitle>
-                    <javadocExecutable>/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home/bin/javadoc</javadocExecutable>
                     <failOnError>false</failOnError>
                     <force>true</force>
                 </configuration>
