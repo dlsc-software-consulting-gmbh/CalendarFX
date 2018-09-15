@@ -53,6 +53,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>11-ea+25</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>recurrence</artifactId>
             <version>11.5.0</version>
@@ -61,7 +67,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>9.0.0</version>
+            <version>9.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

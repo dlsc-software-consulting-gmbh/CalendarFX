@@ -17,7 +17,6 @@
 package com.calendarfx.google;
 
 import com.calendarfx.google.view.GoogleCalendarAppView;
-import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.CalendarView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -29,9 +28,7 @@ import java.time.LocalTime;
 public class GoogleCalendarApp extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        LoggingDomain.CONFIG.info("Java version: " + System.getProperty("java.version"));
-
+    public void start(Stage primaryStage) {
         CalendarView calendarView = new CalendarView();
         calendarView.setToday(LocalDate.now());
         calendarView.setTime(LocalTime.now());
