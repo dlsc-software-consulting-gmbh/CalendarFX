@@ -1,5 +1,3 @@
-import com.calendarfx.demo.CalendarFXSamplerProject;
-
 module com.calendarfx.sampler {
     requires com.calendarfx.view;
     requires javafx.graphics;
@@ -16,5 +14,5 @@ module com.calendarfx.sampler {
     exports com.calendarfx.demo.print;
     exports com.calendarfx.demo.views;
 
-    provides fxsampler.FXSamplerProject with CalendarFXSamplerProject;
+    provides fxsampler.FXSamplerProject with com.calendarfx.demo.CalendarFXSamplerProject;
 }
