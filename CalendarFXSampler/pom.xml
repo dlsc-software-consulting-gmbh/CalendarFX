@@ -47,6 +47,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>11-ea+25</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
             <version>11.4.2</version>
@@ -62,7 +68,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>fxsampler</artifactId>
-            <version>1.0.8</version>
+            <version>1.0.9</version>
         </dependency>
 
     </dependencies>
