@@ -16,41 +16,13 @@
 
 package impl.com.calendarfx.view;
 
-import static com.calendarfx.view.RequestEvent.REQUEST_DATE;
-import static com.calendarfx.view.RequestEvent.REQUEST_DATE_TIME;
-import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
-import static com.calendarfx.view.RequestEvent.REQUEST_WEEK;
-import static com.calendarfx.view.RequestEvent.REQUEST_YEAR;
-import static com.calendarfx.view.RequestEvent.REQUEST_YEAR_MONTH;
-import static com.calendarfx.view.YearMonthView.ClickBehaviour.PERFORM_SELECTION;
-import static javafx.geometry.Side.RIGHT;
-import static javafx.scene.control.SelectionMode.SINGLE;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.controlsfx.control.MasterDetailPane;
-import org.controlsfx.control.SegmentedButton;
-import org.controlsfx.control.textfield.CustomTextField;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
-import com.calendarfx.view.CalendarFXControl;
-import com.calendarfx.view.CalendarView;
-import com.calendarfx.view.DeveloperConsole;
-import com.calendarfx.view.Messages;
-import com.calendarfx.view.SearchResultView;
-import com.calendarfx.view.SourceView;
-import com.calendarfx.view.YearMonthView;
-import com.calendarfx.view.page.DayPage;
-import com.calendarfx.view.page.MonthPage;
-import com.calendarfx.view.page.PageBase;
-import com.calendarfx.view.page.WeekPage;
-import com.calendarfx.view.page.YearPage;
+import com.calendarfx.view.*;
+import com.calendarfx.view.page.*;
 import com.calendarfx.view.print.PrintView;
 import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
-
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.animation.Animation.Status;
@@ -62,30 +34,26 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.geometry.Side;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
-import javafx.scene.control.SkinBase;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.SegmentedButton;
+import org.controlsfx.control.textfield.CustomTextField;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.calendarfx.view.RequestEvent.*;
+import static com.calendarfx.view.YearMonthView.ClickBehaviour.PERFORM_SELECTION;
+import static javafx.geometry.Side.RIGHT;
+import static javafx.scene.control.SelectionMode.SINGLE;
 
 public class CalendarViewSkin extends SkinBase<CalendarView> {
 
@@ -167,6 +135,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 		this.trayButton.setId("show-tray-button");
 		
 		this.loadScheduleButton = new Button();
+		this.loadScheduleButton.setId("load-schedule-button");
+		this.loadScheduleButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		this.loadScheduleButton.setOnAction(evt -> manager.loadSchedule());
 		
 		this.addCalendarButton = new Button();
 		this.addCalendarButton.setId("add-calendar-button");
