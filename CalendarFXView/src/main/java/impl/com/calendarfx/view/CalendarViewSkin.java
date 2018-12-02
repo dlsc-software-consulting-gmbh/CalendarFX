@@ -91,7 +91,10 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
 	private MasterDetailPane leftMasterDetailPane;
 	private ToggleButton trayButton;
-	private Button addCalendarButton;
+	public Button addCalendarButton;
+	public Button loadScheduleButton;
+	public Button syncScheduleButton;
+	
 	private Button printButton;
 	private SearchResultView searchResultView;
 	private StackPane stackPane;
@@ -106,7 +109,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 	private ToggleButton showMonth;
 	private ToggleButton showWeek;
 	private ToggleButton showDay;
-	private HBox leftToolBarBox;
+	public HBox leftToolBarBox;
 	private SegmentedButton switcher;
 
 	private SourceView sourceView;
@@ -162,6 +165,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 		this.trayButton = new ToggleButton(
 				Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY")); //$NON-NLS-1$
 		this.trayButton.setId("show-tray-button");
+		
+		this.loadScheduleButton = new Button();
+		
 		this.addCalendarButton = new Button();
 		this.addCalendarButton.setId("add-calendar-button");
 		this.addCalendarButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
