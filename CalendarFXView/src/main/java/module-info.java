@@ -1,6 +1,6 @@
 module com.calendarfx.view {
 
-    requires controlsfx;
+    requires org.controlsfx.controls;
     requires javafx.controls;
     requires javafx.fxml;
     requires java.logging;

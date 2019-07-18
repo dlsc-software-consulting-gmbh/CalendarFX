@@ -6,7 +6,7 @@ module com.calendarfx.google {
     requires javafx.graphics;
     requires de.jensd.fx.glyphs.fontawesome;
     requires guava.jdk5;
-    requires controlsfx;
+    requires org.controlsfx.controls;
     requires google.http.client;
     requires javafx.controls;
     requires javafx.web;
