@@ -18,7 +18,6 @@ package com.calendarfx.view;
 
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.Util;
-import com.google.ical.values.RRule;
 import impl.com.calendarfx.view.RecurrenceViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -27,6 +26,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Skin;
+import net.fortuna.ical4j.model.Recur;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -101,7 +101,7 @@ public class RecurrenceView extends CalendarFXControl {
         public void set(String newValue) {
             try {
                 if (newValue != null) {
-                    new RRule(newValue);
+                    new Recur(newValue.replaceFirst("^RRULE:", ""));
                 }
                 super.set(newValue);
             } catch (ParseException e) {
