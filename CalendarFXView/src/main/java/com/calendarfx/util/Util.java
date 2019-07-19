@@ -18,11 +18,6 @@ package com.calendarfx.util;
 
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
-import com.google.ical.values.DateValue;
-import com.google.ical.values.Frequency;
-import com.google.ical.values.RRule;
-import com.google.ical.values.Weekday;
-import com.google.ical.values.WeekdayNum;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.WeakListener;
@@ -31,15 +26,20 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollBar;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.WeekDay;
+import net.fortuna.ical4j.model.WeekDayList;
+import net.fortuna.ical4j.model.Recur.Frequency;
 
 import java.lang.ref.WeakReference;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.List;
 import java.util.Objects;
 
 import static java.time.temporal.ChronoField.DAY_OF_WEEK;
@@ -75,13 +75,13 @@ public class Util {
                                               LocalDate startDate) {
 
         try {
-            RRule rule = new RRule(rrule);
+            Recur rule = new Recur(rrule.replaceFirst("^RRULE:", ""));
             StringBuilder sb = new StringBuilder();
 
             String granularity = ""; //$NON-NLS-1$
             String granularities = ""; //$NON-NLS-1$
 
-            switch (rule.getFreq()) {
+            switch (rule.getFrequency()) {
                 case DAILY:
                     granularity = Messages.getString("Util.DAY"); //$NON-NLS-1$
                     granularities = Messages.getString("Util.DAYS"); //$NON-NLS-1$
@@ -124,13 +124,13 @@ public class Util {
              * Weekdays
              */
 
-            if (rule.getFreq().equals(Frequency.WEEKLY)) {
-                List<WeekdayNum> byDay = rule.getByDay();
+            if (rule.getFrequency().equals(Frequency.WEEKLY)) {
+                WeekDayList byDay = rule.getDayList();
                 if (!byDay.isEmpty()) {
                     sb.append(Messages.getString("Util.ON_WEEKDAY")); //$NON-NLS-1$
                     for (int i = 0; i < byDay.size(); i++) {
-                        WeekdayNum num = byDay.get(i);
-                        sb.append(makeHuman(num.wday));
+                        WeekDay num = byDay.get(i);
+                        sb.append(makeHuman(num.getDay()));
                         if (i < byDay.size() - 1) {
                             sb.append(", "); //$NON-NLS-1$
                         }
@@ -138,28 +138,28 @@ public class Util {
                 }
             }
 
-            if (rule.getFreq().equals(Frequency.MONTHLY)) {
+            if (rule.getFrequency().equals(Frequency.MONTHLY)) {
 
-                if (rule.getByMonthDay().length > 0) {
+                if (!rule.getMonthDayList().isEmpty()) {
 
-                    int day = rule.getByMonthDay()[0];
+                    int day = rule.getMonthDayList().get(0);
                     sb.append(Messages.getString("Util.ON_MONTH_DAY")); //$NON-NLS-1$
                     sb.append(day);
 
-                } else if (!rule.getByDay().isEmpty()) {
+                } else if (!rule.getDayList().isEmpty()) {
 
                     /*
                      * We only support one day.
                      */
-                    WeekdayNum num = rule.getByDay().get(0);
+                    WeekDay num = rule.getDayList().get(0);
 
                     sb.append(MessageFormat.format(Messages.getString("Util.ON_MONTH_WEEKDAY"), //$NON-NLS-1$
-                            makeHuman(num.num), makeHuman(num.wday)));
+                            makeHuman(num.getOffset()), makeHuman(num.getDay())));
 
                 }
             }
 
-            if (rule.getFreq().equals(Frequency.YEARLY)) {
+            if (rule.getFrequency().equals(Frequency.YEARLY)) {
                 sb.append(MessageFormat.format(Messages.getString("Util.ON_DATE"), DateTimeFormatter //$NON-NLS-1$
                         .ofPattern(Messages.getString("Util.MONTH_AND_DAY_FORMAT")).format(startDate))); //$NON-NLS-1$
             }
@@ -172,10 +172,9 @@ public class Util {
                     sb.append(MessageFormat.format(Messages.getString("Util.TIMES"), count)); //$NON-NLS-1$
                 }
             } else {
-                DateValue until = rule.getUntil();
+                Date until = rule.getUntil();
                 if (until != null) {
-                    LocalDate localDate = LocalDate.of(until.year(),
-                            until.month(), until.day());
+                    LocalDate localDate = until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     sb.append(
                             MessageFormat.format(Messages.getString("Util.UNTIL_DATE"), //$NON-NLS-1$
                                     DateTimeFormatter
@@ -191,7 +190,7 @@ public class Util {
         }
     }
 
-    private static String makeHuman(Weekday wday) {
+    private static String makeHuman(WeekDay.Day wday) {
         switch (wday) {
             case FR:
                 return Messages.getString("Util.FRIDAY"); //$NON-NLS-1$
