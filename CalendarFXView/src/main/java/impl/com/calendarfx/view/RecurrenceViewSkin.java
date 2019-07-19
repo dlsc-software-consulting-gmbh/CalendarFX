@@ -20,13 +20,6 @@ import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.Util;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RecurrenceView;
-import com.google.ical.compat.javatime.LocalDateIterator;
-import com.google.ical.compat.javatime.LocalDateIteratorFactory;
-import com.google.ical.values.DateValue;
-import com.google.ical.values.DateValueImpl;
-import com.google.ical.values.RRule;
-import com.google.ical.values.Weekday;
-import com.google.ical.values.WeekdayNum;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
@@ -43,6 +36,14 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.NumberList;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.WeekDay;
+import net.fortuna.ical4j.model.WeekDayList;
+import net.fortuna.ical4j.model.WeekDay.Day;
+import net.fortuna.ical4j.model.parameter.Value;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -51,8 +52,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
@@ -312,8 +311,8 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             if (rule == null) {
                 return;
             }
-            RRule rrule = new RRule(rule);
-            switch (rrule.getFreq()) {
+            Recur rrule = new Recur(rule.replaceFirst("^RRULE:", ""));
+            switch (rrule.getFrequency()) {
                 case DAILY:
                     frequencyBox.setValue(Frequency.DAILY);
                     repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.DAYS")); //$NON-NLS-1$
@@ -334,25 +333,25 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
                 case HOURLY:
                 case MINUTELY:
                     throw new IllegalArgumentException(
-                            "unsupported frequency: " + rrule.getFreq()); //$NON-NLS-1$
+                            "unsupported frequency: " + rrule.getFrequency()); //$NON-NLS-1$
                 default:
                     throw new IllegalArgumentException(
-                            "unknown frequency: " + rrule.getFreq()); //$NON-NLS-1$
+                            "unknown frequency: " + rrule.getFrequency()); //$NON-NLS-1$
 
             }
 
-            DateValue until = rrule.getUntil();
+            Date until = rrule.getUntil();
             if (until != null) {
                 endsOnButton.setSelected(true);
                 endsOnDatePicker.setValue(
-                        LocalDate.of(until.year(), until.month(), until.day()));
+                        until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             } else if (rrule.getCount() > 0) {
                 endsAfterButton.setSelected(true);
             } else {
                 endsNeverButton.setSelected(true);
             }
 
-            if (rrule.getByMonthDay().length > 0) {
+            if (!rrule.getMonthDayList().isEmpty()) {
                 repeatByDayOfTheMonth.setSelected(true);
             } else {
                 repeatByDayOfTheWeek.setSelected(true);
@@ -361,15 +360,15 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             repeatCountSpinnerValueFactory.setValue(rrule.getInterval());
             endsAfterCounterSpinnerValueFactory.setValue(rrule.getCount());
 
-            List<WeekdayNum> days = rrule.getByDay();
+            WeekDayList days = rrule.getDayList();
 
-            weekDayMondayButton.setSelected(isSelected(Weekday.MO, days));
-            weekDayTuesdayButton.setSelected(isSelected(Weekday.TU, days));
-            weekDayWednesdayButton.setSelected(isSelected(Weekday.WE, days));
-            weekDayThursdayButton.setSelected(isSelected(Weekday.TH, days));
-            weekDayFridayButton.setSelected(isSelected(Weekday.FR, days));
-            weekDaySaturdayButton.setSelected(isSelected(Weekday.SA, days));
-            weekDaySundayButton.setSelected(isSelected(Weekday.SU, days));
+            weekDayMondayButton.setSelected(isSelected(Day.MO, days));
+            weekDayTuesdayButton.setSelected(isSelected(Day.TU, days));
+            weekDayWednesdayButton.setSelected(isSelected(Day.WE, days));
+            weekDayThursdayButton.setSelected(isSelected(Day.TH, days));
+            weekDayFridayButton.setSelected(isSelected(Day.FR, days));
+            weekDaySaturdayButton.setSelected(isSelected(Day.SA, days));
+            weekDaySundayButton.setSelected(isSelected(Day.SU, days));
 
             summary.setText(Util.convertRFC2445ToText(rule,
                     getSkinnable().getStartDate()));
@@ -382,9 +381,9 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
                         .format(getSkinnable().getStartDate()));
     }
 
-    private boolean isSelected(Weekday day, List<WeekdayNum> days) {
-        for (WeekdayNum num : days) {
-            if (num.wday.equals(day)) {
+    private boolean isSelected(WeekDay.Day day, WeekDayList days) {
+        for (WeekDay num : days) {
+            if (num.getDay().equals(day)) {
                 return true;
             }
         }
@@ -393,19 +392,19 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
     }
 
     private void updateRule() {
-        RRule rule = new RRule();
+        Recur.Builder rBuilder = new Recur.Builder();
         switch (frequencyBox.getValue()) {
             case DAILY:
-                rule.setFreq(com.google.ical.values.Frequency.DAILY);
+                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.DAILY);
                 break;
             case MONTHLY:
-                rule.setFreq(com.google.ical.values.Frequency.MONTHLY);
+                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.MONTHLY);
                 break;
             case WEEKLY:
-                rule.setFreq(com.google.ical.values.Frequency.WEEKLY);
+                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.WEEKLY);
                 break;
             case YEARLY:
-                rule.setFreq(com.google.ical.values.Frequency.YEARLY);
+                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.YEARLY);
                 break;
             default:
                 break;
@@ -413,25 +412,24 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
         int interval = repeatCountSpinner.getValue();
         if (interval > 1) {
-            rule.setInterval(interval);
+            rBuilder.interval(interval);
         } else {
-            rule.setInterval(0);
+            rBuilder.interval(0);
         }
 
         if (endsOnButton.isSelected()) {
             LocalDate date = endsOnDatePicker.getValue();
-            rule.setUntil(new DateValueImpl(date.getYear(),
-                    date.getMonthValue(), date.getDayOfMonth()));
+            rBuilder.until(new Date(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())));
         }
 
         if (endsAfterButton.isSelected()) {
-            rule.setCount(endsAfterCounterSpinner.getValue());
+            rBuilder.count(endsAfterCounterSpinner.getValue());
         }
 
-        if (rule.getFreq().equals(com.google.ical.values.Frequency.MONTHLY)) {
+        if (frequencyBox.getValue() == Frequency.MONTHLY) {
             if (repeatByDayOfTheMonth.isSelected()) {
-                rule.setByMonthDay(new int[]{
-                        getSkinnable().getStartDate().getDayOfMonth()});
+                int value = getSkinnable().getStartDate().getDayOfMonth();
+                rBuilder.monthList(new NumberList(value, value, false));
             } else {
                 LocalDate localDate = getSkinnable().getStartDate();
 
@@ -448,90 +446,81 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
                     current = current.plusDays(1);
                 } while (current.toLocalDate().isBefore(localDate));
 
-                List<WeekdayNum> weekdays = new ArrayList<>();
+                WeekDayList weekdays = new WeekDayList();
                 switch (zonedDateTime.getDayOfWeek()) {
                     case FRIDAY:
-                        weekdays.add(new WeekdayNum(hits, Weekday.FR));
+                        weekdays.add(new WeekDay(WeekDay.FR, hits));
                         break;
                     case MONDAY:
-                        weekdays.add(new WeekdayNum(hits, Weekday.MO));
+                        weekdays.add(new WeekDay(WeekDay.MO, hits));
                         break;
                     case SATURDAY:
-                        weekdays.add(new WeekdayNum(hits, Weekday.SA));
+                        weekdays.add(new WeekDay(WeekDay.SA, hits));
                         break;
                     case SUNDAY:
-                        weekdays.add(new WeekdayNum(hits, Weekday.SU));
+                        weekdays.add(new WeekDay(WeekDay.SU, hits));
                         break;
                     case THURSDAY:
-                        weekdays.add(new WeekdayNum(hits, Weekday.TH));
+                        weekdays.add(new WeekDay(WeekDay.TH, hits));
                         break;
                     case TUESDAY:
-                        weekdays.add(new WeekdayNum(hits, Weekday.TU));
+                        weekdays.add(new WeekDay(WeekDay.TU, hits));
                         break;
                     case WEDNESDAY:
-                        weekdays.add(new WeekdayNum(hits, Weekday.WE));
+                        weekdays.add(new WeekDay(WeekDay.WE, hits));
                         break;
                     default:
                         break;
                 }
 
-                rule.setByDay(weekdays);
+                rBuilder.dayList(weekdays);
             }
         }
 
-        if (rule.getFreq().equals(com.google.ical.values.Frequency.WEEKLY)) {
+        if (frequencyBox.getValue() == Frequency.WEEKLY) {
 
             /*
              * Weekdays MO, TU, .... SU
              */
-            List<WeekdayNum> weekdays = new ArrayList<>();
+            WeekDayList weekdays = new WeekDayList();
 
-            maybeAddWeekday(weekdays, new WeekdayNum(0, Weekday.MO),
+            maybeAddWeekday(weekdays, WeekDay.MO,
                     weekDayMondayButton);
-            maybeAddWeekday(weekdays, new WeekdayNum(0, Weekday.TU),
+            maybeAddWeekday(weekdays, WeekDay.TU,
                     weekDayTuesdayButton);
-            maybeAddWeekday(weekdays, new WeekdayNum(0, Weekday.WE),
+            maybeAddWeekday(weekdays, WeekDay.WE,
                     weekDayWednesdayButton);
-            maybeAddWeekday(weekdays, new WeekdayNum(0, Weekday.TH),
+            maybeAddWeekday(weekdays, WeekDay.TH,
                     weekDayThursdayButton);
-            maybeAddWeekday(weekdays, new WeekdayNum(0, Weekday.FR),
+            maybeAddWeekday(weekdays, WeekDay.FR,
                     weekDayFridayButton);
-            maybeAddWeekday(weekdays, new WeekdayNum(0, Weekday.SA),
+            maybeAddWeekday(weekdays, WeekDay.SA,
                     weekDaySaturdayButton);
-            maybeAddWeekday(weekdays, new WeekdayNum(0, Weekday.SU),
+            maybeAddWeekday(weekdays, WeekDay.SU,
                     weekDaySundayButton);
 
-            rule.setByDay(weekdays);
+            rBuilder.dayList(weekdays);
         }
 
-        getSkinnable().setRecurrenceRule(rule.toIcal());
+        Recur rule = rBuilder.build();
+        getSkinnable().setRecurrenceRule(rule.toString());
 
         if (LoggingDomain.RECURRENCE.isLoggable(Level.FINE)) {
             LoggingDomain.RECURRENCE.fine(
                     "test dumping 10 recurrences starting with today's date"); //$NON-NLS-1$
 
-            try {
-                LocalDateIterator iterator = LocalDateIteratorFactory
-                        .createLocalDateIterator(rule.toIcal(),
-                                LocalDate.of(2015, 8, 18), true);
+            Date today = new Date(Date.from(LocalDate.of(2015, 8, 18).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            DateList dates = rule.getDates(today, today, new Date(Long.MAX_VALUE), Value.DATE, 10);
 
-                int counter = 0;
-                while (iterator.hasNext()) {
-                    LocalDate repeatingDate = iterator.next();
-                    LoggingDomain.RECURRENCE.fine(repeatingDate.toString());
-                    counter++;
-                    if (counter == 10) {
-                        break;
-                    }
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            for (Date date : dates) {
+                LocalDate repeatingDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LoggingDomain.RECURRENCE.fine(repeatingDate.toString());
             }
         }
     }
 
-    private void maybeAddWeekday(List<WeekdayNum> weekdays,
-                                 WeekdayNum weekdayNum, ToggleButton button) {
+    private void maybeAddWeekday(WeekDayList weekdays,
+                                 WeekDay weekdayNum, ToggleButton button) {
         if (button.isSelected()) {
             weekdays.add(weekdayNum);
         }
