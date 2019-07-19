@@ -1,5 +1,5 @@
 module com.calendarfx.recurrence {
-    requires joda.time;
+    requires org.joda.time;
     requires java.logging;
 
     exports com.google.ical.compat.javatime;

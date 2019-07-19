@@ -1,11 +1,11 @@
 module com.calendarfx.view {
 
-    requires controlsfx;
+    requires org.controlsfx.controls;
     requires javafx.controls;
     requires javafx.fxml;
     requires java.logging;
     requires de.jensd.fx.glyphs.fontawesome;
-    requires joda.time;
+    requires org.joda.time;
 
     requires transitive com.calendarfx.recurrence;
 
