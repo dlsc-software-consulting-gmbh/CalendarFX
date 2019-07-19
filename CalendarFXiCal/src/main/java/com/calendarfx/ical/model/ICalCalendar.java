@@ -20,7 +20,6 @@ import com.calendarfx.model.Interval;
 import com.calendarfx.model.LoadEvent;
 import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.PeriodRule;
-import net.fortuna.ical4j.filter.Rule;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
@@ -40,6 +39,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 
@@ -88,7 +88,7 @@ public class ICalCalendar extends com.calendarfx.model.Calendar {
                     new DateTime(Date.from(st.toInstant())),
                     new DateTime(Date.from(et.toInstant())));
 
-            Rule[] rules = new Rule[]{new PeriodRule(period)};
+            Predicate[] rules = new Predicate[]{new PeriodRule(period)};
             Filter filter = new Filter(rules, Filter.MATCH_ANY);
 
             @SuppressWarnings("unchecked")
