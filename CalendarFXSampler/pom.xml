@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>11-ea+25</version>
+            <version>12.0.1</version>
         </dependency>
 
         <dependency>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>fxsampler</artifactId>
-            <version>1.0.9</version>
+            <version>1.0.10</version>
         </dependency>
 
     </dependencies>

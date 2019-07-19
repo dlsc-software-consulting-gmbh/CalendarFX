@@ -3,7 +3,7 @@ module com.calendarfx.sampler {
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.web;
-    requires controlsfx;
+    requires org.controlsfx.controls;
     requires fxsampler;
 
     exports com.calendarfx.demo;
