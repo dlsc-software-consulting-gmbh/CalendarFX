@@ -35,10 +35,9 @@ CalendarFX can be found on jcenter / bintray and also on maven central. For mave
 3. CalendarFXExperimental - a playground for new controls
 4. CalendarFXGoogle - code for working with Google calendars
 5. CalendarFXiCal - code for dealing with iCal data
-6. CalendarFXRecurrence - an extension for the Google recurrence API (RFC 2445). Needed for the new date and time API of Java 8
-7. CalendarFXSampler - a demo app based on FXSampler to test controls individually
-8. CalendarFXView - the main module containing the various calendar views
-9. CalendarFXWeather - a standalone demo for the month sheet view
+6. CalendarFXSampler - a demo app based on FXSampler to test controls individually
+7. CalendarFXView - the main module containing the various calendar views
+8. CalendarFXWeather - a standalone demo for the month sheet view
 
 # Building It
 Simply run the 'install' target inside the top level project. Once completed you will find the installation inside the target folder of the assembly module.

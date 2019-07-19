@@ -39,7 +39,6 @@
     </properties>
 
     <modules>
-        <module>CalendarFXRecurrence</module>
         <module>CalendarFXSampler</module>
         <module>CalendarFXView</module>
         <module>CalendarFXGoogle</module>
