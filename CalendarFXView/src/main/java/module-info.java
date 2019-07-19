@@ -11,8 +11,6 @@ module com.calendarfx.view {
 
     requires ical4j;
 
-    requires transitive com.calendarfx.recurrence;
-
     exports com.calendarfx.model;
     exports com.calendarfx.util;
     exports com.calendarfx.view;
