@@ -5,8 +5,6 @@ module com.calendarfx.view {
     requires javafx.fxml;
     requires java.logging;
     requires de.jensd.fx.glyphs.fontawesome;
-    requires org.joda.time;
-
     requires transitive com.calendarfx.recurrence;
 
     exports com.calendarfx.model;

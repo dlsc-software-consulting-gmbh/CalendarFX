@@ -20,8 +20,8 @@ import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.Util;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RecurrenceView;
-import com.google.ical.compat.jodatime.LocalDateIterator;
-import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
+import com.google.ical.compat.javatime.LocalDateIterator;
+import com.google.ical.compat.javatime.LocalDateIteratorFactory;
 import com.google.ical.values.DateValue;
 import com.google.ical.values.DateValueImpl;
 import com.google.ical.values.RRule;
@@ -513,11 +513,11 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             try {
                 LocalDateIterator iterator = LocalDateIteratorFactory
                         .createLocalDateIterator(rule.toIcal(),
-                                new org.joda.time.LocalDate(2015, 8, 18), true);
+                                LocalDate.of(2015, 8, 18), true);
 
                 int counter = 0;
                 while (iterator.hasNext()) {
-                    org.joda.time.LocalDate repeatingDate = iterator.next();
+                    LocalDate repeatingDate = iterator.next();
                     LoggingDomain.RECURRENCE.fine(repeatingDate.toString());
                     counter++;
                     if (counter == 10) {
