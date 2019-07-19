@@ -1520,7 +1520,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
              * with the given day. We have to find a solution for
              * this.
              */
-            // iterator.advanceTo(org.joda.time.LocalDate.fromDateFields(Date.from(st.toInstant())));
+            // iterator.advanceTo(st.toLocalDate());
 
             while (iterator.hasNext()) {
                 LocalDate repeatingDate = iterator.next();
