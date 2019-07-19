@@ -17,8 +17,6 @@
 package com.calendarfx.model;
 
 import com.calendarfx.view.DateControl;
-import com.google.ical.compat.javatime.LocalDateIterator;
-import com.google.ical.compat.javatime.LocalDateIteratorFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,6 +29,9 @@ import javafx.event.Event;
 import javafx.event.EventDispatchChain;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.Recur;
 
 import java.text.ParseException;
 import java.time.Duration;
@@ -53,6 +54,7 @@ import static com.calendarfx.util.LoggingDomain.MODEL;
 import static java.util.Objects.requireNonNull;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
+import static net.fortuna.ical4j.model.parameter.Value.DATE;
 
 /**
  * A calendar is responsible for storing calendar entries. It provides methods
@@ -313,15 +315,13 @@ public class Calendar implements EventTarget {
                 /*
                  * The recurring entry / entries.
                  */
-                String recurrenceRule = entry.getRecurrenceRule();
+                String recurrenceRule = entry.getRecurrenceRule().replaceFirst("^RRULE:", "");
                 if (recurrenceRule != null && !recurrenceRule.trim().equals("")) { //$NON-NLS-1$
 
-                    LocalDate utilStartDate = entry.getStartAsZonedDateTime().toLocalDate();
+                    Date utilStartDate = new Date(Date.from(entry.getStartAsZonedDateTime().toInstant()));
 
                     try {
-                        LocalDate utilEndDate = et.toLocalDate();
-
-                        LocalDateIterator iterator = LocalDateIteratorFactory.createLocalDateIterator(recurrenceRule, utilStartDate, zoneId, true);
+                        Date utilEndDate = new Date(Date.from(et.toInstant()));
 
                         /*
                          * TODO: for performance reasons we should definitely
@@ -334,34 +334,32 @@ public class Calendar implements EventTarget {
                          */
                         // iterator.advanceTo(st.toLocalDate());
 
-                        while (iterator.hasNext()) {
-                            LocalDate repeatingDate = iterator.next();
-                            if (repeatingDate.isAfter(utilEndDate)) {
-                                break;
-                            } else {
-                                ZonedDateTime zonedDateTime = ZonedDateTime.of(repeatingDate, LocalTime.MIN, zoneId);
+                        DateList dateList = new Recur(recurrenceRule.replaceFirst("^RRULE:", "")).getDates(utilStartDate, utilEndDate, DATE);
 
-                                Entry recurrence = entry.createRecurrence();
-                                recurrence.setId(entry.getId());
-                                recurrence.getProperties().put("com.calendarfx.recurrence.source", entry);
-                                recurrence.getProperties().put("com.calendarfx.recurrence.id", zonedDateTime.toString());
-                                recurrence.setRecurrenceRule(entry.getRecurrenceRule());
+                        for (Date date : dateList) {
+                            LocalDate repeatingDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                            ZonedDateTime zonedDateTime = ZonedDateTime.of(repeatingDate, LocalTime.MIN, zoneId);
 
-                                LocalDate recurrenceStartDate = zonedDateTime.toLocalDate();
-                                LocalDate recurrenceEndDate = recurrenceStartDate.plus(entry.getStartDate().until(entry.getEndDate()));
+                            Entry recurrence = entry.createRecurrence();
+                            recurrence.setId(entry.getId());
+                            recurrence.getProperties().put("com.calendarfx.recurrence.source", entry);
+                            recurrence.getProperties().put("com.calendarfx.recurrence.id", zonedDateTime.toString());
+                            recurrence.setRecurrenceRule(entry.getRecurrenceRule());
 
-                                Interval recurrenceInterval = entry.getInterval().withDates(recurrenceStartDate, recurrenceEndDate);
+                            LocalDate recurrenceStartDate = zonedDateTime.toLocalDate();
+                            LocalDate recurrenceEndDate = recurrenceStartDate.plus(entry.getStartDate().until(entry.getEndDate()));
 
-                                recurrence.setInterval(recurrenceInterval);
-                                recurrence.setUserObject(entry.getUserObject());
-                                recurrence.setTitle(entry.getTitle());
-                                recurrence.setMinimumDuration(entry.getMinimumDuration());
-                                recurrence.setFullDay(entry.isFullDay());
-                                recurrence.setLocation(entry.getLocation());
-                                recurrence.setCalendar(this);
+                            Interval recurrenceInterval = entry.getInterval().withDates(recurrenceStartDate, recurrenceEndDate);
 
-                                addEntryToResult(result, recurrence, startDate, endDate);
-                            }
+                            recurrence.setInterval(recurrenceInterval);
+                            recurrence.setUserObject(entry.getUserObject());
+                            recurrence.setTitle(entry.getTitle());
+                            recurrence.setMinimumDuration(entry.getMinimumDuration());
+                            recurrence.setFullDay(entry.isFullDay());
+                            recurrence.setLocation(entry.getLocation());
+                            recurrence.setCalendar(this);
+
+                            addEntryToResult(result, recurrence, startDate, endDate);
                         }
 
                     } catch (ParseException e) {
