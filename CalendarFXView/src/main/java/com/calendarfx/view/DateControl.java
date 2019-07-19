@@ -16,30 +16,6 @@
 
 package com.calendarfx.view;
 
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-import static java.util.Objects.requireNonNull;
-import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
-
-import java.text.MessageFormat;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PopOver.ArrowLocation;
-import org.controlsfx.control.PropertySheet.Item;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -48,7 +24,6 @@ import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
 import com.calendarfx.view.popover.EntryPopOverContentPane;
-
 import impl.com.calendarfx.view.ViewHelper;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -84,6 +59,29 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
+import org.controlsfx.control.PropertySheet.Item;
+
+import java.text.MessageFormat;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
+import static java.util.Objects.requireNonNull;
+import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
 
 /**
  * The superclass for all controls that are showing calendar information. This
@@ -201,10 +199,6 @@ public abstract class DateControl extends CalendarFXControl {
         Calendar defaultCalendar = new Calendar(Messages.getString("DateControl.DEFAULT_CALENDAR_NAME")); //$NON-NLS-1$
         defaultCalendarSource.getCalendars().add(defaultCalendar);
         getCalendarSources().add(defaultCalendarSource);
-
-        InvalidationListener hidePopOverListener = it -> maybeHidePopOvers();
-        sceneProperty().addListener(hidePopOverListener);
-        visibleProperty().addListener(hidePopOverListener);
 
         getCalendarSources().addListener(weakUpdateCalendarListListener);
 
@@ -421,10 +415,6 @@ public abstract class DateControl extends CalendarFXControl {
                     }
                 }
             }
-        });
-
-        addEventFilter(MouseEvent.MOUSE_PRESSED, evt -> {
-            maybeHidePopOvers();
         });
     }
 
@@ -675,17 +665,14 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
-    private static PopOver entryPopOver;
 
     private void showEntryDetails(Entry<?> entry, Node owner, double screenY) {
-        maybeHidePopOvers();
-
         Callback<EntryDetailsPopOverContentParameter, Node> contentCallback = getEntryDetailsPopOverContentCallback();
         if (contentCallback == null) {
             throw new IllegalStateException("No content callback found for entry popover"); //$NON-NLS-1$
         }
 
-        entryPopOver = new PopOver();
+        PopOver entryPopOver = new PopOver();
 
         EntryDetailsPopOverContentParameter param = new EntryDetailsPopOverContentParameter(entryPopOver, this, owner, entry);
         Node content = contentCallback.call(param);
@@ -702,8 +689,6 @@ public abstract class DateControl extends CalendarFXControl {
         entryPopOver.show(owner, position.getX(), position.getY());
     }
 
-    private static DatePopOver datePopOver;
-
     /**
      * Creates a new {@link DatePopOver} and shows it attached to the given
      * owner node.
@@ -712,19 +697,8 @@ public abstract class DateControl extends CalendarFXControl {
      * @param date the date for which to display more detail
      */
     public void showDateDetails(Node owner, LocalDate date) {
-        maybeHidePopOvers();
-        datePopOver = new DatePopOver(this, date);
+        PopOver datePopOver = new DatePopOver(this, date);
         datePopOver.show(owner);
-    }
-
-    private void maybeHidePopOvers() {
-        if (entryPopOver != null && entryPopOver.isShowing() && !entryPopOver.isDetached()) {
-            entryPopOver.hide();
-        }
-
-        if (datePopOver != null && datePopOver.isShowing() && !datePopOver.isDetached()) {
-            datePopOver.hide();
-        }
     }
 
     private abstract static class ContextMenuParameterBase {
