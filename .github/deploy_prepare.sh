@@ -1,21 +1,17 @@
 #!/bin/bash
 
+echo "Prepare Deployment"
+
 # Script will zip the javadoc for upload to the release later, generate the changelog and increment the version in the pom.xml file to the one of the tag
 
 echo TRAVIS_TAG=$TRAVIS_TAG
 echo TAG_BRANCH=$TAG_BRANCH
 
-if [[ "$TRAVIS_PULL_REQUEST" != "false" || ("$TAG_BRANCH" != "master" && "$TAG_BRANCH" != "master-11") || "$TRAVIS_TAG" == "" ]]
-then
-  echo "No tag was made from master or master-11, skipping deployment preparation."
-  exit 0
-fi
-
 rev=$(git rev-parse --short HEAD)
 
 echo "Install Dependencies for Changelog Generation"
-gem install rack -v 1.6.4
-gem install github_changelog_generator
+gem install activesupport -v 5.2.3
+gem install github_changelog_generator -v 1.14.3
 echo "Finished Install Dependencies for Changelog Generation"
 
 git config user.name "Travis CI"
