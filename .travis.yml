@@ -42,9 +42,16 @@ script: mvn test -B
 after_success:
   - chmod +x .github/deploy_prepare.sh
   - chmod +x .github/deploy_bintray_central.sh
-  - .github/deploy_prepare.sh
 
 deploy:
+  - provider: script
+    script: .github/deploy_prepare.sh
+    skip_cleanup: true
+    on: &on
+      repo: $TRAVIS_REPO_SLUG
+      tags: true
+      all_branches: true
+      condition: $TAG_BRANCH =~ ^(master|master-11)$
   - provider: releases
     api_key: $GITHUB_TOKEN
     file_glob: true
@@ -54,11 +61,7 @@ deploy:
     skip_cleanup: true
     name: Release $TRAVIS_TAG
     body: See [CHANGELOG.md](https://github.com/$TRAVIS_REPO_SLUG/blob/master/CHANGELOG.md)
-    on: &on
-      repo: $TRAVIS_REPO_SLUG
-      tags: true
-      all_branches: true
-      condition: $TAG_BRANCH =~ ^(master|master-11)$
+    on: *on
   - provider: script
     script: .github/deploy_bintray_central.sh
     skip_cleanup: true
