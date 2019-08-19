@@ -1,14 +1,63 @@
 language: java
+
+# to make the build work with oraclejdk8: https://travis-ci.community/t/solved-oraclejdk8-installation-failing-still-again/3428
+dist: trusty
+
+sudo: false   # Linux OS: run in container
+
+env:
+  global:
+    # get all the branches referencing this commit
+    - TAG_BRANCH=$(git ls-remote origin | sed -n "\|$TRAVIS_COMMIT\s\+refs/heads/|{s///p}")
+
+# Necessary environment variables on Travis CI:
+#
+# GITHUB_TOKEN: Token from here: https://github.com/settings/tokens => with scope "public_repo"
+# BINTRAY_USER: Bintray username
+# BINTRAY_API_KEY: API key from here: https://bintray.com/profile/edit => API Key
+#
+# The Bintray URL follows the following pattern: https://bintray.com/subject/repo/package
+# BINTRAY_SUBJECT=subject
+# BINTRAY_REPO=repo
+# BINTRAY_PACKAGE=package
+
+jdk: oraclejdk8
+
+addons:
+  apt:
+    packages:
+      - p7zip-full
+
 before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get update -qq
-  - sudo apt-get install oracle-java8-installer
+  - if [[ "${TRAVIS_OS_NAME}" == linux ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
+
+install: true
+
 cache:
   directories:
-  - $HOME/.m2/
-before_script:
-  - mvn -v
-script:  mvn package
-jdk: oraclejdk8
-env: TERM=dumb
+    - $HOME/.m2
+
+script: mvn test -B
+
+after_success:
+  - .github/deploy_prepare.sh
+
+deploy:
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file:
+      - javadoc.zip
+      - /**/target/*.jar
+    skip_cleanup: true
+    name: Release $TRAVIS_TAG
+    body: See [CHANGELOG.md](https://github.com/$TRAVIS_REPO_SLUG/blob/master/CHANGELOG.md)
+    on: &on
+      repo: $TRAVIS_REPO_SLUG
+      tags: true
+      all_branches: true
+      condition: $TAG_BRANCH =~ ^(master|master-11)$
+  - provider: script
+    script: .github/deploy_bintray_central.sh
+    skip_cleanup: true
+    on: *on
