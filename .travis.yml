@@ -1,14 +1,12 @@
 language: java
 
-# to make the build work with oraclejdk8: https://travis-ci.community/t/solved-oraclejdk8-installation-failing-still-again/3428
-dist: trusty
-
 sudo: false   # Linux OS: run in container
 
 env:
   global:
     # get all the branches referencing this commit
     - TAG_BRANCH=$(git ls-remote origin | sed -n "\|$TRAVIS_COMMIT\s\+refs/heads/|{s///p}")
+    - TERM=dumb
 
 # Necessary environment variables on Travis CI:
 #
@@ -21,15 +19,12 @@ env:
 # BINTRAY_REPO=repo
 # BINTRAY_PACKAGE=package
 
-jdk: oraclejdk8
+jdk: openjdk11
 
 addons:
   apt:
     packages:
       - p7zip-full
-
-before_install:
-  - if [[ "${TRAVIS_OS_NAME}" == linux ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
 
 install: true
 
