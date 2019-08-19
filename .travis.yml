@@ -35,6 +35,8 @@ cache:
 script: mvn test -B
 
 after_success:
+  - chmod +x .github/deploy_prepare.sh
+  - chmod +x .github/deploy_bintray_central.sh
   - .github/deploy_prepare.sh
 
 deploy:
