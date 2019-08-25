@@ -60,7 +60,7 @@ deploy:
       - /**/target/*.jar
     skip_cleanup: true
     name: Release $TRAVIS_TAG
-    body: See [CHANGELOG.md](https://github.com/$TRAVIS_REPO_SLUG/blob/master/CHANGELOG.md)
+    body: See [CHANGELOG.md](https://github.com/$TRAVIS_REPO_SLUG/blob/$TAG_BRANCH/CHANGELOG.md)
     on: *on
   - provider: script
     script: .github/deploy_bintray_central.sh
