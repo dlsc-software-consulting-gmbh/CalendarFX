@@ -134,18 +134,21 @@ public class DayPageSkin extends PageBaseSkin<DayPage> {
                     leftColumn.setPercentWidth(50);
                     rightColumn.setPercentWidth(50);
                 }
+                gridPane.setHgap(20);
                 break;
             case AGENDA_ONLY:
                 leftSide.setVisible(true);
                 rightSide.setVisible(false);
                 leftColumn.setPercentWidth(100);
                 rightColumn.setPercentWidth(0);
+                gridPane.setHgap(0);
                 break;
             case DAY_ONLY:
                 leftSide.setVisible(false);
                 rightSide.setVisible(true);
                 leftColumn.setPercentWidth(0);
                 rightColumn.setPercentWidth(100);
+                gridPane.setHgap(0);
                 break;
         }
     }
