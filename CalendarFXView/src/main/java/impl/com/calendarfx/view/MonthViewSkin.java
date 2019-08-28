@@ -111,7 +111,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         RowConstraints rowHeaderCon = new RowConstraints();
 
         RowConstraints rowCon = new RowConstraints();
-        rowCon.setPercentHeight(100 / 6);
+        rowCon.setPercentHeight(100d / 6d);
 
         gridPane.getRowConstraints().add(rowHeaderCon);
         gridPane.getRowConstraints().add(rowCon);
