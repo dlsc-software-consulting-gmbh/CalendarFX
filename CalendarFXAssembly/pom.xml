@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>8.5.0</version>
+        <version>8.5.1</version>
     </parent>
     <artifactId>assembly</artifactId>
     <packaging>pom</packaging>
@@ -36,19 +36,19 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>recurrence</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>google</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
     </dependencies>

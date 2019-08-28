@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>8.5.0</version>
+        <version>8.5.1</version>
     </parent>
     <name>CalendarFXRecurrence</name>
     <artifactId>recurrence</artifactId>
