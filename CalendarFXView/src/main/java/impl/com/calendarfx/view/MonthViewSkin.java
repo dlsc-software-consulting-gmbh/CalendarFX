@@ -98,7 +98,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         gridPane.setMaxSize(MAX_VALUE, MAX_VALUE);
 
         ColumnConstraints colCon = new ColumnConstraints();
-        colCon.setPercentWidth(100 / 7);
+        colCon.setPercentWidth(100d / 7d);
 
         gridPane.getColumnConstraints().add(colCon);
         gridPane.getColumnConstraints().add(colCon);
