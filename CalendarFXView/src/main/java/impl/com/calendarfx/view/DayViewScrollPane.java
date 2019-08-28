@@ -95,7 +95,10 @@ public class DayViewScrollPane extends Pane {
 
         updateVisibleTimeRange();
 
-        addEventFilter(ScrollEvent.SCROLL, evt -> scrollY(evt.getDeltaY()));
+        addEventFilter(ScrollEvent.SCROLL, evt -> {
+            scrollY(evt.getDeltaY());
+            evt.consume();
+        });
 
         // regular drag, e.g. of an entry view
         addEventFilter(MouseEvent.MOUSE_DRAGGED, this::autoscrollIfNeeded);
