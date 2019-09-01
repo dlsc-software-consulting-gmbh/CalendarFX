@@ -132,13 +132,60 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.1</version>
                 <configuration>
-                    <windowtitle>CalendarFX API</windowtitle>
                     <failOnError>false</failOnError>
                     <force>true</force>
+                    <windowtitle>CalendarFX API</windowtitle>
+                    <additionalJOptions>
+                        <additionalJOption>-J-Djavafx.javadoc=true</additionalJOption>
+                        <additionalJOption>-html5</additionalJOption>
+                    </additionalJOptions>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <tags>
+                        <tag>
+                            <name>defaultValue</name>
+                            <placement>a</placement>
+                            <head>Default Value:</head>
+                        </tag>
+                        <tag>
+                            <name>apiNote</name>
+                            <placement>a</placement>
+                            <head>API Note:</head>
+                        </tag>
+                        <tag>
+                            <name>implSpec</name>
+                            <placement>a</placement>
+                            <head>Implementation Requirements:</head>
+                        </tag>
+                        <tag>
+                            <name>implNote</name>
+                            <placement>a</placement>
+                            <head>Implementation Note:</head>
+                        </tag>
+                    </tags>
+                    <sourceFileExcludes>
+                        <sourceFileExclude>**\/\module-info.java</sourceFileExclude>
+                    </sourceFileExcludes>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>7.0</version>
+                    </dependency>
+                </dependencies>
                 <executions>
+                    <execution>
+                        <id>make-docs
+
+                        </id> <!-- this is used for inheritance merges -->
+                        <phase>package
+                        </phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>attach-javadocs</id>
                         <goals>
