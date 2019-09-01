@@ -1,5 +1,8 @@
 # Change Log
 
+## [8.6.1](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/tree/8.6.1) (2019-08-28)
+[Full Changelog](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/compare/8.6.0...8.6.1)
+
 ## [8.6.0](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/tree/8.6.0) (2019-08-28)
 [Full Changelog](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/compare/11.6.2...8.6.0)
 
