@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>8.6.0</version>
+        <version>8.6.1</version>
     </parent>
 
     <properties>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
-            <version>8.6.0</version>
+            <version>8.6.1</version>
         </dependency>
 
         <dependency>
