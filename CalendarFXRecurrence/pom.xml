@@ -10,14 +10,6 @@
     <artifactId>recurrence</artifactId>
     <description>Contains the RFC 2445 support.</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.10.3</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>

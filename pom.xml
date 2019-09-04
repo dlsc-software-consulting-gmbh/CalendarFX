@@ -54,7 +54,9 @@
         <repository>
             <id>bintray-dlsc-oss-repository</id>
             <name>dlsc-oss-repository</name>
-            <url>https://api.bintray.com/maven/dlsc-oss/repository/CalendarFX/;publish=1</url>
+            <url>
+                https://api.bintray.com/maven/dlsc-oss/repository/CalendarFX/;publish=1
+            </url>
         </repository>
     </distributionManagement>
 

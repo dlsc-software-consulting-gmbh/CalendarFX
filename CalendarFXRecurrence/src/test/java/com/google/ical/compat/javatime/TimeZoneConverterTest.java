@@ -73,7 +73,7 @@ public class TimeZoneConverterTest extends TestCase {
             String tzid = tzids[i];
             String timeZoneTzid = tzids[i + 1] == null ? tzid : tzids[i + 1];
             TimeZone utilTz = TimeZone.getTimeZone(timeZoneTzid);
-            ZoneId jodaTz = ZoneId.of(tzid);
+            ZoneId javaTimeTz = ZoneId.of(tzid);
             // make sure that the timezone is recognized and we're not just testing
             // UTC over and over.
             assertTrue(utilTz.getID(),
@@ -81,7 +81,7 @@ public class TimeZoneConverterTest extends TestCase {
                             !utilTz.hasSameRules(TimeZone.getTimeZone("UTC")));
 
             // check that we're working a week out.
-            assertOffsetsEqualForDate(utilTz, jodaTz, soon);
+            assertOffsetsEqualForDate(utilTz, javaTimeTz, soon);
 
             // generate a bunch of random times in 2006 and test that the offsets
             // convert properly
@@ -89,7 +89,7 @@ public class TimeZoneConverterTest extends TestCase {
                 // pick a random time in 2006
                 long t = ((2000 - 1970) * MILLIS_PER_YEAR)
                         + (rand.nextLong() % (10L * MILLIS_PER_YEAR));
-                assertOffsetsEqualForDate(utilTz, jodaTz, t);
+                assertOffsetsEqualForDate(utilTz, javaTimeTz, t);
             }
         }
     }
@@ -125,18 +125,18 @@ public class TimeZoneConverterTest extends TestCase {
     }
 
     private static void assertOffsetsEqualForDate(
-            TimeZone utilTz, ZoneId jodaTz, long offset) {
+            TimeZone utilTz, ZoneId javaTimeTz, long offset) {
 
-        TimeZone convertedTz = TimeZoneConverter.toTimeZone(jodaTz);
+        TimeZone convertedTz = TimeZoneConverter.toTimeZone(javaTimeTz);
 
-        // Test that the util timezone and it's joda timezone are equivalent.
+        // Test that the util timezone and it's javatime timezone are equivalent.
         assertEquals("offset=" + offset + " in " + utilTz.getID(),
                 utilTz.getOffset(offset), convertedTz.getOffset(offset));
 
         // Test the complicated getOffset method.
         // We don't care which tz the output fields are in since we're not
         // concerned that the output from getOffset(...) == offset,
-        // just that the utilTz.getOffset(...) == jodaTz.getOffset(...) computed
+        // just that the utilTz.getOffset(...) == javaTimeTz.getOffset(...) computed
         // from it are equal for both timezones.
         GregorianCalendar c = new GregorianCalendar();
         c.setTime(new Date(offset));

@@ -28,14 +28,7 @@ import junit.framework.TestSuite;
 public class AllTests extends TestSuite {
 
     public AllTests() {
-        this.addTestSuite(
-                com.google.ical.compat.javautil.DateIteratorFactoryTest.class);
-        this.addTestSuite(
-                com.google.ical.compat.jodatime.DateTimeIteratorFactoryTest.class);
-        this.addTestSuite(
-                com.google.ical.compat.jodatime.LocalDateIteratorFactoryTest.class);
-        this.addTestSuite(
-                com.google.ical.compat.jodatime.TimeZoneConverterTest.class);
+        this.addTestSuite(com.google.ical.compat.javautil.DateIteratorFactoryTest.class);
         this.addTestSuite(com.google.ical.iter.CompoundIteratorImplTest.class);
         this.addTestSuite(com.google.ical.iter.ConditionsTest.class);
         this.addTestSuite(com.google.ical.iter.DateValueComparisonTest.class);
