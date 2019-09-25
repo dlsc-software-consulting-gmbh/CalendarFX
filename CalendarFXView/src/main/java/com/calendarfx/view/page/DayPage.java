@@ -121,19 +121,8 @@ public class DayPage extends PageBase {
         segmentedButton.getStyleClass().add("layout-button"); //$NON-NLS-1$
         segmentedButton.visibleProperty().bind(showDayPageLayoutControlsProperty());
 
-        switch (getDayPageLayout()) {
-            case AGENDA_ONLY:
-                agendaOnlyButton.setSelected(true);
-                break;
-            case DAY_ONLY:
-                dayOnlyButton.setSelected(true);
-                break;
-            case STANDARD:
-                standardButton.setSelected(true);
-                break;
-            default:
-                break;
-        }
+        updateDayPageLayoutButtons(agendaOnlyButton, dayOnlyButton, standardButton);
+        dayPageLayout.addListener((observable, oldValue, newValue) -> updateDayPageLayoutButtons(agendaOnlyButton, dayOnlyButton, standardButton));
 
         agendaOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_AGENDA_LIST"))); //$NON-NLS-1$
         dayOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_DAY_VIEW"))); //$NON-NLS-1$
@@ -162,6 +151,22 @@ public class DayPage extends PageBase {
         showLayoutButtonProperty().addListener(it -> updateToolBarControls(segmentedButton, layoutButton));
 
         return toolbarControls;
+    }
+
+    private void updateDayPageLayoutButtons(ToggleButton agendaOnlyButton,ToggleButton dayOnlyButton,ToggleButton standardButton) {
+        switch (dayPageLayout.get()) {
+            case AGENDA_ONLY:
+                agendaOnlyButton.setSelected(true);
+                break;
+            case DAY_ONLY:
+                dayOnlyButton.setSelected(true);
+                break;
+            case STANDARD:
+                standardButton.setSelected(true);
+                break;
+            default:
+                break;
+        }
     }
 
     private void updateToolBarControls(SegmentedButton segmentedButton, ToggleButton layoutButton) {
