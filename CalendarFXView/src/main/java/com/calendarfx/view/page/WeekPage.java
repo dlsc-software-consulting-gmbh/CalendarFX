@@ -16,10 +16,12 @@
 
 package com.calendarfx.view.page;
 
-import com.calendarfx.view.*;
+import com.calendarfx.view.AllDayView;
+import com.calendarfx.view.DetailedWeekView;
+import com.calendarfx.view.Messages;
+import com.calendarfx.view.WeekDayView;
+import com.calendarfx.view.WeekTimeScaleView;
 import com.calendarfx.view.print.ViewType;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import impl.com.calendarfx.view.page.WeekPageSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,8 +32,9 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import org.controlsfx.control.PropertySheet;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -62,7 +65,7 @@ public class WeekPage extends PageBase {
         ToggleButton layoutButton = new ToggleButton();
         layoutButton.setTooltip(new Tooltip(Messages.getString("WeekPage.TOOLTIP_LAYOUT"))); //$NON-NLS-1$
         layoutButton.setId("layout-button");
-        Text layoutIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.TABLE);
+        FontIcon layoutIcon = new FontIcon(FontAwesome.TABLE);
         layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
         layoutButton.setGraphic(layoutIcon);
         layoutButton.setSelected(getLayout().equals(Layout.SWIMLANE));

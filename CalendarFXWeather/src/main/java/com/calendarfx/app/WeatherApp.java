@@ -19,14 +19,14 @@ package com.calendarfx.app;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.MonthSheetView;
-import de.jensd.fx.glyphs.weathericons.WeatherIcon;
-import de.jensd.fx.glyphs.weathericons.WeatherIconView;
 import javafx.application.Application;
 import javafx.beans.Observable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.weathericons.WeatherIcons;
 
 import java.time.LocalDate;
 
@@ -59,7 +59,7 @@ public class WeatherApp extends Application {
 
     private static class WeatherCell extends MonthSheetView.SimpleDateCell {
 
-        private WeatherIconView icon = new WeatherIconView(WeatherIcon.DAY_SUNNY);
+        private FontIcon icon = new FontIcon(WeatherIcons.DAY_SUNNY);
 
         public WeatherCell(MonthSheetView view, LocalDate date) {
             super(view, date);
@@ -70,48 +70,48 @@ public class WeatherApp extends Application {
 
                 switch ((int) (Math.random() * 9)) {
                     case 0:
-                        icon = new WeatherIconView(WeatherIcon.DAY_SUNNY);
+                        icon = new FontIcon(WeatherIcons.DAY_SUNNY);
                         break;
                     case 1:
-                        icon = new WeatherIconView(WeatherIcon.DAY_RAIN);
+                        icon = new FontIcon(WeatherIcons.DAY_RAIN);
                         break;
                     case 2:
-                        icon = new WeatherIconView(WeatherIcon.DAY_CLOUDY);
+                        icon = new FontIcon(WeatherIcons.DAY_CLOUDY);
                         break;
                     case 3:
-                        icon = new WeatherIconView(WeatherIcon.DAY_FOG);
+                        icon = new FontIcon(WeatherIcons.DAY_FOG);
                         break;
                     case 4:
-                        icon = new WeatherIconView(WeatherIcon.DAY_LIGHTNING);
+                        icon = new FontIcon(WeatherIcons.DAY_LIGHTNING);
                         break;
                     case 5:
-                        icon = new WeatherIconView(WeatherIcon.DAY_HAIL);
+                        icon = new FontIcon(WeatherIcons.DAY_HAIL);
                         break;
                     case 6:
-                        icon = new WeatherIconView(WeatherIcon.DAY_CLOUDY_HIGH);
+                        icon = new FontIcon(WeatherIcons.DAY_CLOUDY_HIGH);
                         break;
                     case 7:
-                        icon = new WeatherIconView(WeatherIcon.DAY_HAZE);
+                        icon = new FontIcon(WeatherIcons.DAY_HAZE);
                         break;
                     default:
-                        icon = new WeatherIconView(WeatherIcon.DAY_SHOWERS);
+                        icon = new FontIcon(WeatherIcons.DAY_SHOWERS);
                         break;
                 }
             }
 
             getChildren().add(icon);
 
-            icon.setGlyphSize(14);
+            icon.setIconSize(14);
             updateFillColor(icon);
-            WeatherIconView fIcon = icon;
+            FontIcon fIcon = icon;
             getView().getDateSelectionModel().getSelectedDates().addListener((Observable it) -> updateFillColor(fIcon));
         }
 
-        private void updateFillColor(WeatherIconView icon) {
+        private void updateFillColor(FontIcon icon) {
             if (getDate() != null && getDate().equals(getView().getToday()) || getView().getDateSelectionModel().isSelected(getDate())) {
-                icon.setFill(Color.WHITE);
+                icon.setIconColor(Color.WHITE);
             } else {
-                icon.setFill(Color.CADETBLUE);
+                icon.setIconColor(Color.CADETBLUE);
             }
         }
 

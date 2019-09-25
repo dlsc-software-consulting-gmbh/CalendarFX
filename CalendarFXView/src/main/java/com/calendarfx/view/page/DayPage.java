@@ -25,8 +25,6 @@ import com.calendarfx.view.MonthView;
 import com.calendarfx.view.TimeScaleView;
 import com.calendarfx.view.YearMonthView;
 import com.calendarfx.view.print.ViewType;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import impl.com.calendarfx.view.page.DayPageSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -40,10 +38,11 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.PropertySheet.Item;
 import org.controlsfx.control.SegmentedButton;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -98,17 +97,17 @@ public class DayPage extends PageBase {
         ToggleButton dayOnlyButton = new ToggleButton();
         ToggleButton standardButton = new ToggleButton();
 
-        Text listIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.LIST);
+        FontIcon listIcon = new FontIcon(FontAwesome.LIST);
         listIcon.getStyleClass().addAll("button-icon");
         agendaOnlyButton.setGraphic(listIcon);
         agendaOnlyButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-        Text calendarIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.CALENDAR);
+        FontIcon calendarIcon = new FontIcon(FontAwesome.CALENDAR);
         calendarIcon.getStyleClass().addAll("button-icon");
         dayOnlyButton.setGraphic(calendarIcon);
         dayOnlyButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-        Text standardIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.COLUMNS);
+        FontIcon standardIcon = new FontIcon(FontAwesome.COLUMNS);
         standardIcon.getStyleClass().addAll("button-icon");
         standardButton.setGraphic(standardIcon);
         standardButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -142,7 +141,7 @@ public class DayPage extends PageBase {
         ToggleButton layoutButton = new ToggleButton();
         layoutButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_LAYOUT"))); //$NON-NLS-1$
         layoutButton.setId("layout-button");
-        Text layoutIcon = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.TABLE);
+        FontIcon layoutIcon = new FontIcon(FontAwesome.TABLE);
         layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
         layoutButton.setGraphic(layoutIcon);
         layoutButton.setSelected(getLayout().equals(Layout.SWIMLANE));

@@ -1,10 +1,14 @@
 module com.calendarfx.view {
 
-    requires org.controlsfx.controls;
-    requires javafx.controls;
-    requires javafx.fxml;
     requires java.logging;
-    requires de.jensd.fx.glyphs.fontawesome;
+
+    requires transitive org.controlsfx.controls;
+    requires transitive javafx.controls;
+    requires transitive javafx.fxml;
+
+    requires transitive org.kordamp.ikonli.javafx;
+    requires transitive org.kordamp.ikonli.fontawesome;
+
     requires transitive com.calendarfx.recurrence;
 
     exports com.calendarfx.model;

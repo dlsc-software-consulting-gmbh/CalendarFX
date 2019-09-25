@@ -101,8 +101,8 @@
 }
 
 .calendar-view .button-icon {
-    -fx-fill: rgb(100, 100, 100);
-    -glyph-size: 14.0px;
+    -fx-icon-color: rgb(100, 100, 100);
+    -fx-icon-size: 14.0px;
 }
 
 /*

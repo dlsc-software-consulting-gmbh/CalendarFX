@@ -20,8 +20,6 @@ import com.calendarfx.view.Messages;
 import com.calendarfx.view.print.PreviewPane;
 import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ZoomPane;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -30,6 +28,8 @@ import javafx.scene.control.SkinBase;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class PreviewPaneSkin extends SkinBase<PreviewPane> {
 
@@ -47,8 +47,8 @@ public class PreviewPaneSkin extends SkinBase<PreviewPane> {
 
         PrintablePage page = control.getPrintablePage();
 
-        FontAwesomeIconView backIcon = new FontAwesomeIconView(FontAwesomeIcon.CHEVRON_LEFT);
-        FontAwesomeIconView forwardIcon = new FontAwesomeIconView(FontAwesomeIcon.CHEVRON_RIGHT);
+        FontIcon backIcon = new FontIcon(FontAwesome.CHEVRON_LEFT);
+        FontIcon forwardIcon = new FontIcon(FontAwesome.CHEVRON_RIGHT);
 
         Button backBtn = new Button();
         backBtn.setGraphic(backIcon);

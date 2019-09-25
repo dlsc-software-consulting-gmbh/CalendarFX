@@ -21,8 +21,6 @@ import com.calendarfx.google.view.log.LogItem;
 import com.calendarfx.google.view.log.LogPane;
 import com.calendarfx.google.view.log.StatusType;
 import com.google.api.client.util.Lists;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.Event;
@@ -43,6 +41,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.MasterDetailPane;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -97,12 +97,12 @@ public class LogPaneSkin extends SkinBase<LogPane> {
     private ToolBar createToolBar() {
         Button clearAllBtn = new Button();
         clearAllBtn.setText("Clear All");
-        clearAllBtn.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.TRASH));
+        clearAllBtn.setGraphic(new FontIcon(FontAwesome.TRASH));
         clearAllBtn.setOnAction(evt -> getSkinnable().clearItems());
 
         Button clearSelectionBtn = new Button();
         clearSelectionBtn.setText("Clear Selected");
-        clearSelectionBtn.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.TRASH_ALT));
+        clearSelectionBtn.setGraphic(new FontIcon(FontAwesome.TRASH_O));
         clearSelectionBtn.setOnAction(evt -> getSkinnable().removeItems(Lists.newArrayList(getSkinnable().getSelectedItems())));
 
         List<ToggleButton> statusTypeButtons = new ArrayList<>();
@@ -138,7 +138,7 @@ public class LogPaneSkin extends SkinBase<LogPane> {
             }
         });
         Button searchBtn = new Button();
-        searchBtn.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.SEARCH));
+        searchBtn.setGraphic(new FontIcon(FontAwesome.SEARCH));
         searchBtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         searchBtn.setOnAction(evt -> getSkinnable().filter(textField.getText()));
 

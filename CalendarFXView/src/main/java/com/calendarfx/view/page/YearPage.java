@@ -21,8 +21,6 @@ import com.calendarfx.view.MonthSheetView;
 import com.calendarfx.view.MonthSheetView.ClickBehaviour;
 import com.calendarfx.view.YearView;
 import com.calendarfx.view.print.ViewType;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import impl.com.calendarfx.view.page.YearPageSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -33,8 +31,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
-import javafx.scene.text.Text;
 import org.controlsfx.control.PropertySheet;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -110,12 +109,12 @@ public class YearPage extends PageBase {
      * mode (column or grid).
      */
     private void updateDisplayModeIcon() {
-        FontAwesomeIcon icon = FontAwesomeIcon.CALENDAR;
+        FontAwesome icon = FontAwesome.CALENDAR;
         if (getDisplayMode().equals(DisplayMode.GRID)) {
-            icon = FontAwesomeIcon.CALENDAR_ALT;
+            icon = FontAwesome.TABLE;
         }
 
-        final Text graphic = FontAwesomeIconFactory.get().createIcon(icon);
+        final FontIcon graphic = new FontIcon(icon);
         graphic.getStyleClass().addAll("button-icon", "display-mode-icon");
         displayModeButton.setGraphic(graphic);
     }

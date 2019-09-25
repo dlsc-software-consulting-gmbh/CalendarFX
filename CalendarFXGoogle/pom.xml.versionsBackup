@@ -1,6 +1,5 @@
 <!--
   ~  Copyright (C) 2017 Dirk Lemmermann Software & Consulting (dlsc.com)
-  ~  Copyright (C) 2006 Google Inc.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -17,26 +16,10 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>sampler</artifactId>
-    <packaging>jar</packaging>
-
-    <name>CalendarFXSampler</name>
-
-    <repositories>
-        <repository>
-            <id>oss-sonatype</id>
-            <name>oss-sonatype</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
+    <name>CalendarFXGoogle</name>
+    <artifactId>google</artifactId>
 
     <parent>
         <groupId>com.calendarfx</groupId>
@@ -44,12 +27,34 @@
         <version>11.6.4</version>
     </parent>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>12.0.1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>13</version>
+            <version>12.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lynden</groupId>
+            <artifactId>GMapsFX</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+
+        <!-- Required for GMapsFX -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.0-alpha0</version>
         </dependency>
 
         <dependency>
@@ -59,17 +64,41 @@
         </dependency>
 
         <dependency>
-            <groupId>com.calendarfx</groupId>
-            <artifactId>application</artifactId>
-            <version>11.6.4</version>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.22.0</version>
         </dependency>
-
 
         <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>fxsampler</artifactId>
-            <version>1.0.10</version>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client-java6</artifactId>
+            <version>1.30.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client-jackson2</artifactId>
+            <version>1.30.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-calendar</artifactId>
+            <version>v3-rev20190609-1.30.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-oauth2</artifactId>
+            <version>v2-rev20190313-1.30.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.geocoder-java</groupId>
+            <artifactId>geocoder-java</artifactId>
+            <version>0.16</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -79,14 +108,14 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <finalName>sampler-demo</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>google-demo</finalName>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>com.calendarfx.demo.CalendarFXSampler</mainClass>
+                            <mainClass>com.calendarfx.google.GoogleCalendarApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -102,5 +131,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

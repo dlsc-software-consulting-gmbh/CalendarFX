@@ -16,9 +16,10 @@
 
 package com.calendarfx.google.view.log;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.scene.paint.Color;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Status of the google task.
@@ -34,8 +35,8 @@ public enum StatusType {
         }
 
         @Override
-        public FontAwesomeIcon getIcon() {
-            return FontAwesomeIcon.CHECK;
+        public Ikon getIcon() {
+            return FontAwesome.CHECK;
         }
 
         @Override
@@ -51,8 +52,8 @@ public enum StatusType {
         }
 
         @Override
-        public FontAwesomeIcon getIcon() {
-            return FontAwesomeIcon.EXCLAMATION_TRIANGLE;
+        public Ikon getIcon() {
+            return FontAwesome.EXCLAMATION_TRIANGLE;
         }
 
         @Override
@@ -68,8 +69,8 @@ public enum StatusType {
         }
 
         @Override
-        public FontAwesomeIcon getIcon() {
-            return FontAwesomeIcon.CLOSE;
+        public Ikon getIcon() {
+            return FontAwesome.CLOSE;
         }
 
         @Override
@@ -85,8 +86,8 @@ public enum StatusType {
         }
 
         @Override
-        public FontAwesomeIcon getIcon() {
-            return FontAwesomeIcon.EXCLAMATION_CIRCLE;
+        public Ikon getIcon() {
+            return FontAwesome.EXCLAMATION_CIRCLE;
         }
 
         @Override
@@ -97,12 +98,12 @@ public enum StatusType {
 
     public abstract String getDisplayName();
 
-    public abstract FontAwesomeIcon getIcon();
+    public abstract Ikon getIcon();
 
     public abstract Color getColor();
 
-    public FontAwesomeIconView createView() {
-        FontAwesomeIconView view = new FontAwesomeIconView(getIcon());
+    public FontIcon createView() {
+        FontIcon view = new FontIcon(getIcon());
         view.setFill(getColor());
         return view;
     }
