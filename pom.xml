@@ -42,7 +42,6 @@
         <module>CalendarFXRecurrence</module>
         <module>CalendarFXSampler</module>
         <module>CalendarFXView</module>
-        <module>CalendarFXExperimental</module>
         <module>CalendarFXGoogle</module>
         <module>CalendarFXApp</module>
         <module>CalendarFXiCal</module>
