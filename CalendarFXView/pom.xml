@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>11.6.4</version>
+        <version>11.7.0</version>
     </parent>
 
     <repositories>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>recurrence</artifactId>
-            <version>11.6.4</version>
+            <version>11.7.0</version>
         </dependency>
 
         <dependency>
