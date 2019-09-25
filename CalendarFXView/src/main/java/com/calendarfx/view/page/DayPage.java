@@ -121,19 +121,21 @@ public class DayPage extends PageBase {
         segmentedButton.getStyleClass().add("layout-button"); //$NON-NLS-1$
         segmentedButton.visibleProperty().bind(showDayPageLayoutControlsProperty());
 
-        switch (getDayPageLayout()) {
-            case AGENDA_ONLY:
-                agendaOnlyButton.setSelected(true);
-                break;
-            case DAY_ONLY:
-                dayOnlyButton.setSelected(true);
-                break;
-            case STANDARD:
-                standardButton.setSelected(true);
-                break;
-            default:
-                break;
-        }
+        dayPageLayout.addListener((observable, oldValue, newValue) -> {
+            switch (getDayPageLayout()) {
+                case AGENDA_ONLY:
+                    agendaOnlyButton.setSelected(true);
+                    break;
+                case DAY_ONLY:
+                    dayOnlyButton.setSelected(true);
+                    break;
+                case STANDARD:
+                    standardButton.setSelected(true);
+                    break;
+                default:
+                    break;
+            }
+        });
 
         agendaOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_AGENDA_LIST"))); //$NON-NLS-1$
         dayOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_DAY_VIEW"))); //$NON-NLS-1$
