@@ -3,4 +3,6 @@ module com.calendarfx.weather {
     requires com.calendarfx.view;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.weathericons;
+
+    exports com.calendarfx.app;
 }

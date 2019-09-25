@@ -31,6 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.fortuna.ical4j.util.MapTimeZoneCache;
 import org.controlsfx.dialog.ProgressDialog;
 
 import java.time.LocalDate;
@@ -54,6 +55,7 @@ public class ICalCalendarApp extends Application {
 
         System.setProperty("ical4j.unfolding.relaxed", "true");
         System.setProperty("ical4j.parsing.relaxed", "true");
+        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache.class.getName());
 
         CalendarView calendarView = new CalendarView();
         calendarView.setToday(LocalDate.now());
