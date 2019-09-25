@@ -164,9 +164,9 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView>
 
         getChildren().add(gridPane);
 
-        updateHyerlinkSupport();
+        updateHyperlinkSupport();
         view.enableHyperlinksProperty()
-                .addListener(it -> updateHyerlinkSupport());
+                .addListener(it -> updateHyperlinkSupport());
 
         buildView();
 
@@ -175,7 +175,7 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView>
         updateUsageColors("initial creation of usage colors");
     }
 
-    private void updateHyerlinkSupport() {
+    private void updateHyperlinkSupport() {
         final YearMonthView view = getSkinnable();
 
         if (view.isEnableHyperlinks()) {
