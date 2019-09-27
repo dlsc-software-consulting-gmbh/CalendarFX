@@ -9,7 +9,7 @@ module com.calendarfx.view {
     requires transitive org.kordamp.ikonli.javafx;
     requires transitive org.kordamp.ikonli.fontawesome;
 
-    requires transitive com.calendarfx.recurrence;
+    requires ical4j;
 
     exports com.calendarfx.model;
     exports com.calendarfx.util;

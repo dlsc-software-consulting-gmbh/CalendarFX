@@ -61,9 +61,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.calendarfx</groupId>
-            <artifactId>recurrence</artifactId>
-            <version>11.7.0</version>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
+            <version>3.0.7</version>
         </dependency>
 
         <dependency>

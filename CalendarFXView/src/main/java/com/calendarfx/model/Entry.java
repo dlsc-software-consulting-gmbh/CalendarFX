@@ -16,10 +16,6 @@
 
 package com.calendarfx.model;
 
-import com.google.ical.compat.javatime.LocalDateIterator;
-import com.google.ical.compat.javatime.LocalDateIteratorFactory;
-import com.google.ical.values.DateValue;
-import com.google.ical.values.RRule;
 import impl.com.calendarfx.view.util.Util;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -38,6 +34,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.parameter.Value;
 import org.controlsfx.control.PropertySheet.Item;
 
 import java.text.ParseException;
@@ -696,10 +696,10 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 private void updateRecurrenceEndProperty(String newRecurrence) {
                     if (newRecurrence != null && !newRecurrence.trim().equals("")) { //$NON-NLS-1$
                         try {
-                            RRule rule = new RRule(newRecurrence);
-                            DateValue until = rule.getUntil();
+                            Recur recur = new Recur(newRecurrence.replaceFirst("^RRULE:", ""));
+                            Date until = recur.getUntil();
                             if (until != null) {
-                                setRecurrenceEnd(LocalDate.of(until.year(), until.month(), until.day()));
+                                setRecurrenceEnd(until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
                             } else {
                                 setRecurrenceEnd(LocalDate.MAX);
                             }
@@ -1504,12 +1504,10 @@ public class Entry<T> implements Comparable<Entry<?>> {
     private boolean isRecurrenceShowing(Entry<?> entry, ZonedDateTime st, ZonedDateTime et, ZoneId zoneId) {
         String recurrenceRule = entry.getRecurrenceRule();
 
-        LocalDate utilStartDate = entry.getStartAsZonedDateTime().toLocalDate();
+        Date utilStartDate = new Date(Date.from(entry.getStartAsZonedDateTime().toInstant()));
 
         try {
-            LocalDate utilEndDate = et.toLocalDate();
-
-            LocalDateIterator iterator = LocalDateIteratorFactory.createLocalDateIterator(recurrenceRule, utilStartDate, zoneId, true);
+            Date utilEndDate = new Date(Date.from(et.toInstant()));
 
             /*
              * TODO: for performance reasons we should definitely
@@ -1522,17 +1520,15 @@ public class Entry<T> implements Comparable<Entry<?>> {
              */
             // iterator.advanceTo(st.toLocalDate());
 
-            while (iterator.hasNext()) {
-                LocalDate repeatingDate = iterator.next();
-                if (repeatingDate.isAfter(utilEndDate)) {
-                    break;
-                } else {
-                    ZonedDateTime recurrenceStart = ZonedDateTime.of(repeatingDate, LocalTime.MIN, zoneId);
-                    ZonedDateTime recurrenceEnd = recurrenceStart.plus(entry.getDuration());
+            DateList dateList = new Recur(recurrenceRule.replaceFirst("^RRULE:", "")).getDates(utilStartDate, utilEndDate, Value.DATE);
 
-                    if (Util.intersect(recurrenceStart, recurrenceEnd, st, et)) {
-                        return true;
-                    }
+            for (Date date : dateList) {
+                LocalDate repeatingDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                ZonedDateTime recurrenceStart = ZonedDateTime.of(repeatingDate, LocalTime.MIN, zoneId);
+                ZonedDateTime recurrenceEnd = recurrenceStart.plus(entry.getDuration());
+
+                if (Util.intersect(recurrenceStart, recurrenceEnd, st, et)) {
+                    return true;
                 }
             }
         } catch (ParseException ex) {

@@ -39,12 +39,6 @@
             <version>11.7.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.calendarfx</groupId>
-            <artifactId>recurrence</artifactId>
-            <version>11.7.0</version>
-        </dependency>
-
         <!--dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>google</artifactId>
