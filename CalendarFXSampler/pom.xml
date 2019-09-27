@@ -23,17 +23,6 @@
 
     <name>CalendarFXSampler</name>
 
-    <repositories>
-        <repository>
-            <id>oss-sonatype</id>
-            <name>oss-sonatype</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
@@ -45,6 +34,30 @@
     </parent>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>11</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -70,18 +83,24 @@
             <version>1.0.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <!-- plugin>
+            <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
                     <mainClass>com.calendarfx.demo.CalendarFXSampler</mainClass>
                 </configuration>
-            </plugin -->
+            </plugin>
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
