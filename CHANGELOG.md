@@ -1,5 +1,15 @@
 # Change Log
 
+## [11.8.0](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/tree/11.8.0) (2019-09-27)
+[Full Changelog](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/compare/11.7.0...11.8.0)
+
+**Merged pull requests:**
+
+- Add missing German translation [\#58](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/pull/58) ([saarmbruster](https://github.com/saarmbruster))
+- Fix typo in private method name [\#56](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/pull/56) ([saarmbruster](https://github.com/saarmbruster))
+- Add listener to dayPageLayout [\#55](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/pull/55) ([saarmbruster](https://github.com/saarmbruster))
+- iCal4j recurrence [\#51](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/pull/51) ([mwkroening](https://github.com/mwkroening))
+
 ## [11.7.0](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/tree/11.7.0) (2019-09-25)
 [Full Changelog](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/compare/11.6.4...11.7.0)
 
