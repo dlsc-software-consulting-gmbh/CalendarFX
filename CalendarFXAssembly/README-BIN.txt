@@ -6,12 +6,6 @@ This is the CalendarFX distribution. It contains the following items:
 
 	Contains the calendar.css file.
 
--- demos
-
-	Contains several standalone / runnable JAR files. Demos can be
-	started by either double clicking on them or by calling java -jar demo.jar. Make
-	sure to use at least Java 8u60+.
-   
 -- docs
 
 	Contains the generated JavaDocs / API HTML files.

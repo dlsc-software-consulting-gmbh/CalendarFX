@@ -4,5 +4,5 @@ module com.calendarfx.weather {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.weathericons;
 
-    exports com.calendarfx.app;
+    exports com.calendarfx.weather;
 }

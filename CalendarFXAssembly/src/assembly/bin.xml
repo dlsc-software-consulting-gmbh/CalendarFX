@@ -63,39 +63,9 @@
         </file>
 
         <file>
-            <source>README-DEMOS.txt</source>
-            <outputDirectory>demos</outputDirectory>
-        </file>
-
-        <file>
             <source>README-MISC.txt</source>
             <outputDirectory>misc</outputDirectory>
         </file>
-
-        <file>
-            <source>../CalendarFXApp/target/calendar-demo.jar</source>
-            <outputDirectory>demos</outputDirectory>
-        </file>
-
-        <file>
-            <source>../CalendarFXiCal/target/ical-demo.jar</source>
-            <outputDirectory>demos</outputDirectory>
-        </file>
-
-        <file>
-            <source>../CalendarFXWeather/target/weather-demo.jar</source>
-            <outputDirectory>demos</outputDirectory>
-        </file>
-
-        <file>
-            <source>../CalendarFXSampler/target/sampler-demo.jar</source>
-            <outputDirectory>demos</outputDirectory>
-        </file>
-
-        <!--file>
-            <source>../CalendarFXGoogle/target/google-demo.jar</source>
-            <outputDirectory>demos</outputDirectory>
-        </file-->
 
         <file>
             <source>../CalendarFXView/src/main/resources/com/calendarfx/view/calendar.css</source>
@@ -108,7 +78,7 @@
         </file>
 
         <file>
-            <source>../CalendarFXWeather/src/main/java/com/calendarfx/app/WeatherApp.java</source>
+            <source>../CalendarFXWeather/src/main/java/com/calendarfx/weather/WeatherApp.java</source>
             <outputDirectory>tutorial</outputDirectory>
         </file>
 

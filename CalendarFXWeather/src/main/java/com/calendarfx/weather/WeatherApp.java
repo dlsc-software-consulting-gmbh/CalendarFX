@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.calendarfx.app;
+package com.calendarfx.weather;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
