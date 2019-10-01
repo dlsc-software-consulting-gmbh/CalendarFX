@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>11.8.0</version>
+        <version>11.8.1</version>
     </parent>
 
     <repositories>
