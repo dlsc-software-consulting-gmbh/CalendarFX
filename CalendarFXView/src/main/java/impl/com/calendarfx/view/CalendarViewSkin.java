@@ -503,6 +503,10 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
             PageBase selectedPage = view.getSelectedPage();
 
+            if (!stackPane.getChildren().contains(selectedPage)) {
+                stackPane.getChildren().add(selectedPage);
+            }
+
             selectedPage.setManaged(true);
             selectedPage.setVisible(true);
 
