@@ -385,7 +385,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             getChildren().add(borderPane);
         }
 
-        stackPane.getChildren().setAll(dayPage, weekPage, monthPage, yearPage);
+        stackPane.getChildren().setAll(dayPage);
 
         final PageBase selectedPage = view.getSelectedPage();
         selectedPage.toFront();

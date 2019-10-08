@@ -28,6 +28,7 @@ public class YearPageSkin extends PageBaseSkin<YearPage> {
 
     private YearView yearView;
     private MonthSheetView sheetView;
+    private StackPane stackPane;
 
     public YearPageSkin(YearPage view) {
         super(view);
@@ -45,12 +46,18 @@ public class YearPageSkin extends PageBaseSkin<YearPage> {
                 yearView.setVisible(false);
                 sheetView.setManaged(true);
                 sheetView.setVisible(true);
+                if(!stackPane.getChildren().contains(sheetView)) {
+                    stackPane.getChildren().add(sheetView);
+                }
                 break;
             case GRID:
                 yearView.setManaged(true);
                 yearView.setVisible(true);
                 sheetView.setManaged(false);
                 sheetView.setVisible(false);
+                if(!stackPane.getChildren().contains(yearView)) {
+                    stackPane.getChildren().add(yearView);
+                }
                 break;
         }
     }
@@ -70,15 +77,13 @@ public class YearPageSkin extends PageBaseSkin<YearPage> {
 
     @Override
     protected Node createContent() {
-        StackPane stackPane = new StackPane();
+        stackPane = new StackPane();
 
         this.sheetView = getSkinnable().getMonthSheetView();
         this.sheetView.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         this.yearView = getSkinnable().getYearView();
         this.yearView.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-        stackPane.getChildren().addAll(yearView, sheetView);
 
         return stackPane;
     }
