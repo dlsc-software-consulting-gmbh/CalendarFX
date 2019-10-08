@@ -20,7 +20,6 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
-import com.calendarfx.util.CalendarFX;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DraggedEntry;
@@ -86,8 +85,6 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
                 }
             }
         });
-
-        showInfo();
     }
 
     protected void refreshData() {
@@ -191,18 +188,5 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
         ZonedDateTime st = ZonedDateTime.of(loadStartDate, LocalTime.MIN, zoneId);
         ZonedDateTime et = ZonedDateTime.of(loadEndDate, LocalTime.MAX, zoneId);
         return Util.intersect(interval.getStartZonedDateTime(), interval.getEndZonedDateTime(), st, et);
-    }
-
-    private static boolean infoShown;
-
-    private synchronized void showInfo() {
-        if (!infoShown) {
-            infoShown = true;
-
-            System.out.println("CalendarFX user interface framework for Java");
-            System.out.println("(c) 2014 - 2018 DLSC Software & Consulting");
-            System.out.println("Version: " + CalendarFX.getVersion());
-            System.out.println("Website: http://www.dlsc.com");
-        }
     }
 }
