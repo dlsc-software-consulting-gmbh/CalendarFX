@@ -47,7 +47,7 @@ public class YearPageSkin extends PageBaseSkin<YearPage> {
                 sheetView.setManaged(true);
                 sheetView.setVisible(true);
                 if(!stackPane.getChildren().contains(sheetView)) {
-                    stackPane.getChildren().setAll(sheetView);
+                    stackPane.getChildren().add(sheetView);
                 }
                 break;
             case GRID:
@@ -56,7 +56,7 @@ public class YearPageSkin extends PageBaseSkin<YearPage> {
                 sheetView.setManaged(false);
                 sheetView.setVisible(false);
                 if(!stackPane.getChildren().contains(yearView)) {
-                    stackPane.getChildren().setAll(yearView);
+                    stackPane.getChildren().add(yearView);
                 }
                 break;
         }
