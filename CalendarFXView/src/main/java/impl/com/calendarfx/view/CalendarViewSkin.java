@@ -503,10 +503,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
             PageBase selectedPage = view.getSelectedPage();
 
-            if (!stackPane.getChildren().contains(selectedPage)) {
-                stackPane.getChildren().add(selectedPage);
-            }
-
             selectedPage.setManaged(true);
             selectedPage.setVisible(true);
 
@@ -545,6 +541,10 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             showMonth.setSelected(true);
         } else if (page == view.getYearPage()) {
             showYear.setSelected(true);
+        }
+
+        if (!stackPane.getChildren().contains(page)) {
+            stackPane.getChildren().add(page);
         }
     }
 
@@ -621,10 +621,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         KeyValue newOpacity = new KeyValue(newPage.opacityProperty(), 1);
         KeyValue newScaleX = new KeyValue(newPage.scaleXProperty(), 1);
         KeyValue newScaleY = new KeyValue(newPage.scaleYProperty(), 1);
-
-        if (!children.contains(newPage)) {
-            children.add(newPage);
-        }
 
         KeyFrame frame2 = new KeyFrame(duration, newOpacity, newScaleX,
                 newScaleY);
