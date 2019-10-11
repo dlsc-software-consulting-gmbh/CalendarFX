@@ -168,7 +168,7 @@ public class Calendar implements EventTarget {
         setName(name);
 
         if (name != null) {
-            setShortName(name.substring(0, 1));
+            setShortName(!name.isEmpty() ? name.substring(0, 1) : "");
         }
     }
 
