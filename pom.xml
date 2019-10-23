@@ -15,6 +15,13 @@
 
     <url>https://github.com/dlemmermann/CalendarFX</url>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>13.0.1</javafx.version>
+        <javafx.maven.plugin.version>0.0.3</javafx.maven.plugin.version>
+        <controlsfx.version>11.0.0</controlsfx.version>
+    </properties>
+
     <licenses>
         <license>
             <name>Apache 2.0</name>
@@ -32,11 +39,6 @@
             <organization>DLSC Software &amp; Consulting</organization>
         </developer>
     </developers>
-
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <modules>
         <module>CalendarFXSampler</module>

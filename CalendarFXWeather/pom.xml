@@ -60,7 +60,7 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.3</version>
+                <version>${javafx.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>com.calendarfx.weather.WeatherApp</mainClass>
                 </configuration>
