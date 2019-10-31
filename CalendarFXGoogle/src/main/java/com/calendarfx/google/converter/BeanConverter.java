@@ -18,7 +18,7 @@ package com.calendarfx.google.converter;
 
 /**
  * Interface representing a converter from/to a single bean.
- * <p>
+ *
  * Created by gdiaz on 20/02/2017.
  */
 public interface BeanConverter<S, T> {
@@ -29,6 +29,6 @@ public interface BeanConverter<S, T> {
      * @param source The object source to be converted.
      * @return The target result of the convertion.
      */
-    public T convert(S source);
+    T convert(S source);
 
 }

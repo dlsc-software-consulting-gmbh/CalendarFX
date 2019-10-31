@@ -24,7 +24,7 @@ import com.calendarfx.google.view.log.ActionType;
 
 /**
  * Moves an entry from one calendar to another.
- * <p>
+ *
  * Created by gdiaz on 19/03/2017.
  */
 public final class MoveEntryTask extends GoogleTask<GoogleEntry> {

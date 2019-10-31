@@ -24,7 +24,7 @@ import com.calendarfx.google.view.log.ActionType;
 
 /**
  * Task that inserts an entry into google.
- * <p>
+ *
  * Created by gdiaz on 12/03/2017.
  */
 public final class InsertEntryTask extends GoogleTask<GoogleEntry> {

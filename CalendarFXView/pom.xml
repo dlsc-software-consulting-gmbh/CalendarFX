@@ -135,6 +135,11 @@
                     <failOnError>false</failOnError>
                     <force>true</force>
                     <windowtitle>CalendarFX API</windowtitle>
+                    <detectLinks>false</detectLinks>
+                    <links>
+                        <link>https://openjfx.io/javadoc/13/</link>
+                    </links>
+
                     <additionalJOptions>
                         <additionalJOption>-J-Djavafx.javadoc=true</additionalJOption>
                         <additionalJOption>-html5</additionalJOption>

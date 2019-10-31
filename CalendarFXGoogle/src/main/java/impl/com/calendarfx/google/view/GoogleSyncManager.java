@@ -37,7 +37,7 @@ import java.util.Map;
 
 /**
  * Class in charge of receiving calendar events and synchronize data between the app and google.
- * <p>
+ *
  * Created by gdiaz on 06/03/2017.
  */
 final class GoogleSyncManager implements EventHandler<CalendarEvent>, ListChangeListener<Calendar> {

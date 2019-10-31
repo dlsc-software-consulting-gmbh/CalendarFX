@@ -35,7 +35,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Executor class that allows to have some background tasks executed.
- * <p>
+ *
  * Created by gdiaz on 22/02/2017.
  */
 public final class GoogleTaskExecutor {

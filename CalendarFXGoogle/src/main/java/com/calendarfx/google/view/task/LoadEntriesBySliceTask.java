@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Task that loads some entries from google for one single calendar using the period provided by some slices.
- * <p>
+ *
  * Created by gdiaz on 6/03/2017.
  */
 public final class LoadEntriesBySliceTask extends GoogleTask<List<GoogleEntry>> {

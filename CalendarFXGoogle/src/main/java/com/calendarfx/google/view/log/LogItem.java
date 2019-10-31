@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 
 /**
  * Item of the log that provides information about one performed task.
- * <p>
+ *
  * Created by gdiaz on 22/02/2017.
  */
 public class LogItem {

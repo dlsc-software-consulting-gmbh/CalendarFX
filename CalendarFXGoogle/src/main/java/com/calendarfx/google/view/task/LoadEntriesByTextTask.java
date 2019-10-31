@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * Search entries by text task.
- * <p>
+ *
  * Created by gdiaz on 21/03/2017.
  */
 public final class LoadEntriesByTextTask extends GoogleTask<List<GoogleEntry>> {

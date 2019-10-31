@@ -23,7 +23,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Status of the google task.
- * <p>
+ *
  * Created by gdiaz on 28/02/2017.
  */
 public enum StatusType {

@@ -23,7 +23,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * Remind method.
- * <p>
+ *
  * Created by gdiaz on 28/04/2017.
  */
 public class GoogleEntryReminder {

@@ -35,7 +35,7 @@ import javafx.scene.layout.StackPane;
 
 /**
  * Pane that shows in a map the location of the entry.
- * <p>
+ *
  * Created by gdiaz on 13/01/2017.
  */
 public class GoogleEntryGMapsFXView extends EntryPopOverPane implements MapComponentInitializedListener {

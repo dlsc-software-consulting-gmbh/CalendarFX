@@ -42,7 +42,7 @@ import java.util.function.Predicate;
 
 /**
  * Pane that displays a table with all log items registered by the app.
- * <p>
+ *
  * Created by gdiaz on 22/02/2017.
  */
 public class LogPane extends Control {
@@ -185,9 +185,7 @@ public class LogPane extends Control {
 
                 if (logItem.getCalendar() != null) {
                     String calendarLower = logItem.getCalendar().toLowerCase();
-                    if (calendarLower.contains(textLower)) {
-                        return true;
-                    }
+                    return calendarLower.contains(textLower);
                 }
 
                 return false;

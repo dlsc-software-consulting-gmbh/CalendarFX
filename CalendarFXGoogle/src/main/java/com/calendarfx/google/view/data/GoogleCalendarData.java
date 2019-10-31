@@ -28,7 +28,7 @@ import static java.util.Comparator.naturalOrder;
 
 /**
  * Class storing data about the entries loaded from google for one single calendar.
- * <p>
+ *
  * Created by gdiaz on 27/02/2017.
  */
 public final class GoogleCalendarData {

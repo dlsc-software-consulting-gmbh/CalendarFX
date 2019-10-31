@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * Thread that shows notifications of entries that are about to happen.
- * <p>
+ *
  * Created by gdiaz on 6/05/2017.
  */
 public class GoogleNotificationPopupThread extends Thread {

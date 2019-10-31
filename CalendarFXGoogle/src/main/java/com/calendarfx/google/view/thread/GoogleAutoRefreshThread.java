@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * Thread that performs the automatic refreshing.
- * <p>
+ *
  * Created by gdiaz on 5/05/2017.
  */
 public class GoogleAutoRefreshThread extends Thread {
