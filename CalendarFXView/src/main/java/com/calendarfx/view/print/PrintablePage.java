@@ -16,20 +16,12 @@
 
 package com.calendarfx.view.print;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DetailedDayView;
 import com.calendarfx.view.DetailedWeekView;
 import com.calendarfx.view.MonthView;
 import com.calendarfx.view.print.PaperView.MarginType;
-
 import impl.com.calendarfx.view.print.PrintablePageSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -51,6 +43,13 @@ import javafx.print.Paper;
 import javafx.scene.control.Skin;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A control that is designed and laid out in such a way that it can be nicely
@@ -853,9 +852,9 @@ public class PrintablePage extends DateControl {
     }
 
     /**
-     * Default configuration for Month view in the preview Pane.
+     * Default configuration for Month view in the preview pane.
      * 
-     * @return
+     * @return the month view
      */
     protected MonthView createMonthView() {
         MonthView newMonthView = new MonthView();

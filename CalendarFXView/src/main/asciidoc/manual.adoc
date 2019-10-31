@@ -1,4 +1,4 @@
-= CalendarFX 8 Developer Manual
+= CalendarFX Developer Manual
 Dirk Lemmermann <dlemmermann@gmail.com>
 :toc: left
 :source-highlighter: coderay
@@ -7,32 +7,6 @@ Dirk Lemmermann <dlemmermann@gmail.com>
 This is the CalendarFX developer manual. It aims to contain all the information required to quickly get a calendar UI into your application. If you notice any mistakes or if you are missing vital information then please let us know.
 
 image::title.png[Calendar View,align="center"]
-
-== Distribution
-
-CalendarFX is distributed as an archive (ZIP file). Once downloaded double click on the file to extract it. When you open the extracted folder you will see the following content.
-
-image::distribution.png[Distribution,align="center"]
-
-css:: Contains the calendar.css file used for styling all controls in CalendarFX.
-demos:: Several executable JAR files - double click to start the demo. If the applications do not start or you encounter problems try starting the demos from the command line like this "java -jar calendar-demo.jar".
-docs:: The generated JavaDocs / API documentation. The docs are covering everything in great detail. Many screenshots can be found inside of them. 
-ext:: A folder with third-party libraries. ControlsFX is used for providing additional controls (e.g. MasterDetailPane, CustomTextField), some of which are the result of our work on CalendarFX and have been handed over as open source to the community (e.g. PopOver). The second JAR file includes the FontAwesome graphics and API. The third JAR file in the "ext" folder "license4j.jar" is used for supporting the licensing concept behind CalendarFX.
-i18n:: Contains the resource bundles (english, german).
-legal:: A folder containing the licensing agreements (development, runtime, source code, research).
-lib:: The CalendarFX JAR files.
-manual:: Contains this document.
-misc:: Logging and i18N information and resources.
-tutorial:: Two JavaFX apps showing you how to get started with CalendarFX.
-
-== Installation
-
-To use CalendarFX for your project, simply add the calendarfx JAR files found in the "lib" folder and all JAR files found in the "ext" folder to the classpath of your application. This is all that is needed, no further configuration required, at least not for the trial period of several months. After this period it will be necessary to set a license key as shown below. For buying options please refer to the website at http://www.calendarfx.com.
-
-[source,java,linenums]
-----
-CalendarFX.setLicenseKey("abb91c8aa43efhhllm...");
-----
 
 == Quick Start
 
@@ -93,7 +67,7 @@ public class CalendarApp extends Application {
 					}
 
 				}
-			};
+			}
 		};
 
 		updateTimeThread.setPriority(Thread.MIN_PRIORITY);

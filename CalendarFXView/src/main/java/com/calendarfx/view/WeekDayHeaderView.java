@@ -44,9 +44,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * A view for displaying the names of the week days in the {@link DetailedWeekView}
  * control. A cell factory can be used to customize the appearance of the names.
- * <p/>
- * <center><img src="doc-files/week-weekdays.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/week-weekdays.png" alt="Week Weekdays">
+ *
  */
 public class WeekDayHeaderView extends DateControl {
 
@@ -229,6 +229,8 @@ public class WeekDayHeaderView extends DateControl {
 
         /**
          * Constructs a new date cell.
+         *
+         * @param view the weekday header view
          */
         public WeekDayCell(WeekDayHeaderView view) {
             Objects.requireNonNull(view);

@@ -27,10 +27,10 @@ import static java.util.Objects.requireNonNull;
  * An event class used to signal changes done within a calendar or changes done
  * to a calendar entry. Events of this type can be received by adding an event
  * handler to a calendar.
- * <p/>
- * <p>
+ *
+ *
  * <h2>Example</h2>
- * <p>
+ *
  * <pre>
  * {@code
  * Calendar calendar = new Calendar("Home");

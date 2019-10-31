@@ -37,9 +37,9 @@ import static java.util.Objects.requireNonNull;
  * A custom control used for editing recurrence rules according to RFC 2445. The
  * image below shows the four configurations of the control depending on the
  * currently selected frequency (daily, weekly, monthly, yearly).
- * <p/>
- * <center><img width="80%" src="doc-files/recurrence-view.png"></center>
- * <p/>
+ *
+ * <img width="80%" src="doc-files/recurrence-view.png" alt="Recurrence Week">
+ *
  */
 public class RecurrenceView extends CalendarFXControl {
 

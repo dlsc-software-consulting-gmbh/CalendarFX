@@ -59,27 +59,24 @@ import static java.util.logging.Level.FINE;
  * An entry inside a calendar, for example "Dentist Appointment, Feb 2nd, 9am".
  * Entries are added to and managed by calendars. The main attributes of an
  * entry are:
- * <p/>
+ *
  * <ul>
  * <li><b>Title</b> - the title shown to the user in the UI</li>
- * <li><b>Interval</b> - the time interval and time zone occupied by the entry
- * </li> valid for</li>
- * <li><b>Full Day</b> - a flag signalling whether the entry should be treated
- * as a "full day" event, e.g. a birthday</li>
+ * <li><b>Interval</b> - the time interval and time zone occupied by the entry</li>
+ * <li><b>Full Day</b> - a flag signalling whether the entry should be treated as a "full day" event, e.g. a birthday</li>
  * <li><b>Calendar</b> - the calendar to which the entry belongs</li>
  * </ul>
- * <br/>
  * The default minimum duration of an entry is 15 minutes.
- * <p>
+ *
  * <h2>Visual Appearance</h2>
  * The image below shows an entry called "dentist appointment" as it would be visualized
  * via an {@link com.calendarfx.view.DayEntryView} inside a {@link com.calendarfx.view.DayView}.
- * <p/>
- * <center><img src="doc-files/entry.png"></center>
- * <p/>
- * <p>
+ *
+ * <img src="doc-files/entry.png" alt="Entry">
+ *
+ *
  * <h2>Recurrence</h2>
- * <p/>
+ *
  * This class supports the industry standard for defining recurring events (RFC
  * 2445). For recurring events the method {@link #setRecurrenceRule(String)}
  * must be fed with a valid RRULE string, for example "RRULE:FREQ=DAILY" for an
@@ -89,9 +86,9 @@ import static java.util.logging.Level.FINE;
  * invoked. Recurring entries will return "true" when their
  * {@link #isRecurrence()} method is called and they will also be able to return
  * the "source" entry ({@link #getRecurrenceSourceEntry()}).
- * <p>
+ *
  * <h2>Example</h2>
- * <p>
+ *
  * <pre>
  * Entry entry = new Entry(&quot;Dentist Appointment&quot;);
  * Interval interval = new Interval(...);
@@ -656,7 +653,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
      * A property used to store a recurrence rule according to RFC-2445.
      * <h3>Example</h3> Repeat entry / event every other day until September
      * 1st, 2015.
-     * <p>
+     *
      * <pre>
      * String rrule = "RRULE:FREQ=DAILY;INTERVAL=2;UNTIL=20150901";
      * setRecurrenceRule(rrule);
@@ -1235,8 +1232,8 @@ public class Entry<T> implements Comparable<Entry<?>> {
      * A property used to signal whether an entry is considered to be a
      * "full day" entry, for example a birthday. The image below shows how full
      * day entries are shown in the UI.
-     * <p/>
-     * <center><img width="100%" src="doc-files/full-day.png"></center>
+     *
+     * <img width="100%" src="doc-files/full-day.png" alt="Full Day">
      *
      * @return the full day property
      */
@@ -1408,8 +1405,8 @@ public class Entry<T> implements Comparable<Entry<?>> {
     /**
      * A read-only property to determine if the entry spans several days. The
      * image below shows such an entry.
-     * <p/>
-     * <center><img src="doc-files/multi-day.png"></center>
+     *
+     * <img src="doc-files/multi-day.png" alt="Multi Day">
      *
      * @return true if the end date is after the start date (multiple days)
      * @see #getStartDate()
@@ -1603,11 +1600,8 @@ public class Entry<T> implements Comparable<Entry<?>> {
         String otherRecId = other.getRecurrenceId();
 
         if (recId == null) {
-            if (otherRecId != null)
-                return false;
-        } else if (!recId.equals(otherRecId))
-            return false;
-        return true;
+            return otherRecId == null;
+        } else return recId.equals(otherRecId);
     }
 
     private static final String ENTRY_CATEGORY = "Entry"; //$NON-NLS-1$

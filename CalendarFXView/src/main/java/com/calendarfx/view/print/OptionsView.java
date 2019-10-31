@@ -29,8 +29,8 @@ import java.util.Optional;
 /**
  * A control that allows to toggle a couple of options inside the print preview dialog.
  * The default style class of this view is "options-view".
- * <p>
- * <center><img src="doc-files/options-view.png"></center>
+ *
+ * <img src="doc-files/options-view.png" alt="Options View">
  */
 public class OptionsView extends ViewTypeControl {
 

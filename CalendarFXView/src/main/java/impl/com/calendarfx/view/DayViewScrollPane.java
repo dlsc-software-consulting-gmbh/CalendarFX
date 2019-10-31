@@ -53,6 +53,7 @@ public class DayViewScrollPane extends Pane {
      * Constructs a new scrollpane for the given content node.
      *
      * @param dayView the content node
+     * @param scrollBar the scrollbar used for vertical scrolling
      */
     public DayViewScrollPane(DayViewBase dayView, ScrollBar scrollBar) {
         super();

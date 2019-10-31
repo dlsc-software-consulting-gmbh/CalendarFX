@@ -88,8 +88,8 @@ public class Calendar implements EventTarget {
      * styles can be found in the framework stylesheet, prefixed with "style1-",
      * "style2-", etc. The picture below shows the colors used for the various
      * styles.
-     * <p>
-     * <center><img src="doc-files/styles.png"></center>
+     *
+     * <img src="doc-files/styles.png" alt="Styles">
      *
      * @see Calendar#setStyle(Style)
      */
@@ -763,8 +763,8 @@ public class Calendar implements EventTarget {
      * Sets the value of {@link #styleProperty()} based on one of the predefined
      * styles (see also the enum {@link Style}). The image below shows how the
      * styles appear in the UI.
-     * <p>
-     * <center><img src="doc-files/styles.png"></center>
+     *
+     * <img src="doc-files/styles.png" alt="Styles">
      *
      * @param style the calendar style
      */

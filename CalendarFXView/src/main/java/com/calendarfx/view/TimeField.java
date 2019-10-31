@@ -33,9 +33,9 @@ import java.util.Optional;
 
 /**
  * A control for editing a {@link LocalTime}.
- * <p/>
- * <center><img src="doc-files/time-field.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/time-field.png" alt="Time Field">
+ *
  */
 public class TimeField extends CalendarFXControl {
 

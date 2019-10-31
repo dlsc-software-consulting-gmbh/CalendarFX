@@ -16,15 +16,8 @@
 
 package com.calendarfx.view;
 
-import static java.util.Objects.requireNonNull;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
-
 import impl.com.calendarfx.view.DayViewSkin;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
@@ -32,23 +25,29 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Skin;
 import javafx.util.Callback;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * A view representing a single day. This view can be customized to show all 24
  * hours at equal height, compress the early and late hours (unused hours), or
  * to hide these hours altogether.
- * <p/>
+ *
  * The view uses a factory to create instances of {@link DayEntryView}.
  * Applications can plug in their own factory to customize the appearance of
  * entry views.
- * <p/>
+ *
  * New calendar entries can be created by double clicking in the background of
  * the view.
- * <p/>
+ *
  * The image below shows an example of this view with three entry views and
  * compressed early hours.
- * <p/>
- * <center><img src="doc-files/day-view.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/day-view.png" alt="Day View">
+ *
  */
 public class DayView extends DayViewBase {
 

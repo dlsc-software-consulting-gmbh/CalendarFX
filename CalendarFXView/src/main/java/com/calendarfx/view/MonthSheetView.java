@@ -72,10 +72,10 @@ import static java.util.Objects.requireNonNull;
  * months or even a year. Each day is represented by a cell (see {@link DateCell}). Cells are
  * created by a cell factory and can be customized to fit an application's needs.
  * <h3>Screenshot (Using DetailedDateCell)</h3>
- * <center><img width="100%" src="doc-files/month-sheet-view.png"></center>
+ * <img width="100%" src="doc-files/month-sheet-view.png" alt="Month Sheet View">
  *
  * <h3>Screenshot (Using "aligned" weekday layout)</h3>
- * <center><img width="100%" src="doc-files/month-sheet-view-aligned.png"></center>
+ * <img width="100%" src="doc-files/month-sheet-view-aligned.png" alt="Month Sheet View Aligned">
  *
  * @see #setWeekDayLayout(WeekDayLayoutStrategy)
  * @see #setCellFactory(Callback)
@@ -500,9 +500,7 @@ public class MonthSheetView extends DateControl {
             }
 
             YearMonth extendedEnd = getExtendedEndMonth();
-            if ((month.equals(extendedEnd) || month.isBefore(extendedEnd)) && month.isAfter(getEndMonth())) {
-                return true;
-            }
+            return (month.equals(extendedEnd) || month.isBefore(extendedEnd)) && month.isAfter(getEndMonth());
         }
         return false;
     }
@@ -524,9 +522,7 @@ public class MonthSheetView extends DateControl {
             LocalDate startDate = extendedStart.atDay(1);
             LocalDate endDate = extendedEnd.atEndOfMonth();
 
-            if ((date.equals(startDate) || date.isAfter(startDate)) && (date.equals(endDate) || date.isBefore(endDate))) {
-                return true;
-            }
+            return (date.equals(startDate) || date.isAfter(startDate)) && (date.equals(endDate) || date.isBefore(endDate));
         }
         return false;
     }

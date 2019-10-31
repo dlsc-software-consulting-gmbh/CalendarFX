@@ -71,9 +71,9 @@ public abstract class MonthViewBase extends DateControl {
     /**
      * Controls whether the view will show week numbers. The image below shows
      * an example (weeks 10, 11, 12 in 2015):
-     * <p/>
-     * <center><img src="doc-files/week-numbers.png"></center>
-     * <p/>
+     *
+     * <img src="doc-files/week-numbers.png" alt="Week Numbers">
+     *
      *
      * @return true if week numbers are shown
      */

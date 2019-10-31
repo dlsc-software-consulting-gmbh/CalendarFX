@@ -376,9 +376,9 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * date shown by the view is equal to the value of "today". Depending on the
      * subclass the marker can be a red label (see {@link TimeScaleView}) or a
      * thin red line (see red time label and line in image below).
-     * <p>
-     * <center><img src="doc-files/current-time-marker.png"></center>
-     * <p>
+     *
+     * <img src="doc-files/current-time-marker.png" alt="Current Time Marker">
+     *
      *
      * @return true if the current time marker should be shown
      * @see #showCurrentTimeTodayMarkerProperty()
@@ -406,9 +406,9 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * "current time today" marker. Normally a day view will show this marker if
      * the date shown by the view is equal to the value of "today". The default
      * marker is a red circle (see circle in the image below).
-     * <p>
-     * <center><img src="doc-files/current-time-marker.png"></center>
-     * <p>
+     *
+     * <img src="doc-files/current-time-marker.png" alt="Current Time Marker">
+     *
      *
      * @return true if the current time marker should be shown
      * @see #showCurrentTimeMarkerProperty()

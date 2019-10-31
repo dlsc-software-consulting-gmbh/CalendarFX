@@ -16,23 +16,22 @@
 
 package impl.com.calendarfx.view;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DraggedEntry;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.shape.Rectangle;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 /**
- * The default day entry view. <br />
+ * The default day entry view.
  * It displays a title and the start time of the entry.
  */
 public class DayEntryViewSkin extends SkinBase<DayEntryView> {
@@ -82,7 +81,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * @returns The entry.
+     * @return The entry.
      */
     protected Entry<?> getEntry() {
         Entry<?> entry = getSkinnable().getEntry();
@@ -129,7 +128,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     /**
      * The label used to show the start time.
      *
-     * @returns The label component.
+     * @return The label component.
      */
     protected Label createStartTimeLabel() {
         Label label = new Label();
@@ -141,7 +140,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     /**
      * Convert the given time to a string.
      *
-     * @returns The formatted time.
+     * @param time the time
+     * @return The formatted time.
      */
     protected String formatTime(LocalTime time) {
         return formatter.format(time);
@@ -151,7 +151,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
      * Convert the given title. This method can be overridden for e.g.
      * translating the title.
      *
-     * @returns The formatted title.
+     * @param title the title
+     * @return The formatted title.
      */
     protected String formatTitle(String title) {
         return title;
@@ -160,7 +161,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     /**
      * The label used to show the title.
      *
-     * @returns The title component.
+     * @return The title component.
      */
     protected Label createTitleLabel() {
         Label label = new Label();
@@ -182,7 +183,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
     @Override
     protected void layoutChildren(double contentX, double contentY,
-            double contentWidth, double contentHeight) {
+                                  double contentWidth, double contentHeight) {
         // title label
         double titleHeight = titleLabel.prefHeight(contentWidth);
 
@@ -206,7 +207,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
     @Override
     protected double computeMinHeight(double width, double topInset,
-            double rightInset, double bottomInset, double leftInset) {
+                                      double rightInset, double bottomInset, double leftInset) {
         if (titleLabel != null) {
             // For this pref height calculation we do not consider the available
             // width because

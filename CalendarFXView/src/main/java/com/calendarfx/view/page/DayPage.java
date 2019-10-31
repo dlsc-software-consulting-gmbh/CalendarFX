@@ -54,8 +54,8 @@ import static java.util.Objects.requireNonNull;
  * The view consists of the page "chrome" inherited from the superclass, a
  * {@link DayView}, an {@link AllDayView}, a {@link TimeScaleView}, a
  * {@link YearMonthView} for picking a new date, and an {@link AgendaView}.
- * <p/>
- * <center><img width="100%" src="doc-files/day-page.png"></center>
+ *
+ * <img width="100%" src="doc-files/day-page.png" alt="Day Page">
  */
 public class DayPage extends PageBase {
 

@@ -49,10 +49,10 @@ import static java.util.Objects.requireNonNull;
  * is required for creating the child control {@link AllDayView}. The image
  * below shows the appearance of this view when it is embedded inside the
  * {@link DetailedWeekView}.
- * <p>
- * <p/>
- * <center><img src="doc-files/week-view.png"></center>
- * <p/>
+ *
+ *
+ * <img src="doc-files/week-view.png" alt="Week View">
+ *
  */
 public class WeekView extends DayViewBase {
 

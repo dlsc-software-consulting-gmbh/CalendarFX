@@ -28,8 +28,8 @@ import java.time.format.DateTimeFormatter;
  * A composite view focused on displaying calendar information for a single
  * month. The view consists of the page "chrome" inherited from the superclass
  * and a {@link MonthView}.
- * <p/>
- * <center><img width="100%" src="doc-files/month-page.png"></center>
+ *
+ * <img width="100%" src="doc-files/month-page.png" alt="Month Page">
  */
 public class MonthPage extends PageBase {
 

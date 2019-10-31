@@ -26,8 +26,8 @@ import javafx.scene.control.Skin;
 
 /**
  * A control for choosing a calendar from a list of calendars.
- * <p/>
- * <center><img src="doc-files/calendar-selector.png"></center>
+ *
+ * <img src="doc-files/calendar-selector.png" alt="Calendar Selector">
  */
 public class CalendarSelector extends CalendarFXControl {
 

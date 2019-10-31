@@ -46,9 +46,9 @@ import java.util.Optional;
  * application can switch between these two views by calling {@link #setDisplayMode(DisplayMode)}.
  *
  * <h3>YearView</h3>
- * <center><img width="100%" src="doc-files/year-page.png"></center>
+ * <img width="100%" src="doc-files/year-page.png" alt="Year Page">
  * <h3>MonthSheetView</h3>
- * <center><img width="100%" src="doc-files/year-page-2.png"></center>
+ * <img width="100%" src="doc-files/year-page-2.png" alt="Year Page 2">
  */
 public class YearPage extends PageBase {
 

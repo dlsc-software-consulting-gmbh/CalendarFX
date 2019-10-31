@@ -44,8 +44,8 @@ import java.util.Optional;
  * in a row, normally a week. The view consists of the page "chrome" inherited
  * from the superclass, a {@link WeekDayView} for each day, an
  * {@link AllDayView}, and a {@link WeekTimeScaleView}.
- * <p/>
- * <center><img width="100%" src="doc-files/week-page.png"></center>
+ *
+ * <img width="100%" src="doc-files/week-page.png" alt="Week Page">
  */
 public class WeekPage extends PageBase {
 

@@ -40,8 +40,8 @@ import static java.util.Objects.requireNonNull;
  * A view used for showing the short names of calendars on top of those
  * {@link DayView} instances that are using the {@link Layout#SWIMLANE} layout
  * strategy.
- * <p/>
- * <center><img width="100%" src="doc-files/calendar-header-view.png"></center>
+ *
+ * <img width="100%" src="doc-files/calendar-header-view.png" alt="Calendar Header View">
  *
  * @see DetailedWeekView#getCalendarHeaderView()
  */

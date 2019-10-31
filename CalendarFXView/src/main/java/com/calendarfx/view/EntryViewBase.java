@@ -16,22 +16,10 @@
 
 package com.calendarfx.view;
 
-import static java.util.Objects.requireNonNull;
-import static javafx.scene.control.SelectionMode.MULTIPLE;
-import static javafx.scene.input.MouseButton.PRIMARY;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Optional;
-
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.control.PropertySheet.Item;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.EntryContextMenuParameter;
 import com.calendarfx.view.DateControl.EntryDetailsParameter;
-
 import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
@@ -57,13 +45,23 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.controlsfx.control.PropertySheet;
+import org.controlsfx.control.PropertySheet.Item;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
+import static javafx.scene.input.MouseButton.PRIMARY;
 
 /**
  * The base class for all views that are representing calendar entries. There
  * are specializations of this class for the {@link DayView}, the
  * {@link DetailedWeekView}, and the {@link MonthView}. Each date control class uses
  * their own entry factory to create entry view instances.
- * <p/>
+ *
  * This view uses four pseudo classes:
  * <ul>
  * <li>dragged - when the user drags the view</li>
@@ -409,10 +407,10 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * view is shown on the "first" day, the "last" day, or some day in the
      * "middle" of the span. If the entry is located on only one day then the
      * position will be "only".
-     * <p/>
+     *
      * The image below illustrates this concept:
-     * <p/>
-     * <center><img src="doc-files/multi-days.png"></center>
+     *
+     * <img src="doc-files/multi-days.png" alt="Multi Days">
      *
      * @see EntryViewBase#positionProperty()
      */
@@ -453,11 +451,11 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * "middle" of the span. If the entry is located on only one day then the
      * position will be "only". This property is read-only and will be set by
      * the framework.
-     * <p/>
+     *
      * The image below illustrates this concept:
-     * <p/>
-     * <center><img src="doc-files/multi-days.png"></center>
-     * <p/>
+     *
+     * <img src="doc-files/multi-days.png" alt="Multi Day">
+     *
      *
      * @return the position of the view within the time range of the calendar
      *         entry
@@ -974,8 +972,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
             
             if(isMultiSelect(evt) && control.getSelections().contains(entry))
                 control.deselect(entry);
-            else if (!control.getSelections().contains(entry))
-                control.getSelections().add(entry);
+            else control.getSelections().add(entry);
             
             getProperties().remove(disableFocusHandlingKey);
         }

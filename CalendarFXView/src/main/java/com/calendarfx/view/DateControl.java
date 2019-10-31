@@ -86,7 +86,7 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
 /**
  * The superclass for all controls that are showing calendar information. This
  * class is responsible for:
- * <p>
+ *
  * <ul>
  * <li>Binding to other date controls</li>
  * <li>Providing the current date, "today", first day of week</li>
@@ -105,7 +105,7 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  * application to create a complex calendar control and to configure only that
  * control without worrying about the date controls that are nested inside of
  * it. The children will all "inherit" their settings from the parent control.
- * <p>
+ *
  * <h2>Current Date, Today, First Day of Week</h2> The {@link #dateProperty()}
  * is used to store the date that the control has to display. For the
  * {@link DayView} this would mean that it has to show exactly that date. The
@@ -115,19 +115,19 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  * fields stored in the {@link #weekFieldsProperty()}. The
  * {@link #todayProperty()} is mainly used for highlighting today's date in the
  * view (e.g. a red background).
- * <p>
+ *
  * <h2>Creating Sources, Calendars, Entries</h2> The date control uses various
  * factories to create new sources, calendars, and entries. Each factory has to
  * implement the {@link Callback} interface. The factories will be invoked when
  * the application calls {@link #createCalendarSource()} or
  * {@link #createEntryAt(ZonedDateTime)}.
- * <p>
+ *
  * <h2>Context Menu</h2> Date controls can either set a context menu explicitly
  * via {@link #setContextMenu(ContextMenu)} or by providing a callback that gets
  * invoked every time the context menu event is received (see
  * {@link #setContextMenuCallback(Callback)}). If a context menu has been set
  * explicitly then the callback will never be called again.
- * <p>
+ *
  * <h2>Details for Entries and Dates</h2> When clicking on an entry or a date
  * the user wants to see details regarding the entry or the date. Callbacks for
  * this can be registered via {@link #setEntryDetailsCallback(Callback)} and
@@ -135,14 +135,14 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  * kind of user interface they want to show to the user. The default
  * implementation for both callbacks is a {@link PopOver} control from the
  * <a href="http://controlsfx.org">ControlsFX</a> project.
- * <p>
+ *
  * <h2>Selection Handling</h2> Date controls use a very simple selection
  * concept. All selected entries are stored inside an observable list (see
  * {@link #getSelections()}). The controls support single and multiple
  * selections (see {@link #setSelectionMode(SelectionMode)}). Due to the binding
  * approach it does not matter in which child date control an entry gets
  * selected. All controls will always know which entries are selected.
- * <p>
+ *
  * <h2>Virtual Grid</h2> A virtual grid is used for editing. It allows the start
  * and end times of entries to snap to "virtual" grid lines. The grid can be
  * used to make the times always snap to 5, 10, 15, 30 minutes for example. This
@@ -694,7 +694,7 @@ public abstract class DateControl extends CalendarFXControl {
      * owner node.
      *
      * @param owner the owner node
-     * @param date the date for which to display more detail
+     * @param date  the date for which to display more detail
      */
     public void showDateDetails(Node owner, LocalDate date) {
         PopOver datePopOver = new DatePopOver(this, date);
@@ -793,13 +793,13 @@ public abstract class DateControl extends CalendarFXControl {
      * date control or when the application calls
      * {@link #createEntryAt(ZonedDateTime)}. The factory can return NULL to
      * indicate that no entry can be created at the given location.
-     * <p>
+     *
      * <h2>Code Example</h2>
      * <p>
      * The code below shows the default entry factory that is set on every date
      * control.
-     * <p>
-     * <p>
+     *
+     *
      * <pre>
      * setEntryFactory(param -&gt; {
      * 	DateControl control = param.getControl();
@@ -892,14 +892,14 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * A factory for creating a new calendar source, e.g. a new Google calendar
      * account.
-     * <p>
+     *
      * <h2>Code Example</h2> The code below shows the default implementation of
      * this factory. Applications can choose to bring up a full featured user
      * interface / dialog to specify the exact location of the source (either
      * locally or over a network). A local calendar source might read its data
      * from an XML file while a remote source could load data from a web
      * service.
-     * <p>
+     *
      * <pre>
      * setCalendarSourceFactory(param -&gt; {
      * 	CalendarSource source = new CalendarSource(&quot;Calendar Source&quot;);
@@ -1058,6 +1058,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         /**
          * The {@link DateControl} which is asking for a specific {@link DateControl.EditOperation} permission.
+         *
          * @return The date control.
          */
         public DateControl getDateControl() {
@@ -1099,6 +1100,7 @@ public abstract class DateControl extends CalendarFXControl {
      * on an entry then the callback will be invoked to determine if the operation is allowed. By default
      * all operations listed inside {@link EditOperation} are allowed.
      *
+     * @return the property
      * @see EditOperation
      */
     public final ObjectProperty<Callback<EntryEditParameter, Boolean>> entryEditPolicyProperty() {
@@ -1109,7 +1111,6 @@ public abstract class DateControl extends CalendarFXControl {
      * Returns the value of {@link #entryEditPolicy}.
      *
      * @return The entry edit policy callback
-     *
      * @see EditOperation
      */
     public final Callback<EntryEditParameter, Boolean> getEntryEditPolicy() {
@@ -1120,7 +1121,6 @@ public abstract class DateControl extends CalendarFXControl {
      * Sets the value of {@link #entryEditPolicy}.
      *
      * @param policy the entry edit policy callback
-     *
      * @see EditOperation
      */
     public final void setEntryEditPolicy(Callback<EntryEditParameter, Boolean> policy) {
@@ -1133,11 +1133,11 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * A callback used for dynamically creating a context menu for a given
      * entry view.
-     * <p>
+     *
      * <h2>Code Example</h2> The code below shows the default implementation of
      * this callback.
-     * <p>
-     * <p>
+     *
+     *
      * <pre>
      * setEntryContextMenuCallback(param -&gt; {
      * 	EntryViewBase&lt;?&gt; entryView = param.getEntryView();
@@ -1258,12 +1258,12 @@ public abstract class DateControl extends CalendarFXControl {
      * callback allows the application to create context menus with different
      * content, depending on the current state of the application and the
      * location of the click.
-     * <p>
+     *
      * <h2>Code Example</h2>
      * <p>
      * The code below shows a part of the default implementation:
-     * <p>
-     * <p>
+     *
+     *
      * <pre>
      * setContextMenuCallback(param -&gt; {
      * 	ContextMenu menu = new ContextMenu();
@@ -1311,14 +1311,14 @@ public abstract class DateControl extends CalendarFXControl {
      * entries by simply double clicking inside the view without the need of
      * first showing a calendar selection UI. This can be changed by setting a
      * callback that prompts the user with a dialog.
-     * <p>
+     *
      * <h2>Code Example</h2>
      * <p>
      * The code shown below is the default implementation of this provider. It
      * returns the first calendar of the first source. If no source is available
      * it will return null.
-     * <p>
-     * <p>
+     *
+     *
      * <pre>
      * setDefaultCalendarProvider(control -&gt; {
      * 	List&lt;CalendarSource&gt; sources = getCalendarSources();
@@ -1537,11 +1537,11 @@ public abstract class DateControl extends CalendarFXControl {
      * implementation of this callback displays a small {@link PopOver} but
      * applications might as well display a large dialog where the user can
      * freely edit the date.
-     * <p>
+     *
      * <h2>Code Example</h2> The code below shows the default implementation
      * used by all date controls. It delegates to a private method that shows
      * the popover.
-     * <p>
+     *
      * <pre>
      * setDateDetailsCallback(param -&gt; {
      * 	InputEvent evt = param.getInputEvent();
@@ -1589,11 +1589,11 @@ public abstract class DateControl extends CalendarFXControl {
      * implementation of this callback displays a small {@link PopOver} but
      * applications might as well display a large dialog where the user can
      * freely edit the entry.
-     * <p>
+     *
      * <h2>Code Example</h2> The code below shows the default implementation
      * used by all date controls. It delegates to a private method that shows
      * the popover.
-     * <p>
+     *
      * <pre>
      * setEntryDetailsCallback(param -&gt; {
      * 	InputEvent evt = param.getInputEvent();
@@ -1778,8 +1778,8 @@ public abstract class DateControl extends CalendarFXControl {
      * A flag used to indicate that the view will mark the area that represents
      * the value of {@link #todayProperty()}. By default this area will be
      * filled with a different color (red) than the rest (white).
-     * <p/>
-     * <center><img src="doc-files/all-day-view-today.png"></center>
+     *
+     * <img src="doc-files/all-day-view-today.png" alt="All Day View Today">
      *
      * @return true if today will be shown differently
      */

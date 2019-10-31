@@ -55,8 +55,8 @@ import static java.util.Objects.requireNonNull;
  * all calendar sources, and one for seeing the results of the current search.
  * The trays can be shown or hidden. Another nice feature is direct support for
  * printing (see {@link #getPrintView()}).
- * <p/>
- * <center><img width="100%" src="doc-files/calendar-view.png"></center>
+ *
+ * <img width="100%" src="doc-files/calendar-view.png" alt="Calendar View">
  */
 public class CalendarView extends DateControl {
 

@@ -39,10 +39,10 @@ import static java.util.Objects.requireNonNull;
  * Visualizes an entire month including the last days of the previous month and
  * the first days of the next month. Each day is shown in its own box with its
  * entries. These entries are of type {@link MonthEntryView}.
- * <p/>
- * <p/>
- * <center><img width="823" src="doc-files/month-view.png"></center>
- * <p/>
+ *
+ *
+ * <img width="823" src="doc-files/month-view.png" alt="Month View">
+ *
  */
 public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
@@ -83,8 +83,8 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     /**
      * Controls whether the view will highlight the current week. The image
      * below shows an example:
-     * <p/>
-     * <center><img src="doc-files/current-week.png"></center>
+     *
+     * <img src="doc-files/current-week.png" alt="Current Week">
      *
      * @see DateControl#todayProperty()
      *
@@ -119,8 +119,8 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     /**
      * Controls whether the view will show weekend days differently than regular
      * week days. The image below shows an example:
-     * <p/>
-     * <center><img src="doc-files/weekend.png"></center>
+     *
+     * <img src="doc-files/weekend.png" alt="Weekend">
      *
      * @return true if the weekend days will be shown differently
      */
@@ -153,8 +153,8 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     /**
      * Controls whether the view will show the names of the week days ("Mo",
      * "Tu", "We", ...). The image below shows an example:
-     * <p/>
-     * <center><img src="doc-files/weekdays.png"></center>
+     *
+     * <img src="doc-files/weekdays.png" alt="Weekdays">
      *
      * @return true if the week day names will be shown
      */

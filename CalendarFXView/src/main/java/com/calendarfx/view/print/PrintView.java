@@ -16,12 +16,6 @@
 
 package com.calendarfx.view.print;
 
-import static java.util.Objects.requireNonNull;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.WeekFields;
-
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.Util;
@@ -29,7 +23,6 @@ import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.SourceView;
-
 import impl.com.calendarfx.view.print.PrintViewSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -55,12 +48,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * A print preview pane / dialog for CalendarFX. This view manages a
  * {@link PrintablePage} and binds it to the settingsView / properties that are
  * made available via the {@link SettingsView}. The default style class used by
  * this view is "print-view".
- * <center><img width="100%" src="doc-files/print-view.png"></center>
+ *
+ * <img width="100%" src="doc-files/print-view.png" alt="Print View">
  */
 public class PrintView extends ViewTypeControl {
 

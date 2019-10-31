@@ -47,7 +47,6 @@
         <module>CalendarFXApp</module>
         <module>CalendarFXiCal</module>
         <module>CalendarFXWeather</module>
-        <module>CalendarFXAssembly</module>
     </modules>
 
     <distributionManagement>

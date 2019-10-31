@@ -16,9 +16,6 @@
 
 package com.calendarfx.view.print;
 
-import java.util.Objects;
-import java.util.Set;
-
 import impl.com.calendarfx.view.print.PaperViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -33,11 +30,14 @@ import javafx.print.Printer;
 import javafx.print.PrinterAttributes;
 import javafx.scene.control.Skin;
 
+import java.util.Objects;
+import java.util.Set;
+
 /**
  * A control for specifying the paper size, the view type (day, week, month),
  * and the print margins. The default style class of this view is "paper-view".
  *
- * <center><img src="doc-files/paper-view.png"></center>
+ * <img src="doc-files/paper-view.png" alt="Paper View">
  */
 public class PaperView extends ViewTypeControl {
 

@@ -60,9 +60,9 @@ import static java.util.Objects.requireNonNull;
  * The agenda view displays calendar entries in a list. The view can be
  * configured to look back a given number of days and also to look forward a
  * given number of days.
- * <p/>
- * <center><img src="doc-files/agenda-view.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/agenda-view.png" alt="Agenda View">
+ *
  */
 public class AgendaView extends DateControl {
 

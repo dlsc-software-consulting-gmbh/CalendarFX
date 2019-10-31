@@ -34,8 +34,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * A popover that shows the calendar entries for a given date.
- * <p/>
- * <center><img src="doc-files/date-popover.png"></center>
+ *
+ * <img src="doc-files/date-popover.png" alt="Date PopOver">
  */
 public class DatePopOver extends PopOver {
 

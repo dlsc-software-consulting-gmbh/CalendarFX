@@ -16,7 +16,17 @@
 
 package com.calendarfx.view.print;
 
-import static java.util.Objects.requireNonNull;
+import impl.com.calendarfx.view.print.TimeRangeFieldSkin;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Skin;
+import org.controlsfx.control.PropertySheet.Item;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -29,18 +39,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import org.controlsfx.control.PropertySheet.Item;
-
-import impl.com.calendarfx.view.print.TimeRangeFieldSkin;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.Skin;
+import static java.util.Objects.requireNonNull;
 
 /**
  * A control for specifying the start or end time of a time range. This control
@@ -50,7 +49,7 @@ import javafx.scene.control.Skin;
  * rangers, or month ranges. The default style class used by this control is
  * "time-range-field".
  *
- * <center><img src="doc-files/time-range-field.png"></center>
+ * <img src="doc-files/time-range-field.png" alt="Time Range Field">
  */
 public class TimeRangeField extends ViewTypeControl {
 

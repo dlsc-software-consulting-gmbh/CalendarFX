@@ -56,9 +56,9 @@ import static javafx.geometry.Pos.CENTER;
  * that date)</li>
  * </ol>
  * The image below shows the visual apperance of this control:
- * <p/>
- * <center><img src="doc-files/date-picker.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/date-picker.png" alt="Date Picker">
+ *
  */
 public class YearMonthView extends MonthViewBase {
 
@@ -111,8 +111,8 @@ public class YearMonthView extends MonthViewBase {
      * A factory for creating alternative content for the month view. The image
      * below shows the {@link YearMonthView} once with the default factory and
      * once with an alternative factory that creates checkboxes.
-     * <p/>
-     * <center><img src="doc-files/month-cell-factory.png"></center>
+     *
+     * <img src="doc-files/month-cell-factory.png" alt="Month Cell Factory">
      *
      * @return the cell factory
      */
@@ -301,8 +301,8 @@ public class YearMonthView extends MonthViewBase {
     /**
      * Show or hide usage colors that are based on the number of entries on a
      * given date. The image below shows those colors in action:
-     * <p/>
-     * <center><img src="doc-files/usage-colors.png"></center>
+     *
+     * <img src="doc-files/usage-colors.png" alt="Usage Colors">
      *
      * @return true if the usage colors will be shown
      */

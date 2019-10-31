@@ -39,9 +39,9 @@ import java.util.Optional;
  * larger sub controls: a week view, an all day view, a calendar header view, a
  * week day header view, and a time scale view. The image below shows the appearance
  * of this view.
- * <p/>
- * <center><img src="doc-files/detailed-week-view.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/detailed-week-view.png" alt="Detailed Week View">
+ *
  * @see WeekView
  */
 public class DetailedWeekView extends DayViewBase {
