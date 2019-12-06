@@ -16,18 +16,16 @@
 
 package com.calendarfx.view;
 
-import java.util.Optional;
-
-import org.controlsfx.control.PropertySheet.Item;
-
 import com.calendarfx.view.AgendaView.AgendaEntryCell;
-
 import impl.com.calendarfx.view.DetailedDayViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Skin;
+import org.controlsfx.control.PropertySheet.Item;
+
+import java.util.Optional;
 
 /**
  * The detailed day view is a composite control consisting of a {@link DayView},
@@ -35,11 +33,10 @@ import javafx.scene.control.Skin;
  * {@link TimeScaleView}. The image below shows the standard appearance of the
  * view. The second image shows the same view with the optional agenda view made
  * visible.
- * <p/>
- * <center><img src="doc-files/detailed-day-view.png"></center>
- * <p/>
- * <center><img src="doc-files/detailed-day-view-agenda.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/detailed-day-view.png" alt="Detailed Day View">
+ * <img src="doc-files/detailed-day-view-agenda.png" alt="Detailed Day View Agenda">
+ *
  */
 public class DetailedDayView extends DayViewBase {
 

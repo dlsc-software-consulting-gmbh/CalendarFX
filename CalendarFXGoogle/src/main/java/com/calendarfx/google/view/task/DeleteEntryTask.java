@@ -24,7 +24,7 @@ import com.calendarfx.google.view.log.ActionType;
 
 /**
  * Task that deletes one entry from google.
- * <p>
+ *
  * Created by gdiaz on 12/03/2017.
  */
 public final class DeleteEntryTask extends GoogleTask<Boolean> {

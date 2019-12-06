@@ -23,7 +23,7 @@ import java.io.IOException;
 
 /**
  * Class that holds the info about the user logged in.
- * <p>
+ *
  * Created by gdiaz on 5/05/2017.
  */
 public class SecurityService {

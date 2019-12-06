@@ -36,7 +36,7 @@ import java.util.Map;
  * @see DateControl#setUsagePolicy(Callback)
  *
  * <h3>Screenshot</h3>
- * <center><img src="doc-files/year-view.png"></center>
+ * <img src="doc-files/year-view.png" alt="Year View">
  */
 public class YearView extends DateControl {
 

@@ -45,9 +45,9 @@ import static java.util.logging.Level.FINE;
 /**
  * A view used for searching entries in the calendars and for displaying the
  * results.
- * <p/>
- * <center><img src="doc-files/search-result-view.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/search-result-view.png" alt="Search Result View">
+ *
  * To perform a search the application simply needs to change the value of the
  * text property of this view. The easiest way to do this is to bind the
  * property to the text property of a textfield.

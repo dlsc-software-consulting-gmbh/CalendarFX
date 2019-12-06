@@ -17,7 +17,7 @@
 /**
  * A set of controls used for creating a print preview dialog.
  *
- * <center><img width="100%" src="doc-files/preview-dialog.png"></center>
+ * <img width="100%" src="doc-files/preview-dialog.png" alt="Preview Dialog">
  */
 package com.calendarfx.view.print;
 

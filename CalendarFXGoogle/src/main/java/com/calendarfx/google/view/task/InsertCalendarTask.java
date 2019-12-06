@@ -23,7 +23,7 @@ import com.calendarfx.google.view.log.ActionType;
 
 /**
  * Task that performs an insert operation into google.
- * <p>
+ *
  * Created by gdiaz on 06.03.2017.
  */
 public final class InsertCalendarTask extends GoogleTask<GoogleCalendar> {

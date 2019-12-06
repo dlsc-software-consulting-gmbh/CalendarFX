@@ -33,7 +33,7 @@ import javafx.scene.control.Skin;
  * </ul>
  * The default style of this control is "print-settings-view".
  *
- * <center><img src="doc-files/settings-view.png"></center>
+ * <img src="doc-files/settings-view.png" alt="Settings View">
  */
 public class SettingsView extends CalendarFXControl {
 

@@ -16,21 +16,21 @@
 
 package com.calendarfx.view;
 
-import static java.util.Objects.requireNonNull;
-
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-
 import impl.com.calendarfx.view.TimeScaleViewSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Skin;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * A control used for displaying a vertical time scale.
- * <p/>
- * <center><img src="doc-files/time-scale-view.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/time-scale-view.png" alt="Time Scale View">
+ *
  */
 public class TimeScaleView extends DayViewBase {
 

@@ -51,7 +51,7 @@ import java.util.List;
 
 /**
  * Skin for the log pane.
- * <p>
+ *
  * Created by gdiaz on 22/02/2017.
  */
 public class LogPaneSkin extends SkinBase<LogPane> {

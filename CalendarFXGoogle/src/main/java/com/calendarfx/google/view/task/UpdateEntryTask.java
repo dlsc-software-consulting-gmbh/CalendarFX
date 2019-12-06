@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * Task that updates one entry in google.
- * <p>
+ *
  * Created by gdiaz on 12/03/2017.
  */
 public final class UpdateEntryTask extends GoogleTask<GoogleEntry> {

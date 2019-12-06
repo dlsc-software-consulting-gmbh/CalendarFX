@@ -32,10 +32,10 @@ import static java.util.logging.Level.FINE;
  * account with some calendar service, e.g. Google Calendar or Apple me.com. The
  * image below shows an example: a calendar source called "Work" with calendars
  * "Meetings, Training, Customers, Holidays".
- * <p/>
  *
- * <img src="doc-files/calendar-source.png">
- * <p/>
+ *
+ * <img src="doc-files/calendar-source.png" alt="Calendar Source View">
+ *
  *
  * Calendar sources can be shown to the user via the {@link SourceView} control.
  */

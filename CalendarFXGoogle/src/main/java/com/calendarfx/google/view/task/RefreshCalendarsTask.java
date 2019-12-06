@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * Task that allows to refresh the data of a single calendar.
- * <p>
+ *
  * Created by gdiaz on 10/04/2017.
  */
 public final class RefreshCalendarsTask extends GoogleTask<List<GoogleCalendar>> {

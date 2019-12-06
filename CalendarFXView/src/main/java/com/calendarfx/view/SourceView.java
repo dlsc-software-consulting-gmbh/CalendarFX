@@ -32,9 +32,9 @@ import javafx.scene.control.Skin;
 /**
  * A view specialized in showing a list of {@link CalendarSource} instances.
  * This list can be used to toggle the visibility of calendars.
- * <p/>
- * <img src="doc-files/source-view.png">
- * <p/>
+ *
+ * <img src="doc-files/source-view.png" alt="Source View">
+ *
  */
 public class SourceView extends CalendarFXControl {
 

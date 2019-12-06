@@ -20,7 +20,7 @@ import com.calendarfx.google.model.GoogleCalendar;
 
 /**
  * Provider of the google calendar data.
- * <p>
+ *
  * Created by gdiaz on 5/05/2017.
  */
 public interface IGoogleCalendarDataProvider {

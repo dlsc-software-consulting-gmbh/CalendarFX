@@ -33,7 +33,7 @@ import java.util.TimeZone;
 
 /**
  * BeanConverter between entry (calendarfx api) and event (google api).
- * <p>
+ *
  * Created by gdiaz on 20/02/2017.
  */
 public final class GoogleEntryToEventConverter implements BeanConverter<GoogleEntry, Event> {

@@ -24,7 +24,7 @@ import java.time.LocalTime;
 
 /**
  * Thread that updates the current tine on the calendar view
- * <p>
+ *
  * Created by gdiaz on 4/05/2017.
  */
 public class CalendarViewTimeUpdateThread extends Thread {

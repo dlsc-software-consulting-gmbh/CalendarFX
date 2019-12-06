@@ -37,7 +37,7 @@ import java.util.Map;
 
 /**
  * Loader class for calendars and entries.
- * <p>
+ *
  * Created by gdiaz on 27/02/2017.
  */
 final class GoogleCalendarDataManager implements IGoogleCalendarDataProvider, ListChangeListener<Calendar>, EventHandler<LoadEvent> {

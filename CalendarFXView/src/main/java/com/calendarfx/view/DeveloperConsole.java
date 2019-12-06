@@ -26,7 +26,7 @@ import javafx.scene.control.TabPane;
  * A control used for showing the internals of CalendarFX at work. Helps
  * detecting problems. Developers can freely add their own tabs to the tab pane.
  * <h3>Screenshot</h3>
- * <center><img alt="developer console" src="doc-files/developer-console.png"></center>
+ * <img alt="Developer Console" src="doc-files/developer-console.png">
  */
 public class DeveloperConsole extends CalendarFXControl {
 

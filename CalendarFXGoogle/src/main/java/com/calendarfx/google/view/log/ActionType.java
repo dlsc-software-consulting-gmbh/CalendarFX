@@ -18,7 +18,7 @@ package com.calendarfx.google.view.log;
 
 /**
  * Action performed by the user.
- * <p>
+ *
  * Created by gdiaz on 28/02/2017.
  */
 public enum ActionType {

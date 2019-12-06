@@ -26,7 +26,7 @@ import javafx.scene.control.Skin;
  * A segmented button bar control based on the segmented button control
  * found in ControlsFX but this one working with regular buttons and not
  * toggle buttons.
- * <center><img src="doc-files/button-bar.png"></center>
+ * <img src="doc-files/button-bar.png" alt="Button Bar">
  */
 public class ButtonBar extends CalendarFXControl {
 

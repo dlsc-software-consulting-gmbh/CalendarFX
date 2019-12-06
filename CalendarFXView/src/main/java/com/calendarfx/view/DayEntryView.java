@@ -24,9 +24,9 @@ import javafx.scene.control.Skin;
  * A view representing an entry inside the {@link DayView} control. Instances of
  * this type are created by the {@link DayView} itelf via a pluggable factory.
  * The image below shows the default apperance of this view.
- * <p/>
- * <center><img src="doc-files/day-entry-view.png"></center>
- * <p/>
+ *
+ * <img src="doc-files/day-entry-view.png" alt="Day Entry View">
+ *
  *
  * @see DayView#entryViewFactoryProperty()
  */

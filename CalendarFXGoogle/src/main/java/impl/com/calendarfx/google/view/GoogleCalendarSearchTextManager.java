@@ -29,7 +29,7 @@ import javafx.collections.ListChangeListener;
 
 /**
  * Default implementation of the provider that searches entries in google synchronously.
- * <p>
+ *
  * Created by gdiaz on 5/05/2017.
  */
 final class GoogleCalendarSearchTextManager implements IGoogleCalendarSearchTextProvider, ListChangeListener<Calendar> {

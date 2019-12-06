@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Converts from calendar (calendarfx api) to calendar list entry (google api).
- * <p>
+ *
  * Created by gdiaz on 20/02/2017.
  */
 public final class GoogleCalendarToCalendarListEntryConverter implements BeanConverter<GoogleCalendar, CalendarListEntry> {

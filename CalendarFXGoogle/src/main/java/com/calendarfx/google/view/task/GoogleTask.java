@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 
 /**
  * Base class for tasks executed for google calendar interaction.
- * <p>
+ *
  * Created by gdiaz on 28/02/2017.
  */
 public abstract class GoogleTask<V> extends Task<V> {

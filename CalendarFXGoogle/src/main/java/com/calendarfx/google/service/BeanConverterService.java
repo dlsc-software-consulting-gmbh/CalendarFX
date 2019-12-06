@@ -33,7 +33,7 @@ import java.util.Map;
 
 /**
  * Service that provides convertion from one object to another based on the class.
- * <p>
+ *
  * Created by gdiaz on 22/02/2017.
  */
 public class BeanConverterService {

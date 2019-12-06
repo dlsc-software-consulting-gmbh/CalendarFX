@@ -23,7 +23,7 @@ import java.time.ZoneId;
 
 /**
  * BeanConverter between calendarfx and google api.
- * <p>
+ *
  * Created by gdiaz on 26/03/2017.
  */
 public class GoogleCalendarToCalendarConverter implements BeanConverter<GoogleCalendar, Calendar> {

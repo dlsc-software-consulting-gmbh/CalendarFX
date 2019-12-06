@@ -16,7 +16,18 @@
 
 package com.calendarfx.view.print;
 
-import static java.util.Objects.requireNonNull;
+import com.calendarfx.util.Util;
+import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.print.TimeRangeField.TimeRangeFieldValue;
+import impl.com.calendarfx.view.print.TimeRangeViewSkin;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.Skin;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -29,19 +40,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.calendarfx.util.Util;
-import com.calendarfx.view.CalendarView;
-import com.calendarfx.view.print.TimeRangeField.TimeRangeFieldValue;
-
-import impl.com.calendarfx.view.print.TimeRangeViewSkin;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.Skin;
+import static java.util.Objects.requireNonNull;
 
 /**
  * A control for specifying the start and end time of a time range. This control
@@ -50,7 +49,7 @@ import javafx.scene.control.Skin;
  * ranges, week rangers, or month ranges. The default style class used by this
  * control is "time-range-view".
  *
- * <center><img src="doc-files/time-range-view.png"></center>
+ * <img src="doc-files/time-range-view.png" alt="Time Range View">
  */
 public class TimeRangeView extends ViewTypeControl {
 

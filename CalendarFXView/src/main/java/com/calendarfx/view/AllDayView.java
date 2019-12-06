@@ -56,8 +56,8 @@ import static java.util.Objects.requireNonNull;
  * showing "full day" calendar entries. This view can be configured to span a
  * given number of days. One day is sufficient when used with a {@link DayView}
  * and seven days when used with a {@link DetailedWeekView}.
- * <p/>
- * <center><img src="doc-files/all-day-view.png"></center>
+ *
+ * <img src="doc-files/all-day-view.png" alt="All Day View">
  *
  * @see Entry#isFullDay()
  */

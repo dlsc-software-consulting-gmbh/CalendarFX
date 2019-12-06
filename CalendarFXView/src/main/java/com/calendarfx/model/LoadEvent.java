@@ -35,7 +35,6 @@ import static java.util.Objects.requireNonNull;
  * <h2>Code Example</h2>
  * The following code snippet was taken from the Google calendar application included
  * in the distribution.
- * <br/>
  * <pre>
  * CalendarView calendarView = ...
  * calendarView.addEventFilter(LoadEvent.LOAD, evt -&gt; {

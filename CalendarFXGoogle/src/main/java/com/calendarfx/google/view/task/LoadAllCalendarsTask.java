@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * Task that queries all calendars from google and updates the google calendar source.
- * <p>
+ *
  * Created by gdiaz on 28/02/2017.
  */
 public final class LoadAllCalendarsTask extends GoogleTask<List<GoogleCalendar>> {
