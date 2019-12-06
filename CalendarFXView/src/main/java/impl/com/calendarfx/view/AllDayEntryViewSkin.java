@@ -79,6 +79,7 @@ public class AllDayEntryViewSkin extends SkinBase<AllDayEntryView> {
         titleLabel.setText(entry.getTitle());
 
         view.getStyleClass().add("default-style-entry-small-only");
+        view.getStyleClass().addAll(entry.getStyleClass());
     }
 
     @Override

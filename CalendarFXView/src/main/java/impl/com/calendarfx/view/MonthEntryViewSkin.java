@@ -245,6 +245,8 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                         getDateTimeFormatter().format(entry.getStartTime()));
             }
         }
+
+        styleClass.addAll(entry.getStyleClass());
     }
 
     /**
