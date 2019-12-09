@@ -7,6 +7,9 @@ A Java framework for creating sophisticated calendar views based on JavaFX. A de
 [![travis-ci Build Status](https://img.shields.io/travis/dlsc-software-consulting-gmbh/CalendarFX)](https://travis-ci.org/dlsc-software-consulting-gmbh/CalendarFX/) 
 [![Maven Central](https://img.shields.io/maven-central/v/com.calendarfx/view)](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) 
 [![Download](https://api.bintray.com/packages/dlsc-oss/repository/CalendarFX/images/download.svg) ](https://bintray.com/dlsc-oss/repository/CalendarFX/_latestVersion)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/dlsc-software-consulting-gmbh/CalendarFX.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dlsc-software-consulting-gmbh/CalendarFX/alerts/)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/dlsc-software-consulting-gmbh/CalendarFX.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dlsc-software-consulting-gmbh/CalendrFX/context:java)
+
 
 For a quick online demo please checkout the [JPRO website](https://jpro.one) and there the [CalendarFX demo](https://demos.jpro.one/calendar.html).
 
