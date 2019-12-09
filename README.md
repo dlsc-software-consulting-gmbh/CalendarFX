@@ -1,13 +1,14 @@
-[![Apache-2 license](https://img.shields.io/badge/license-Apache--2-%230778B9.svg)](https://opensource.org/licenses/Apache-2.0) [![travis-ci Build Status OpenJDK8](https://img.shields.io/travis/dlsc-software-consulting-gmbh/CalendarFX)](https://travis-ci.org/controlsfx/controlsfx/) [![Maven Central](https://img.shields.io/maven-central/v/com.calendarfx/view)](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) 
 
 
 # CalendarFX
 A Java framework for creating sophisticated calendar views based on JavaFX. A detailed developer manual can be found online: http://dlsc.com/wp-content/html/calendarfx/manual.html
 
-[ ![Download](https://api.bintray.com/packages/dlsc-oss/repository/CalendarFX/images/download.svg) ](https://bintray.com/dlsc-oss/repository/CalendarFX/_latestVersion)
-[ ![Build](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master-11) ](https://travis-ci.org/dlemmermann/CalendarFX.svg?branch=master)
+[![Apache-2 license](https://img.shields.io/badge/license-Apache--2-%230778B9.svg)](https://opensource.org/licenses/Apache-2.0) 
+[![travis-ci Build Status](https://img.shields.io/travis/dlsc-software-consulting-gmbh/CalendarFX)](https://travis-ci.org/dlsc-software-consulting-gmbh/CalendarFX/) 
+[![Maven Central](https://img.shields.io/maven-central/v/com.calendarfx/view)](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) 
+[![Download](https://api.bintray.com/packages/dlsc-oss/repository/CalendarFX/images/download.svg) ](https://bintray.com/dlsc-oss/repository/CalendarFX/_latestVersion)
 
-
+For a quick online demo please checkout the [JPRO website](https://jpro.one) and there the [CalendarFX demo](https://demos.jpro.one/calendar.html).
 
 ![alt text](screenshot.png "Screenshot")
 
