@@ -1,3 +1,6 @@
+[![Apache-2 license](https://img.shields.io/badge/license-Apache--2-%230778B9.svg)](https://opensource.org/licenses/Apache-2.0) [![travis-ci Build Status OpenJDK8](https://img.shields.io/travis/dlsc-software-consulting-gmbh/CalendarFX)](https://travis-ci.org/controlsfx/controlsfx/) [![Maven Central](https://img.shields.io/maven-central/v/com.calendarfx/view)](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) 
+
+
 # CalendarFX
 A Java framework for creating sophisticated calendar views based on JavaFX. A detailed developer manual can be found online: http://dlsc.com/wp-content/html/calendarfx/manual.html
 
