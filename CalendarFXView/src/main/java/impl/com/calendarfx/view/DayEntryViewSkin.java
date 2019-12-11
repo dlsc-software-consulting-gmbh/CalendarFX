@@ -117,6 +117,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
             view.getStyleClass().add("recurrence"); //$NON-NLS-1$
         }
 
+        view.getStyleClass().addAll(entry.getStyleClass());
+
         startTimeLabel.getStyleClass().setAll("start-time-label",
                 "default-style-entry-time-label",
                 calendar.getStyle() + "-entry-time-label");
