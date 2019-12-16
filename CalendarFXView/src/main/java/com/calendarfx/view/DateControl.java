@@ -216,10 +216,10 @@ public abstract class DateControl extends CalendarFXControl {
             if (sources != null) {
                 boolean calendarsDefined = false;
                 for (CalendarSource s : sources) {
-                    List<? extends com.calendarfx.model.Calendar> calendars = s.getCalendars();
+                    List<? extends Calendar> calendars = s.getCalendars();
                     if (calendars != null && !calendars.isEmpty()) {
                         calendarsDefined = true;
-                        for (com.calendarfx.model.Calendar c : calendars) {
+                        for (Calendar c : calendars) {
                             if (!c.isReadOnly() && isCalendarVisible(c)) {
                                 return c;
                             }
