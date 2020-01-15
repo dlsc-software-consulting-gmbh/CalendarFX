@@ -170,58 +170,58 @@ public class ContextMenuProvider
                 earlyLateHoursMenu.getItems().setAll(hideItem, showItem,
                         showCompressedItem);
                 contextMenu.getItems().add(earlyLateHoursMenu);
-
-                Menu gridMenu = new Menu(Messages.getString("ContextMenuProvider.GRID")); //$NON-NLS-1$
-                MenuItem gridOff = new MenuItem(Messages.getString("ContextMenuProvider.GRID_OFF")); //$NON-NLS-1$
-                gridOff.setOnAction(evt -> control.setVirtualGrid(OFF));
-                gridMenu.getItems().add(gridOff);
-                gridMenu.getItems().add(new SeparatorMenuItem());
-                int[] grids = new int[]{5, 10, 15, 30, 60};
-                for (int grid : grids) {
-                    String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES"), grid); //$NON-NLS-1$
-                    String itemTextShort = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES_SHORT"), grid); //$NON-NLS-1$
-                    MenuItem gridItem = new MenuItem(itemText);
-                    gridMenu.getItems().add(gridItem);
-                    gridItem.setOnAction(evt -> control
-                            .setVirtualGrid(new VirtualGrid(itemText,
-                                    itemTextShort, ChronoUnit.MINUTES, grid)));
-                }
-
-                contextMenu.getItems().add(gridMenu);
-
-                Menu hoursMenu = new Menu(Messages.getString("ContextMenuProvider.SHOW_HOURS")); //$NON-NLS-1$
-                MenuItem hourHeight = new MenuItem();
-                Slider slider = new Slider(40, 200, 50);
-                slider.setPrefWidth(100);
-                slider.setValue(dayView.getHourHeight());
-                slider.valueProperty().addListener(it -> {
-                    dayView.setHoursLayoutStrategy(
-                            HoursLayoutStrategy.FIXED_HOUR_HEIGHT);
-                    dayView.setHourHeight(slider.getValue());
-                });
-                Label sliderWrapper = new Label();
-                sliderWrapper.setGraphic(slider);
-                sliderWrapper.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                hourHeight.setGraphic(sliderWrapper);
-                hoursMenu.getItems().add(hourHeight);
-                hoursMenu.getItems().add(new SeparatorMenuItem());
-                int[] hours = new int[]{4, 6, 8, 10, 12, 18, 24};
-                for (int h : hours) {
-                    String labelText = MessageFormat.format(Messages.getString("ContextMenuProvider.HOURS"), h); //$NON-NLS-1$
-                    Label wrapper = new Label(labelText);
-                    MenuItem item = new MenuItem();
-                    item.setGraphic(wrapper);
-                    item.setOnAction(evt -> {
-                        dayView.setEarlyLateHoursStrategy(
-                                EarlyLateHoursStrategy.SHOW);
-                        dayView.setHoursLayoutStrategy(
-                                HoursLayoutStrategy.FIXED_HOUR_COUNT);
-                        dayView.setVisibleHours(h);
-                    });
-                    hoursMenu.getItems().add(item);
-                }
-                contextMenu.getItems().add(hoursMenu);
             }
+
+            Menu gridMenu = new Menu(Messages.getString("ContextMenuProvider.GRID")); //$NON-NLS-1$
+            MenuItem gridOff = new MenuItem(Messages.getString("ContextMenuProvider.GRID_OFF")); //$NON-NLS-1$
+            gridOff.setOnAction(evt -> control.setVirtualGrid(OFF));
+            gridMenu.getItems().add(gridOff);
+            gridMenu.getItems().add(new SeparatorMenuItem());
+            int[] grids = new int[]{5, 10, 15, 30, 60};
+            for (int grid : grids) {
+                String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES"), grid); //$NON-NLS-1$
+                String itemTextShort = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES_SHORT"), grid); //$NON-NLS-1$
+                MenuItem gridItem = new MenuItem(itemText);
+                gridMenu.getItems().add(gridItem);
+                gridItem.setOnAction(evt -> control
+                        .setVirtualGrid(new VirtualGrid(itemText,
+                                itemTextShort, ChronoUnit.MINUTES, grid)));
+            }
+
+            contextMenu.getItems().add(gridMenu);
+
+            Menu hoursMenu = new Menu(Messages.getString("ContextMenuProvider.SHOW_HOURS")); //$NON-NLS-1$
+            MenuItem hourHeight = new MenuItem();
+            Slider slider = new Slider(40, 200, 50);
+            slider.setPrefWidth(100);
+            slider.setValue(dayView.getHourHeight());
+            slider.valueProperty().addListener(it -> {
+                dayView.setHoursLayoutStrategy(
+                        HoursLayoutStrategy.FIXED_HOUR_HEIGHT);
+                dayView.setHourHeight(slider.getValue());
+            });
+            Label sliderWrapper = new Label();
+            sliderWrapper.setGraphic(slider);
+            sliderWrapper.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            hourHeight.setGraphic(sliderWrapper);
+            hoursMenu.getItems().add(hourHeight);
+            hoursMenu.getItems().add(new SeparatorMenuItem());
+            int[] hours = new int[]{4, 6, 8, 10, 12, 18, 24};
+            for (int h : hours) {
+                String labelText = MessageFormat.format(Messages.getString("ContextMenuProvider.HOURS"), h); //$NON-NLS-1$
+                Label wrapper = new Label(labelText);
+                MenuItem item = new MenuItem();
+                item.setGraphic(wrapper);
+                item.setOnAction(evt -> {
+                    dayView.setEarlyLateHoursStrategy(
+                            EarlyLateHoursStrategy.SHOW);
+                    dayView.setHoursLayoutStrategy(
+                            HoursLayoutStrategy.FIXED_HOUR_COUNT);
+                    dayView.setVisibleHours(h);
+                });
+                hoursMenu.getItems().add(item);
+            }
+            contextMenu.getItems().add(hoursMenu);
         }
 
         return contextMenu;
