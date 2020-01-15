@@ -209,21 +209,24 @@ public abstract class DateControl extends CalendarFXControl {
         setEntryDetailsPopOverContentCallback(param -> new EntryPopOverContentPane(param.getPopOver(), param.getDateControl(), param.getEntry()));
 
         /*
-         * The default calendar provider returns the first calendar from the
-         * first source.
+         * The default calendar provider returns the first calendar which is visible and not read-only.
          */
         setDefaultCalendarProvider(control -> {
             List<CalendarSource> sources = getCalendarSources();
-            if (sources != null && !sources.isEmpty()) {
-                CalendarSource s = sources.get(0);
-                List<? extends Calendar> calendars = s.getCalendars();
-                if (calendars != null && !calendars.isEmpty()) {
-                    for (Calendar c : calendars) {
-                        if (!c.isReadOnly() && isCalendarVisible(c)) {
-                            return c;
+            if (sources != null) {
+                boolean calendarsDefined = false;
+                for (CalendarSource s : sources) {
+                    List<? extends Calendar> calendars = s.getCalendars();
+                    if (calendars != null && !calendars.isEmpty()) {
+                        calendarsDefined = true;
+                        for (Calendar c : calendars) {
+                            if (!c.isReadOnly() && isCalendarVisible(c)) {
+                                return c;
+                            }
                         }
                     }
-
+                }
+                if (calendarsDefined) {
                     Alert alert = new Alert(AlertType.WARNING);
                     alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM")); //$NON-NLS-1$
                     alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY")); //$NON-NLS-1$
