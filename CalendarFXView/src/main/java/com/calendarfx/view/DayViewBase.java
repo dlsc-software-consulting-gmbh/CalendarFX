@@ -100,7 +100,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         @Override
         public void set(double newValue) {
             if (newValue < 10 || newValue > 100) {
-                throw new IllegalArgumentException("percentage widht must be between 10 and 100 but was " + newValue);
+                throw new IllegalArgumentException("percentage width must be between 10 and 100 but was " + newValue);
             }
             super.set(newValue);
         }
