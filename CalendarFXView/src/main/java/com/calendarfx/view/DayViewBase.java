@@ -37,7 +37,9 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import org.controlsfx.control.PropertySheet.Item;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -93,6 +95,34 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         earliestTimeUsedProperty().addListener(trimListener);
         latestTimeUsedProperty().addListener(trimListener);
         trimTimeBoundsProperty().addListener(trimListener);
+    }
+
+    private final ObjectProperty<ZonedDateTime> scrollTime = new SimpleObjectProperty<>(this, "scrollTime", ZonedDateTime.of(LocalDate.now(), LocalTime.MIN, ZoneId.systemDefault()));
+
+    public final ZonedDateTime getScrollTime() {
+        return scrollTime.get();
+    }
+
+    public final ObjectProperty<ZonedDateTime> scrollTimeProperty() {
+        return scrollTime;
+    }
+
+    public final void setScrollTime(ZonedDateTime scrollTime) {
+        this.scrollTime.set(scrollTime);
+    }
+
+    private final BooleanProperty scrollingEnabled = new SimpleBooleanProperty(this, "scrollingEnabled", false);
+
+    public final boolean isScrollingEnabled() {
+        return scrollingEnabled.get();
+    }
+
+    public final BooleanProperty scrollingEnabledProperty() {
+        return scrollingEnabled;
+    }
+
+    public final void setScrollingEnabled(boolean scrollingEnabled) {
+        this.scrollingEnabled.set(scrollingEnabled);
     }
 
     private final DoubleProperty entryWidthPercentage = new SimpleDoubleProperty(this, "entryWidthPercentage", 100) {
@@ -578,42 +608,27 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     public final void bind(DayViewBase otherControl, boolean bindDate) {
         super.bind(otherControl, bindDate);
 
-        Bindings.bindBidirectional(
-                otherControl.earlyLateHoursStrategyProperty(),
-                earlyLateHoursStrategy);
-        Bindings.bindBidirectional(otherControl.hoursLayoutStrategyProperty(),
-                hoursLayoutStrategyProperty());
-        Bindings.bindBidirectional(otherControl.hourHeightProperty(),
-                hourHeightProperty());
-        Bindings.bindBidirectional(otherControl.hourHeightCompressedProperty(),
-                hourHeightCompressedProperty());
-        Bindings.bindBidirectional(otherControl.visibleHoursProperty(),
-                visibleHoursProperty());
-        Bindings.bindBidirectional(otherControl.enableCurrentTimeMarkerProperty(),
-                enableCurrentTimeMarkerProperty());
-        Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(),
-                trimTimeBoundsProperty());
+        Bindings.bindBidirectional(otherControl.earlyLateHoursStrategyProperty(), earlyLateHoursStrategyProperty());
+        Bindings.bindBidirectional(otherControl.hoursLayoutStrategyProperty(), hoursLayoutStrategyProperty());
+        Bindings.bindBidirectional(otherControl.hourHeightProperty(), hourHeightProperty());
+        Bindings.bindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
+        Bindings.bindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
+        Bindings.bindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
+        Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
         super.unbind(otherControl);
 
-        Bindings.unbindBidirectional(
-                otherControl.earlyLateHoursStrategyProperty(),
-                earlyLateHoursStrategy);
-        Bindings.unbindBidirectional(otherControl.hoursLayoutStrategyProperty(),
-                hoursLayoutStrategyProperty());
-        Bindings.unbindBidirectional(otherControl.hourHeightProperty(),
-                hourHeightProperty());
-        Bindings.unbindBidirectional(
-                otherControl.hourHeightCompressedProperty(),
-                hourHeightCompressedProperty());
-        Bindings.unbindBidirectional(otherControl.visibleHoursProperty(),
-                visibleHoursProperty());
-        Bindings.unbindBidirectional(otherControl.enableCurrentTimeMarkerProperty(),
-                enableCurrentTimeMarkerProperty());
-        Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(),
-                trimTimeBoundsProperty());
+        Bindings.unbindBidirectional(otherControl.earlyLateHoursStrategyProperty(), earlyLateHoursStrategyProperty());
+        Bindings.unbindBidirectional(otherControl.hoursLayoutStrategyProperty(), hoursLayoutStrategyProperty());
+        Bindings.unbindBidirectional(otherControl.hourHeightProperty(), hourHeightProperty());
+        Bindings.unbindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
+        Bindings.unbindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
+        Bindings.unbindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
+        Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base"; //$NON-NLS-1$
@@ -621,6 +636,44 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     @Override
     public ObservableList<Item> getPropertySheetItems() {
         ObservableList<Item> items = super.getPropertySheetItems();
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(scrollingEnabledProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setScrollingEnabled((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isScrollingEnabled();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Infinite Scrolling"; //$NON-NLS-1$
+            }
+
+            @Override
+            public String getDescription() {
+                return "Support scrolling to previous or next days"; //$NON-NLS-1$
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+        });
 
         items.add(new Item() {
 
