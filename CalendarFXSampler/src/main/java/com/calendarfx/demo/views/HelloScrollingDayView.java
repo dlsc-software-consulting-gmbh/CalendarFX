@@ -29,13 +29,13 @@ import javafx.scene.Node;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class HelloInfiniteScrollingDayView extends CalendarFXSample {
+public class HelloScrollingDayView extends CalendarFXSample {
 
     private DayView dayView = new DayView();
 
     @Override
     public String getSampleName() {
-        return "Day View (Infinite)";
+        return "Day View (Scrolling)";
     }
 
     @Override
@@ -51,6 +51,8 @@ public class HelloInfiniteScrollingDayView extends CalendarFXSample {
         dayView.setHoursLayoutStrategy(DayViewBase.HoursLayoutStrategy.FIXED_HOUR_HEIGHT);
         dayView.setHourHeight(20);
         dayView.setPrefWidth(200);
+        dayView.setPrefHeight(500);
+
         return dayView;
     }
 

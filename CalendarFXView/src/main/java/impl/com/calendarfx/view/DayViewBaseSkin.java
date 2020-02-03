@@ -52,6 +52,10 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
     protected double computePrefHeight(double width, double topInset,
                                        double rightInset, double bottomInset, double leftInset) {
 
+        if (getSkinnable().isScrollingEnabled()) {
+            return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+        }
+
         T dayView = getSkinnable();
         double hourHeight = dayView.getHourHeight();
 
@@ -59,24 +63,21 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
 
         switch (strategy) {
             case HIDE:
-                long earlyHours = ChronoUnit.HOURS.between(LocalTime.MIN,
-                        dayView.getStartTime());
-                long lateHours = ChronoUnit.HOURS.between(dayView.getEndTime(),
-                        LocalTime.MAX) + 1;
+                long earlyHours = ChronoUnit.HOURS.between(LocalTime.MIN, dayView.getStartTime());
+                long lateHours = ChronoUnit.HOURS.between(dayView.getEndTime(), LocalTime.MAX) + 1;
                 long hours = 24 - earlyHours - lateHours;
                 return hours * hourHeight;
+
             case SHOW:
                 return 24 * hourHeight;
-            case SHOW_COMPRESSED:
-                earlyHours = ChronoUnit.HOURS.between(LocalTime.MIN,
-                        dayView.getStartTime());
-                lateHours = ChronoUnit.HOURS.between(dayView.getEndTime(),
-                        LocalTime.MAX) + 1;
 
+            case SHOW_COMPRESSED:
+                earlyHours = ChronoUnit.HOURS.between(LocalTime.MIN, dayView.getStartTime());
+                lateHours = ChronoUnit.HOURS.between(dayView.getEndTime(), LocalTime.MAX) + 1;
                 hours = 24 - earlyHours - lateHours;
                 double hourHeightCompressed = dayView.getHourHeightCompressed();
-                return hours * hourHeight + (earlyHours + lateHours)
-                        * hourHeightCompressed;
+                return hours * hourHeight + (earlyHours + lateHours) * hourHeightCompressed;
+
             default:
                 throw new IllegalArgumentException(
                         "unsupported early / late hours strategy: " + strategy); //$NON-NLS-1$
@@ -85,11 +86,19 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
 
     @Override
     protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        if (getSkinnable().isScrollingEnabled()) {
+            return super.computeMaxHeight(width, topInset, rightInset, bottomInset, leftInset);
+        }
+
         return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
     }
 
     @Override
     protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        if (getSkinnable().isScrollingEnabled()) {
+            return super.computeMinHeight(width, topInset, rightInset, bottomInset, leftInset);
+        }
+
         return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
     }
 }

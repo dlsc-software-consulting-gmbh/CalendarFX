@@ -16,14 +16,6 @@
 
 package impl.com.calendarfx.view;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Objects;
-import java.util.logging.Logger;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
@@ -35,12 +27,19 @@ import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.WeekView;
-
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 public class DayViewEditController {
 
@@ -188,7 +187,7 @@ public class DayViewEditController {
             case START_AND_END_TIME:
                 if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.MOVE))) {
                     dragging = true;
-                    dayEntryView.getProperties().put("dragged", true); //$NON-NLS-1$
+                    dayEntryView.getProperties().put("dragged", true); 
 
                     LocalDateTime time = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
                     offsetDuration = Duration.between(entry.getStartAsLocalDateTime(), time);
@@ -204,13 +203,13 @@ public class DayViewEditController {
             case END_TIME:
                 if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_END))) {
                     dragging = true;
-                    dayEntryView.getProperties().put("dragged-end", true); //$NON-NLS-1$
+                    dayEntryView.getProperties().put("dragged-end", true); 
                 }
                 break;
             case START_TIME:
                 if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_START))) {
                     dragging = true;
-                    dayEntryView.getProperties().put("dragged-start", true); //$NON-NLS-1$
+                    dayEntryView.getProperties().put("dragged-start", true); 
                 }
                 break;
             default:
@@ -242,9 +241,9 @@ public class DayViewEditController {
             return;
         }
 
-        dayEntryView.getProperties().put("dragged", false); //$NON-NLS-1$
-        dayEntryView.getProperties().put("dragged-start", false); //$NON-NLS-1$
-        dayEntryView.getProperties().put("dragged-end", false); //$NON-NLS-1$
+        dayEntryView.getProperties().put("dragged", false); 
+        dayEntryView.getProperties().put("dragged-start", false); 
+        dayEntryView.getProperties().put("dragged-end", false); 
 
         /*
          * We might run in the sampler application. Then the entry view will not
@@ -309,12 +308,11 @@ public class DayViewEditController {
             time = LocalDateTime.of(entry.getStartDate(), time.toLocalTime());
         }
 
-        LOGGER.finer("changing start time, time = " + time); //$NON-NLS-1$
+        LOGGER.finer("changing start time, time = " + time); 
 
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        if (isMinimumDuration(entry, entry.getEndAsLocalDateTime(),
-                locationTime)) {
+        if (isMinimumDuration(entry, entry.getEndAsLocalDateTime(), locationTime)) {
 
             LocalDate startDate;
             LocalDate endDate;
@@ -334,8 +332,7 @@ public class DayViewEditController {
                 endDate = entry.getEndDate();
             }
 
-            LOGGER.finer("new interval: sd = " + startDate + ", st = "
-                    + startTime + ", ed = " + endDate + ", et = " + endTime);
+            LOGGER.finer("new interval: sd = " + startDate + ", st = " + startTime + ", ed = " + endDate + ", et = " + endTime);
 
             draggedEntry.setInterval(startDate, startTime, endDate, endTime);
 
@@ -353,7 +350,7 @@ public class DayViewEditController {
             time = LocalDateTime.of(entry.getEndDate(), time.toLocalTime());
         }
 
-        LOGGER.finer("changing end time, time = " + time); //$NON-NLS-1$
+        LOGGER.finer("changing end time, time = " + time); 
 
         if (isMinimumDuration(entry, entry.getStartAsLocalDateTime(),
                 locationTime)) {
@@ -391,8 +388,7 @@ public class DayViewEditController {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
         LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
 
-        LOGGER.fine("changing start/end time, time = " + locationTime //$NON-NLS-1$
-                + " offset duration = " + offsetDuration); //$NON-NLS-1$
+        LOGGER.fine("changing start/end time, time = " + locationTime + " offset duration = " + offsetDuration);
 
         if (locationTime != null && offsetDuration != null) {
 
@@ -400,9 +396,9 @@ public class DayViewEditController {
             newStartTime = grid(newStartTime);
             LocalDateTime newEndTime = newStartTime.plus(entryDuration);
 
-            LOGGER.fine("new start time = " + newStartTime); //$NON-NLS-1$
-            LOGGER.fine("new start time (grid) = " + newStartTime); //$NON-NLS-1$
-            LOGGER.fine("new end time = " + newEndTime); //$NON-NLS-1$
+            LOGGER.fine("new start time = " + newStartTime); 
+            LOGGER.fine("new start time (grid) = " + newStartTime); 
+            LOGGER.fine("new end time = " + newEndTime); 
 
             LocalDate startDate = newStartTime.toLocalDate();
             LocalTime startTime = newStartTime.toLocalTime();
@@ -423,9 +419,7 @@ public class DayViewEditController {
         Duration minDuration = entry.getMinimumDuration().abs();
         if (minDuration != null) {
             Duration duration = Duration.between(timeA, timeB).abs();
-            if (duration.minus(minDuration).isNegative()) {
-                return false;
-            }
+            return !duration.minus(minDuration).isNegative();
         }
 
         return true;

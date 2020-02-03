@@ -789,11 +789,20 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     @Override
     public LocalDate getLoadStartDate() {
+        if (getSkinnable().isScrollingEnabled()) {
+            return getSkinnable().getScrollTime().toLocalDate();
+        }
+
         return getSkinnable().getDate();
     }
 
     @Override
     public LocalDate getLoadEndDate() {
+        if (getSkinnable().isScrollingEnabled()) {
+            double height = getSkinnable().getHeight();
+            return getSkinnable().getZonedDateTimeAt(0, height).toLocalDate();
+        }
+
         return getSkinnable().getDate();
     }
 
