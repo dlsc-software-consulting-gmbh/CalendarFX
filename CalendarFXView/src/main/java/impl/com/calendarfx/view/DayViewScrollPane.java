@@ -230,7 +230,7 @@ public class DayViewScrollPane extends Pane {
         /*
          * We have to add some content, otherwise drag over will not be called.
          */
-        content.putString("dummy"); //$NON-NLS-1$
+        content.putString("dummy");
         db.setContent(content);
     }
 
@@ -313,7 +313,7 @@ public class DayViewScrollPane extends Pane {
         private double yOffset;
 
         public ScrollThread() {
-            super("Autoscrolling List View"); //$NON-NLS-1$
+            super("Autoscrolling List View");
             setDaemon(true);
         }
 

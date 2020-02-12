@@ -51,12 +51,12 @@ public class CalendarSource {
                         while (change.next()) {
                             if (change.wasAdded()) {
                                 for (Calendar calendar : change.getAddedSubList()) {
-                                    LoggingDomain.MODEL.fine("added calendar " + calendar.getName() + " to source " //$NON-NLS-1$ //$NON-NLS-2$
+                                    LoggingDomain.MODEL.fine("added calendar " + calendar.getName() + " to source "
                                             + getName());
                                 }
                             } else if (change.wasRemoved()) {
                                 for (Calendar calendar : change.getRemoved()) {
-                                    MODEL.fine("removed calendar " + calendar.getName() + " from source " + getName()); //$NON-NLS-1$ //$NON-NLS-2$
+                                    MODEL.fine("removed calendar " + calendar.getName() + " from source " + getName());
                                 }
                             }
                         }
@@ -75,7 +75,7 @@ public class CalendarSource {
         setName(name);
     }
 
-    private final StringProperty name = new SimpleStringProperty(this, "name", "Untitled"); //$NON-NLS-1$ //$NON-NLS-2$
+    private final StringProperty name = new SimpleStringProperty(this, "name", "Untitled");
 
     /**
      * The property used to store the name of the calendar source.
@@ -93,7 +93,7 @@ public class CalendarSource {
      *            the new name for the calendar source
      */
     public final void setName(String name) {
-        MODEL.fine("changing name to " + name); //$NON-NLS-1$
+        MODEL.fine("changing name to " + name);
         nameProperty().set(name);
     }
 
@@ -121,6 +121,6 @@ public class CalendarSource {
 
     @Override
     public String toString() {
-        return "CalendarSource [name=" + getName() + ", calendars=" + calendars + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "CalendarSource [name=" + getName() + ", calendars=" + calendars + "]";
     }
 }

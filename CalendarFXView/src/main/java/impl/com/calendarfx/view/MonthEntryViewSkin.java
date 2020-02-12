@@ -128,15 +128,15 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
         final ObservableList<String> styleClass = view.getStyleClass();
 
-        styleClass.setAll("month-entry-view", "default-style-entry-small"); //$NON-NLS-1$
+        styleClass.setAll("month-entry-view", "default-style-entry-small");
         if (calendar != null) {
-            styleClass.add(calendar.getStyle() + "-entry-small"); //$NON-NLS-1$
+            styleClass.add(calendar.getStyle() + "-entry-small");
         }
 
         if (entry.isFullDay() || entry.isMultiDay()) {
-            styleClass.add("default-style-entry-small-full-day"); //$NON-NLS-1$
+            styleClass.add("default-style-entry-small-full-day");
             if (calendar != null) {
-                styleClass.add(calendar.getStyle() + "-entry-small-full-day"); //$NON-NLS-1$
+                styleClass.add(calendar.getStyle() + "-entry-small-full-day");
             }
         }
 
@@ -145,54 +145,54 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
         if (calendar != null) {
             // color dot style
-            colorDot.getStyleClass().setAll("default-style-icon-small", //$NON-NLS-1$
-                    calendar.getStyle() + "-icon-small"); //$NON-NLS-1$
+            colorDot.getStyleClass().setAll("default-style-icon-small",
+                    calendar.getStyle() + "-icon-small");
 
             // title style
             titleLabel.getStyleClass().setAll(
-                    "default-style-entry-small-title-label", //$NON-NLS-1$
-                    calendar.getStyle() + "-entry-small-title-label"); //$NON-NLS-1$
+                    "default-style-entry-small-title-label",
+                    calendar.getStyle() + "-entry-small-title-label");
 
             // time label style
             timeLabel.getStyleClass().setAll(
-                    "default-style-entry-small-time-label", //$NON-NLS-1$
-                    calendar.getStyle() + "-entry-small-time-label"); //$NON-NLS-1$
+                    "default-style-entry-small-time-label",
+                    calendar.getStyle() + "-entry-small-time-label");
 
             // title style
             if (entry.isMultiDay() || entry.isFullDay()) {
                 titleLabel.getStyleClass().addAll(
-                        "default-style-entry-small-title-label-full-day", //$NON-NLS-1$
+                        "default-style-entry-small-title-label-full-day",
                         calendar.getStyle()
-                                + "-entry-small-title-label-full-day"); //$NON-NLS-1$
+                                + "-entry-small-title-label-full-day");
                 timeLabel.getStyleClass().addAll(
-                        "default-style-entry-small-time-label-full-day", //$NON-NLS-1$
+                        "default-style-entry-small-time-label-full-day",
                         calendar.getStyle()
-                                + "-entry-small-time-label-full-day"); //$NON-NLS-1$
+                                + "-entry-small-time-label-full-day");
             }
         } else {
             // Calendar might be null when the entry is a "dummy" entry.
             // color dot style
-            colorDot.getStyleClass().setAll("default-style-icon-small"); //$NON-NLS-1$
+            colorDot.getStyleClass().setAll("default-style-icon-small");
 
             // title style
             titleLabel.getStyleClass()
-                    .setAll("default-style-entry-small-title-label"); //$NON-NLS-1$
+                    .setAll("default-style-entry-small-title-label");
 
             // time label style
             timeLabel.getStyleClass()
-                    .setAll("default-style-entry-small-time-label"); //$NON-NLS-1$
+                    .setAll("default-style-entry-small-time-label");
 
             // title style
             if (entry.isMultiDay() || entry.isFullDay()) {
                 titleLabel.getStyleClass().addAll(
-                        "default-style-entry-small-title-label-full-day"); //$NON-NLS-1$
+                        "default-style-entry-small-title-label-full-day");
                 timeLabel.getStyleClass().addAll(
-                        "default-style-entry-small-time-label-full-day"); //$NON-NLS-1$
+                        "default-style-entry-small-time-label-full-day");
             }
         }
 
         if (entry.isFullDay()) {
-            timeLabel.setText(""); //$NON-NLS-1$
+            timeLabel.setText("");
         }
 
         switch (view.getPosition()) {
@@ -206,7 +206,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
         default:
             // Blank string is important for layout purposes (title and time
             // might have different font sizes
-            titleLabel.setText(" "); //$NON-NLS-1$
+            titleLabel.setText(" ");
             titleLabel.setGraphic(null);
             break;
         }
@@ -220,7 +220,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                 switch (view.getPosition()) {
                 case LAST:
                     timeLabel.setText(MessageFormat.format(
-                            Messages.getString("MonthEntryViewSkin.ENDS_AT"), //$NON-NLS-1$
+                            Messages.getString("MonthEntryViewSkin.ENDS_AT"),
                             getDateTimeFormatter().format(entry.getEndTime())));
                     break;
                 case FIRST:
@@ -237,7 +237,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                     }
                     break;
                 default:
-                    timeLabel.setText(""); //$NON-NLS-1$
+                    timeLabel.setText("");
                     break;
                 }
             } else {

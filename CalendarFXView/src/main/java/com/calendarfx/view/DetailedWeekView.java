@@ -157,7 +157,7 @@ public class DetailedWeekView extends DayViewBase {
         return weekView;
     }
 
-    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7); //$NON-NLS-1$
+    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7);
 
     /**
      * Stores the number of days that will be shown by this view. This value
@@ -186,14 +186,14 @@ public class DetailedWeekView extends DayViewBase {
      */
     public final void setNumberOfDays(int number) {
         if (number < 1) {
-            throw new IllegalArgumentException("invalid number of days, must be larger than 0 but was " //$NON-NLS-1$
+            throw new IllegalArgumentException("invalid number of days, must be larger than 0 but was "
                     + number);
         }
 
         numberOfDaysProperty().set(number);
     }
 
-    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true); //$NON-NLS-1$
+    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);
 
     /**
      * A flag used to indicate that the view should always show the first day of
@@ -354,7 +354,7 @@ public class DetailedWeekView extends DayViewBase {
 
     // start date support
 
-    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(this, "startDate"); //$NON-NLS-1$
+    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(this, "startDate");
 
     /**
      * The earliest date shown by the view.
@@ -374,7 +374,7 @@ public class DetailedWeekView extends DayViewBase {
         return startDate.get();
     }
 
-    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(this, "endDate"); //$NON-NLS-1$
+    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(this, "endDate");
 
     // end date support
 
@@ -406,7 +406,7 @@ public class DetailedWeekView extends DayViewBase {
         setDate(getDate().minusDays(getNumberOfDays()));
     }
 
-    private static final String WEEK_VIEW_CATEGORY = "Week View"; //$NON-NLS-1$
+    private static final String WEEK_VIEW_CATEGORY = "Week View";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -436,12 +436,12 @@ public class DetailedWeekView extends DayViewBase {
 
             @Override
             public String getName() {
-                return "Number of Days"; //$NON-NLS-1$
+                return "Number of Days";
             }
 
             @Override
             public String getDescription() {
-                return "Number of Days"; //$NON-NLS-1$
+                return "Number of Days";
             }
 
             @Override
@@ -622,12 +622,12 @@ public class DetailedWeekView extends DayViewBase {
 
             @Override
             public String getName() {
-                return "Adjust to first day of week"; //$NON-NLS-1$
+                return "Adjust to first day of week";
             }
 
             @Override
             public String getDescription() {
-                return "Adjust to first day of week"; //$NON-NLS-1$
+                return "Adjust to first day of week";
             }
 
             @Override

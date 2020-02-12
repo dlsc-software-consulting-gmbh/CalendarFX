@@ -67,7 +67,7 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         // the day view (scroll pane)
         DayView dayView = view.getDayView();
         dayViewScrollPane = new DayViewScrollPane(dayView, scrollBar);
-        dayViewScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-scroll-pane"); //$NON-NLS-1$
+        dayViewScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-scroll-pane");
 
         // the time scale
         TimeScaleView timeScale = view.getTimeScaleView();
@@ -79,9 +79,9 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         allDayView.setAdjustToFirstDayOfWeek(false);
 
         // all day label
-        allDayLabel = new Label(Messages.getString("DetailedDayViewSkin.ALL_DAY")); //$NON-NLS-1$
+        allDayLabel = new Label(Messages.getString("DetailedDayViewSkin.ALL_DAY"));
         allDayLabel.setTextOverrun(OverrunStyle.CLIP);
-        allDayLabel.getStyleClass().add("all-day-label"); //$NON-NLS-1$
+        allDayLabel.getStyleClass().add("all-day-label");
         allDayLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         // all day filler
@@ -90,7 +90,7 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
 
         // time scale scroll pane
         timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
-        timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane"); //$NON-NLS-1$
+        timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
 
         // separator
         separator = new Separator(Orientation.VERTICAL);

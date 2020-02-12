@@ -47,7 +47,7 @@ import javafx.scene.layout.BorderPane;
 public class AgendaViewSkin extends DateControlSkin<AgendaView>
         implements LoadDataSettingsProvider {
 
-    private static final String AGENDA_VIEW_PLACEHOLDER_LABEL = "placeholder-label"; //$NON-NLS-1$
+    private static final String AGENDA_VIEW_PLACEHOLDER_LABEL = "placeholder-label";
 
     private ListView<AgendaEntry> listView;
 
@@ -65,18 +65,18 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView>
         listView.getStyleClass().add("agenda-view-list");
 
         statusLabel = new Label();
-        statusLabel.getStyleClass().add("status-label"); //$NON-NLS-1$
+        statusLabel.getStyleClass().add("status-label");
         statusLabel.setMaxWidth(Double.MAX_VALUE);
         statusLabel.visibleProperty().bind(view.showStatusLabelProperty());
         statusLabel.managedProperty().bind(statusLabel.visibleProperty());
 
         Label placeholderLabel = new Label(
-                Messages.getString("AgendaViewSkin.NO_ENTRIES")); //$NON-NLS-1$
+                Messages.getString("AgendaViewSkin.NO_ENTRIES"));
         placeholderLabel.getStyleClass().add(AGENDA_VIEW_PLACEHOLDER_LABEL);
         listView.setPlaceholder(placeholderLabel);
 
         BorderPane borderPane = new BorderPane();
-        borderPane.getStyleClass().add("container"); //$NON-NLS-1$
+        borderPane.getStyleClass().add("container");
         getChildren().add(borderPane);
 
         borderPane.setCenter(listView);
@@ -179,13 +179,13 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView>
                 .format(getLoadEndDate());
 
         statusLabel.setText(MessageFormat.format(
-                Messages.getString("AgendaViewSkin.AGENDA_TIME_RANGE"), //$NON-NLS-1$
+                Messages.getString("AgendaViewSkin.AGENDA_TIME_RANGE"),
                 startTime, endTime));
     }
 
     @Override
     public String getLoaderName() {
-        return "Agenda View"; //$NON-NLS-1$
+        return "Agenda View";
     }
 
     @Override

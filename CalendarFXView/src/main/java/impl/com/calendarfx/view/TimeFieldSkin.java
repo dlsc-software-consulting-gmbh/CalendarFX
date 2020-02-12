@@ -69,7 +69,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
         minuteField.setOnKeyPressed(new RollingHandler(minuteField, 59));
         minuteField.setTextFormatter(minuteFormatter);
 
-        Label separator = new Label(":"); //$NON-NLS-1$
+        Label separator = new Label(":");
         separator.setMaxHeight(Double.MAX_VALUE);
 
         HBox box = new HBox();
@@ -177,7 +177,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
                 value = 0;
             }
             if (value < 10) {
-                field.setText("0" + Integer.toString(value));
+                field.setText("0" + value);
             } else {
                 field.setText(Integer.toString(value));
             }
@@ -197,7 +197,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
             }
 
             if (value < 10) {
-                field.setText("0" + Integer.toString(value));
+                field.setText("0" + value);
             } else {
                 field.setText(Integer.toString(value));
             }
@@ -217,12 +217,12 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
 
         @Override
         public void replaceText(int start, int end, String s) {
-            super.replaceText(start, end, s.replaceAll("[^0-9]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+            super.replaceText(start, end, s.replaceAll("[^0-9]", ""));
         }
 
         @Override
         public void replaceSelection(String s) {
-            super.replaceSelection(s.replaceAll("[^0-9]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+            super.replaceSelection(s.replaceAll("[^0-9]", ""));
         }
     }
 }

@@ -36,17 +36,17 @@ public final class CalendarFX {
     public static String getVersion() {
         if (version == null) {
 
-            InputStream stream = CalendarFX.class.getResourceAsStream("version.properties"); //$NON-NLS-1$
+            InputStream stream = CalendarFX.class.getResourceAsStream("version.properties");
             Properties props = new Properties();
             try {
                 props.load(stream);
             } catch (IOException ex) {
-                LoggingDomain.CONFIG.throwing(CalendarFX.class.getName(), "getVersion()", ex); //$NON-NLS-1$
+                LoggingDomain.CONFIG.throwing(CalendarFX.class.getName(), "getVersion()", ex);
             }
 
-            version = props.getProperty("calendarfx.version", "1.0.0"); //$NON-NLS-1$ //$NON-NLS-2$
+            version = props.getProperty("calendarfx.version", "1.0.0");
 
-            LoggingDomain.CONFIG.info("CalendarFX Version: " + version); //$NON-NLS-1$
+            LoggingDomain.CONFIG.info("CalendarFX Version: " + version);
         }
         return version;
     }

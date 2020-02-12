@@ -33,8 +33,8 @@ import javafx.util.Duration;
 public class TimeScaleViewSkin<T extends TimeScaleView>
         extends DayViewBaseSkin<T> {
 
-    private static final String EARLY_HOUR_LATER = "early-hour-label";//$NON-NLS-1$
-    private static final String LATE_HOUR_LATER = "late-hour-label";//$NON-NLS-1$
+    private static final String EARLY_HOUR_LATER = "early-hour-label";
+    private static final String LATE_HOUR_LATER = "late-hour-label";
 
     private List<Label> labels = new ArrayList<>();
 
@@ -50,7 +50,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView>
             label.setManaged(false);
             label.setMaxWidth(Double.MAX_VALUE);
             label.setAlignment(Pos.CENTER_RIGHT);
-            label.getStyleClass().add("time-label"); //$NON-NLS-1$
+            label.getStyleClass().add("time-label");
             label.setTextOverrun(OverrunStyle.CLIP);
             labels.add(label);
             getChildren().add(label);
@@ -58,7 +58,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView>
         }
 
         currentTimeLabel = new Label();
-        currentTimeLabel.getStyleClass().add("current-time-label"); //$NON-NLS-1$
+        currentTimeLabel.getStyleClass().add("current-time-label");
         currentTimeLabel.setManaged(false);
         currentTimeLabel.setMaxWidth(Double.MAX_VALUE);
         currentTimeLabel.setAlignment(Pos.CENTER_RIGHT);
@@ -100,7 +100,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView>
 
     private void updateShowMarkers() {
         T view = getSkinnable();
-        view.getProperties().put("show.current.time.marker", //$NON-NLS-1$
+        view.getProperties().put("show.current.time.marker",
                 isShowingTimeMarker());
     }
 

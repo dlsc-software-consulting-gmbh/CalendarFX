@@ -54,13 +54,13 @@ public class EntryDetailsView extends EntryPopOverPane {
 
         getStyleClass().add("entry-details-view");
 
-        Label fullDayLabel = new Label(Messages.getString("EntryDetailsView.FULL_DAY")); //$NON-NLS-1$
-        Label startDateLabel = new Label(Messages.getString("EntryDetailsView.FROM")); //$NON-NLS-1$
-        Label endDateLabel = new Label(Messages.getString("EntryDetailsView.TO")); //$NON-NLS-1$
-        Label recurrentLabel = new Label(Messages.getString("EntryDetailsView.REPEAT")); //$NON-NLS-1$
+        Label fullDayLabel = new Label(Messages.getString("EntryDetailsView.FULL_DAY"));
+        Label startDateLabel = new Label(Messages.getString("EntryDetailsView.FROM"));
+        Label endDateLabel = new Label(Messages.getString("EntryDetailsView.TO"));
+        Label recurrentLabel = new Label(Messages.getString("EntryDetailsView.REPEAT"));
 
         summaryLabel = new Label();
-        summaryLabel.getStyleClass().add("recurrence-summary-label"); //$NON-NLS-1$
+        summaryLabel.getStyleClass().add("recurrence-summary-label");
         summaryLabel.setWrapText(true);
         summaryLabel.setMaxWidth(300);
 
@@ -114,7 +114,7 @@ public class EntryDetailsView extends EntryPopOverPane {
 
         zoneIds.sort(Comparator.comparing(ZoneId::getId));
 
-        Label zoneLabel = new Label(Messages.getString("EntryDetailsView.TIMEZONE")); //$NON-NLS-1$
+        Label zoneLabel = new Label(Messages.getString("EntryDetailsView.TIMEZONE"));
 
         ComboBox<ZoneId> zoneBox = new ComboBox<>(zoneIds);
         zoneBox.disableProperty().bind(entry.getCalendar().readOnlyProperty());
@@ -132,27 +132,27 @@ public class EntryDetailsView extends EntryPopOverPane {
         });
         zoneBox.setValue(entry.getZoneId());
 
-        recurrenceButton = new MenuButton(Messages.getString("EntryDetailsView.MENU_BUTTON_NONE")); //$NON-NLS-1$
+        recurrenceButton = new MenuButton(Messages.getString("EntryDetailsView.MENU_BUTTON_NONE"));
 
-        MenuItem none = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_NONE")); //$NON-NLS-1$
-        MenuItem everyDay = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_DAY")); //$NON-NLS-1$
-        MenuItem everyWeek = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_WEEK")); //$NON-NLS-1$
-        MenuItem everyMonth = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_MONTH")); //$NON-NLS-1$
-        MenuItem everyYear = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_YEAR")); //$NON-NLS-1$
-        MenuItem custom = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_CUSTOM")); //$NON-NLS-1$
+        MenuItem none = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_NONE"));
+        MenuItem everyDay = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_DAY"));
+        MenuItem everyWeek = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_WEEK"));
+        MenuItem everyMonth = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_MONTH"));
+        MenuItem everyYear = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_EVERY_YEAR"));
+        MenuItem custom = new MenuItem(Messages.getString("EntryDetailsView.MENU_ITEM_CUSTOM"));
 
         none.setOnAction(evt -> updateRecurrenceRule(entry, null));
-        everyDay.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=DAILY")); //$NON-NLS-1$
-        everyWeek.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=WEEKLY")); //$NON-NLS-1$
-        everyMonth.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=MONTHLY")); //$NON-NLS-1$
-        everyYear.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=YEARLY")); //$NON-NLS-1$
+        everyDay.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=DAILY"));
+        everyWeek.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=WEEKLY"));
+        everyMonth.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=MONTHLY"));
+        everyYear.setOnAction(evt -> updateRecurrenceRule(entry, "RRULE:FREQ=YEARLY"));
         custom.setOnAction(evt -> showRecurrenceEditor(entry));
 
         recurrenceButton.getItems().setAll(none, everyDay, everyWeek, everyMonth, everyYear, new SeparatorMenuItem(), custom);
         recurrenceButton.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
         GridPane box = new GridPane();
-        box.getStyleClass().add("content"); //$NON-NLS-1$
+        box.getStyleClass().add("content");
         box.add(fullDayLabel, 0, 0);
         box.add(fullDay, 1, 0);
         box.add(startDateLabel, 0, 1);
@@ -213,8 +213,8 @@ public class EntryDetailsView extends EntryPopOverPane {
         RecurrencePopup popup = new RecurrencePopup();
         RecurrenceView recurrenceView = popup.getRecurrenceView();
         String recurrenceRule = entry.getRecurrenceRule();
-        if (recurrenceRule == null || recurrenceRule.trim().equals("")) { //$NON-NLS-1$
-            recurrenceRule = "RRULE:FREQ=DAILY;"; //$NON-NLS-1$
+        if (recurrenceRule == null || recurrenceRule.trim().equals("")) {
+            recurrenceRule = "RRULE:FREQ=DAILY;";
         }
         recurrenceView.setRecurrenceRule(recurrenceRule);
         popup.setOnOkPressed(evt -> {
@@ -234,23 +234,23 @@ public class EntryDetailsView extends EntryPopOverPane {
     private void updateRecurrenceRuleButton(Entry<?> entry) {
         String rule = entry.getRecurrenceRule();
         if (rule == null) {
-            recurrenceButton.setText(Messages.getString("EntryDetailsView.NONE")); //$NON-NLS-1$
+            recurrenceButton.setText(Messages.getString("EntryDetailsView.NONE"));
         } else {
             switch (rule.trim().toUpperCase()) {
-                case "RRULE:FREQ=DAILY": //$NON-NLS-1$
-                    recurrenceButton.setText(Messages.getString("EntryDetailsView.DAILY")); //$NON-NLS-1$
+                case "RRULE:FREQ=DAILY":
+                    recurrenceButton.setText(Messages.getString("EntryDetailsView.DAILY"));
                     break;
-                case "RRULE:FREQ=WEEKLY": //$NON-NLS-1$
-                    recurrenceButton.setText(Messages.getString("EntryDetailsView.WEEKLY")); //$NON-NLS-1$
+                case "RRULE:FREQ=WEEKLY":
+                    recurrenceButton.setText(Messages.getString("EntryDetailsView.WEEKLY"));
                     break;
-                case "RRULE:FREQ=MONTHLY": //$NON-NLS-1$
-                    recurrenceButton.setText(Messages.getString("EntryDetailsView.MONTHLY")); //$NON-NLS-1$
+                case "RRULE:FREQ=MONTHLY":
+                    recurrenceButton.setText(Messages.getString("EntryDetailsView.MONTHLY"));
                     break;
-                case "RRULE:FREQ=YEARLY": //$NON-NLS-1$
-                    recurrenceButton.setText(Messages.getString("EntryDetailsView.YEARLY")); //$NON-NLS-1$
+                case "RRULE:FREQ=YEARLY":
+                    recurrenceButton.setText(Messages.getString("EntryDetailsView.YEARLY"));
                     break;
                 default:
-                    recurrenceButton.setText(Messages.getString("EntryDetailsView.CUSTOM")); //$NON-NLS-1$
+                    recurrenceButton.setText(Messages.getString("EntryDetailsView.CUSTOM"));
                     break;
             }
         }

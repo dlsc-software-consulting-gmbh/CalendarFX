@@ -59,7 +59,7 @@ public class SearchResultView extends CalendarFXControl {
 
     private static final String DEFAULT_STYLE_CLASS = "search-result-view";
 
-    private static final String SELECTED_ENTRY = "selected.search.result"; //$NON-NLS-1$
+    private static final String SELECTED_ENTRY = "selected.search.result";
 
     private final SearchService searchService;
 
@@ -74,7 +74,7 @@ public class SearchResultView extends CalendarFXControl {
 
         searchTextProperty().addListener(it -> {
             if (SEARCH.isLoggable(FINE)) {
-                SEARCH.fine("restarting search service"); //$NON-NLS-1$
+                SEARCH.fine("restarting search service");
             }
 
             searchService.restart();
@@ -133,7 +133,7 @@ public class SearchResultView extends CalendarFXControl {
     }
 
     private final ReadOnlyObjectWrapper<Entry<?>> selectedEntry = new ReadOnlyObjectWrapper<>(
-            this, "selectedEntry"); //$NON-NLS-1$
+            this, "selectedEntry");
 
     /**
      * Stores the currently selected entry / search result.
@@ -154,7 +154,7 @@ public class SearchResultView extends CalendarFXControl {
     }
 
     private final ObjectProperty<ZoneId> zoneId = new SimpleObjectProperty<>(
-            this, "zoneId", ZoneId.systemDefault()); //$NON-NLS-1$
+            this, "zoneId", ZoneId.systemDefault());
 
     /**
      * Provides the current time zone. The zone is required for searches as the
@@ -188,7 +188,7 @@ public class SearchResultView extends CalendarFXControl {
     }
 
     private final StringProperty searchText = new SimpleStringProperty(this,
-            "searchText"); //$NON-NLS-1$
+            "searchText");
 
     /**
      * The text used to perform the search in the calendars.
@@ -240,7 +240,7 @@ public class SearchResultView extends CalendarFXControl {
                     String searchText = getSearchText();
 
                     if (SEARCH.isLoggable(FINE)) {
-                        SEARCH.fine("search text: " + searchText); //$NON-NLS-1$
+                        SEARCH.fine("search text: " + searchText);
                     }
 
                     if (searchText == null || searchText.trim().isEmpty()) {
@@ -254,7 +254,7 @@ public class SearchResultView extends CalendarFXControl {
                     Thread.sleep(200);
 
                     if (SEARCH.isLoggable(FINE)) {
-                        SEARCH.fine("performing search after delay"); //$NON-NLS-1$
+                        SEARCH.fine("performing search after delay");
                     }
 
                     if (!isCancelled()) {
@@ -264,14 +264,14 @@ public class SearchResultView extends CalendarFXControl {
                         for (CalendarSource source : getCalendarSources()) {
 
                             if (SEARCH.isLoggable(FINE)) {
-                                SEARCH.fine("searching in source " //$NON-NLS-1$
+                                SEARCH.fine("searching in source "
                                         + source.getName());
                             }
 
                             for (Calendar calendar : source.getCalendars()) {
 
                                 if (SEARCH.isLoggable(FINE)) {
-                                    SEARCH.fine("searching in calendar " //$NON-NLS-1$
+                                    SEARCH.fine("searching in calendar "
                                             + calendar.getName());
                                 }
 
@@ -293,13 +293,13 @@ public class SearchResultView extends CalendarFXControl {
 
                         if (SEARCH.isLoggable(FINE)) {
                             if (isCancelled()) {
-                                SEARCH.fine("search was canceled"); //$NON-NLS-1$
+                                SEARCH.fine("search was canceled");
                             }
                         }
 
                         if (SEARCH.isLoggable(FINE)) {
                             SEARCH.fine(
-                                    "found " + totalResult.size() + " entries"); //$NON-NLS-1$ //$NON-NLS-2$
+                                    "found " + totalResult.size() + " entries");
                         }
 
                         return totalResult;
@@ -307,7 +307,7 @@ public class SearchResultView extends CalendarFXControl {
                 }
 
                 if (SEARCH.isLoggable(FINE)) {
-                    SEARCH.fine("returning empty search result"); //$NON-NLS-1$
+                    SEARCH.fine("returning empty search result");
                 }
 
                 return Collections.emptyList();

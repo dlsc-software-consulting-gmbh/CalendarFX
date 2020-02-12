@@ -101,10 +101,10 @@ public class ContextMenuProvider
 
         WeekDayView weekDayView = (WeekDayView) param.getDateControl();
         WeekView weekView = weekDayView.getWeekView();
-        Menu daysMenu = new Menu(Messages.getString("ContextMenuProvider.SHOW_DAYS")); //$NON-NLS-1$
+        Menu daysMenu = new Menu(Messages.getString("ContextMenuProvider.SHOW_DAYS"));
         int[] days = new int[]{5, 7, 14, 21, 28};
         for (int d : days) {
-            String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.DAYS"), d); //$NON-NLS-1$
+            String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.DAYS"), d);
             MenuItem item = new MenuItem(itemText);
             item.setOnAction(evt -> weekView.setNumberOfDays(d));
             daysMenu.getItems().add(item);
@@ -122,7 +122,7 @@ public class ContextMenuProvider
         if (control instanceof DayView) {
             DayViewBase dayView = (DayViewBase) control;
 
-            MenuItem newEntry = new MenuItem(Messages.getString("ContextMenuProvider.ADD_NEW_EVENT")); //$NON-NLS-1$
+            MenuItem newEntry = new MenuItem(Messages.getString("ContextMenuProvider.ADD_NEW_EVENT"));
             newEntry.setOnAction(evt -> {
                 if (control.getLayout().equals(DateControl.Layout.SWIMLANE)) {
                     Calendar calendar = control.getCalendarAt(param.getContextMenuEvent().getX(), param.getContextMenuEvent().getY()).orElse(null);
@@ -140,11 +140,11 @@ public class ContextMenuProvider
             if (!(dayView.getStartTime().equals(LocalTime.MIN)
                     && dayView.getEndTime().equals(LocalTime.MAX))) {
                 // Early / late hours menu
-                Menu earlyLateHoursMenu = new Menu(Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS")); //$NON-NLS-1$
-                RadioMenuItem hideItem = new RadioMenuItem(Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS_HIDE")); //$NON-NLS-1$
-                RadioMenuItem showItem = new RadioMenuItem(Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS_SHOW")); //$NON-NLS-1$
+                Menu earlyLateHoursMenu = new Menu(Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS"));
+                RadioMenuItem hideItem = new RadioMenuItem(Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS_HIDE"));
+                RadioMenuItem showItem = new RadioMenuItem(Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS_SHOW"));
                 RadioMenuItem showCompressedItem = new RadioMenuItem(
-                        Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS_COMPRESSED")); //$NON-NLS-1$
+                        Messages.getString("ContextMenuProvider.EARLY_LATE_HOURS_COMPRESSED"));
                 hideItem.setOnAction(
                         evt -> dayView.setEarlyLateHoursStrategy(HIDE));
                 showItem.setOnAction(
@@ -171,15 +171,15 @@ public class ContextMenuProvider
                         showCompressedItem);
                 contextMenu.getItems().add(earlyLateHoursMenu);
 
-                Menu gridMenu = new Menu(Messages.getString("ContextMenuProvider.GRID")); //$NON-NLS-1$
-                MenuItem gridOff = new MenuItem(Messages.getString("ContextMenuProvider.GRID_OFF")); //$NON-NLS-1$
+                Menu gridMenu = new Menu(Messages.getString("ContextMenuProvider.GRID"));
+                MenuItem gridOff = new MenuItem(Messages.getString("ContextMenuProvider.GRID_OFF"));
                 gridOff.setOnAction(evt -> control.setVirtualGrid(OFF));
                 gridMenu.getItems().add(gridOff);
                 gridMenu.getItems().add(new SeparatorMenuItem());
                 int[] grids = new int[]{5, 10, 15, 30, 60};
                 for (int grid : grids) {
-                    String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES"), grid); //$NON-NLS-1$
-                    String itemTextShort = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES_SHORT"), grid); //$NON-NLS-1$
+                    String itemText = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES"), grid);
+                    String itemTextShort = MessageFormat.format(Messages.getString("ContextMenuProvider.MINUTES_SHORT"), grid);
                     MenuItem gridItem = new MenuItem(itemText);
                     gridMenu.getItems().add(gridItem);
                     gridItem.setOnAction(evt -> control
@@ -189,7 +189,7 @@ public class ContextMenuProvider
 
                 contextMenu.getItems().add(gridMenu);
 
-                Menu hoursMenu = new Menu(Messages.getString("ContextMenuProvider.SHOW_HOURS")); //$NON-NLS-1$
+                Menu hoursMenu = new Menu(Messages.getString("ContextMenuProvider.SHOW_HOURS"));
                 MenuItem hourHeight = new MenuItem();
                 Slider slider = new Slider(40, 200, 50);
                 slider.setPrefWidth(100);
@@ -207,7 +207,7 @@ public class ContextMenuProvider
                 hoursMenu.getItems().add(new SeparatorMenuItem());
                 int[] hours = new int[]{4, 6, 8, 10, 12, 18, 24};
                 for (int h : hours) {
-                    String labelText = MessageFormat.format(Messages.getString("ContextMenuProvider.HOURS"), h); //$NON-NLS-1$
+                    String labelText = MessageFormat.format(Messages.getString("ContextMenuProvider.HOURS"), h);
                     Label wrapper = new Label(labelText);
                     MenuItem item = new MenuItem();
                     item.setGraphic(wrapper);
@@ -240,7 +240,7 @@ public class ContextMenuProvider
 
         DateControl control = param.getDateControl();
         if (control instanceof AllDayView) {
-            MenuItem newEntry = new MenuItem(Messages.getString("ContextMenuProvider.ADD_NEW_EVENT")); //$NON-NLS-1$
+            MenuItem newEntry = new MenuItem(Messages.getString("ContextMenuProvider.ADD_NEW_EVENT"));
             newEntry.setOnAction(evt -> {
                 control.createEntryAt(param.getZonedDateTime());
                 contextMenu.hide();

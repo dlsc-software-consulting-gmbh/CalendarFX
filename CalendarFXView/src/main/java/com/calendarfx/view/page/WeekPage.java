@@ -57,16 +57,16 @@ public class WeekPage extends PageBase {
      * Constructs a new week page.
      */
     public WeekPage() {
-        getStyleClass().add("week-page"); //$NON-NLS-1$
-        setDateTimeFormatter(DateTimeFormatter.ofPattern(Messages.getString("WeekPage.DATE_FORMAT"))); //$NON-NLS-1$
+        getStyleClass().add("week-page");
+        setDateTimeFormatter(DateTimeFormatter.ofPattern(Messages.getString("WeekPage.DATE_FORMAT")));
 
         this.detailedWeekView = new DetailedWeekView();
 
         ToggleButton layoutButton = new ToggleButton();
-        layoutButton.setTooltip(new Tooltip(Messages.getString("WeekPage.TOOLTIP_LAYOUT"))); //$NON-NLS-1$
+        layoutButton.setTooltip(new Tooltip(Messages.getString("WeekPage.TOOLTIP_LAYOUT")));
         layoutButton.setId("layout-button");
         FontIcon layoutIcon = new FontIcon(FontAwesome.TABLE);
-        layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
+        layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon");
         layoutButton.setGraphic(layoutIcon);
         layoutButton.setSelected(getLayout().equals(Layout.SWIMLANE));
         layoutButton.setOnAction(evt -> {
@@ -156,7 +156,7 @@ public class WeekPage extends PageBase {
         return ViewType.WEEK_VIEW;
     }
 
-    private final String WEEK_PAGE_CATEGORY = "Week Page"; //$NON-NLS-1$
+    private final String WEEK_PAGE_CATEGORY = "Week Page";
 
     @Override
     public ObservableList<PropertySheet.Item> getPropertySheetItems() {
@@ -186,12 +186,12 @@ public class WeekPage extends PageBase {
 
             @Override
             public String getName() {
-                return "Layout Button"; //$NON-NLS-1$
+                return "Layout Button";
             }
 
             @Override
             public String getDescription() {
-                return "Can the user access the button to toggle the layout or not."; //$NON-NLS-1$
+                return "Can the user access the button to toggle the layout or not.";
             }
 
             @Override

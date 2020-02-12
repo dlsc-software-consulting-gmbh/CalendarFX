@@ -363,8 +363,8 @@ class IntervalTree<E extends Entry<?>> {
 
         @Override
         public String toString() {
-            return "[" + Instant.ofEpochMilli(low) + " - " //$NON-NLS-1$ //$NON-NLS-2$
-                    + Instant.ofEpochMilli(high) + "]=" + value; //$NON-NLS-1$
+            return "[" + Instant.ofEpochMilli(low) + " - "
+                    + Instant.ofEpochMilli(high) + "]=" + value;
         }
 
         public TreeEntry<V> getLeft() {
@@ -683,8 +683,8 @@ class IntervalTree<E extends Entry<?>> {
 
             if (startTime.isAfter(endTime)) {
                 throw new IllegalArgumentException(
-                        "start time can not be after end time, start = " //$NON-NLS-1$
-                                + startTime + ", end = " + endTime); //$NON-NLS-1$
+                        "start time can not be after end time, start = "
+                                + startTime + ", end = " + endTime);
             }
 
             this.startTime = startTime;

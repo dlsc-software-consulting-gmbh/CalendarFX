@@ -30,7 +30,7 @@ import javafx.scene.control.TabPane;
  */
 public class DeveloperConsole extends CalendarFXControl {
 
-    private static final String DEFAULT_STYLE_CLASS = "developer-console"; //$NON-NLS-1$
+    private static final String DEFAULT_STYLE_CLASS = "developer-console";
 
     private TabPane tabPane = new TabPane();
 
@@ -59,7 +59,7 @@ public class DeveloperConsole extends CalendarFXControl {
     }
 
     private final ObjectProperty<DateControl> dateControl = new SimpleObjectProperty<>(
-            this, "dateControl"); //$NON-NLS-1$
+            this, "dateControl");
 
     /**
      * Stores a reference to the date control that will be monitored by the

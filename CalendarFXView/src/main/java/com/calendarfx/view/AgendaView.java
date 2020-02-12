@@ -66,13 +66,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class AgendaView extends DateControl {
 
-    private static final String DEFAULT_STYLE_CLASS = "agenda-view"; //$NON-NLS-1$
-    private static final String AGENDA_CATEGORY = "Agenda View"; //$NON-NLS-1$
+    private static final String DEFAULT_STYLE_CLASS = "agenda-view";
+    private static final String AGENDA_CATEGORY = "Agenda View";
 
     private final ListView<AgendaEntry> listView = new ListView<>();
     private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
             this,
-            "formatter", //$NON-NLS-1$
+            "formatter",
             DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
 
     /**
@@ -101,10 +101,10 @@ public class AgendaView extends DateControl {
 
     private ContextMenu buildContextMenu() {
         ContextMenu menu = new ContextMenu();
-        Menu lookBackMenu = new Menu(Messages.getString("AgendaView.MENU_ITEM_LOOK_BACK")); //$NON-NLS-1$
-        Menu lookAheadMenu = new Menu(Messages.getString("AgendaView.MENU_ITEM_LOOK_AHEAD")); //$NON-NLS-1$
+        Menu lookBackMenu = new Menu(Messages.getString("AgendaView.MENU_ITEM_LOOK_BACK"));
+        Menu lookAheadMenu = new Menu(Messages.getString("AgendaView.MENU_ITEM_LOOK_AHEAD"));
 
-        String format = Messages.getString("AgendaView.MENU_ITEM_DAYS"); //$NON-NLS-1$
+        String format = Messages.getString("AgendaView.MENU_ITEM_DAYS");
 
         MenuItem lookBack0 = new MenuItem(MessageFormat.format(format, 0));
         MenuItem lookBack10 = new MenuItem(MessageFormat.format(format, 10));
@@ -131,7 +131,7 @@ public class AgendaView extends DateControl {
         return menu;
     }
 
-    private final IntegerProperty lookBackPeriodInDays = new SimpleIntegerProperty(this, "lookBackPeriodInDays", 0); //$NON-NLS-1$
+    private final IntegerProperty lookBackPeriodInDays = new SimpleIntegerProperty(this, "lookBackPeriodInDays", 0);
 
     /**
      * Stores the number of days to "look back" into the past when loading data.
@@ -159,12 +159,12 @@ public class AgendaView extends DateControl {
      */
     public final void setLookBackPeriodInDays(int days) {
         if (days < 0) {
-            throw new IllegalArgumentException("days must be larger than or equal to 0"); //$NON-NLS-1$
+            throw new IllegalArgumentException("days must be larger than or equal to 0");
         }
         lookBackPeriodInDaysProperty().set(days);
     }
 
-    private final IntegerProperty lookAheadPeriodInDays = new SimpleIntegerProperty(this, "lookAheadPeriodInDays", 30); //$NON-NLS-1$
+    private final IntegerProperty lookAheadPeriodInDays = new SimpleIntegerProperty(this, "lookAheadPeriodInDays", 30);
 
     /**
      * Stores the number of days to "look ahead" into the future when loading
@@ -193,7 +193,7 @@ public class AgendaView extends DateControl {
      */
     public final void setLookAheadPeriodInDays(int days) {
         if (days < 0) {
-            throw new IllegalArgumentException("days must be larger than or equal to 0"); //$NON-NLS-1$
+            throw new IllegalArgumentException("days must be larger than or equal to 0");
         }
         lookAheadPeriodInDaysProperty().set(days);
     }
@@ -299,19 +299,19 @@ public class AgendaView extends DateControl {
      */
     public static class AgendaEntryCell extends ListCell<AgendaEntry> {
 
-        private static final String AGENDA_VIEW_LIST_CELL = "agenda-view-list-cell"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_TIME_LABEL = "time-label"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_TITLE_LABEL = "title-label"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_BODY = "body"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_DATE_LABEL = "date-label"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_DATE_LABEL_TODAY = "today"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_WEEKDAY_LABEL = "weekday-label"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_WEEKDAY_LABEL_TODAY = "today"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_HEADER = "header"; //$NON-NLS-1$
-        private static final String AGENDA_VIEW_HEADER_TODAY = "today"; //$NON-NLS-1$
+        private static final String AGENDA_VIEW_LIST_CELL = "agenda-view-list-cell";
+        private static final String AGENDA_VIEW_TIME_LABEL = "time-label";
+        private static final String AGENDA_VIEW_TITLE_LABEL = "title-label";
+        private static final String AGENDA_VIEW_BODY = "body";
+        private static final String AGENDA_VIEW_DATE_LABEL = "date-label";
+        private static final String AGENDA_VIEW_DATE_LABEL_TODAY = "today";
+        private static final String AGENDA_VIEW_WEEKDAY_LABEL = "weekday-label";
+        private static final String AGENDA_VIEW_WEEKDAY_LABEL_TODAY = "today";
+        private static final String AGENDA_VIEW_HEADER = "header";
+        private static final String AGENDA_VIEW_HEADER_TODAY = "today";
         private static final String AGENDA_VIEW_BODY_SEPARATOR = "separator";
 
-        private DateTimeFormatter weekdayFormatter = DateTimeFormatter.ofPattern(Messages.getString("AgendaEntryCell.WEEKDAY_FORMAT")); //$NON-NLS-1$
+        private DateTimeFormatter weekdayFormatter = DateTimeFormatter.ofPattern(Messages.getString("AgendaEntryCell.WEEKDAY_FORMAT"));
         private DateTimeFormatter mediumDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
         private DateTimeFormatter shortDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
         private DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
@@ -458,7 +458,7 @@ public class AgendaView extends DateControl {
 
                     if (count > 1 && i < count - 1) {
                         Region separator = new Region();
-                        separator.getStyleClass().add(AGENDA_VIEW_BODY_SEPARATOR); //$NON-NLS-1$
+                        separator.getStyleClass().add(AGENDA_VIEW_BODY_SEPARATOR);
                         row++;
                         gridPane.add(separator, 0, row);
                         GridPane.setColumnSpan(separator, 3);
@@ -513,7 +513,7 @@ public class AgendaView extends DateControl {
          * the calendar to which the entry belongs.
          * <pre>
          *	  Circle circle = new Circle(4);
-         *	  circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon"); //$NON-NLS-1$
+         *	  circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon");
          * </pre>
          *
          * @param entry the entry for which the icon will be displayed
@@ -521,7 +521,7 @@ public class AgendaView extends DateControl {
          */
         protected Node createEntryGraphic(Entry<?> entry) {
             Circle circle = new Circle(4);
-            circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon"); //$NON-NLS-1$
+            circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon");
             return circle;
         }
 
@@ -535,7 +535,7 @@ public class AgendaView extends DateControl {
          */
         protected String getTimeText(Entry<?> entry) {
             if (entry.isFullDay()) {
-                return Messages.getString("AgendaEntryCell.ALL_DAY");//$NON-NLS-1$
+                return Messages.getString("AgendaEntryCell.ALL_DAY");
             }
 
             LocalDate startDate = entry.getStartDate();
@@ -544,10 +544,10 @@ public class AgendaView extends DateControl {
             String text;
 
             if (startDate.equals(endDate)) {
-                text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE"), //$NON-NLS-1$
+                text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE"),
                         timeFormatter.format(entry.getStartTime()), timeFormatter.format(entry.getEndTime()));
             } else {
-                text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE_WITH_DATE"), //$NON-NLS-1$
+                text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE_WITH_DATE"),
                         shortDateFormatter.format(entry.getStartDate()), timeFormatter.format(entry.getStartTime()), shortDateFormatter.format(entry.getEndDate()),
                         timeFormatter.format(entry.getEndTime()));
             }
@@ -619,12 +619,12 @@ public class AgendaView extends DateControl {
 
             @Override
             public String getName() {
-                return "Look Ahead Period"; //$NON-NLS-1$
+                return "Look Ahead Period";
             }
 
             @Override
             public String getDescription() {
-                return "Look ahead period in days"; //$NON-NLS-1$
+                return "Look ahead period in days";
             }
 
             @Override
@@ -657,12 +657,12 @@ public class AgendaView extends DateControl {
 
             @Override
             public String getName() {
-                return "Look Back Period"; //$NON-NLS-1$
+                return "Look Back Period";
             }
 
             @Override
             public String getDescription() {
-                return "Look back period in days"; //$NON-NLS-1$
+                return "Look back period in days";
             }
 
             @Override
@@ -694,12 +694,12 @@ public class AgendaView extends DateControl {
 
             @Override
             public String getName() {
-                return "Show Status Label"; //$NON-NLS-1$
+                return "Show Status Label";
             }
 
             @Override
             public String getDescription() {
-                return "Show Status Label"; //$NON-NLS-1$
+                return "Show Status Label";
             }
 
             @Override

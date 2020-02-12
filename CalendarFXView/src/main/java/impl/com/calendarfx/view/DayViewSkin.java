@@ -264,7 +264,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         for (int i = 0; i < lineCount; i++) {
             Line line = lines.get(i);
 
-            line.getStyleClass().removeAll("early-hour-line", "late-hour-line");  //$NON-NLS-2$
+            line.getStyleClass().removeAll("early-hour-line", "late-hour-line");
 
             int hour = (i + 1) / 2;
             int minute = 0;

@@ -59,15 +59,15 @@ public class DatePopOver extends PopOver {
         List<Entry<?>> entries = findEntries();
         if (entries == null || entries.isEmpty()) {
             Label label = new Label();
-            label.setText("No Entries"); //$NON-NLS-1$
-            label.getStyleClass().add("no-entries-label"); //$NON-NLS-1$
+            label.setText("No Entries");
+            label.getStyleClass().add("no-entries-label");
             setContentNode(label);
         } else {
             entriesPane.getEntries().setAll(entries);
             setContentNode(entriesPane);
         }
 
-        getStyleClass().add("date-popover"); //$NON-NLS-1$
+        getStyleClass().add("date-popover");
         setArrowIndent(4);
         setDetachable(false);
         setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);

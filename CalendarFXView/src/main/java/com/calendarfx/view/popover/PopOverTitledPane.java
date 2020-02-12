@@ -38,12 +38,12 @@ public class PopOverTitledPane extends TitledPane {
         super(title, detailedContent);
 
         if (title == null) {
-            throw new IllegalArgumentException("title can not be null"); //$NON-NLS-1$
+            throw new IllegalArgumentException("title can not be null");
         }
 
         if (detailedContent == null) {
             throw new IllegalArgumentException(
-                    "detailed content can not be null"); //$NON-NLS-1$
+                    "detailed content can not be null");
         }
 
         setContentDisplay(TEXT_ONLY);
@@ -76,7 +76,7 @@ public class PopOverTitledPane extends TitledPane {
     }
 
     private final ObjectProperty<Duration> fadingDuration = new SimpleObjectProperty<>(
-            this, "fadingDuration", Duration.seconds(.2)); //$NON-NLS-1$
+            this, "fadingDuration", Duration.seconds(.2));
 
     public final ObjectProperty<Duration> fadingDurationProperty() {
         return fadingDuration;

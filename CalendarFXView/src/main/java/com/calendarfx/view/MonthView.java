@@ -78,7 +78,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     }
 
     private final BooleanProperty showCurrentWeek = new SimpleBooleanProperty(
-            this, "showCurrentWeek", true); //$NON-NLS-1$
+            this, "showCurrentWeek", true);
 
     /**
      * Controls whether the view will highlight the current week. The image
@@ -114,7 +114,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     }
 
     private final BooleanProperty showWeekends = new SimpleBooleanProperty(
-            this, "showWeekends", true); //$NON-NLS-1$
+            this, "showWeekends", true);
 
     /**
      * Controls whether the view will show weekend days differently than regular
@@ -148,7 +148,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     }
 
     private final BooleanProperty showWeekdays = new SimpleBooleanProperty(
-            this, "showWeekdays", true); //$NON-NLS-1$
+            this, "showWeekdays", true);
 
     /**
      * Controls whether the view will show the names of the week days ("Mo",
@@ -182,7 +182,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     }
 
     private final BooleanProperty showTimedEntries = new SimpleBooleanProperty(this,
-            "showTimedEntries", true); //$NON-NLS-1$
+            "showTimedEntries", true);
 
     /**
      * Controls whether the view will show calendar entries that are not "full-day" entries
@@ -215,7 +215,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
 
     private final BooleanProperty showFullDayEntries = new SimpleBooleanProperty(this,
-            "showFullDayEntries", true); //$NON-NLS-1$
+            "showFullDayEntries", true);
 
     /**
      * Controls whether the view will show calendar entries that are "full-day" entries
@@ -247,7 +247,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     }
 
     private final ObjectProperty<Callback<Entry<?>, MonthEntryView>> entryViewFactory = new SimpleObjectProperty<>(
-            this, "entryViewFactory"); //$NON-NLS-1$
+            this, "entryViewFactory");
 
     /**
      * A factory used for creating instances of type {@link MonthEntryView}.
@@ -295,7 +295,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
         setDate(getDate().plusMonths(1));
     }
 
-    private static final String MONTH_PAGE_CATEGORY = "Month View"; //$NON-NLS-1$
+    private static final String MONTH_PAGE_CATEGORY = "Month View";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -325,12 +325,12 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
             @Override
             public String getName() {
-                return "Show Weekdays"; //$NON-NLS-1$
+                return "Show Weekdays";
             }
 
             @Override
             public String getDescription() {
-                return "Show or hide the weekdays"; //$NON-NLS-1$
+                return "Show or hide the weekdays";
             }
 
             @Override
@@ -363,12 +363,12 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
             @Override
             public String getName() {
-                return "Show Weekends"; //$NON-NLS-1$
+                return "Show Weekends";
             }
 
             @Override
             public String getDescription() {
-                return "Mark the weekends"; //$NON-NLS-1$
+                return "Mark the weekends";
             }
 
             @Override
@@ -401,12 +401,12 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
             @Override
             public String getName() {
-                return "Show Week Numbers"; //$NON-NLS-1$
+                return "Show Week Numbers";
             }
 
             @Override
             public String getDescription() {
-                return "Show or hide the week numbers"; //$NON-NLS-1$
+                return "Show or hide the week numbers";
             }
 
             @Override
@@ -439,12 +439,12 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
             @Override
             public String getName() {
-                return "Show Current Week"; //$NON-NLS-1$
+                return "Show Current Week";
             }
 
             @Override
             public String getDescription() {
-                return "Highlight the current week"; //$NON-NLS-1$
+                return "Highlight the current week";
             }
 
             @Override
@@ -477,12 +477,12 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
             @Override
             public String getName() {
-                return "Show Full Day Entries"; //$NON-NLS-1$
+                return "Show Full Day Entries";
             }
 
             @Override
             public String getDescription() {
-                return "Show full day entries"; //$NON-NLS-1$
+                return "Show full day entries";
             }
 
             @Override
@@ -515,12 +515,12 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
             @Override
             public String getName() {
-                return "Show Timed Entries"; //$NON-NLS-1$
+                return "Show Timed Entries";
             }
 
             @Override
             public String getDescription() {
-                return "Show timed entries"; //$NON-NLS-1$
+                return "Show timed entries";
             }
 
             @Override

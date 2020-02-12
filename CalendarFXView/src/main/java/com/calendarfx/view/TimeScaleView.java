@@ -35,14 +35,14 @@ import static java.util.Objects.requireNonNull;
 public class TimeScaleView extends DayViewBase {
 
     private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
-            this, "formatter", //$NON-NLS-1$
+            this, "formatter",
             DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
 
     /**
      * Constructs a new scale view.
      */
     public TimeScaleView() {
-        getStyleClass().add("time-scale"); //$NON-NLS-1$
+        getStyleClass().add("time-scale");
     }
 
     @Override

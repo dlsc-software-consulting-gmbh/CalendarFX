@@ -49,7 +49,7 @@ public final class Placement {
 
     @Override
     public String toString() {
-        return "Placement [columnIndex=" + columnIndex + ", columnCount=" //$NON-NLS-1$ //$NON-NLS-2$
-                + columnCount + ", entry=" + entryViewBase.getEntry() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+        return "Placement [columnIndex=" + columnIndex + ", columnCount="
+                + columnCount + ", entry=" + entryViewBase.getEntry() + "]";
     }
 }

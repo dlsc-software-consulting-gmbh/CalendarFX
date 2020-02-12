@@ -71,10 +71,10 @@ public class DayPage extends PageBase {
     public DayPage() {
         super();
 
-        getStyleClass().add("day-page"); //$NON-NLS-1$
+        getStyleClass().add("day-page");
 
         setDateTimeFormatter(
-                DateTimeFormatter.ofPattern(Messages.getString("DayPage.DATE_FORMATTER"))); //$NON-NLS-1$
+                DateTimeFormatter.ofPattern(Messages.getString("DayPage.DATE_FORMATTER")));
 
         this.agendaView = new AgendaView();
         this.yearMonthView = new YearMonthView();
@@ -117,21 +117,21 @@ public class DayPage extends PageBase {
         standardButton.setOnAction(evt -> setDayPageLayout(DayPageLayout.STANDARD));
 
         SegmentedButton segmentedButton = new SegmentedButton(agendaOnlyButton, standardButton, dayOnlyButton);
-        segmentedButton.getStyleClass().add("layout-button"); //$NON-NLS-1$
+        segmentedButton.getStyleClass().add("layout-button");
         segmentedButton.visibleProperty().bind(showDayPageLayoutControlsProperty());
 
         updateDayPageLayoutButtons(agendaOnlyButton, dayOnlyButton, standardButton);
         dayPageLayout.addListener((observable, oldValue, newValue) -> updateDayPageLayoutButtons(agendaOnlyButton, dayOnlyButton, standardButton));
 
-        agendaOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_AGENDA_LIST"))); //$NON-NLS-1$
-        dayOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_DAY_VIEW"))); //$NON-NLS-1$
-        standardButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_STANDARD_LAYOUT"))); //$NON-NLS-1$
+        agendaOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_AGENDA_LIST")));
+        dayOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_DAY_VIEW")));
+        standardButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_STANDARD_LAYOUT")));
 
         ToggleButton layoutButton = new ToggleButton();
-        layoutButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_LAYOUT"))); //$NON-NLS-1$
+        layoutButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_LAYOUT")));
         layoutButton.setId("layout-button");
         FontIcon layoutIcon = new FontIcon(FontAwesome.TABLE);
-        layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
+        layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon");
         layoutButton.setGraphic(layoutIcon);
         layoutButton.setSelected(getLayout().equals(Layout.SWIMLANE));
         layoutButton.setOnAction(evt -> {
@@ -231,7 +231,7 @@ public class DayPage extends PageBase {
     }
 
     private final ObjectProperty<DayPageLayout> dayPageLayout = new SimpleObjectProperty<>(
-            this, "dayPageLayout", DayPageLayout.STANDARD); //$NON-NLS-1$
+            this, "dayPageLayout", DayPageLayout.STANDARD);
 
     /**
      * Stores the currently requested layout for the {@link DayPage}. The layout
@@ -267,7 +267,7 @@ public class DayPage extends PageBase {
     }
 
     private final BooleanProperty showDayPageLayoutControls = new SimpleBooleanProperty(
-            this, "showDayPageLayoutControls", true); //$NON-NLS-1$
+            this, "showDayPageLayoutControls", true);
 
     /**
      * Determines if the controls for switching between different layouts of
@@ -340,7 +340,7 @@ public class DayPage extends PageBase {
         return ViewType.DAY_VIEW;
     }
 
-    private static final String DAY_PAGE_CATEGORY = "Day Page"; //$NON-NLS-1$
+    private static final String DAY_PAGE_CATEGORY = "Day Page";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -370,12 +370,12 @@ public class DayPage extends PageBase {
 
             @Override
             public String getName() {
-                return "Day Page Layout"; //$NON-NLS-1$
+                return "Day Page Layout";
             }
 
             @Override
             public String getDescription() {
-                return "Layout of the day page"; //$NON-NLS-1$
+                return "Layout of the day page";
             }
 
             @Override
@@ -408,12 +408,12 @@ public class DayPage extends PageBase {
 
             @Override
             public String getName() {
-                return "Day Page Layout Controls"; //$NON-NLS-1$
+                return "Day Page Layout Controls";
             }
 
             @Override
             public String getDescription() {
-                return "Show Day Page Layout Controls"; //$NON-NLS-1$
+                return "Show Day Page Layout Controls";
             }
 
             @Override
@@ -446,12 +446,12 @@ public class DayPage extends PageBase {
 
             @Override
             public String getName() {
-                return "Layout Button"; //$NON-NLS-1$
+                return "Layout Button";
             }
 
             @Override
             public String getDescription() {
-                return "Can the user access the button to toggle the layout or not."; //$NON-NLS-1$
+                return "Can the user access the button to toggle the layout or not.";
             }
 
             @Override

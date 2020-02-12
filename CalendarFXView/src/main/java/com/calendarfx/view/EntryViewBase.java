@@ -83,13 +83,13 @@ import static javafx.scene.input.MouseButton.PRIMARY;
  */
 public abstract class EntryViewBase<T extends DateControl> extends CalendarFXControl implements Comparable<EntryViewBase<T>> {
 
-    private static final PseudoClass DRAGGED_PSEUDO_CLASS = PseudoClass.getPseudoClass("dragged"); //$NON-NLS-1$
+    private static final PseudoClass DRAGGED_PSEUDO_CLASS = PseudoClass.getPseudoClass("dragged");
 
-    private static final PseudoClass DRAGGED_START_PSEUDO_CLASS = PseudoClass.getPseudoClass("dragged-start"); //$NON-NLS-1$
+    private static final PseudoClass DRAGGED_START_PSEUDO_CLASS = PseudoClass.getPseudoClass("dragged-start");
 
-    private static final PseudoClass DRAGGED_END_PSEUDO_CLASS = PseudoClass.getPseudoClass("dragged-end"); //$NON-NLS-1$
+    private static final PseudoClass DRAGGED_END_PSEUDO_CLASS = PseudoClass.getPseudoClass("dragged-end");
 
-    private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected"); //$NON-NLS-1$
+    private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
 
     private Entry<?> entry;
 
@@ -145,40 +145,40 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         @SuppressWarnings("unchecked")
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
             if (change.wasAdded()) {
-                if (change.getKey().equals("startDate")) { //$NON-NLS-1$
+                if (change.getKey().equals("startDate")) {
                     setStartDate((LocalDate) change.getValueAdded());
-                } else if (change.getKey().equals("endDate")) { //$NON-NLS-1$
+                } else if (change.getKey().equals("endDate")) {
                     setEndDate((LocalDate) change.getValueAdded());
-                } else if (change.getKey().equals("startTime")) { //$NON-NLS-1$
+                } else if (change.getKey().equals("startTime")) {
                     setStartTime((LocalTime) change.getValueAdded());
-                } else if (change.getKey().equals("endTime")) { //$NON-NLS-1$
+                } else if (change.getKey().equals("endTime")) {
                     setEndTime((LocalTime) change.getValueAdded());
-                } else if (change.getKey().equals("position")) { //$NON-NLS-1$
+                } else if (change.getKey().equals("position")) {
                     setPosition((Position) change.getValueAdded());
-                } else if (change.getKey().equals("dragged")) { //$NON-NLS-1$
+                } else if (change.getKey().equals("dragged")) {
                     Boolean onOff = (Boolean) change.getValueAdded();
                     dragged.set(onOff);
-                    getProperties().remove("dragged"); //$NON-NLS-1$
-                } else if (change.getKey().equals("dragged-start")) { //$NON-NLS-1$
+                    getProperties().remove("dragged");
+                } else if (change.getKey().equals("dragged-start")) {
                     Boolean onOff = (Boolean) change.getValueAdded();
                     draggedStart.set(onOff);
-                    getProperties().remove("dragged-start"); //$NON-NLS-1$
-                } else if (change.getKey().equals("dragged-end")) { //$NON-NLS-1$
+                    getProperties().remove("dragged-start");
+                } else if (change.getKey().equals("dragged-end")) {
                     Boolean onOff = (Boolean) change.getValueAdded();
                     draggedEnd.set(onOff);
-                    getProperties().remove("dragged-end"); //$NON-NLS-1$
-                } else if (change.getKey().equals("selected")) { //$NON-NLS-1$
+                    getProperties().remove("dragged-end");
+                } else if (change.getKey().equals("selected")) {
                     Boolean onOff = (Boolean) change.getValueAdded();
                     selected.set(onOff);
-                    getProperties().remove("selected"); //$NON-NLS-1$
-                } else if (change.getKey().equals("hidden")) { //$NON-NLS-1$
+                    getProperties().remove("selected");
+                } else if (change.getKey().equals("hidden")) {
                     Boolean onOff = (Boolean) change.getValueAdded();
                     setHidden(onOff);
-                    getProperties().remove("hidden"); //$NON-NLS-1$
-                } else if (change.getKey().equals("control")) { //$NON-NLS-1$
+                    getProperties().remove("hidden");
+                } else if (change.getKey().equals("control")) {
                     T control = (T) change.getValueAdded();
                     setDateControl(control);
-                    getProperties().remove("control"); //$NON-NLS-1$
+                    getProperties().remove("control");
                 }
             }
         };
@@ -244,7 +244,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
              * We want to make sure the dragged entry gets styled like a
              * selected entry.
              */
-            getProperties().put("selected", true); //$NON-NLS-1$
+            getProperties().put("selected", true);
         }
 
         entry.calendarProperty().addListener(weakCalendarListener);
@@ -274,7 +274,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final ReadOnlyBooleanProperty hiddenProperty() {
         if (hidden == null) {
-            hidden = new ReadOnlyBooleanWrapper(this, "hidden", _hidden); //$NON-NLS-1$
+            hidden = new ReadOnlyBooleanWrapper(this, "hidden", _hidden);
         }
         return hidden.getReadOnlyProperty();
     }
@@ -300,7 +300,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
     private void processFocus() {
         if (isFocused()) {
 
-            if (!getProperties().containsKey("disable-focus-handling")) { //$NON-NLS-1$
+            if (!getProperties().containsKey("disable-focus-handling")) {
                 DateControl control = getDateControl();
                 if (control != null) {
                     if (!control.getSelections().contains(getEntry())) {
@@ -462,7 +462,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final ReadOnlyObjectProperty<Position> positionProperty() {
         if (position == null) {
-            position = new ReadOnlyObjectWrapper<>(this, "position", _position); //$NON-NLS-1$
+            position = new ReadOnlyObjectWrapper<>(this, "position", _position);
         }
         return position.getReadOnlyProperty();
     }
@@ -495,7 +495,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final ReadOnlyObjectProperty<T> dateControlProperty() {
         if (dateControl == null) {
-            dateControl = new ReadOnlyObjectWrapper<>(this, "dateControl", _dateControl); //$NON-NLS-1$
+            dateControl = new ReadOnlyObjectWrapper<>(this, "dateControl", _dateControl);
         }
 
         return dateControl.getReadOnlyProperty();
@@ -532,7 +532,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final ReadOnlyObjectProperty<LocalDate> startDateProperty() {
         if (startDate == null) {
-            startDate = new ReadOnlyObjectWrapper<>(this, "startDate", _startDate); //$NON-NLS-1$
+            startDate = new ReadOnlyObjectWrapper<>(this, "startDate", _startDate);
         }
         return startDate.getReadOnlyProperty();
     }
@@ -568,7 +568,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final ReadOnlyObjectProperty<LocalDate> endDateProperty() {
         if (endDate == null) {
-            endDate = new ReadOnlyObjectWrapper<>(this, "endDate", _endDate); //$NON-NLS-1$
+            endDate = new ReadOnlyObjectWrapper<>(this, "endDate", _endDate);
         }
 
         return endDate.getReadOnlyProperty();
@@ -603,7 +603,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final ReadOnlyObjectProperty<LocalTime> startTimeProperty() {
         if (startTime == null) {
-            startTime = new ReadOnlyObjectWrapper<>(this, "startTime", _startTime); //$NON-NLS-1$
+            startTime = new ReadOnlyObjectWrapper<>(this, "startTime", _startTime);
         }
         return startTime.getReadOnlyProperty();
     }
@@ -637,7 +637,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final ReadOnlyObjectProperty<LocalTime> endTimeProperty() {
         if (endTime == null) {
-            endTime = new ReadOnlyObjectWrapper<>(this, "endTime", _endTime); //$NON-NLS-1$
+            endTime = new ReadOnlyObjectWrapper<>(this, "endTime", _endTime);
         }
         return endTime.getReadOnlyProperty();
     }
@@ -677,7 +677,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         @Override
         public String getName() {
-            return "dragged"; //$NON-NLS-1$
+            return "dragged";
         }
     };
 
@@ -718,7 +718,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         @Override
         public String getName() {
-            return "draggedStart"; //$NON-NLS-1$
+            return "draggedStart";
         }
     };
 
@@ -760,7 +760,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         @Override
         public String getName() {
-            return "draggedEnd"; //$NON-NLS-1$
+            return "draggedEnd";
         }
     };
 
@@ -802,7 +802,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         @Override
         public String getName() {
-            return "selected"; //$NON-NLS-1$
+            return "selected";
         }
     };
 
@@ -863,11 +863,11 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     @Override
     public String toString() {
-        return "EntryViewBase [entry=" + getEntry() + ", selected=" //$NON-NLS-1$ //$NON-NLS-2$
-                + isSelected() + "]"; //$NON-NLS-1$
+        return "EntryViewBase [entry=" + getEntry() + ", selected="
+                + isSelected() + "]";
     }
 
-    private static final String ENTRY_VIEW_CATEGORY = "Entry View Base"; //$NON-NLS-1$
+    private static final String ENTRY_VIEW_CATEGORY = "Entry View Base";
 
     /**
      * Returns a list of property items that can be shown by the
@@ -903,12 +903,12 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
             @Override
             public String getName() {
-                return "Position"; //$NON-NLS-1$
+                return "Position";
             }
 
             @Override
             public String getDescription() {
-                return "Position (first, last, middle, only)"; //$NON-NLS-1$
+                return "Position (first, last, middle, only)";
             }
 
             @Override
@@ -941,12 +941,12 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
             @Override
             public String getName() {
-                return "Selected"; //$NON-NLS-1$
+                return "Selected";
             }
 
             @Override
             public String getDescription() {
-                return "Selected"; //$NON-NLS-1$
+                return "Selected";
             }
 
             @Override

@@ -51,9 +51,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class DayView extends DayViewBase {
 
-	private static final String DAY_VIEW = "day-view"; //$NON-NLS-1$
-	private static final String DAY_VIEW_TODAY = "today"; //$NON-NLS-1$
-	private static final String DAY_VIEW_WEEKEND_DAY = "weekend-day"; //$NON-NLS-1$
+	private static final String DAY_VIEW = "day-view";
+	private static final String DAY_VIEW_TODAY = "today";
+	private static final String DAY_VIEW_WEEKEND_DAY = "weekend-day";
 
 	/**
 	 * Constructs a new day view.
@@ -112,7 +112,7 @@ public class DayView extends DayViewBase {
 	}
 
 	private final ObjectProperty<Callback<Entry<?>, DayEntryView>> entryViewFactory = new SimpleObjectProperty<>(
-			this, "entryViewFactory"); //$NON-NLS-1$
+			this, "entryViewFactory");
 
 	/**
 	 * A factory used for creating instances of {@link DayEntryView} for each

@@ -31,7 +31,7 @@ import javafx.scene.layout.StackPane;
 
 public class RecurrencePopup extends PopupControl {
 
-    private static final String DEFAULT_STYLE = "recurrence-popup"; //$NON-NLS-1$
+    private static final String DEFAULT_STYLE = "recurrence-popup";
 
     private RecurrenceView recurrenceView;
 
@@ -90,7 +90,7 @@ public class RecurrencePopup extends PopupControl {
 
     public final ObjectProperty<EventHandler<RecurrencePopupEvent>> onOkPressedProperty() {
         if (onOkPressed == null) {
-            onOkPressed = new RecurrencePopupEventHandlerProperty("onOkPressed", //$NON-NLS-1$
+            onOkPressed = new RecurrencePopupEventHandlerProperty("onOkPressed",
                     RecurrencePopupEvent.OK_PRESSED);
         }
 
@@ -114,7 +114,7 @@ public class RecurrencePopup extends PopupControl {
     public final ObjectProperty<EventHandler<RecurrencePopupEvent>> onCancelPressedProperty() {
         if (onCancelPressed == null) {
             onCancelPressed = new RecurrencePopupEventHandlerProperty(
-                    "onCancelPressed", RecurrencePopupEvent.CANCEL_PRESSED); //$NON-NLS-1$
+                    "onCancelPressed", RecurrencePopupEvent.CANCEL_PRESSED);
         }
 
         return onCancelPressed;
@@ -132,13 +132,13 @@ public class RecurrencePopup extends PopupControl {
     public static class RecurrencePopupEvent extends Event {
 
         public static final EventType<RecurrencePopupEvent> RECURRENCE_POPUP_CLOSED = new EventType<>(
-                Event.ANY, "RECURRENCE_POPUP_CLOSED"); //$NON-NLS-1$
+                Event.ANY, "RECURRENCE_POPUP_CLOSED");
 
         public static final EventType<RecurrencePopupEvent> OK_PRESSED = new EventType<>(
-                RecurrencePopupEvent.RECURRENCE_POPUP_CLOSED, "OK_PRESSED"); //$NON-NLS-1$
+                RecurrencePopupEvent.RECURRENCE_POPUP_CLOSED, "OK_PRESSED");
 
         public static final EventType<RecurrencePopupEvent> CANCEL_PRESSED = new EventType<>(
-                RecurrencePopupEvent.RECURRENCE_POPUP_CLOSED, "CANCEL_PRESSED"); //$NON-NLS-1$
+                RecurrencePopupEvent.RECURRENCE_POPUP_CLOSED, "CANCEL_PRESSED");
 
         public RecurrencePopupEvent(EventType<? extends Event> eventType) {
             super(eventType);

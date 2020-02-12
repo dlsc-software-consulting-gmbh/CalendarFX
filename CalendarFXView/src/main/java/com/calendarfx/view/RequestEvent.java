@@ -45,43 +45,43 @@ public final class RequestEvent extends Event {
      * An event type used to request that the UI shows a certain granularity.
      */
     public static final EventType<RequestEvent> REQUEST = new EventType<>(
-            RequestEvent.ANY, "REQUEST"); //$NON-NLS-1$
+            RequestEvent.ANY, "REQUEST");
 
     /**
      * An event type used to request that the UI shows a certain granularity.
      */
     public static final EventType<RequestEvent> REQUEST_DATE = new EventType<>(
-            RequestEvent.REQUEST, "REQUEST_DATE"); //$NON-NLS-1$
+            RequestEvent.REQUEST, "REQUEST_DATE");
 
     /**
      * An event type used to request that the UI shows a certain granularity.
      */
     public static final EventType<RequestEvent> REQUEST_DATE_TIME = new EventType<>(
-            RequestEvent.REQUEST, "REQUEST_DATE_TIME"); //$NON-NLS-1$
+            RequestEvent.REQUEST, "REQUEST_DATE_TIME");
 
     /**
      * An event type used to request that the UI shows a certain granularity.
      */
     public static final EventType<RequestEvent> REQUEST_YEAR_MONTH = new EventType<>(
-            RequestEvent.REQUEST, "REQUEST_YEAR_MONTH"); //$NON-NLS-1$
+            RequestEvent.REQUEST, "REQUEST_YEAR_MONTH");
 
     /**
      * An event type used to request that the UI shows a certain granularity.
      */
     public static final EventType<RequestEvent> REQUEST_YEAR = new EventType<>(
-            RequestEvent.REQUEST, "REQUEST_YEAR"); //$NON-NLS-1$
+            RequestEvent.REQUEST, "REQUEST_YEAR");
 
     /**
      * An event type used to request that the UI shows a certain week.
      */
     public static final EventType<RequestEvent> REQUEST_WEEK = new EventType<>(
-            RequestEvent.REQUEST, "REQUEST_WEEK"); //$NON-NLS-1$
+            RequestEvent.REQUEST, "REQUEST_WEEK");
 
     /**
      * An event type used to request that the UI shows a certain entry.
      */
     public static final EventType<RequestEvent> REQUEST_ENTRY = new EventType<>(
-            RequestEvent.REQUEST, "REQUEST_ENTRY"); //$NON-NLS-1$
+            RequestEvent.REQUEST, "REQUEST_ENTRY");
 
     private LocalDate date;
 
@@ -250,9 +250,9 @@ public final class RequestEvent extends Event {
 
     @Override
     public String toString() {
-        return "RequestEvent [date=" + date + ", dateTime=" + dateTime //$NON-NLS-1$ //$NON-NLS-2$
-                + ", yearMonth=" + yearMonth + ", year=" + year + ", entry=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                + entry + ", weekOfYear" + weekOfYear + ", eventType=" + eventType + ", target=" + target //$NON-NLS-1$ //$NON-NLS-2$
-                + ", consumed=" + consumed + ", source=" + source + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "RequestEvent [date=" + date + ", dateTime=" + dateTime
+                + ", yearMonth=" + yearMonth + ", year=" + year + ", entry="
+                + entry + ", weekOfYear" + weekOfYear + ", eventType=" + eventType + ", target=" + target
+                + ", consumed=" + consumed + ", source=" + source + "]";
     }
 }

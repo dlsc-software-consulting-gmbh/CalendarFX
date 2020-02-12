@@ -64,7 +64,7 @@ public class YearView extends DateControl {
         return new YearViewSkin(this);
     }
 
-    private final ReadOnlyObjectWrapper<Year> year = new ReadOnlyObjectWrapper<>(this, "year", Year.from(getToday())); //$NON-NLS-1$
+    private final ReadOnlyObjectWrapper<Year> year = new ReadOnlyObjectWrapper<>(this, "year", Year.from(getToday()));
 
     /**
      * Reports the year shown by the control.

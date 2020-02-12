@@ -31,7 +31,7 @@ import static java.time.temporal.ChronoField.DAY_OF_WEEK;
 
 public class WeekDayHeaderViewSkin extends SkinBase<WeekDayHeaderView> {
 
-    private static final String TODAY = "today"; //$NON-NLS-1$
+    private static final String TODAY = "today";
 
     private GridPane pane;
 

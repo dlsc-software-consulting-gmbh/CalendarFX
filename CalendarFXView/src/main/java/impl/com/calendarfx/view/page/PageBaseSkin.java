@@ -51,12 +51,12 @@ public abstract class PageBaseSkin<C extends PageBase> extends SkinBase<C> {
         todayButton.setOnAction(evt -> page.goToday());
 
         ButtonBar navigationButton = new ButtonBar(backButton, todayButton, forwardButton);
-        navigationButton.getStyleClass().add("navigation-button-bar"); //$NON-NLS-1$
+        navigationButton.getStyleClass().add("navigation-button-bar");
         navigationButton.visibleProperty().bind(page.showNavigationProperty());
 
         // Date label
-        this.dateText = new Text("Date"); //$NON-NLS-1$
-        this.dateText.getStyleClass().add("date-text"); //$NON-NLS-1$
+        this.dateText = new Text("Date");
+        this.dateText.getStyleClass().add("date-text");
         this.dateText.visibleProperty().bind(page.showDateProperty());
         page.dateProperty().addListener(evt -> updateDateText());
 
@@ -69,7 +69,7 @@ public abstract class PageBaseSkin<C extends PageBase> extends SkinBase<C> {
         headerPane.setRight(dateText);
 
         Node content = createContent();
-        content.getStyleClass().add("content"); //$NON-NLS-1$
+        content.getStyleClass().add("content");
         content.sceneProperty().addListener(it -> {
             if (content.getScene() != null) {
                 content.applyCss();

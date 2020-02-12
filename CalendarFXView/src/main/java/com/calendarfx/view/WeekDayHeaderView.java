@@ -79,7 +79,7 @@ public class WeekDayHeaderView extends DateControl {
         return new WeekDayHeaderViewSkin(this);
     }
 
-    private final ObjectProperty<Callback<WeekDayHeaderView, WeekDayCell>> cellFactory = new SimpleObjectProperty<>(this, "cellFactory"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<WeekDayHeaderView, WeekDayCell>> cellFactory = new SimpleObjectProperty<>(this, "cellFactory");
 
     /**
      * A cell factory used for creating instances of {@link WeekDayCell} that will
@@ -113,7 +113,7 @@ public class WeekDayHeaderView extends DateControl {
     }
 
     private final IntegerProperty numberOfDays = new SimpleIntegerProperty(
-            this, "numberOfDays", 7); //$NON-NLS-1$
+            this, "numberOfDays", 7);
 
     /**
      * Stores the number of days that will be shown by this view. This value
@@ -144,7 +144,7 @@ public class WeekDayHeaderView extends DateControl {
     public final void setNumberOfDays(int number) {
         if (number < 1) {
             throw new IllegalArgumentException(
-                    "invalid number of days, must be larger than 0 but was " //$NON-NLS-1$
+                    "invalid number of days, must be larger than 0 but was "
                             + number);
         }
 
@@ -152,7 +152,7 @@ public class WeekDayHeaderView extends DateControl {
     }
 
     private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(
-            this, "adjustToFirstDayOfWeek", true); //$NON-NLS-1$
+            this, "adjustToFirstDayOfWeek", true);
 
     /**
      * A flag used to indicate that the view should always show the first day of
@@ -185,7 +185,7 @@ public class WeekDayHeaderView extends DateControl {
     }
 
     private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(
-            this, "startDate"); //$NON-NLS-1$
+            this, "startDate");
 
     /**
      * The first date shown by the view.
@@ -206,7 +206,7 @@ public class WeekDayHeaderView extends DateControl {
     }
 
     private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(
-            this, "endDate"); //$NON-NLS-1$
+            this, "endDate");
 
     /**
      * The last date shown by the view.
@@ -225,7 +225,7 @@ public class WeekDayHeaderView extends DateControl {
      */
     public static class WeekDayCell extends Label {
 
-        private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Messages.getString("WeekDayHeaderView.CELL_DATE_FORMAT")); //$NON-NLS-1$
+        private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Messages.getString("WeekDayHeaderView.CELL_DATE_FORMAT"));
 
         /**
          * Constructs a new date cell.
@@ -234,7 +234,7 @@ public class WeekDayHeaderView extends DateControl {
          */
         public WeekDayCell(WeekDayHeaderView view) {
             Objects.requireNonNull(view);
-            getStyleClass().add("cell"); //$NON-NLS-1$
+            getStyleClass().add("cell");
             setMaxWidth(Double.MAX_VALUE);
             dateProperty().addListener(it -> setText(formatter.format(getDate())));
             if (view.isEnableHyperlinks()) {
@@ -247,7 +247,7 @@ public class WeekDayHeaderView extends DateControl {
             }
         }
 
-        private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now()); //$NON-NLS-1$
+        private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now());
 
         /**
          * The date shown by this cell.
@@ -278,7 +278,7 @@ public class WeekDayHeaderView extends DateControl {
         }
     }
 
-    private static final String WEEK_DAY_HEADER_VIEW_CATEGORY = "Week Day Header View"; //$NON-NLS-1$
+    private static final String WEEK_DAY_HEADER_VIEW_CATEGORY = "Week Day Header View";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -308,12 +308,12 @@ public class WeekDayHeaderView extends DateControl {
 
             @Override
             public String getName() {
-                return "Number of Days"; //$NON-NLS-1$
+                return "Number of Days";
             }
 
             @Override
             public String getDescription() {
-                return "Number of Days"; //$NON-NLS-1$
+                return "Number of Days";
             }
 
             @Override

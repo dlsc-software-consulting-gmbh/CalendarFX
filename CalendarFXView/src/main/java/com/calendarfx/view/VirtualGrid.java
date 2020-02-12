@@ -41,7 +41,7 @@ public class VirtualGrid {
      *
      * @see DateControl#setVirtualGrid(VirtualGrid)
      */
-    public static final VirtualGrid OFF = new VirtualGrid(Messages.getString("VirtualGrid.OFF"), Messages.getString("VirtualGrid.OFF_SHORT"), //$NON-NLS-1$ //$NON-NLS-2$
+    public static final VirtualGrid OFF = new VirtualGrid(Messages.getString("VirtualGrid.OFF"), Messages.getString("VirtualGrid.OFF_SHORT"),
             ChronoUnit.SECONDS, 1) {
 
         @Override
@@ -88,7 +88,7 @@ public class VirtualGrid {
 
         if (amount <= 0) {
             throw new IllegalArgumentException(
-                    "grid amount must be larger than 0 but was " + amount); //$NON-NLS-1$
+                    "grid amount must be larger than 0 but was " + amount);
         }
 
         this.amount = amount;
@@ -204,7 +204,7 @@ public class VirtualGrid {
 
     @Override
     public String toString() {
-        return "VirtualGrid [name=" + name + ", shortName=" + shortName //$NON-NLS-1$ //$NON-NLS-2$
-                + ", unit=" + unit + ", amount=" + amount + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "VirtualGrid [name=" + name + ", shortName=" + shortName
+                + ", unit=" + unit + ", amount=" + amount + "]";
     }
 }

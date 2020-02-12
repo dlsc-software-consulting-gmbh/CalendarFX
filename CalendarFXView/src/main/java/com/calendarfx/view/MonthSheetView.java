@@ -136,7 +136,7 @@ public class MonthSheetView extends DateControl {
 
     private ContextMenu createContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem newEntry = new MenuItem(Messages.getString("MonthSheetView.ADD_NEW_EVENT")); //$NON-NLS-1$
+        MenuItem newEntry = new MenuItem(Messages.getString("MonthSheetView.ADD_NEW_EVENT"));
         newEntry.setOnAction(evt -> {
 
             LocalDate date = getDateSelectionModel().getLastSelected();
@@ -881,12 +881,12 @@ public class MonthSheetView extends DateControl {
 
             @Override
             public String getName() {
-                return "Click Behaviour"; //$NON-NLS-1$
+                return "Click Behaviour";
             }
 
             @Override
             public String getDescription() {
-                return "Click behaviour"; //$NON-NLS-1$
+                return "Click behaviour";
             }
 
             @Override

@@ -69,7 +69,7 @@ public final class LoadEvent extends Event {
      * given date range is required to be present in the calendars.
      */
     public static final EventType<LoadEvent> LOAD = new EventType<>(Event.ANY,
-            "LOAD"); //$NON-NLS-1$
+            "LOAD");
 
     private List<CalendarSource> calendarSources;
 
@@ -178,8 +178,8 @@ public final class LoadEvent extends Event {
 
     @Override
     public String toString() {
-        return "LoadEvent [sourceName=" + sourceName + ", startDate=" //$NON-NLS-1$ //$NON-NLS-2$
-                + startDate + ", endDate=" + endDate + ", zoneId=" + zoneId //$NON-NLS-1$ //$NON-NLS-2$
-                + ", calendarSources=" + calendarSources + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+        return "LoadEvent [sourceName=" + sourceName + ", startDate="
+                + startDate + ", endDate=" + endDate + ", zoneId=" + zoneId
+                + ", calendarSources=" + calendarSources + "]";
     }
 }

@@ -56,7 +56,7 @@ public class CalendarSelector extends CalendarFXControl {
     /*
      * Support for value.
      */
-    private final ObjectProperty<Calendar> calendar = new SimpleObjectProperty<>(this, "calendar"); //$NON-NLS-1$
+    private final ObjectProperty<Calendar> calendar = new SimpleObjectProperty<>(this, "calendar");
 
     /**
      * A property used to store the current value of the control, the currently

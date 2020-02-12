@@ -476,17 +476,14 @@ public final class Interval {
         } else if (!startTime.equals(other.startTime))
             return false;
         if (zoneId == null) {
-            if (other.zoneId != null)
-                return false;
-        } else if (!zoneId.equals(other.zoneId))
-            return false;
-        return true;
+            return other.zoneId == null;
+        } else return zoneId.equals(other.zoneId);
     }
 
     @Override
     public String toString() {
-        return "Interval [startDate=" + startDate + ", endDate=" + endDate //$NON-NLS-1$ //$NON-NLS-2$
-                + ", startTime=" + startTime + ", endTime=" + endTime //$NON-NLS-1$ //$NON-NLS-2$
-                + ", zoneId=" + zoneId + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+        return "Interval [startDate=" + startDate + ", endDate=" + endDate
+                + ", startTime=" + startTime + ", endTime=" + endTime
+                + ", zoneId=" + zoneId + "]";
     }
 }

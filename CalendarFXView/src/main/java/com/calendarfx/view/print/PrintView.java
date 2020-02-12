@@ -141,7 +141,7 @@ public class PrintView extends ViewTypeControl {
     }
 
     private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(
-            this, "today", LocalDate.now()); //$NON-NLS-1$
+            this, "today", LocalDate.now());
 
     /**
      * Stores the date that is considered to represent "today". This property is
@@ -195,7 +195,7 @@ public class PrintView extends ViewTypeControl {
     }
     
     private final ObjectProperty<DateControl.Layout> layout = new SimpleObjectProperty<>(
-            this, "layout", DateControl.Layout.STANDARD); //$NON-NLS-1$
+            this, "layout", DateControl.Layout.STANDARD);
 
     /**
      * Stores the strategy used by the view to layout the entries of several
@@ -233,7 +233,7 @@ public class PrintView extends ViewTypeControl {
     }
 
     private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(
-            this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
+            this, "weekFields", WeekFields.ISO);
 
     /**
      * Week fields are used to determine the first day of a week (e.g. "Monday"

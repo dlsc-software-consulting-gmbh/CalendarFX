@@ -49,7 +49,7 @@ public class CalendarEvent extends Event {
      * The supertype of all event types in this event class.
      */
     public static final EventType<CalendarEvent> ANY = new EventType<>(
-            Event.ANY, "ANY"); //$NON-NLS-1$
+            Event.ANY, "ANY");
 
     /**
      * An event type used to inform the application that "something" inside the
@@ -57,21 +57,21 @@ public class CalendarEvent extends Event {
      * accordingly (brute force update).
      */
     public static final EventType<CalendarEvent> CALENDAR_CHANGED = new EventType<>(
-            CalendarEvent.ANY, "CALENDAR_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ANY, "CALENDAR_CHANGED");
 
     /**
      * The supertype of all events that a related to an entry itself and not the
      * calendar.
      */
     public static final EventType<CalendarEvent> ENTRY_CHANGED = new EventType<>(
-            CalendarEvent.ANY, "ENTRY_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ANY, "ENTRY_CHANGED");
 
     /**
      * An event type used to inform the application that an entry has been moved
      * from one calendar to another.
      */
     public static final EventType<CalendarEvent> ENTRY_CALENDAR_CHANGED = new EventType<>(
-            CalendarEvent.ENTRY_CHANGED, "ENTRY_CALENDAR_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ENTRY_CHANGED, "ENTRY_CALENDAR_CHANGED");
 
     /**
      * An event type used to inform the application that an entry has become a
@@ -80,35 +80,35 @@ public class CalendarEvent extends Event {
      * take all day (e.g. a birthday).
      */
     public static final EventType<CalendarEvent> ENTRY_FULL_DAY_CHANGED = new EventType<>(
-            CalendarEvent.ENTRY_CHANGED, "ENTRY_FULL_DAY_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ENTRY_CHANGED, "ENTRY_FULL_DAY_CHANGED");
 
     /**
      * An event type used to inform the application that an entry has been
      * assigned a new user object.
      */
     public static final EventType<CalendarEvent> ENTRY_RECURRENCE_RULE_CHANGED = new EventType<>(
-            CalendarEvent.ENTRY_CHANGED, "ENTRY_RECURRENCE_RULE_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ENTRY_CHANGED, "ENTRY_RECURRENCE_RULE_CHANGED");
 
     /**
      * An event type used to inform the application that an entry has been
      * assigned a new title.
      */
     public static final EventType<CalendarEvent> ENTRY_TITLE_CHANGED = new EventType<>(
-            CalendarEvent.ENTRY_CHANGED, "ENTRY_TITLE_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ENTRY_CHANGED, "ENTRY_TITLE_CHANGED");
 
     /**
      * An event type used to inform the application that an entry has been
      * assigned a new user object.
      */
     public static final EventType<CalendarEvent> ENTRY_USER_OBJECT_CHANGED = new EventType<>(
-            CalendarEvent.ENTRY_CHANGED, "ENTRY_USER_OBJECT_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ENTRY_CHANGED, "ENTRY_USER_OBJECT_CHANGED");
 
     /**
      * An event type used to inform the application that an entry has been
      * assigned a new user object.
      */
     public static final EventType<CalendarEvent> ENTRY_LOCATION_CHANGED = new EventType<>(
-            CalendarEvent.ENTRY_CHANGED, "ENTRY_LOCATION_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ENTRY_CHANGED, "ENTRY_LOCATION_CHANGED");
 
     /**
      * An event type used to inform the application that the time bounds of an
@@ -116,7 +116,7 @@ public class CalendarEvent extends Event {
      * time.
      */
     public static final EventType<CalendarEvent> ENTRY_INTERVAL_CHANGED = new EventType<>(
-            CalendarEvent.ENTRY_CHANGED, "ENTRY_INTERVAL_CHANGED"); //$NON-NLS-1$
+            CalendarEvent.ENTRY_CHANGED, "ENTRY_INTERVAL_CHANGED");
 
     private Entry<?> entry;
 
@@ -363,12 +363,12 @@ public class CalendarEvent extends Event {
 
     @Override
     public String toString() {
-        return "CalendarEvent [" //$NON-NLS-1$
-                + (entry == null ? "" : ("entry=" + entry + ", ")) + "calendar=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                + calendar + ", oldInterval=" + oldInterval + ", oldFullDay=" //$NON-NLS-1$ //$NON-NLS-2$
-                + oldFullDay + ", oldText=" + oldText + ", oldCalendar=" //$NON-NLS-1$ //$NON-NLS-2$
-                + oldCalendar + ", eventType=" + eventType + ", target=" //$NON-NLS-1$ //$NON-NLS-2$
-                + target + ", consumed=" + consumed + ", source=" + source //$NON-NLS-1$ //$NON-NLS-2$
-                + "]"; //$NON-NLS-1$
+        return "CalendarEvent ["
+                + (entry == null ? "" : ("entry=" + entry + ", ")) + "calendar="
+                + calendar + ", oldInterval=" + oldInterval + ", oldFullDay="
+                + oldFullDay + ", oldText=" + oldText + ", oldCalendar="
+                + oldCalendar + ", eventType=" + eventType + ", target="
+                + target + ", consumed=" + consumed + ", source=" + source
+                + "]";
     }
 }

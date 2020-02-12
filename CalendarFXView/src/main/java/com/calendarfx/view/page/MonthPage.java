@@ -41,11 +41,11 @@ public class MonthPage extends PageBase {
     public MonthPage() {
         super();
 
-        getStyleClass().add("month-page"); //$NON-NLS-1$
+        getStyleClass().add("month-page");
 
         this.monthView = new MonthView();
 
-        setDateTimeFormatter(DateTimeFormatter.ofPattern(Messages.getString("MonthPage.DATE_FORMAT"))); //$NON-NLS-1$
+        setDateTimeFormatter(DateTimeFormatter.ofPattern(Messages.getString("MonthPage.DATE_FORMAT")));
     }
 
     @Override

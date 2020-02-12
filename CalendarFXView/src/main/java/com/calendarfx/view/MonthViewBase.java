@@ -45,7 +45,7 @@ public abstract class MonthViewBase extends DateControl {
     }
 
     private final ReadOnlyObjectWrapper<YearMonth> yearMonth = new ReadOnlyObjectWrapper<>(
-            this, "yearMonth", YearMonth.from(getToday())); //$NON-NLS-1$
+            this, "yearMonth", YearMonth.from(getToday()));
 
     /**
      * Stores the year and month shown by the control.
@@ -66,7 +66,7 @@ public abstract class MonthViewBase extends DateControl {
     }
 
     private final BooleanProperty showWeeks = new SimpleBooleanProperty(this,
-            "showWeeks", true); //$NON-NLS-1$
+            "showWeeks", true);
 
     /**
      * Controls whether the view will show week numbers. The image below shows
@@ -112,7 +112,7 @@ public abstract class MonthViewBase extends DateControl {
         return selectedDates;
     }
 
-    private static final String MONTH_VIEW_CATEGORY = "Month View Base"; //$NON-NLS-1$
+    private static final String MONTH_VIEW_CATEGORY = "Month View Base";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -141,12 +141,12 @@ public abstract class MonthViewBase extends DateControl {
 
             @Override
             public String getName() {
-                return "Show Week Numbers"; //$NON-NLS-1$
+                return "Show Week Numbers";
             }
 
             @Override
             public String getDescription() {
-                return "Show or hide the week numbers"; //$NON-NLS-1$
+                return "Show or hide the week numbers";
             }
 
             @Override

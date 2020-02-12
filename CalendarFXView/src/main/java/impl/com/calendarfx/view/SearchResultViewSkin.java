@@ -44,7 +44,7 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
         super(view);
 
         Label placeholderLabel = new Label();
-        placeholderLabel.getStyleClass().add("placeholder-label"); //$NON-NLS-1$
+        placeholderLabel.getStyleClass().add("placeholder-label");
 
         listView = new ListView<>();
         listView.setItems(view.getSearchResults());
@@ -52,7 +52,7 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
         listView.setPlaceholder(placeholderLabel);
         listView.getSelectionModel().selectedItemProperty()
                 .addListener(it -> view.getProperties().put(
-                        "selected.search.result",   //$NON-NLS-1$
+                        "selected.search.result",
                         listView.getSelectionModel().getSelectedItem()));
         getChildren().add(listView);
     }
@@ -80,7 +80,7 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
         public SearchResultListViewCell() {
             setPrefWidth(0);
 
-            getStyleClass().add("search-result-cell"); //$NON-NLS-1$
+            getStyleClass().add("search-result-cell");
 
             colorCircle = new Circle();
             colorCircle.setRadius(3.5);
@@ -88,15 +88,15 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
             titleLabel = new Label();
             titleLabel.setMinWidth(0);
             titleLabel.setGraphic(colorCircle);
-            titleLabel.getStyleClass().add("title-label"); //$NON-NLS-1$
+            titleLabel.getStyleClass().add("title-label");
 
             dateLabel = new Label();
             dateLabel.setMinWidth(0);
-            dateLabel.getStyleClass().add("date-label"); //$NON-NLS-1$
+            dateLabel.getStyleClass().add("date-label");
 
             timeLabel = new Label();
             timeLabel.setMinWidth(0);
-            timeLabel.getStyleClass().add("time-label"); //$NON-NLS-1$
+            timeLabel.getStyleClass().add("time-label");
 
             BorderPane dateTimePane = new BorderPane();
             dateTimePane.getStyleClass().add("date-time-pane");
@@ -128,7 +128,7 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
                 Calendar calendar = entry.getCalendar();
 
                 borderPane.setVisible(true);
-                colorCircle.getStyleClass().add(calendar.getStyle() + "-icon"); //$NON-NLS-1$
+                colorCircle.getStyleClass().add(calendar.getStyle() + "-icon");
 
                 titleLabel.setText(entry.getTitle());
                 titleLabel.setVisible(true);
@@ -141,7 +141,7 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
 
         private String getTimeText(Entry<?> entry) {
             if (entry.isFullDay()) {
-                return "all-day"; //$NON-NLS-1$
+                return "all-day";
             }
 
             LocalDate startDate = entry.getStartDate();
@@ -149,11 +149,11 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
 
             String text;
             if (startDate.equals(endDate)) {
-                text = MessageFormat.format(Messages.getString("SearchResultViewSkin.FROM_UNTIL"), //$NON-NLS-1$
+                text = MessageFormat.format(Messages.getString("SearchResultViewSkin.FROM_UNTIL"),
                         timeFormatter.format(entry.getStartTime()),
                         timeFormatter.format(entry.getEndTime()));
             } else {
-                text = MessageFormat.format(Messages.getString("SearchResultViewSkin.FROM_UNTIL_WITH_DATE"), //$NON-NLS-1$
+                text = MessageFormat.format(Messages.getString("SearchResultViewSkin.FROM_UNTIL_WITH_DATE"),
                         timeFormatter.format(entry.getStartTime()),
                         dateFormatter.format(entry.getStartDate()),
                         timeFormatter.format(entry.getEndTime()),

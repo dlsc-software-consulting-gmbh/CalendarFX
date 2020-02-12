@@ -158,7 +158,7 @@ public class DayPageSkin extends PageBaseSkin<DayPage> {
 
         // today label
         todayLabel = new Label();
-        todayLabel.getStyleClass().add("today-label"); //$NON-NLS-1$
+        todayLabel.getStyleClass().add("today-label");
         todayLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         todayLabel.setAlignment(Pos.TOP_LEFT);
         todayLabel.setTextOverrun(OverrunStyle.CLIP);

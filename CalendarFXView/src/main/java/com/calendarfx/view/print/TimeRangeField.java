@@ -88,7 +88,7 @@ public class TimeRangeField extends ViewTypeControl {
     }
 
     private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(
-            this, "today", LocalDate.now()); //$NON-NLS-1$
+            this, "today", LocalDate.now());
 
     /**
      * Stores the date that is considered to represent "today". This property is
@@ -121,7 +121,7 @@ public class TimeRangeField extends ViewTypeControl {
     }
 
     private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(
-            this, "weekFields", WeekFields.ISO); //$NON-NLS-1$
+            this, "weekFields", WeekFields.ISO);
 
     /**
      * Week fields are used to determine the first day of a week (e.g. "Monday"

@@ -38,7 +38,7 @@ public class RecurrencePopupSkin implements Skin<RecurrencePopup> {
 
         this.popup = popup;
 
-        Button okButton = new Button(Messages.getString("RecurrencePopupSkin.OK")); //$NON-NLS-1$
+        Button okButton = new Button(Messages.getString("RecurrencePopupSkin.OK"));
         okButton.setDefaultButton(true);
         okButton.setOnAction(evt -> {
             popup.hide();
@@ -46,7 +46,7 @@ public class RecurrencePopupSkin implements Skin<RecurrencePopup> {
                     new RecurrencePopupEvent(RecurrencePopupEvent.OK_PRESSED));
         });
 
-        Button cancelButton = new Button(Messages.getString("RecurrencePopupSkin.CANCEL")); //$NON-NLS-1$
+        Button cancelButton = new Button(Messages.getString("RecurrencePopupSkin.CANCEL"));
         cancelButton.setCancelButton(true);
         cancelButton.setOnAction(evt -> {
             popup.hide();
@@ -57,10 +57,10 @@ public class RecurrencePopupSkin implements Skin<RecurrencePopup> {
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().addAll(cancelButton, okButton);
-        buttonBox.getStyleClass().add("button-pane"); //$NON-NLS-1$
+        buttonBox.getStyleClass().add("button-pane");
 
         BorderPane contentPane = new BorderPane();
-        contentPane.getStyleClass().add("content"); //$NON-NLS-1$
+        contentPane.getStyleClass().add("content");
         contentPane.setCenter(popup.getRecurrenceView());
         contentPane.setBottom(buttonBox);
 

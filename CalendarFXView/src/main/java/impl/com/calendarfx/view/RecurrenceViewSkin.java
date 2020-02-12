@@ -63,22 +63,22 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
     private Spinner<Integer> repeatCountSpinner = new Spinner<>();
     private Label repeatCountGranularity = new Label();
     private Label startOnDateLabel = new Label();
-    private RadioButton endsNeverButton = new RadioButton(Messages.getString("RecurrenceViewSkin.NEVER")); //$NON-NLS-1$
-    private RadioButton endsAfterButton = new RadioButton(Messages.getString("RecurrenceViewSkin.AFTER")); //$NON-NLS-1$
+    private RadioButton endsNeverButton = new RadioButton(Messages.getString("RecurrenceViewSkin.NEVER"));
+    private RadioButton endsAfterButton = new RadioButton(Messages.getString("RecurrenceViewSkin.AFTER"));
     private Spinner<Integer> endsAfterCounterSpinner = new Spinner<>();
-    private Label endsAfterOccurencesLabel = new Label(Messages.getString("RecurrenceViewSkin.OCCURENCES")); //$NON-NLS-1$
-    private RadioButton endsOnButton = new RadioButton(Messages.getString("RecurrenceViewSkin.ON")); //$NON-NLS-1$
+    private Label endsAfterOccurencesLabel = new Label(Messages.getString("RecurrenceViewSkin.OCCURENCES"));
+    private RadioButton endsOnButton = new RadioButton(Messages.getString("RecurrenceViewSkin.ON"));
     private DatePicker endsOnDatePicker = new DatePicker(LocalDate.now());
     private Label summaryLabel = new Label();
-    private RadioButton repeatByDayOfTheMonth = new RadioButton(Messages.getString("RecurrenceViewSkin.DAY_OF_MONTH")); //$NON-NLS-1$
-    private RadioButton repeatByDayOfTheWeek = new RadioButton(Messages.getString("RecurrenceViewSkin.DAY_OF_WEEK")); //$NON-NLS-1$
-    private ToggleButton weekDayMondayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_MONDAY")); //$NON-NLS-1$
-    private ToggleButton weekDayTuesdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_TUESDAY")); //$NON-NLS-1$
-    private ToggleButton weekDayWednesdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_WEDNESDAY")); //$NON-NLS-1$
-    private ToggleButton weekDayThursdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_THURSDAY")); //$NON-NLS-1$
-    private ToggleButton weekDayFridayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_FRIDAY")); //$NON-NLS-1$
-    private ToggleButton weekDaySaturdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_SATURDAY")); //$NON-NLS-1$
-    private ToggleButton weekDaySundayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_SUNDAY")); //$NON-NLS-1$
+    private RadioButton repeatByDayOfTheMonth = new RadioButton(Messages.getString("RecurrenceViewSkin.DAY_OF_MONTH"));
+    private RadioButton repeatByDayOfTheWeek = new RadioButton(Messages.getString("RecurrenceViewSkin.DAY_OF_WEEK"));
+    private ToggleButton weekDayMondayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_MONDAY"));
+    private ToggleButton weekDayTuesdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_TUESDAY"));
+    private ToggleButton weekDayWednesdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_WEDNESDAY"));
+    private ToggleButton weekDayThursdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_THURSDAY"));
+    private ToggleButton weekDayFridayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_FRIDAY"));
+    private ToggleButton weekDaySaturdayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_SATURDAY"));
+    private ToggleButton weekDaySundayButton = new ToggleButton(Messages.getString("RecurrenceViewSkin.SHORT_SUNDAY"));
     private HBox weekdayBox;
     private HBox repeatByBox;
     private HBox repeatCountBox;
@@ -120,15 +120,15 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             public String toString(Frequency frequency) {
                 switch (frequency) {
                     case DAILY:
-                        return Messages.getString("RecurrenceViewSkin.DAILY"); //$NON-NLS-1$
+                        return Messages.getString("RecurrenceViewSkin.DAILY");
                     case MONTHLY:
-                        return Messages.getString("RecurrenceViewSkin.MONTHLY"); //$NON-NLS-1$
+                        return Messages.getString("RecurrenceViewSkin.MONTHLY");
                     case WEEKLY:
-                        return Messages.getString("RecurrenceViewSkin.WEEKLY"); //$NON-NLS-1$
+                        return Messages.getString("RecurrenceViewSkin.WEEKLY");
                     case YEARLY:
-                        return Messages.getString("RecurrenceViewSkin.YEARLY"); //$NON-NLS-1$
+                        return Messages.getString("RecurrenceViewSkin.YEARLY");
                     default:
-                        return ""; //$NON-NLS-1$
+                        return "";
                 }
             }
 
@@ -171,14 +171,14 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
          * Repeat count box.
          */
         repeatCountBox = new HBox();
-        repeatCountBox.getStyleClass().add("repeat-count-box"); //$NON-NLS-1$
+        repeatCountBox.getStyleClass().add("repeat-count-box");
         repeatCountBox.getChildren().setAll(repeatCountSpinner, repeatCountGranularity);
 
         /*
          * Weekday box.
          */
         weekdayBox = new HBox();
-        weekdayBox.getStyleClass().add("weekday-box"); //$NON-NLS-1$
+        weekdayBox.getStyleClass().add("weekday-box");
         weekdayBox.getChildren().setAll(weekDayMondayButton,
                 weekDayTuesdayButton, weekDayWednesdayButton,
                 weekDayThursdayButton, weekDayFridayButton,
@@ -188,25 +188,25 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
          * Repeat by box.
          */
         repeatByBox = new HBox();
-        repeatByBox.getStyleClass().add("repeat-by-box"); //$NON-NLS-1$
+        repeatByBox.getStyleClass().add("repeat-by-box");
         repeatByBox.getChildren().setAll(repeatByDayOfTheMonth, repeatByDayOfTheWeek);
 
         /*
          * Ends after box.
          */
         endsAfterBox = new HBox();
-        endsAfterBox.getStyleClass().add("ends-after-box"); //$NON-NLS-1$
+        endsAfterBox.getStyleClass().add("ends-after-box");
         endsAfterBox.getChildren().setAll(endsAfterButton, endsAfterCounterSpinner, endsAfterOccurencesLabel);
 
         /*
          * Ends on box.
          */
         endsOnBox = new HBox();
-        endsOnBox.getStyleClass().add("ends-on-box"); //$NON-NLS-1$
+        endsOnBox.getStyleClass().add("ends-on-box");
         endsOnBox.getChildren().setAll(endsOnButton, endsOnDatePicker);
 
         grid = new GridPane();
-        grid.getStyleClass().add("container"); //$NON-NLS-1$
+        grid.getStyleClass().add("container");
 
         /*
          * Columns
@@ -219,13 +219,13 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
         grid.getColumnConstraints().setAll(labelsColumn, fieldsColumn);
 
-        frequencyLabel = new Label(Messages.getString("RecurrenceViewSkin.FREQUENCY")); //$NON-NLS-1$
-        repeatCountLabel = new Label(Messages.getString("RecurrenceViewSkin.REPEAT_EVERY")); //$NON-NLS-1$
-        labelRepeatOn = new Label(Messages.getString("RecurrenceViewSkin.REPEAT_ON")); //$NON-NLS-1$
-        labelRepeatBy = new Label(Messages.getString("RecurrenceViewSkin.REPEAT_BY")); //$NON-NLS-1$
-        startsOnLabel = new Label(Messages.getString("RecurrenceViewSkin.STARTS_ON")); //$NON-NLS-1$
-        endsOnLabel = new Label(Messages.getString("RecurrenceViewSkin.ENDS")); //$NON-NLS-1$
-        summaryLabel = new Label(Messages.getString("RecurrenceViewSkin.SUMMARY")); //$NON-NLS-1$
+        frequencyLabel = new Label(Messages.getString("RecurrenceViewSkin.FREQUENCY"));
+        repeatCountLabel = new Label(Messages.getString("RecurrenceViewSkin.REPEAT_EVERY"));
+        labelRepeatOn = new Label(Messages.getString("RecurrenceViewSkin.REPEAT_ON"));
+        labelRepeatBy = new Label(Messages.getString("RecurrenceViewSkin.REPEAT_BY"));
+        startsOnLabel = new Label(Messages.getString("RecurrenceViewSkin.STARTS_ON"));
+        endsOnLabel = new Label(Messages.getString("RecurrenceViewSkin.ENDS"));
+        summaryLabel = new Label(Messages.getString("RecurrenceViewSkin.SUMMARY"));
 
         grid.add(frequencyLabel, 0, 0);
         grid.add(frequencyBox, 1, 0);
@@ -315,28 +315,28 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             switch (rrule.getFrequency()) {
                 case DAILY:
                     frequencyBox.setValue(Frequency.DAILY);
-                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.DAYS")); //$NON-NLS-1$
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.DAYS"));
                     break;
                 case WEEKLY:
                     frequencyBox.setValue(Frequency.WEEKLY);
-                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.32")); //$NON-NLS-1$
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.32"));
                     break;
                 case MONTHLY:
                     frequencyBox.setValue(Frequency.MONTHLY);
-                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.MONTHS")); //$NON-NLS-1$
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.MONTHS"));
                     break;
                 case YEARLY:
                     frequencyBox.setValue(Frequency.YEARLY);
-                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.YEARS")); //$NON-NLS-1$
+                    repeatCountGranularity.setText(Messages.getString("RecurrenceViewSkin.YEARS"));
                     break;
                 case SECONDLY:
                 case HOURLY:
                 case MINUTELY:
                     throw new IllegalArgumentException(
-                            "unsupported frequency: " + rrule.getFrequency()); //$NON-NLS-1$
+                            "unsupported frequency: " + rrule.getFrequency());
                 default:
                     throw new IllegalArgumentException(
-                            "unknown frequency: " + rrule.getFrequency()); //$NON-NLS-1$
+                            "unknown frequency: " + rrule.getFrequency());
 
             }
 
@@ -507,7 +507,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
         if (LoggingDomain.RECURRENCE.isLoggable(Level.FINE)) {
             LoggingDomain.RECURRENCE.fine(
-                    "test dumping 10 recurrences starting with today's date"); //$NON-NLS-1$
+                    "test dumping 10 recurrences starting with today's date");
 
             Date today = new Date(Date.from(LocalDate.of(2015, 8, 18).atStartOfDay(ZoneId.systemDefault()).toInstant()));
             DateList dates = rule.getDates(today, today, new Date(Long.MAX_VALUE), Value.DATE, 10);

@@ -86,7 +86,7 @@ public class WeekViewSkin extends SkinBase<WeekView> {
 
             WeekView.WeekDayParameter param = new WeekView.WeekDayParameter(weekView);
             WeekDayView weekDayView = weekDayViewFactory.call(param);
-            weekDayView.getProperties().put("week.view", weekView); //$NON-NLS-1$
+            weekDayView.getProperties().put("week.view", weekView);
 
             weekDayView.earliestTimeUsedProperty().addListener(it -> updateUsedTimes());
             weekDayView.latestTimeUsedProperty().addListener(it -> updateUsedTimes());

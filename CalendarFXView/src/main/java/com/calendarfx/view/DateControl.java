@@ -195,8 +195,8 @@ public abstract class DateControl extends CalendarFXControl {
          * Every date control is initially populated with a default source and
          * calendar.
          */
-        CalendarSource defaultCalendarSource = new CalendarSource(Messages.getString("DateControl.DEFAULT_CALENDAR_SOURCE_NAME")); //$NON-NLS-1$
-        Calendar defaultCalendar = new Calendar(Messages.getString("DateControl.DEFAULT_CALENDAR_NAME")); //$NON-NLS-1$
+        CalendarSource defaultCalendarSource = new CalendarSource(Messages.getString("DateControl.DEFAULT_CALENDAR_SOURCE_NAME"));
+        Calendar defaultCalendar = new Calendar(Messages.getString("DateControl.DEFAULT_CALENDAR_NAME"));
         defaultCalendarSource.getCalendars().add(defaultCalendar);
         getCalendarSources().add(defaultCalendarSource);
 
@@ -228,17 +228,17 @@ public abstract class DateControl extends CalendarFXControl {
                 }
                 if (calendarsDefined) {
                     Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM")); //$NON-NLS-1$
-                    alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY")); //$NON-NLS-1$
-                    String newLine = System.getProperty("line.separator"); //$NON-NLS-1$
-                    alert.setContentText(MessageFormat.format(Messages.getString("DateControl.CONTENT_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"), //$NON-NLS-1$
+                    alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
+                    alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"));
+                    String newLine = System.getProperty("line.separator");
+                    alert.setContentText(MessageFormat.format(Messages.getString("DateControl.CONTENT_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"),
                             newLine));
                     alert.show();
                 } else {
                     Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM")); //$NON-NLS-1$
-                    alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_NO_CALENDARS_DEFINED")); //$NON-NLS-1$
-                    alert.setContentText(Messages.getString("DateControl.CONTENT_TEXT_NO_CALENDARS_DEFINED")); //$NON-NLS-1$
+                    alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
+                    alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_NO_CALENDARS_DEFINED"));
+                    alert.setContentText(Messages.getString("DateControl.CONTENT_TEXT_NO_CALENDARS_DEFINED"));
                     alert.show();
                 }
             }
@@ -261,7 +261,7 @@ public abstract class DateControl extends CalendarFXControl {
                 time = upperTime;
             }
 
-            Entry<Object> entry = new Entry<>(MessageFormat.format(Messages.getString("DateControl.DEFAULT_ENTRY_TITLE"), entryCounter++)); //$NON-NLS-1$
+            Entry<Object> entry = new Entry<>(MessageFormat.format(Messages.getString("DateControl.DEFAULT_ENTRY_TITLE"), entryCounter++));
             Interval interval = new Interval(time.toLocalDateTime(), time.toLocalDateTime().plusHours(1));
             entry.setInterval(interval);
 
@@ -315,7 +315,7 @@ public abstract class DateControl extends CalendarFXControl {
             /*
              * Show dialog / popover with entry details.
              */
-            MenuItem informationItem = new MenuItem(Messages.getString("DateControl.MENU_ITEM_INFORMATION")); //$NON-NLS-1$
+            MenuItem informationItem = new MenuItem(Messages.getString("DateControl.MENU_ITEM_INFORMATION"));
             informationItem.setOnAction(evt -> {
                 Callback<EntryDetailsParameter, Boolean> detailsCallback = getEntryDetailsCallback();
                 if (detailsCallback != null) {
@@ -326,13 +326,13 @@ public abstract class DateControl extends CalendarFXControl {
             });
             contextMenu.getItems().add(informationItem);
 
-            String stylesheet = CalendarView.class.getResource("calendar.css") //$NON-NLS-1$
+            String stylesheet = CalendarView.class.getResource("calendar.css")
                     .toExternalForm();
 
             /*
              * Assign entry to different calendars.
              */
-            Menu calendarMenu = new Menu(Messages.getString("DateControl.MENU_CALENDAR")); //$NON-NLS-1$
+            Menu calendarMenu = new Menu(Messages.getString("DateControl.MENU_CALENDAR"));
             for (Calendar calendar : getCalendars()) {
                 RadioMenuItem calendarItem = new RadioMenuItem(calendar.getName());
                 calendarItem.setOnAction(evt -> entry.setCalendar(calendar));
@@ -350,7 +350,7 @@ public abstract class DateControl extends CalendarFXControl {
                 Rectangle icon = new Rectangle(10, 10);
                 icon.setArcHeight(2);
                 icon.setArcWidth(2);
-                icon.getStyleClass().setAll(calendar.getStyle() + "-icon"); //$NON-NLS-1$
+                icon.getStyleClass().setAll(calendar.getStyle() + "-icon");
                 graphic.getChildren().add(icon);
 
                 calendarItem.setGraphic(graphic);
@@ -363,7 +363,7 @@ public abstract class DateControl extends CalendarFXControl {
                 /*
                  * Delete calendar entry.
                  */
-                MenuItem delete = new MenuItem(Messages.getString("DateControl.MENU_ITEM_DELETE")); //$NON-NLS-1$
+                MenuItem delete = new MenuItem(Messages.getString("DateControl.MENU_ITEM_DELETE"));
                 contextMenu.getItems().add(delete);
                 delete.setDisable(param.getCalendar().isReadOnly());
                 delete.setOnAction(evt -> {
@@ -382,8 +382,8 @@ public abstract class DateControl extends CalendarFXControl {
         });
 
         setCalendarSourceFactory(param -> {
-            CalendarSource source = new CalendarSource(Messages.getString("DateControl.DEFAULT_NEW_CALENDAR_SOURCE")); //$NON-NLS-1$
-            Calendar calendar = new Calendar(Messages.getString("DateControl.DEFAULT_NEW_CALENDAR")); //$NON-NLS-1$
+            CalendarSource source = new CalendarSource(Messages.getString("DateControl.DEFAULT_NEW_CALENDAR_SOURCE"));
+            Calendar calendar = new Calendar(Messages.getString("DateControl.DEFAULT_NEW_CALENDAR"));
             calendar.setShortName(Messages.getString("DateControl.DEFAULT_NEW_CALENDAR").substring(0, 1));
             source.getCalendars().add(calendar);
             return source;
@@ -449,7 +449,7 @@ public abstract class DateControl extends CalendarFXControl {
      * frequently trigger an explicit refresh.
      */
     public final void refreshData() {
-        getProperties().put("refresh.data", true); //$NON-NLS-1$
+        getProperties().put("refresh.data", true);
 
         getBoundDateControls().forEach(DateControl::refreshData);
     }
@@ -475,7 +475,7 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     // dragged entry support
-    private final ObjectProperty<DraggedEntry> draggedEntry = new SimpleObjectProperty<>(this, "draggedEntry"); //$NON-NLS-1$
+    private final ObjectProperty<DraggedEntry> draggedEntry = new SimpleObjectProperty<>(this, "draggedEntry");
 
     /**
      * Stores a {@link DraggedEntry} instance, which serves as a wrapper around
@@ -584,7 +584,7 @@ public abstract class DateControl extends CalendarFXControl {
 
             return entry;
         } else {
-            LoggingDomain.EDITING.warning("No calendar found for adding a new entry."); //$NON-NLS-1$
+            LoggingDomain.EDITING.warning("No calendar found for adding a new entry.");
         }
 
         return null;
@@ -672,7 +672,7 @@ public abstract class DateControl extends CalendarFXControl {
     private void showEntryDetails(Entry<?> entry, Node owner, double screenY) {
         Callback<EntryDetailsPopOverContentParameter, Node> contentCallback = getEntryDetailsPopOverContentCallback();
         if (contentCallback == null) {
-            throw new IllegalStateException("No content callback found for entry popover"); //$NON-NLS-1$
+            throw new IllegalStateException("No content callback found for entry popover");
         }
 
         PopOver entryPopOver = new PopOver();
@@ -681,7 +681,7 @@ public abstract class DateControl extends CalendarFXControl {
         Node content = contentCallback.call(param);
 
         if (content == null) {
-            content = new Label(Messages.getString("DateControl.NO_CONTENT")); //$NON-NLS-1$
+            content = new Label(Messages.getString("DateControl.NO_CONTENT"));
         }
 
         entryPopOver.setContentNode(content);
@@ -784,12 +784,12 @@ public abstract class DateControl extends CalendarFXControl {
 
         @Override
         public String toString() {
-            return "CreateEntryParameter [calendar=" + calendar //$NON-NLS-1$
-                    + ", zonedDateTime=" + zonedDateTime + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+            return "CreateEntryParameter [calendar=" + calendar
+                    + ", zonedDateTime=" + zonedDateTime + "]";
         }
     }
 
-    private final ObjectProperty<Callback<CreateEntryParameter, Entry<?>>> entryFactory = new SimpleObjectProperty<>(this, "entryFactory"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<CreateEntryParameter, Entry<?>>> entryFactory = new SimpleObjectProperty<>(this, "entryFactory");
 
     /**
      * A factory for creating new entries when the user double clicks inside the
@@ -890,7 +890,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
-    private final ObjectProperty<Callback<CreateCalendarSourceParameter, CalendarSource>> calendarSourceFactory = new SimpleObjectProperty<>(this, "calendarSourceFactory"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<CreateCalendarSourceParameter, CalendarSource>> calendarSourceFactory = new SimpleObjectProperty<>(this, "calendarSourceFactory");
 
     /**
      * A factory for creating a new calendar source, e.g. a new Google calendar
@@ -995,8 +995,8 @@ public abstract class DateControl extends CalendarFXControl {
 
         @Override
         public String toString() {
-            return "EntryContextMenuParameter [entry=" + entryView //$NON-NLS-1$
-                    + ", dateControl =" + getDateControl() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+            return "EntryContextMenuParameter [entry=" + entryView
+                    + ", dateControl =" + getDateControl() + "]";
         }
     }
 
@@ -1131,7 +1131,7 @@ public abstract class DateControl extends CalendarFXControl {
         this.entryEditPolicy.set(policy);
     }
 
-    private final ObjectProperty<Callback<EntryContextMenuParameter, ContextMenu>> entryContextMenuCallback = new SimpleObjectProperty<>(this, "entryFactory"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<EntryContextMenuParameter, ContextMenu>> entryContextMenuCallback = new SimpleObjectProperty<>(this, "entryFactory");
 
     /**
      * A callback used for dynamically creating a context menu for a given
@@ -1248,12 +1248,12 @@ public abstract class DateControl extends CalendarFXControl {
 
         @Override
         public String toString() {
-            return "ContextMenuParameter [calendar=" + calendar //$NON-NLS-1$
-                    + ", zonedDateTime=" + zonedDateTime + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+            return "ContextMenuParameter [calendar=" + calendar
+                    + ", zonedDateTime=" + zonedDateTime + "]";
         }
     }
 
-    private final ObjectProperty<Callback<ContextMenuParameter, ContextMenu>> contextMenuCallback = new SimpleObjectProperty<>(this, "contextMenuCallback"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<ContextMenuParameter, ContextMenu>> contextMenuCallback = new SimpleObjectProperty<>(this, "contextMenuCallback");
 
     /**
      * The context menu callback that will be invoked when the user triggers the
@@ -1306,7 +1306,7 @@ public abstract class DateControl extends CalendarFXControl {
     /*
      * Default calendar provider callback.
      */
-    private final ObjectProperty<Callback<DateControl, Calendar>> defaultCalendarProvider = new SimpleObjectProperty<>(this, "defaultCalendarProvider"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<DateControl, Calendar>> defaultCalendarProvider = new SimpleObjectProperty<>(this, "defaultCalendarProvider");
 
     /**
      * The default calendar provider is responsible for returning a calendar
@@ -1533,7 +1533,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
-    private final ObjectProperty<Callback<DateDetailsParameter, Boolean>> dateDetailsCallback = new SimpleObjectProperty<>(this, "dateDetailsCallback"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<DateDetailsParameter, Boolean>> dateDetailsCallback = new SimpleObjectProperty<>(this, "dateDetailsCallback");
 
     /**
      * A callback used for showing the details of a given date. The default
@@ -1585,7 +1585,7 @@ public abstract class DateControl extends CalendarFXControl {
         return dateDetailsCallbackProperty().get();
     }
 
-    private final ObjectProperty<Callback<EntryDetailsParameter, Boolean>> entryDetailsCallback = new SimpleObjectProperty<>(this, "entryDetailsCallback"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<EntryDetailsParameter, Boolean>> entryDetailsCallback = new SimpleObjectProperty<>(this, "entryDetailsCallback");
 
     /**
      * A callback used for showing the details of a given entry. The default
@@ -1710,7 +1710,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
-    private final ObjectProperty<Callback<EntryDetailsPopOverContentParameter, Node>> entryDetailsPopoverContentCallback = new SimpleObjectProperty<>(this, "entryDetailsPopoverContentCallback"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<EntryDetailsPopOverContentParameter, Node>> entryDetailsPopoverContentCallback = new SimpleObjectProperty<>(this, "entryDetailsPopoverContentCallback");
 
     /**
      * Stores a callback for creating the content of the popover.
@@ -1743,7 +1743,7 @@ public abstract class DateControl extends CalendarFXControl {
 
     ///////////
 
-    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now()); //$NON-NLS-1$
+    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now());
 
     /**
      * Stores the date that is considered to represent "today". This property is
@@ -1775,7 +1775,7 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     private final BooleanProperty showToday = new SimpleBooleanProperty(
-            this, "showToday", true); //$NON-NLS-1$
+            this, "showToday", true);
 
     /**
      * A flag used to indicate that the view will mark the area that represents
@@ -1808,7 +1808,7 @@ public abstract class DateControl extends CalendarFXControl {
         showTodayProperty().set(show);
     }
 
-    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now()); //$NON-NLS-1$
+    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now());
 
     /**
      * The date that needs to be shown by the date control. This property is
@@ -1839,7 +1839,7 @@ public abstract class DateControl extends CalendarFXControl {
         return dateProperty().get();
     }
 
-    private final ObjectProperty<ZoneId> zoneId = new SimpleObjectProperty<>(this, "zoneId", ZoneId.systemDefault()); //$NON-NLS-1$
+    private final ObjectProperty<ZoneId> zoneId = new SimpleObjectProperty<>(this, "zoneId", ZoneId.systemDefault());
 
     /**
      * The time zone used by the date control. Entries and date controls might
@@ -1873,7 +1873,7 @@ public abstract class DateControl extends CalendarFXControl {
         return zoneIdProperty().get();
     }
 
-    private final ObjectProperty<LocalTime> time = new SimpleObjectProperty<>(this, "time", LocalTime.now()); //$NON-NLS-1$
+    private final ObjectProperty<LocalTime> time = new SimpleObjectProperty<>(this, "time", LocalTime.now());
 
     /**
      * Stores a time that can be visualized, e.g. the thin line in
@@ -1904,7 +1904,7 @@ public abstract class DateControl extends CalendarFXControl {
         return timeProperty().get();
     }
 
-    private final ObjectProperty<LocalTime> startTime = new SimpleObjectProperty<>(this, "startTime", LocalTime.of(6, 0)); //$NON-NLS-1$
+    private final ObjectProperty<LocalTime> startTime = new SimpleObjectProperty<>(this, "startTime", LocalTime.of(6, 0));
 
     /**
      * A start time used to limit the time interval shown by the control. The
@@ -1936,7 +1936,7 @@ public abstract class DateControl extends CalendarFXControl {
         startTimeProperty().set(time);
     }
 
-    private final ObjectProperty<LocalTime> endTime = new SimpleObjectProperty<>(this, "endTime", LocalTime.of(22, 0)); //$NON-NLS-1$
+    private final ObjectProperty<LocalTime> endTime = new SimpleObjectProperty<>(this, "endTime", LocalTime.of(22, 0));
 
     /**
      * An end time used to limit the time interval shown by the control. The
@@ -1968,7 +1968,7 @@ public abstract class DateControl extends CalendarFXControl {
         endTimeProperty().set(time);
     }
 
-    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", WeekFields.of(Locale.getDefault())); //$NON-NLS-1$
+    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", WeekFields.of(Locale.getDefault()));
 
     /**
      * Week fields are used to determine the first day of a week (e.g. "Monday"
@@ -2055,7 +2055,7 @@ public abstract class DateControl extends CalendarFXControl {
         return calendarSources;
     }
 
-    private final ObjectProperty<SelectionMode> selectionMode = new SimpleObjectProperty<>(this, "selectionMode", SelectionMode.MULTIPLE); //$NON-NLS-1$
+    private final ObjectProperty<SelectionMode> selectionMode = new SimpleObjectProperty<>(this, "selectionMode", SelectionMode.MULTIPLE);
 
     /**
      * Stores the selection mode. All date controls support single and multiple
@@ -2129,8 +2129,8 @@ public abstract class DateControl extends CalendarFXControl {
         getSelections().clear();
     }
 
-    private final ObjectProperty<VirtualGrid> virtualGrid = new SimpleObjectProperty<>(this, "virtualGrid", //$NON-NLS-1$
-            new VirtualGrid(Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_NAME"), Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_SHORT_NAME"), ChronoUnit.MINUTES, 15)); //$NON-NLS-1$ //$NON-NLS-2$
+    private final ObjectProperty<VirtualGrid> virtualGrid = new SimpleObjectProperty<>(this, "virtualGrid",
+            new VirtualGrid(Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_NAME"), Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_SHORT_NAME"), ChronoUnit.MINUTES, 15));
 
     /**
      * A virtual grid used for snapping to invisible grid lines while editing
@@ -2164,7 +2164,7 @@ public abstract class DateControl extends CalendarFXControl {
         virtualGridProperty().set(grid);
     }
 
-    private final ObjectProperty<LocalTime> requestedTime = new SimpleObjectProperty<>(this, "requestedTime", LocalTime.now()); //$NON-NLS-1$
+    private final ObjectProperty<LocalTime> requestedTime = new SimpleObjectProperty<>(this, "requestedTime", LocalTime.now());
 
     /**
      * Stores the time that the application wants to show in its date controls
@@ -2216,7 +2216,7 @@ public abstract class DateControl extends CalendarFXControl {
         SWIMLANE
     }
 
-    private final ObjectProperty<Layout> layout = new SimpleObjectProperty<>(this, "layout", Layout.STANDARD); //$NON-NLS-1$
+    private final ObjectProperty<Layout> layout = new SimpleObjectProperty<>(this, "layout", Layout.STANDARD);
 
     /**
      * Stores the strategy used by the view to layout the entries of several
@@ -2563,7 +2563,7 @@ public abstract class DateControl extends CalendarFXControl {
         return usagePolicy.get();
     }
 
-    private static final String DATE_CONTROL_CATEGORY = "Date Control"; //$NON-NLS-1$
+    private static final String DATE_CONTROL_CATEGORY = "Date Control";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -2593,12 +2593,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Date"; //$NON-NLS-1$
+                return "Date";
             }
 
             @Override
             public String getDescription() {
-                return "Date"; //$NON-NLS-1$
+                return "Date";
             }
 
             @Override
@@ -2631,12 +2631,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Layout"; //$NON-NLS-1$
+                return "Layout";
             }
 
             @Override
             public String getDescription() {
-                return "Layout"; //$NON-NLS-1$
+                return "Layout";
             }
 
             @Override
@@ -2669,12 +2669,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Selection Mode"; //$NON-NLS-1$
+                return "Selection Mode";
             }
 
             @Override
             public String getDescription() {
-                return "Selection Mode"; //$NON-NLS-1$
+                return "Selection Mode";
             }
 
             @Override
@@ -2707,12 +2707,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Today"; //$NON-NLS-1$
+                return "Today";
             }
 
             @Override
             public String getDescription() {
-                return "Today"; //$NON-NLS-1$
+                return "Today";
             }
 
             @Override
@@ -2745,12 +2745,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Show Today"; //$NON-NLS-1$
+                return "Show Today";
             }
 
             @Override
             public String getDescription() {
-                return "Highlight today"; //$NON-NLS-1$
+                return "Highlight today";
             }
 
             @Override
@@ -2783,12 +2783,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Timezone"; //$NON-NLS-1$
+                return "Timezone";
             }
 
             @Override
             public String getDescription() {
-                return "Timezone"; //$NON-NLS-1$
+                return "Timezone";
             }
 
             @Override
@@ -2821,12 +2821,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Week Fields"; //$NON-NLS-1$
+                return "Week Fields";
             }
 
             @Override
             public String getDescription() {
-                return "Week Fields (calendar standard)"; //$NON-NLS-1$
+                return "Week Fields (calendar standard)";
             }
 
             @Override
@@ -2859,12 +2859,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Time"; //$NON-NLS-1$
+                return "Time";
             }
 
             @Override
             public String getDescription() {
-                return "Time"; //$NON-NLS-1$
+                return "Time";
             }
 
             @Override
@@ -2897,12 +2897,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Start Time"; //$NON-NLS-1$
+                return "Start Time";
             }
 
             @Override
             public String getDescription() {
-                return "The first visible time at the top."; //$NON-NLS-1$
+                return "The first visible time at the top.";
             }
 
             @Override
@@ -2935,12 +2935,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "End Time"; //$NON-NLS-1$
+                return "End Time";
             }
 
             @Override
             public String getDescription() {
-                return "The last visible time at the bottom."; //$NON-NLS-1$
+                return "The last visible time at the bottom.";
             }
 
             @Override
@@ -2973,12 +2973,12 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public String getName() {
-                return "Hyperlinks"; //$NON-NLS-1$
+                return "Hyperlinks";
             }
 
             @Override
             public String getDescription() {
-                return "Hyperlinks enabled / disabled"; //$NON-NLS-1$
+                return "Hyperlinks enabled / disabled";
             }
 
             @Override

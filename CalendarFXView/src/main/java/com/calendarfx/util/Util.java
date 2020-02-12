@@ -78,46 +78,46 @@ public class Util {
             Recur rule = new Recur(rrule.replaceFirst("^RRULE:", ""));
             StringBuilder sb = new StringBuilder();
 
-            String granularity = ""; //$NON-NLS-1$
-            String granularities = ""; //$NON-NLS-1$
+            String granularity = "";
+            String granularities = "";
 
             switch (rule.getFrequency()) {
                 case DAILY:
-                    granularity = Messages.getString("Util.DAY"); //$NON-NLS-1$
-                    granularities = Messages.getString("Util.DAYS"); //$NON-NLS-1$
+                    granularity = Messages.getString("Util.DAY");
+                    granularities = Messages.getString("Util.DAYS");
                     break;
                 case MONTHLY:
-                    granularity = Messages.getString("Util.MONTH"); //$NON-NLS-1$
-                    granularities = Messages.getString("Util.MONTHS"); //$NON-NLS-1$
+                    granularity = Messages.getString("Util.MONTH");
+                    granularities = Messages.getString("Util.MONTHS");
                     break;
                 case WEEKLY:
-                    granularity = Messages.getString("Util.WEEK"); //$NON-NLS-1$
-                    granularities = Messages.getString("Util.WEEKS"); //$NON-NLS-1$
+                    granularity = Messages.getString("Util.WEEK");
+                    granularities = Messages.getString("Util.WEEKS");
                     break;
                 case YEARLY:
-                    granularity = Messages.getString("Util.YEAR"); //$NON-NLS-1$
-                    granularities = Messages.getString("Util.YEARS"); //$NON-NLS-1$
+                    granularity = Messages.getString("Util.YEAR");
+                    granularities = Messages.getString("Util.YEARS");
                     break;
                 case HOURLY:
-                    granularity = Messages.getString("Util.HOUR"); //$NON-NLS-1$
-                    granularities = Messages.getString("Util.HOURS"); //$NON-NLS-1$
+                    granularity = Messages.getString("Util.HOUR");
+                    granularities = Messages.getString("Util.HOURS");
                     break;
                 case MINUTELY:
-                    granularity = Messages.getString("Util.MINUTE"); //$NON-NLS-1$
-                    granularities = Messages.getString("Util.MINUTES"); //$NON-NLS-1$
+                    granularity = Messages.getString("Util.MINUTE");
+                    granularities = Messages.getString("Util.MINUTES");
                     break;
                 case SECONDLY:
-                    granularity = Messages.getString("Util.SECOND"); //$NON-NLS-1$
-                    granularities = Messages.getString("Util.SECONDS"); //$NON-NLS-1$
+                    granularity = Messages.getString("Util.SECOND");
+                    granularities = Messages.getString("Util.SECONDS");
                     break;
             }
 
             int interval = rule.getInterval();
             if (interval > 1) {
-                sb.append(MessageFormat.format(Messages.getString("Util.EVERY_PLURAL"), //$NON-NLS-1$
+                sb.append(MessageFormat.format(Messages.getString("Util.EVERY_PLURAL"),
                         rule.getInterval(), granularities));
             } else {
-                sb.append(MessageFormat.format(Messages.getString("Util.EVERY_SINGULAR"), granularity)); //$NON-NLS-1$
+                sb.append(MessageFormat.format(Messages.getString("Util.EVERY_SINGULAR"), granularity));
             }
 
             /*
@@ -127,12 +127,12 @@ public class Util {
             if (rule.getFrequency().equals(Frequency.WEEKLY)) {
                 WeekDayList byDay = rule.getDayList();
                 if (!byDay.isEmpty()) {
-                    sb.append(Messages.getString("Util.ON_WEEKDAY")); //$NON-NLS-1$
+                    sb.append(Messages.getString("Util.ON_WEEKDAY"));
                     for (int i = 0; i < byDay.size(); i++) {
                         WeekDay num = byDay.get(i);
                         sb.append(makeHuman(num.getDay()));
                         if (i < byDay.size() - 1) {
-                            sb.append(", "); //$NON-NLS-1$
+                            sb.append(", ");
                         }
                     }
                 }
@@ -143,7 +143,7 @@ public class Util {
                 if (!rule.getMonthDayList().isEmpty()) {
 
                     int day = rule.getMonthDayList().get(0);
-                    sb.append(Messages.getString("Util.ON_MONTH_DAY")); //$NON-NLS-1$
+                    sb.append(Messages.getString("Util.ON_MONTH_DAY"));
                     sb.append(day);
 
                 } else if (!rule.getDayList().isEmpty()) {
@@ -153,30 +153,30 @@ public class Util {
                      */
                     WeekDay num = rule.getDayList().get(0);
 
-                    sb.append(MessageFormat.format(Messages.getString("Util.ON_MONTH_WEEKDAY"), //$NON-NLS-1$
+                    sb.append(MessageFormat.format(Messages.getString("Util.ON_MONTH_WEEKDAY"),
                             makeHuman(num.getOffset()), makeHuman(num.getDay())));
 
                 }
             }
 
             if (rule.getFrequency().equals(Frequency.YEARLY)) {
-                sb.append(MessageFormat.format(Messages.getString("Util.ON_DATE"), DateTimeFormatter //$NON-NLS-1$
-                        .ofPattern(Messages.getString("Util.MONTH_AND_DAY_FORMAT")).format(startDate))); //$NON-NLS-1$
+                sb.append(MessageFormat.format(Messages.getString("Util.ON_DATE"), DateTimeFormatter
+                        .ofPattern(Messages.getString("Util.MONTH_AND_DAY_FORMAT")).format(startDate)));
             }
 
             int count = rule.getCount();
             if (count > 0) {
                 if (count == 1) {
-                    return Messages.getString("Util.ONCE"); //$NON-NLS-1$
+                    return Messages.getString("Util.ONCE");
                 } else {
-                    sb.append(MessageFormat.format(Messages.getString("Util.TIMES"), count)); //$NON-NLS-1$
+                    sb.append(MessageFormat.format(Messages.getString("Util.TIMES"), count));
                 }
             } else {
                 Date until = rule.getUntil();
                 if (until != null) {
                     LocalDate localDate = until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     sb.append(
-                            MessageFormat.format(Messages.getString("Util.UNTIL_DATE"), //$NON-NLS-1$
+                            MessageFormat.format(Messages.getString("Util.UNTIL_DATE"),
                                     DateTimeFormatter
                                             .ofLocalizedDate(FormatStyle.LONG)
                                             .format(localDate)));
@@ -186,43 +186,43 @@ public class Util {
             return sb.toString();
         } catch (ParseException e) {
             e.printStackTrace();
-            return Messages.getString("Util.INVALID_RULE"); //$NON-NLS-1$
+            return Messages.getString("Util.INVALID_RULE");
         }
     }
 
     private static String makeHuman(WeekDay.Day wday) {
         switch (wday) {
             case FR:
-                return Messages.getString("Util.FRIDAY"); //$NON-NLS-1$
+                return Messages.getString("Util.FRIDAY");
             case MO:
-                return Messages.getString("Util.MONDAY"); //$NON-NLS-1$
+                return Messages.getString("Util.MONDAY");
             case SA:
-                return Messages.getString("Util.SATURDAY"); //$NON-NLS-1$
+                return Messages.getString("Util.SATURDAY");
             case SU:
-                return Messages.getString("Util.SUNDAY"); //$NON-NLS-1$
+                return Messages.getString("Util.SUNDAY");
             case TH:
-                return Messages.getString("Util.THURSDAY"); //$NON-NLS-1$
+                return Messages.getString("Util.THURSDAY");
             case TU:
-                return Messages.getString("Util.TUESDAY"); //$NON-NLS-1$
+                return Messages.getString("Util.TUESDAY");
             case WE:
-                return Messages.getString("Util.WEDNESDAY"); //$NON-NLS-1$
+                return Messages.getString("Util.WEDNESDAY");
             default:
-                throw new IllegalArgumentException("unknown weekday: " + wday); //$NON-NLS-1$
+                throw new IllegalArgumentException("unknown weekday: " + wday);
         }
     }
 
     private static String makeHuman(int num) {
         switch (num) {
             case 1:
-                return Messages.getString("Util.FIRST"); //$NON-NLS-1$
+                return Messages.getString("Util.FIRST");
             case 2:
-                return Messages.getString("Util.SECOND"); //$NON-NLS-1$
+                return Messages.getString("Util.SECOND");
             case 3:
-                return Messages.getString("Util.THIRD"); //$NON-NLS-1$
+                return Messages.getString("Util.THIRD");
             case 4:
-                return Messages.getString("Util.FOURTH"); //$NON-NLS-1$
+                return Messages.getString("Util.FOURTH");
             case 5:
-                return Messages.getString("Util.FIFTH"); //$NON-NLS-1$
+                return Messages.getString("Util.FIFTH");
             default:
                 return Integer.toString(num);
         }

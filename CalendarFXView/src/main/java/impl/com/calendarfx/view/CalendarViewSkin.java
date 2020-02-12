@@ -113,7 +113,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
     public CalendarViewSkin(CalendarView view) {
         super(view);
 
-        if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
+        if (Boolean.getBoolean("calendarfx.developer")) {
             view.addEventFilter(KeyEvent.KEY_PRESSED, evt -> {
                 if (evt.isMetaDown() && evt.getCode().equals(KeyCode.D)) {
                     view.setShowDeveloperConsole(
@@ -157,15 +157,15 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         this.leftMasterDetailPane = new MasterDetailPane(Side.LEFT);
         TrayPane trayPane = new TrayPane();
         this.trayButton = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY")); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY"));
         this.trayButton.setId("show-tray-button");
         this.addCalendarButton = new Button();
         this.addCalendarButton.setId("add-calendar-button");
         this.addCalendarButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
         FontIcon addIcon = new FontIcon(FontAwesome.PLUS);
-        addIcon.getStyleClass().addAll("button-icon", //$NON-NLS-1$
-                "add-calendar-button-icon"); //$NON-NLS-1$
+        addIcon.getStyleClass().addAll("button-icon",
+                "add-calendar-button-icon");
         this.addCalendarButton.setGraphic(addIcon);
 
         this.addCalendarButton.setOnAction(evt -> view.createCalendarSource());
@@ -175,7 +175,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         this.printButton.setOnAction(evt -> print());
 
         FontIcon printIcon = new FontIcon(FontAwesome.PRINT);
-        printIcon.getStyleClass().addAll("button-icon", "print-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
+        printIcon.getStyleClass().addAll("button-icon", "print-button-icon");
         this.printButton.setGraphic(printIcon);
 
         if (view.isShowSourceTray()) {
@@ -217,7 +217,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         toolBarGridPane.getColumnConstraints().addAll(leftColumn, centerColumn,
                 rightColumn);
 
-        toolBarGridPane.setId("toolbar"); //$NON-NLS-1$
+        toolBarGridPane.setId("toolbar");
 
         /*
          * Toolbar box on the left - hand side.Gets rebuild when some of the
@@ -242,13 +242,13 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         // toolbar center
         showDay = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_DAY")); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_DAY"));
         showWeek = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_WEEK")); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_WEEK"));
         showMonth = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_MONTH")); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_MONTH"));
         showYear = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_YEAR")); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_YEAR"));
 
         showDay.setOnAction(evt -> {
             view.showDayPage();
@@ -268,7 +268,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         });
 
         switcher = new SegmentedButton();
-        switcher.setId("switcher"); //$NON-NLS-1$
+        switcher.setId("switcher");
         switcher.visibleProperty().bind(view.showPageSwitcherProperty());
         buildSwitcher();
 
@@ -281,32 +281,32 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         // tooltips
         trayButton.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SOURCE_TRAY"))); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOOLTIP_SOURCE_TRAY")));
         addCalendarButton.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR"))); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR")));
         printButton.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_PRINT"))); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOOLTIP_PRINT")));
         showDay.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY"))); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY")));
         showWeek.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_WEEK"))); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_WEEK")));
         showMonth.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_MONTH"))); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_MONTH")));
         showYear.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_YEAR"))); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_YEAR")));
 
         // toolbar right
         FontIcon searchIcon = new FontIcon(FontAwesome.SEARCH);
-        searchIcon.setId("search-icon"); //$NON-NLS-1$
+        searchIcon.setId("search-icon");
 
         CustomTextField searchField = view.getSearchField();
         searchField.setPrefColumnCount(20);
         searchField.setLeft(searchIcon);
-        searchField.setId("search-field"); //$NON-NLS-1$
+        searchField.setId("search-field");
         searchField.setPromptText(
-                Messages.getString("CalendarViewSkin.PROMPT_SEARCH_FIELD")); //$NON-NLS-1$
+                Messages.getString("CalendarViewSkin.PROMPT_SEARCH_FIELD"));
         searchField.getStylesheets().add(CalendarFXControl.class
-                .getResource("calendar.css").toExternalForm()); //$NON-NLS-1$
+                .getResource("calendar.css").toExternalForm());
         GridPane.setFillWidth(searchField, false);
         GridPane.setHalignment(searchField, HPos.RIGHT);
         toolBarGridPane.add(searchField, 2, 0);
@@ -321,11 +321,11 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         leftMasterDetailPane.setMasterNode(borderPane1);
         leftMasterDetailPane.setDetailNode(trayPane);
-        leftMasterDetailPane.setId("tray-pane"); //$NON-NLS-1$
+        leftMasterDetailPane.setId("tray-pane");
         leftMasterDetailPane.animatedProperty()
                 .bindBidirectional(view.traysAnimatedProperty());
         leftMasterDetailPane.getStylesheets().add(CalendarFXControl.class
-                .getResource("calendar.css").toExternalForm()); //$NON-NLS-1$
+                .getResource("calendar.css").toExternalForm());
 
         MasterDetailPane rightMasterDetailPane = new MasterDetailPane(RIGHT);
         searchResultView = view.getSearchResultView();
@@ -362,7 +362,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         borderPane.setCenter(rightMasterDetailPane);
 
-        if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
+        if (Boolean.getBoolean("calendarfx.developer")) {
             DeveloperConsole developerConsole = view.getDeveloperConsole();
             MasterDetailPane developerConsoleMasterDetailPane = new MasterDetailPane(
                     Side.BOTTOM);
@@ -370,7 +370,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             developerConsoleMasterDetailPane.animatedProperty()
                     .bind(view.traysAnimatedProperty());
             developerConsoleMasterDetailPane.getStyleClass()
-                    .add("developer-master-detail-pane"); //$NON-NLS-1$
+                    .add("developer-master-detail-pane");
             developerConsoleMasterDetailPane.setDetailSide(Side.BOTTOM);
             developerConsoleMasterDetailPane.setMasterNode(borderPane);
             developerConsoleMasterDetailPane.setDetailNode(developerConsole);
@@ -649,7 +649,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             yearMonthView = getSkinnable().getYearMonthView();
             yearMonthView.setShowToday(false);
             yearMonthView.setShowTodayButton(false);
-            yearMonthView.setId("date-picker"); //$NON-NLS-1$
+            yearMonthView.setId("date-picker");
             yearMonthView.setSelectionMode(SINGLE);
             yearMonthView.setClickBehaviour(PERFORM_SELECTION);
             yearMonthView.getSelectedDates().add(getSkinnable().getDate());
@@ -674,7 +674,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
             ScrollPane scrollPane = new ScrollPane(sourceView);
 
-            scrollPane.getStyleClass().add("source-view-scroll-pane"); //$NON-NLS-1$
+            scrollPane.getStyleClass().add("source-view-scroll-pane");
             setCenter(scrollPane);
             setBottom(yearMonthView);
         }

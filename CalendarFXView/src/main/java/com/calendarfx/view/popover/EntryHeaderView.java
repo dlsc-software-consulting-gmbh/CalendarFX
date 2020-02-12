@@ -52,9 +52,9 @@ public class EntryHeaderView extends GridPane {
 
         TextField locationField = new TextField(entry.getLocation());
         Bindings.bindBidirectional(locationField.textProperty(), entry.locationProperty());
-        locationField.getStyleClass().add("location"); //$NON-NLS-1$
+        locationField.getStyleClass().add("location");
         locationField.setEditable(true);
-        locationField.setPromptText(Messages.getString("EntryHeaderView.PROMPT_LOCATION")); //$NON-NLS-1$
+        locationField.setPromptText(Messages.getString("EntryHeaderView.PROMPT_LOCATION"));
         locationField.setMaxWidth(500);
         locationField.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
@@ -64,7 +64,7 @@ public class EntryHeaderView extends GridPane {
         calendarSelector.setCalendar(entry.getCalendar());
         Bindings.bindBidirectional(calendarSelector.calendarProperty(), entry.calendarProperty());
 
-        titleField.getStyleClass().add("default-style-entry-popover-title"); //$NON-NLS-1$
+        titleField.getStyleClass().add("default-style-entry-popover-title");
 
         add(titleField, 0, 0);
         add(calendarSelector, 1, 0, 1, 2);
@@ -90,23 +90,23 @@ public class EntryHeaderView extends GridPane {
 
         getColumnConstraints().addAll(col1, col2);
 
-        getStyleClass().add("popover-header"); //$NON-NLS-1$
+        getStyleClass().add("popover-header");
 
-        titleField.getStyleClass().add("title"); //$NON-NLS-1$
-        titleField.setPromptText(Messages.getString("EntryHeaderView.PROMPT_TITLE")); //$NON-NLS-1$
+        titleField.getStyleClass().add("title");
+        titleField.setPromptText(Messages.getString("EntryHeaderView.PROMPT_TITLE"));
         titleField.setMaxWidth(500);
 
         Calendar calendar = entry.getCalendar();
 
-        titleField.getStyleClass().add(calendar.getStyle() + "-entry-popover-title"); //$NON-NLS-1$
+        titleField.getStyleClass().add(calendar.getStyle() + "-entry-popover-title");
 
         entry.calendarProperty()
                 .addListener((observable, oldCalendar, newCalendar) -> {
                     if (oldCalendar != null) {
-                        titleField.getStyleClass().remove(oldCalendar.getStyle() + "-entry-popover-title"); //$NON-NLS-1$
+                        titleField.getStyleClass().remove(oldCalendar.getStyle() + "-entry-popover-title");
                     }
                     if (newCalendar != null) {
-                        titleField.getStyleClass().add(newCalendar.getStyle() + "-entry-popover-title"); //$NON-NLS-1$
+                        titleField.getStyleClass().add(newCalendar.getStyle() + "-entry-popover-title");
                     }
                 });
     }

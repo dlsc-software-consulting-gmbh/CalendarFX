@@ -29,7 +29,7 @@ import javafx.scene.control.Skin;
  */
 public class WeekDayView extends DayView {
 
-    private static final String WEEKDAY_VIEW = "weekday-view"; //$NON-NLS-1$
+    private static final String WEEKDAY_VIEW = "weekday-view";
 
     /**
      * Constructs a new day view.
@@ -39,7 +39,7 @@ public class WeekDayView extends DayView {
 
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
             if (change.wasAdded()) {
-                if (change.getKey().equals("week.view")) { //$NON-NLS-1$
+                if (change.getKey().equals("week.view")) {
                     WeekView view = (WeekView) change.getValueAdded();
                     weekView.set(view);
                 }
@@ -54,7 +54,7 @@ public class WeekDayView extends DayView {
         return new WeekDayViewSkin(this);
     }
 
-    private final ReadOnlyObjectWrapper<WeekView> weekView = new ReadOnlyObjectWrapper<>(this, "weekView"); //$NON-NLS-1$
+    private final ReadOnlyObjectWrapper<WeekView> weekView = new ReadOnlyObjectWrapper<>(this, "weekView");
 
     /**
      * The week view where the view is being used.

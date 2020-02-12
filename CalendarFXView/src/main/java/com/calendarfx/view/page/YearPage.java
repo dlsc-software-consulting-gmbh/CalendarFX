@@ -60,7 +60,7 @@ public class YearPage extends PageBase {
      * Constructs a new year page.
      */
     public YearPage() {
-        getStyleClass().add("year-page"); //$NON-NLS-1$
+        getStyleClass().add("year-page");
 
         this.yearView = new YearView();
 
@@ -73,7 +73,7 @@ public class YearPage extends PageBase {
 
         Bindings.bindBidirectional(monthSheetView.showTodayProperty(), showTodayProperty());
 
-        setDateTimeFormatter(DateTimeFormatter.ofPattern(Messages.getString("YearPage.DATE_FORMAT"))); //$NON-NLS-1$
+        setDateTimeFormatter(DateTimeFormatter.ofPattern(Messages.getString("YearPage.DATE_FORMAT")));
 
         displayModeProperty().addListener(it -> updateDisplayModeIcon());
 
@@ -200,7 +200,7 @@ public class YearPage extends PageBase {
         return ViewType.MONTH_VIEW;
     }
 
-    private final String YEAR_PAGE_CATEGORY = "Year Page"; //$NON-NLS-1$
+    private final String YEAR_PAGE_CATEGORY = "Year Page";
 
     @Override
     public ObservableList<PropertySheet.Item> getPropertySheetItems() {
@@ -230,12 +230,12 @@ public class YearPage extends PageBase {
 
             @Override
             public String getName() {
-                return "Display Mode"; //$NON-NLS-1$
+                return "Display Mode";
             }
 
             @Override
             public String getDescription() {
-                return "Grid or Column Layout"; //$NON-NLS-1$
+                return "Grid or Column Layout";
             }
 
             @Override

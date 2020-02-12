@@ -52,9 +52,9 @@ import java.util.stream.Collectors;
 
 public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadDataSettingsProvider {
 
-    private static final String ALL_DAY_BACKGROUND_REGION = "day-region"; //$NON-NLS-1$
-    private static final String ALL_DAY_BACKGROUND_REGION_TODAY = "today"; //$NON-NLS-1$
-    private static final String ALL_DAY_BACKGROUND_REGION_WEEKEND = "weekend"; //$NON-NLS-1$
+    private static final String ALL_DAY_BACKGROUND_REGION = "day-region";
+    private static final String ALL_DAY_BACKGROUND_REGION_TODAY = "today";
+    private static final String ALL_DAY_BACKGROUND_REGION_WEEKEND = "weekend";
 
     private DataLoader dataLoader;
     private GridPane pane;
@@ -137,9 +137,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
                     viewEntry = viewEntry.getRecurrenceSourceEntry();
                 }
 
-                if (viewEntry.getId().equals(removedEntry.getId())) {
-                    return true;
-                }
+                return viewEntry.getId().equals(removedEntry.getId());
             }
 
             return false;
@@ -171,7 +169,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         Callback<Entry<?>, AllDayEntryView> factory = getSkinnable().getEntryViewFactory();
         AllDayEntryView view = factory.call(entry);
         view.applyCss(); // TODO: really needed
-        view.getProperties().put("control", getSkinnable()); //$NON-NLS-1$
+        view.getProperties().put("control", getSkinnable());
         view.setManaged(false);
 
         int index = findIndex(entry);
@@ -363,15 +361,15 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
             }
 
             if (entry.getStartDate().isBefore(startDate)) {
-                view.getProperties().put("startDate", startDate); //$NON-NLS-1$
+                view.getProperties().put("startDate", startDate);
             } else {
-                view.getProperties().put("startDate", entry.getStartDate()); //$NON-NLS-1$
+                view.getProperties().put("startDate", entry.getStartDate());
             }
 
             if (entry.getEndDate().isAfter(endDate)) {
-                view.getProperties().put("endDate", endDate); //$NON-NLS-1$
+                view.getProperties().put("endDate", endDate);
             } else {
-                view.getProperties().put("endDate", entry.getEndDate()); //$NON-NLS-1$
+                view.getProperties().put("endDate", entry.getEndDate());
             }
 
             entryDurationInDays = Math.max(entryDurationInDays, 1);
@@ -461,7 +459,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
 
     @Override
     public String getLoaderName() {
-        return "All Day View"; //$NON-NLS-1$
+        return "All Day View";
     }
 
     @Override

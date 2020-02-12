@@ -62,7 +62,7 @@ public class CalendarView extends DateControl {
 
     private static final String DEFAULT_STYLE_CLASS = "calendar-view";
 
-    private static final String SELECTED_PAGE = "com.calendarfx.selectedPage"; //$NON-NLS-1$
+    private static final String SELECTED_PAGE = "com.calendarfx.selectedPage";
 
     private SourceView sourceView;
 
@@ -100,7 +100,7 @@ public class CalendarView extends DateControl {
         this.searchResultView = new SearchResultView();
         this.yearMonthView = new YearMonthView();
 
-        if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
+        if (Boolean.getBoolean("calendarfx.developer")) {
             this.developerConsole = new DeveloperConsole();
             this.developerConsole.setDateControl(this);
         }
@@ -113,7 +113,7 @@ public class CalendarView extends DateControl {
          * We do have a user agent stylesheet, but it doesn't seem to work
          * properly when run as a standalone jar file.
          */
-        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm()); //$NON-NLS-1$
+        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
         /*
          * We are "abusing" the properties map to pass new values of read-only
@@ -257,7 +257,7 @@ public class CalendarView extends DateControl {
         return printView;
     }
 
-    private final BooleanProperty showDevoloperConsole = new SimpleBooleanProperty(this, "showDevoloperConsole", false); //$NON-NLS-1$
+    private final BooleanProperty showDevoloperConsole = new SimpleBooleanProperty(this, "showDevoloperConsole", false);
 
     /**
      * Controls the visibility of the developer console. The console displays
@@ -288,7 +288,7 @@ public class CalendarView extends DateControl {
         return showDeveloperConsoleProperty().get();
     }
 
-    private final BooleanProperty showSourceTray = new SimpleBooleanProperty(this, "showSourceTray", false); //$NON-NLS-1$
+    private final BooleanProperty showSourceTray = new SimpleBooleanProperty(this, "showSourceTray", false);
 
     /**
      * Controls the visibility of the source tray.
@@ -317,7 +317,7 @@ public class CalendarView extends DateControl {
         return showSourceTray.get();
     }
 
-    private final BooleanProperty showSearchResultsTray = new SimpleBooleanProperty(this, "showSearchResultsTray", false); //$NON-NLS-1$
+    private final BooleanProperty showSearchResultsTray = new SimpleBooleanProperty(this, "showSearchResultsTray", false);
 
     /**
      * Controls the visibility of the search results tray.
@@ -366,7 +366,7 @@ public class CalendarView extends DateControl {
         return selectedPageProperty().get();
     }
 
-    private final ObjectProperty<Node> header = new SimpleObjectProperty<>(this, "header", null); //$NON-NLS-1$
+    private final ObjectProperty<Node> header = new SimpleObjectProperty<>(this, "header", null);
 
     /**
      * Property used to reference a node that can be used as a header for the
@@ -397,7 +397,7 @@ public class CalendarView extends DateControl {
         headerProperty().set(node);
     }
 
-    private final ObjectProperty<Node> footer = new SimpleObjectProperty<>(this, "footer", null); //$NON-NLS-1$
+    private final ObjectProperty<Node> footer = new SimpleObjectProperty<>(this, "footer", null);
 
     /**
      * Property used to reference a node that can be used as a footer for the
@@ -428,7 +428,7 @@ public class CalendarView extends DateControl {
         footerProperty().set(node);
     }
 
-    private final BooleanProperty transitionsEnabled = new SimpleBooleanProperty(this, "transitionsEnabled", true); //$NON-NLS-1$
+    private final BooleanProperty transitionsEnabled = new SimpleBooleanProperty(this, "transitionsEnabled", true);
 
     /**
      * A property used to control whether switching from one page to another
@@ -461,7 +461,7 @@ public class CalendarView extends DateControl {
 
     // tray animation support
 
-    private final BooleanProperty traysAnimated = new SimpleBooleanProperty(this, "traysAnimated", true); //$NON-NLS-1$
+    private final BooleanProperty traysAnimated = new SimpleBooleanProperty(this, "traysAnimated", true);
 
     /**
      * A property used to control whether closing or opening the trays (source view,
@@ -844,7 +844,7 @@ public class CalendarView extends DateControl {
         }
     }
 
-    private final String CALENDAR_VIEW_CATEGORY = "Calendar View"; //$NON-NLS-1$
+    private final String CALENDAR_VIEW_CATEGORY = "Calendar View";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -874,12 +874,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Calendar Tray"; //$NON-NLS-1$
+                return "Calendar Tray";
             }
 
             @Override
             public String getDescription() {
-                return "Show or hide the calendar tray on the left"; //$NON-NLS-1$
+                return "Show or hide the calendar tray on the left";
             }
 
             @Override
@@ -912,12 +912,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Search Results Tray"; //$NON-NLS-1$
+                return "Search Results Tray";
             }
 
             @Override
             public String getDescription() {
-                return "Show or hide the search results tray on the right"; //$NON-NLS-1$
+                return "Show or hide the search results tray on the right";
             }
 
             @Override
@@ -950,12 +950,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Transitions"; //$NON-NLS-1$
+                return "Transitions";
             }
 
             @Override
             public String getDescription() {
-                return "Use transitions when changing pages."; //$NON-NLS-1$
+                return "Use transitions when changing pages.";
             }
 
             @Override
@@ -988,12 +988,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Show Search Field"; //$NON-NLS-1$
+                return "Show Search Field";
             }
 
             @Override
             public String getDescription() {
-                return "Can the user access the search field or not."; //$NON-NLS-1$
+                return "Can the user access the search field or not.";
             }
 
             @Override
@@ -1026,12 +1026,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Source Tray Button"; //$NON-NLS-1$
+                return "Source Tray Button";
             }
 
             @Override
             public String getDescription() {
-                return "Can the user access the source tray button or not."; //$NON-NLS-1$
+                return "Can the user access the source tray button or not.";
             }
 
             @Override
@@ -1064,12 +1064,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Add Calendar Button"; //$NON-NLS-1$
+                return "Add Calendar Button";
             }
 
             @Override
             public String getDescription() {
-                return "Can the user access the button to add new calendars or not."; //$NON-NLS-1$
+                return "Can the user access the button to add new calendars or not.";
             }
 
             @Override
@@ -1102,12 +1102,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Print Button"; //$NON-NLS-1$
+                return "Print Button";
             }
 
             @Override
             public String getDescription() {
-                return "Can the user access the button to print calendars or not."; //$NON-NLS-1$
+                return "Can the user access the button to print calendars or not.";
             }
 
             @Override
@@ -1140,12 +1140,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Page Controls"; //$NON-NLS-1$
+                return "Page Controls";
             }
 
             @Override
             public String getDescription() {
-                return "Can the user access the page-specific toolbar controls or not."; //$NON-NLS-1$
+                return "Can the user access the page-specific toolbar controls or not.";
             }
 
             @Override
@@ -1178,12 +1178,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Show Page Switcher"; //$NON-NLS-1$
+                return "Show Page Switcher";
             }
 
             @Override
             public String getDescription() {
-                return "Visibility of the switcher."; //$NON-NLS-1$
+                return "Visibility of the switcher.";
             }
 
             @Override
@@ -1216,12 +1216,12 @@ public class CalendarView extends DateControl {
 
             @Override
             public String getName() {
-                return "Show ToolBar"; //$NON-NLS-1$
+                return "Show ToolBar";
             }
 
             @Override
             public String getDescription() {
-                return "Visibility of the toolbar."; //$NON-NLS-1$
+                return "Visibility of the toolbar.";
             }
 
             @Override

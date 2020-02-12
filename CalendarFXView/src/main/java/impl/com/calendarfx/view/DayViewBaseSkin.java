@@ -49,8 +49,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
     }
 
     @Override
-    protected double computePrefHeight(double width, double topInset,
-                                       double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 
         if (getSkinnable().isScrollingEnabled()) {
             return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
@@ -80,7 +79,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
 
             default:
                 throw new IllegalArgumentException(
-                        "unsupported early / late hours strategy: " + strategy); //$NON-NLS-1$
+                        "unsupported early / late hours strategy: " + strategy);
         }
     }
 

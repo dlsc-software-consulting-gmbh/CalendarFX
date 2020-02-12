@@ -33,7 +33,7 @@ public class EntryPopOverContentPane extends PopOverContentPane {
     private PopOver popOver;
 
     public EntryPopOverContentPane(PopOver popOver, DateControl dateControl, Entry<?> entry) {
-        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm()); //$NON-NLS-1$
+        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
         this.popOver = popOver;
         this.dateControl = dateControl;
@@ -41,7 +41,7 @@ public class EntryPopOverContentPane extends PopOverContentPane {
 
         EntryDetailsView details = new EntryDetailsView(entry);
 
-        PopOverTitledPane detailsPane = new PopOverTitledPane(Messages.getString("EntryPopOverContentPane.DETAILS"), //$NON-NLS-1$
+        PopOverTitledPane detailsPane = new PopOverTitledPane(Messages.getString("EntryPopOverContentPane.DETAILS"),
                 details);
 
 

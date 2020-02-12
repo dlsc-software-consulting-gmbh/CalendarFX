@@ -121,7 +121,7 @@ public class WeekView extends DayViewBase {
         return weekDayViews;
     }
 
-    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7); //$NON-NLS-1$
+    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7);
 
     /**
      * Stores the number of days that will be shown by this view. This value
@@ -150,14 +150,14 @@ public class WeekView extends DayViewBase {
      */
     public final void setNumberOfDays(int number) {
         if (number < 1) {
-            throw new IllegalArgumentException("invalid number of days, must be larger than 0 but was " //$NON-NLS-1$
+            throw new IllegalArgumentException("invalid number of days, must be larger than 0 but was "
                     + number);
         }
 
         numberOfDaysProperty().set(number);
     }
 
-    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true); //$NON-NLS-1$
+    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);
 
     /**
      * A flag used to indicate that the view should always show the first day of
@@ -216,7 +216,7 @@ public class WeekView extends DayViewBase {
         }
     }
 
-    private final ObjectProperty<Callback<WeekDayParameter, WeekDayView>> weekDayViewFactory = new SimpleObjectProperty<>(this, "weekDayViewFactory"); //$NON-NLS-1$
+    private final ObjectProperty<Callback<WeekDayParameter, WeekDayView>> weekDayViewFactory = new SimpleObjectProperty<>(this, "weekDayViewFactory");
 
     /**
      * A factory used for creating instances of {@link WeekDayView} on the fly
@@ -268,7 +268,7 @@ public class WeekView extends DayViewBase {
         return startDate;
     }
 
-    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(this, "startDate"); //$NON-NLS-1$
+    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(this, "startDate");
 
     /**
      * The earliest date shown by the view.
@@ -288,7 +288,7 @@ public class WeekView extends DayViewBase {
         return startDate.get();
     }
 
-    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(this, "endDate"); //$NON-NLS-1$
+    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(this, "endDate");
 
     /**
      * The latest date shown by the view.
@@ -308,7 +308,7 @@ public class WeekView extends DayViewBase {
         return endDate.get();
     }
 
-    private static final String WEEK_VIEW_CATEGORY = "Week View"; //$NON-NLS-1$
+    private static final String WEEK_VIEW_CATEGORY = "Week View";
 
     @Override
     public ObservableList<PropertySheet.Item> getPropertySheetItems() {
@@ -338,12 +338,12 @@ public class WeekView extends DayViewBase {
 
             @Override
             public String getName() {
-                return "Number of Days"; //$NON-NLS-1$
+                return "Number of Days";
             }
 
             @Override
             public String getDescription() {
-                return "Number of Days"; //$NON-NLS-1$
+                return "Number of Days";
             }
 
             @Override
@@ -376,12 +376,12 @@ public class WeekView extends DayViewBase {
 
             @Override
             public String getName() {
-                return "Adjust to first day of week"; //$NON-NLS-1$
+                return "Adjust to first day of week";
             }
 
             @Override
             public String getDescription() {
-                return "Adjust to first day of week"; //$NON-NLS-1$
+                return "Adjust to first day of week";
             }
 
             @Override
@@ -413,12 +413,12 @@ public class WeekView extends DayViewBase {
 
             @Override
             public String getName() {
-                return "Start date (read-only)"; //$NON-NLS-1$
+                return "Start date (read-only)";
             }
 
             @Override
             public String getDescription() {
-                return "Start date (read-only)"; //$NON-NLS-1$
+                return "Start date (read-only)";
             }
 
             @Override
@@ -450,12 +450,12 @@ public class WeekView extends DayViewBase {
 
             @Override
             public String getName() {
-                return "End date (read-only)"; //$NON-NLS-1$
+                return "End date (read-only)";
             }
 
             @Override
             public String getDescription() {
-                return "End date (read-only)"; //$NON-NLS-1$
+                return "End date (read-only)";
             }
 
             @Override

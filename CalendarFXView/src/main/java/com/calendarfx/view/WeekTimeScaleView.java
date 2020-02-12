@@ -34,7 +34,7 @@ import javafx.scene.control.Skin;
 public class WeekTimeScaleView extends TimeScaleView {
 
     private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
-            this, "formatter", //$NON-NLS-1$
+            this, "formatter",
             DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
 
     /**
@@ -43,7 +43,7 @@ public class WeekTimeScaleView extends TimeScaleView {
     public WeekTimeScaleView() {
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
             if (change.wasAdded()) {
-                if (change.getKey().equals("week.view")) { //$NON-NLS-1$
+                if (change.getKey().equals("week.view")) {
                     detailedWeekView
                             .set((DetailedWeekView) change.getValueAdded());
                 }
@@ -59,7 +59,7 @@ public class WeekTimeScaleView extends TimeScaleView {
     }
 
     private final ReadOnlyObjectWrapper<DetailedWeekView> detailedWeekView = new ReadOnlyObjectWrapper<>(
-            this, "detailedWeekView"); //$NON-NLS-1$
+            this, "detailedWeekView");
 
     /**
      * The week view where this scale is being used.

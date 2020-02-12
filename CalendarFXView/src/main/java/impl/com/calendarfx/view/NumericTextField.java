@@ -30,11 +30,11 @@ public final class NumericTextField extends TextField {
 
     @Override
     public void replaceText(int start, int end, String s) {
-        super.replaceText(start, end, s.replaceAll("[^0-9]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+        super.replaceText(start, end, s.replaceAll("[^0-9]", ""));
     }
 
     @Override
     public void replaceSelection(String s) {
-        super.replaceSelection(s.replaceAll("[^0-9]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+        super.replaceSelection(s.replaceAll("[^0-9]", ""));
     }
 }

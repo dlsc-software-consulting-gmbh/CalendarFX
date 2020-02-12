@@ -70,18 +70,18 @@ class EntriesPane extends VBox {
                 Label titleLabel = new Label(entry.getTitle());
                 BorderPane.setAlignment(titleLabel, Pos.CENTER_LEFT);
                 titleLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                titleLabel.getStyleClass().add("title"); //$NON-NLS-1$
+                titleLabel.getStyleClass().add("title");
                 borderPane.setCenter(titleLabel);
 
                 Circle colorDot = new Circle();
                 colorDot.setRadius(2.5);
                 colorDot.getStyleClass().add(
-                        calendar.getStyle() + "-icon-small"); //$NON-NLS-1$
+                        calendar.getStyle() + "-icon-small");
                 titleLabel.setGraphic(colorDot);
 
                 Label timeLabel = new Label();
                 if (entry.isFullDay()) {
-                    timeLabel.setText(Messages.getString("EntriesPane.FULL_DAY")); //$NON-NLS-1$
+                    timeLabel.setText(Messages.getString("EntriesPane.FULL_DAY"));
                 } else {
                     timeLabel.setText(DateTimeFormatter.ofLocalizedTime(
                             FormatStyle.SHORT).format(entry.getStartTime()));
@@ -89,7 +89,7 @@ class EntriesPane extends VBox {
 
                 borderPane.setRight(timeLabel);
 
-                timeLabel.getStyleClass().add("time"); //$NON-NLS-1$
+                timeLabel.getStyleClass().add("time");
                 BorderPane.setAlignment(timeLabel, Pos.CENTER_RIGHT);
 
                 getChildren().add(borderPane);

@@ -73,7 +73,7 @@ public class LoggingFormatter extends Formatter {
                 ZoneId.systemDefault());
 
         sb.append(formatter.format(timestamp));
-        sb.append(" | ");//$NON-NLS-1$
+        sb.append(" | ");
 
         if (record.getSourceClassName() != null) {
             sb.append(truncate(
@@ -84,22 +84,22 @@ public class LoggingFormatter extends Formatter {
             sb.append(truncate(record.getLoggerName(), 10));
         }
 
-        sb.append(" | "); //$NON-NLS-1$
+        sb.append(" | ");
 
         if (record.getSourceMethodName() != null) {
             sb.append(truncate(record.getSourceMethodName(), 30));
         }
 
-        sb.append(" | "); //$NON-NLS-1$
+        sb.append(" | ");
 
         String message = formatMessage(record);
         sb.append(truncate(record.getLevel().getLocalizedName(), MAX_LEVEL_SIZE));
 
-        sb.append(" | ");//$NON-NLS-1$
+        sb.append(" | ");
 
         sb.append(message);
 
-        sb.append(System.getProperty("line.separator")); //$NON-NLS-1$
+        sb.append(System.getProperty("line.separator"));
         if (record.getThrown() != null) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -114,6 +114,6 @@ public class LoggingFormatter extends Formatter {
         if (s.length() > n) {
             s = s.substring(0, n);
         }
-        return String.format("%1$-" + n + "s", s); //$NON-NLS-1$ //$NON-NLS-2$
+        return String.format("%1$-" + n + "s", s);
     }
 }

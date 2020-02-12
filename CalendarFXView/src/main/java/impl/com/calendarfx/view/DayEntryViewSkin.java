@@ -114,7 +114,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
                 calendar.getStyle() + "-entry");
 
         if (entry.isRecurrence()) {
-            view.getStyleClass().add("recurrence"); //$NON-NLS-1$
+            view.getStyleClass().add("recurrence");
         }
 
         view.getStyleClass().addAll(entry.getStyleClass());

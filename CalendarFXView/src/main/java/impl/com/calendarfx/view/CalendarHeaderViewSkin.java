@@ -37,9 +37,9 @@ public class CalendarHeaderViewSkin extends SkinBase<CalendarHeaderView> {
 
     private GridPane pane;
 
-    private PseudoClass FIRST_COLUMN = PseudoClass.getPseudoClass("first"); //$NON-NLS-1$
-    private PseudoClass MIDDLE_COLUMN = PseudoClass.getPseudoClass("middle"); //$NON-NLS-1$
-    private PseudoClass LAST_COLUMN = PseudoClass.getPseudoClass("last"); //$NON-NLS-1$
+    private PseudoClass FIRST_COLUMN = PseudoClass.getPseudoClass("first");
+    private PseudoClass MIDDLE_COLUMN = PseudoClass.getPseudoClass("middle");
+    private PseudoClass LAST_COLUMN = PseudoClass.getPseudoClass("last");
 
     /**
      * Constructs a new header view skin.
@@ -133,8 +133,8 @@ public class CalendarHeaderViewSkin extends SkinBase<CalendarHeaderView> {
                     Node calendarLabel = factory.call(calendar);
 
                     calendarLabel.getStyleClass().addAll(
-                            "default-style-calendar-header", //$NON-NLS-1$
-                            calendar.getStyle() + "-calendar-header"); //$NON-NLS-1$
+                            "default-style-calendar-header",
+                            calendar.getStyle() + "-calendar-header");
                     dayGridPane.add(calendarLabel, j, 0);
 
                     GridPane.setHgrow(calendarLabel, Priority.ALWAYS);
