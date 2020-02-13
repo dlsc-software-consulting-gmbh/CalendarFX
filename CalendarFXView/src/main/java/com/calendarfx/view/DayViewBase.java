@@ -628,6 +628,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
         Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
+        Bindings.bindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -641,6 +642,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
         Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
+        Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base"; 
