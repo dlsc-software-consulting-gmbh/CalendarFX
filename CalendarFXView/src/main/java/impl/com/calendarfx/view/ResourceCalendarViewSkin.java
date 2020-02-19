@@ -30,7 +30,9 @@ import java.util.HashMap;
 
 public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalendarView<T>> {
 
-    private CustomGridPane gridPane = new CustomGridPane();
+    private GridPane gridPane = new GridPane();
+
+    private CustomGridPane innerGridPane = new CustomGridPane();
 
     private TimeScaleView timeScaleView = new TimeScaleView();
 
@@ -54,21 +56,19 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         gridPane.getRowConstraints().setAll(row1, row2);
 
-        final InvalidationListener updateViewListener = it -> updateView();
+        final InvalidationListener updateGridPaneListener = it -> updateView();
 
-        view.dayViewMapProperty().addListener(updateViewListener);
-        view.overlapHeaderProperty().addListener(updateViewListener);
-        view.showScrollBarProperty().addListener(updateViewListener);
-        view.markersProperty().addListener(updateViewListener);
+        view.dayViewMapProperty().addListener(updateGridPaneListener);
+        view.overlapHeaderProperty().addListener(updateGridPaneListener);
+        view.showScrollBarProperty().addListener(updateGridPaneListener);
+        view.markersProperty().addListener(updateGridPaneListener);
 
         updateView();
     }
 
     private void updateView() {
-        gridPane.getChildren().removeIf(node -> !(node instanceof MarkerLine));
+        gridPane.getChildren().clear();
         gridPane.getColumnConstraints().clear();
-
-        final int columnCounts = getSkinnable().getResources().size();
 
         ColumnConstraints con = new ColumnConstraints();
         con.setPrefWidth(Region.USE_COMPUTED_SIZE);
@@ -76,57 +76,38 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         gridPane.getColumnConstraints().add(con);
 
-        if (getSkinnable().isOverlapHeader()) {
-            gridPane.add(timeScaleView, 0, 0);
-            GridPane.setRowSpan(timeScaleView, 2);
-        } else {
-            gridPane.add(timeScaleView, 0, 1);
-            GridPane.setRowSpan(timeScaleView, 1);
-        }
+        gridPane.add(timeScaleView, 0, 1);
 
-        for (int i = 1; i <= columnCounts; i++) {
-            T resource = getSkinnable().getResources().get(i - 1);
-
-            con = new ColumnConstraints();
-            con.setHalignment(HPos.CENTER);
-            con.setFillWidth(true);
-            con.setHgrow(Priority.ALWAYS);
-            gridPane.getColumnConstraints().add(con);
-
-            DayView dayView = getSkinnable().getDayView(resource);
-
-            GridPane.setFillHeight(dayView, true);
-            GridPane.setVgrow(dayView, Priority.ALWAYS);
-
-            if (getSkinnable().isOverlapHeader()) {
-
-                gridPane.add(dayView, i, 0);
-                GridPane.setRowSpan(dayView, 2);
-
-            } else {
-
-                gridPane.add(dayView, i, 1);
-                GridPane.setRowSpan(dayView, 1);
-
-            }
-        }
+        final int columnCounts = getSkinnable().getResources().size();
 
         Region header = new Region();
         header.getStyleClass().add("header-background");
         gridPane.add(header, 0, 0);
         GridPane.setColumnSpan(header, columnCounts + 2);
 
-        for (int i = 1; i <= columnCounts; i++) {
-            T resource = getSkinnable().getResources().get(i - 1);
+        for (int i = 0; i < columnCounts; i++) {
+            con = new ColumnConstraints();
+            con.setHalignment(HPos.CENTER);
+            con.setFillWidth(true);
+            con.setHgrow(Priority.ALWAYS);
+            gridPane.getColumnConstraints().add(con);
+
+            T resource = getSkinnable().getResources().get(i);
 
             Node columnHeader = getSkinnable().getHeaderFactory().call(resource);
 
             if (getSkinnable().isOverlapHeader()) {
-                gridPane.add(columnHeader, i, 0);
+                gridPane.add(columnHeader, i + 1, 0);
             } else {
-                gridPane.add(columnHeader, i, 0);
+                gridPane.add(columnHeader, i + 1, 0);
             }
         }
+
+        gridPane.add(innerGridPane, 1, 1);
+        GridPane.setColumnSpan(innerGridPane, columnCounts);
+        GridPane.setFillWidth(innerGridPane, true);
+
+        innerGridPane.updateView();
 
         if (getSkinnable().isShowScrollBar()) {
             // slider column
@@ -137,7 +118,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
             slider = new PlusMinusSlider();
             slider.setOrientation(Orientation.VERTICAL);
-            gridPane.add(slider, columnCounts + 1, 1);
+            gridPane.add(slider, columnCounts + 2, 1);
             slider.setOnValueChanged(evt -> {
                 // exponential function to increase scrolling speed when reaching ends of slider
                 final double base = slider.getValue();
@@ -203,7 +184,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
             getSkinnable().markersProperty().addListener(l);
 
             final ObservableList<Marker> markers = getSkinnable().getMarkers();
-            markers.forEach(marker-> addMarkerLine(marker));
+            markers.forEach(marker -> addMarkerLine(marker));
         }
 
         private void addMarkerLine(Marker marker) {
@@ -226,14 +207,36 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
                 double ph = markerLine.prefHeight(-1);
                 markerLine.toFront();
 
-                double x = getInsets().getLeft() + timeScaleView.prefWidth(-1);
-                double w = getWidth() - getInsets().getLeft() - getInsets().getRight() - timeScaleView.prefWidth(-1);
+                double x = getInsets().getLeft();
+                double w = getWidth() - getInsets().getLeft() - getInsets().getRight();
 
-                if (getSkinnable().isShowScrollBar()) {
-                    w -= slider.prefWidth(-1) + 2;
-                }
                 markerLine.resizeRelocate(x, snapPositionY(location - ph / 2), snapSizeX(w), snapSizeY(ph));
             });
+        }
+
+        private void updateView() {
+            getChildren().removeIf(node -> !(node instanceof MarkerLine));
+            getColumnConstraints().clear();
+
+            final int columnCounts = getSkinnable().getResources().size();
+
+            for (int i = 0; i < columnCounts; i++) {
+                T resource = getSkinnable().getResources().get(i);
+
+                ColumnConstraints con = new ColumnConstraints();
+                con.setHalignment(HPos.CENTER);
+                con.setFillWidth(true);
+                con.setHgrow(Priority.ALWAYS);
+                innerGridPane.getColumnConstraints().add(con);
+
+                DayView dayView = getSkinnable().getDayView(resource);
+
+                GridPane.setFillHeight(dayView, true);
+                GridPane.setVgrow(dayView, Priority.ALWAYS);
+
+                innerGridPane.add(dayView, i, 1);
+                GridPane.setRowSpan(dayView, 1);
+            }
         }
     }
 
