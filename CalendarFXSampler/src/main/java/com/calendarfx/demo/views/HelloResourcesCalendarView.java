@@ -21,6 +21,7 @@ import com.calendarfx.demo.CalendarFXSample;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
+import com.calendarfx.model.Marker;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.geometry.Pos;
@@ -32,6 +33,7 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 public class HelloResourcesCalendarView extends CalendarFXSample {
 
@@ -67,7 +69,6 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
         });
 
         for (int i = 0; i < 5; i++) {
-
             CalendarSource source = new CalendarSource("Default");
             Calendar calendar = new HelloDayViewCalendar();
             source.getCalendars().add(calendar);
@@ -78,6 +79,11 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             DayView dayView = resourceCalendarView.getDayView(resource);
             dayView.getCalendarSources().setAll(source);
         }
+
+        Marker marker = new Marker();
+        marker.setTitle("My Marker");
+        marker.setTime(ZonedDateTime.now());
+        resourceCalendarView.getMarkers().add(marker);
 
         return resourceCalendarView;
     }

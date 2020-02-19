@@ -24,7 +24,7 @@ import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
 import com.calendarfx.view.popover.EntryPopOverContentPane;
-import impl.com.calendarfx.view.ViewHelper;
+import com.calendarfx.util.ViewHelper;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;

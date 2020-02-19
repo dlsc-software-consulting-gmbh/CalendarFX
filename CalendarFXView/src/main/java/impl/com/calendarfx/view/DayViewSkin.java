@@ -353,10 +353,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         }
     }
 
-    protected double getTimeLocation(LocalTime startTime) {
-        return ViewHelper.getTimeLocation(getSkinnable(), startTime);
-    }
-
     @Override
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
         super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
@@ -373,7 +369,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         final ZonedDateTime scrollTime = view.getScrollTime();
         Instant time = scrollTime.toInstant().truncatedTo(ChronoUnit.HOURS);
 
-        double y = getInstantLocation(time);
+        double y = view.getLocation(time);
 
         int lineIndex = 0;
 
@@ -418,7 +414,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             lineIndex++;
 
             time = time.plus(30, ChronoUnit.MINUTES);
-            y = getInstantLocation(time);
+            y = view.getLocation(time);
 
         } while (y < contentY + contentHeight);
 
@@ -435,6 +431,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         int lineCount = lines.size();
 
         T dayView = getSkinnable();
+
         LocalTime startTime = dayView.getStartTime();
         LocalTime endTime = dayView.getEndTime();
 
@@ -444,8 +441,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         earlyHoursRegion.setVisible(showEarlyHoursRegion);
         lateHoursRegion.setVisible(showLateHoursRegion);
 
-        double earlyHoursY = getTimeLocation(startTime);
-        double lateHoursY = getTimeLocation(endTime);
+        double earlyHoursY = dayView.getLocation(startTime);
+        double lateHoursY = dayView.getLocation(endTime);
 
         earlyHoursRegion.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth), snapSizeY(earlyHoursY));
         lateHoursRegion.resizeRelocate(snapPositionX(contentX), snapPositionY(lateHoursY), snapSizeX(contentWidth), snapSizeY(contentHeight - lateHoursY));
@@ -464,7 +461,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
             LocalTime time = LocalTime.of(hour, minute);
 
-            double yy = snapPositionY(contentY + getTimeLocation(time));
+            double yy = snapPositionY(contentY + dayView.getLocation(time));
 
             line.setStartX(snapPositionX(contentX + 4));
             line.setStartY(yy);
@@ -505,9 +502,9 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         LocalTime time = dayView.getTime();
 
         if (dayView.isScrollingEnabled()) {
-            y = snapPositionY(getInstantLocation(ZonedDateTime.of(getSkinnable().getDate(), time, getSkinnable().getZoneId()).toInstant()));
+            y = snapPositionY(dayView.getLocation(ZonedDateTime.of(getSkinnable().getDate(), time, getSkinnable().getZoneId()).toInstant()));
         } else {
-            y = snapPositionY(contentY + getTimeLocation(time));
+            y = snapPositionY(contentY + dayView.getLocation(time));
         }
 
         currentTimeLine.setStartX(snapPositionX(contentX));
@@ -572,13 +569,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
                 if (dayView.isScrollingEnabled()) {
 
-                    y1 = getInstantLocation(entry.getStartAsZonedDateTime().toInstant());
-                    y2 = getInstantLocation(entry.getEndAsZonedDateTime().toInstant());
+                    y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
+                    y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
 
                 } else {
 
-                    y1 = getTimeLocation(entry.getStartTime());
-                    y2 = getTimeLocation(entry.getEndTime());
+                    y1 = dayView.getLocation(entry.getStartTime());
+                    y2 = dayView.getLocation(entry.getEndTime());
 
                 }
 

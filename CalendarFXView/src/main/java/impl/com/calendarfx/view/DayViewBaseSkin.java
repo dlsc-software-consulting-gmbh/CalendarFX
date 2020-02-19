@@ -20,7 +20,6 @@ import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import javafx.beans.InvalidationListener;
 
-import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
@@ -61,14 +60,6 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
                 }
             }
         });
-    }
-
-    protected double getInstantLocation(Instant instant) {
-        final T view = getSkinnable();
-        final Instant scrollInstant = view.getScrollTime().toInstant();
-        final double mpp = MILLIS_PER_HOUR / view.getHourHeight();
-        final long millis = instant.toEpochMilli() - scrollInstant.toEpochMilli();
-        return millis / mpp;
     }
 
     @Override

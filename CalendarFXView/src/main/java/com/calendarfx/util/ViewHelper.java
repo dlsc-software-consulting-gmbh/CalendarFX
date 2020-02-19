@@ -14,11 +14,12 @@
  *  limitations under the License.
  */
 
-package impl.com.calendarfx.view;
+package com.calendarfx.util;
 
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
+import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;

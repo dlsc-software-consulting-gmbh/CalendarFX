@@ -1,24 +1,40 @@
 package impl.com.calendarfx.view;
 
+import com.calendarfx.model.Marker;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
 import com.calendarfx.view.TimeScaleView;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import org.controlsfx.control.PlusMinusSlider;
+
+import java.time.ZonedDateTime;
+import java.util.HashMap;
 
 public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalendarView<T>> {
 
-    private GridPane gridPane = new GridPane();
+    private CustomGridPane gridPane = new CustomGridPane();
 
     private TimeScaleView timeScaleView = new TimeScaleView();
+
+    private PlusMinusSlider slider;
 
     public ResourceCalendarViewSkin(ResourceCalendarView view) {
         super(view);
@@ -43,12 +59,13 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         view.dayViewMapProperty().addListener(updateViewListener);
         view.overlapHeaderProperty().addListener(updateViewListener);
         view.showScrollBarProperty().addListener(updateViewListener);
+        view.markersProperty().addListener(updateViewListener);
 
         updateView();
     }
 
     private void updateView() {
-        gridPane.getChildren().clear();
+        gridPane.getChildren().removeIf(node -> !(node instanceof MarkerLine));
         gridPane.getColumnConstraints().clear();
 
         final int columnCounts = getSkinnable().getResources().size();
@@ -82,11 +99,15 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
             GridPane.setVgrow(dayView, Priority.ALWAYS);
 
             if (getSkinnable().isOverlapHeader()) {
+
                 gridPane.add(dayView, i, 0);
                 GridPane.setRowSpan(dayView, 2);
+
             } else {
+
                 gridPane.add(dayView, i, 1);
                 GridPane.setRowSpan(dayView, 1);
+
             }
         }
 
@@ -114,7 +135,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
             con.setFillWidth(true);
             gridPane.getColumnConstraints().add(con);
 
-            PlusMinusSlider slider = new PlusMinusSlider();
+            slider = new PlusMinusSlider();
             slider.setOrientation(Orientation.VERTICAL);
             gridPane.add(slider, columnCounts + 1, 1);
             slider.setOnValueChanged(evt -> {
@@ -124,6 +145,122 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
                 final double pixel = pow * -100;
                 getSkinnable().setScrollTime(getSkinnable().getZonedDateTimeAt(0, pixel));
             });
+        }
+    }
+
+    public class CustomGridPane extends GridPane {
+
+        private InvalidationListener markerListener = it -> getSkinnable().requestLayout();
+
+        private WeakInvalidationListener weakMarkerListener = new WeakInvalidationListener(markerListener);
+
+        private ObservableMap<Marker, MarkerLine> markerLineMap = FXCollections.observableMap(new HashMap<>());
+
+        private double startY;
+
+        public CustomGridPane() {
+            addEventFilter(MouseEvent.MOUSE_PRESSED, evt -> {
+                startY = evt.getScreenY();
+                if (evt.getTarget() instanceof MarkerLine) {
+                    MarkerLine markerLine = (MarkerLine) evt.getTarget();
+                    markerLine.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            addEventFilter(MouseEvent.MOUSE_RELEASED, evt -> {
+                if (evt.getTarget() instanceof MarkerLine) {
+                    MarkerLine markerLine = (MarkerLine) evt.getTarget();
+                    markerLine.setCursor(Cursor.HAND);
+
+
+                }
+            });
+
+            addEventFilter(MouseEvent.MOUSE_DRAGGED, evt -> {
+                if (evt.getTarget() instanceof MarkerLine) {
+                    MarkerLine markerLine = (MarkerLine) evt.getTarget();
+                    double y = evt.getScreenY();
+                    double delta = startY - y;
+                    double newLocation = markerLine.getLayoutY() - delta;
+                    markerLine.setLayoutY(newLocation);
+                    startY = y;
+                }
+            });
+
+            ListChangeListener<Marker> l = change -> {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        change.getAddedSubList().forEach(marker -> addMarkerLine(marker));
+                    } else if (change.wasRemoved()) {
+                        change.getRemoved().forEach(marker -> {
+                            marker.timeProperty().removeListener(weakMarkerListener);
+                            getChildren().remove(markerLineMap.get(marker));
+                        });
+                    }
+                }
+            };
+
+            getSkinnable().markersProperty().addListener(l);
+
+            final ObservableList<Marker> markers = getSkinnable().getMarkers();
+            markers.forEach(marker-> addMarkerLine(marker));
+        }
+
+        private void addMarkerLine(Marker marker) {
+            marker.timeProperty().addListener(weakMarkerListener);
+            MarkerLine markerLine = new MarkerLine(marker);
+            markerLineMap.put(marker, markerLine);
+            markerLine.setManaged(false);
+            getChildren().add(markerLine);
+        }
+
+        @Override
+        protected void layoutChildren() {
+            super.layoutChildren();
+
+            markerLineMap.values().forEach(line -> {
+                final Marker marker = line.getMarker();
+                final ZonedDateTime time = marker.getTime();
+                final double location = getSkinnable().getLocation(time);
+                MarkerLine markerLine = markerLineMap.get(marker);
+                double ph = markerLine.prefHeight(-1);
+                markerLine.toFront();
+
+                double x = getInsets().getLeft() + timeScaleView.prefWidth(-1);
+                double w = getWidth() - getInsets().getLeft() - getInsets().getRight() - timeScaleView.prefWidth(-1);
+
+                if (getSkinnable().isShowScrollBar()) {
+                    w -= slider.prefWidth(-1) + 2;
+                }
+                markerLine.resizeRelocate(x, snapPositionY(location - ph / 2), snapSizeX(w), snapSizeY(ph));
+            });
+        }
+    }
+
+    private static class MarkerLine extends StackPane {
+
+        private final Marker marker;
+
+        public MarkerLine(Marker marker) {
+            this.marker = marker;
+
+            marker.styleClassProperty().addListener((Observable it) -> updateStyleClass());
+            updateStyleClass();
+
+            setCursor(Cursor.HAND);
+
+            Tooltip tooltip = new Tooltip();
+            tooltip.textProperty().bind(marker.titleProperty());
+            Tooltip.install(this, tooltip);
+        }
+
+        private void updateStyleClass() {
+            getStyleClass().setAll("marker-line");
+            getStyleClass().addAll(marker.getStyleClass());
+        }
+
+        public Marker getMarker() {
+            return marker;
         }
     }
 }

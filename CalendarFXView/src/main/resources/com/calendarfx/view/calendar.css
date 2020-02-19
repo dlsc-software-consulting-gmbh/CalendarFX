@@ -1979,3 +1979,8 @@
 .resource-calendar-view .header-background {
     -fx-background-color: rgba(255, 255, 255, .8);
 }
+
+.resource-calendar-view .marker-line {
+    -fx-pref-height: 5px;
+    -fx-background-color: orange;
+}

@@ -1,5 +1,6 @@
 package com.calendarfx.view;
 
+import com.calendarfx.model.Marker;
 import impl.com.calendarfx.view.ResourceCalendarViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -50,6 +51,20 @@ public class ResourceCalendarView<T> extends DayViewBase {
     @Override
     protected Skin<?> createDefaultSkin() {
         return new ResourceCalendarViewSkin(this);
+    }
+
+    private final ListProperty<Marker> markers = new SimpleListProperty<>(this, "markers", FXCollections.observableArrayList());
+
+    public final ObservableList<Marker> getMarkers() {
+        return markers.get();
+    }
+
+    public final ListProperty<Marker> markersProperty() {
+        return markers;
+    }
+
+    public final void setMarkers(ObservableList<Marker> markers) {
+        this.markers.set(markers);
     }
 
     private void partialUnbinding(DayView otherControl) {

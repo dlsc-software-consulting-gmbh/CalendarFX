@@ -16,6 +16,7 @@
 
 package impl.com.calendarfx.view;
 
+import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayViewBase;
 import javafx.application.Platform;

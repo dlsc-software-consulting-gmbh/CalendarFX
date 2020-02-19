@@ -16,7 +16,7 @@
 
 package com.calendarfx.view;
 
-import impl.com.calendarfx.view.ViewHelper;
+import com.calendarfx.util.ViewHelper;
 import impl.com.calendarfx.view.WeekViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

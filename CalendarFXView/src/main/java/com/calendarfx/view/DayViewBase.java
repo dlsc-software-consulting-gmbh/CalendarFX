@@ -17,7 +17,7 @@
 package com.calendarfx.view;
 
 import com.calendarfx.util.LoggingDomain;
-import impl.com.calendarfx.view.ViewHelper;
+import com.calendarfx.util.ViewHelper;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -37,6 +37,7 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import org.controlsfx.control.PropertySheet.Item;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -67,11 +68,11 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
             if (change.wasAdded()) {
-                if (change.getKey().equals("show.current.time.marker")) { 
+                if (change.getKey().equals("show.current.time.marker")) {
                     Boolean show = (Boolean) change.getValueAdded();
                     showCurrentTimeMarker.set(show);
                 } else if (change.getKey().equals(
-                        "show.current.time.today.marker")) { 
+                        "show.current.time.today.marker")) {
                     Boolean show = (Boolean) change.getValueAdded();
                     showCurrentTimeTodayMarker.set(show);
                 } else if (change.getKey().equals("earliest.time.used")) {
@@ -184,6 +185,50 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     /**
+     * Returns the y coordinate for the given time.
+     *
+     * @param time the time for which to return the coordinate
+     * @return the y coordinate
+     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is not set to true
+     */
+    public final double getLocation(ZonedDateTime time) {
+        return getLocation(time.toInstant());
+    }
+
+    /**
+     * Returns the y coordinate for the given time instance. Uses {@link #getZoneId()} to
+     * create a {@link ZonedDateTime} object on-the-fly.
+     *
+     * @param instant the time for which to return the coordinate
+     * @return the y coordinate
+     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is not set to true
+     */
+    public final double getLocation(Instant instant) {
+        if (isScrollingEnabled()) {
+            final Instant scrollInstant = getScrollTime().toInstant();
+            final double mpp = MILLIS_PER_HOUR / getHourHeight();
+            final long millis = instant.toEpochMilli() - scrollInstant.toEpochMilli();
+            return millis / mpp;
+        }
+
+        throw new UnsupportedOperationException("this method can only be called if scrolling is enabled");
+    }
+
+    /**
+     * Returns the y coordinate for the given time.
+     *
+     * @param time the time for which to return the coordinate
+     * @return the y coordinate
+     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is set to true
+     */
+    public double getLocation(LocalTime time) {
+        if (isScrollingEnabled()) {
+            throw new UnsupportedOperationException("this method can only be called if scrolling is disabled");
+        }
+        return ViewHelper.getTimeLocation(this, time);
+    }
+
+    /**
      * An enumerator used for specifying how to deal with late and early hours.
      *
      * @see DayViewBase#earlyLateHoursStrategyProperty()
@@ -213,7 +258,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     private final ObjectProperty<EarlyLateHoursStrategy> earlyLateHoursStrategy = new SimpleObjectProperty<>(
-            this, "earlyLateHoursStrategy", EarlyLateHoursStrategy.SHOW); 
+            this, "earlyLateHoursStrategy", EarlyLateHoursStrategy.SHOW);
 
     /**
      * Specifies a strategy for dealing with early / late hours. The idea behind
@@ -271,7 +316,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     private final ObjectProperty<HoursLayoutStrategy> hoursLayoutStrategy = new SimpleObjectProperty<>(
-            this, "hoursLayoutStrategy", HoursLayoutStrategy.FIXED_HOUR_COUNT); 
+            this, "hoursLayoutStrategy", HoursLayoutStrategy.FIXED_HOUR_COUNT);
 
     /**
      * The layout strategy used by this view for showing hours. The view can
@@ -305,7 +350,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     private final IntegerProperty visibleHours = new SimpleIntegerProperty(
-            this, "visibleHours", 10); 
+            this, "visibleHours", 10);
 
     /**
      * The number of visible hours that the application wants to present to the
@@ -396,7 +441,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     public final void setHourHeight(double height) {
         if (height < 1) {
             throw new IllegalArgumentException(
-                    "height must be larger than 0 but was " + height); 
+                    "height must be larger than 0 but was " + height);
         }
         hourHeightProperty().set(height);
     }
@@ -411,7 +456,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     private final DoubleProperty hourHeightCompressed = new SimpleDoubleProperty(
-            this, "hourHeightCompressed", 10); 
+            this, "hourHeightCompressed", 10);
 
     /**
      * The height used for each early / late hour shown by the view when using
@@ -432,7 +477,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     public final void setHourHeightCompressed(double height) {
         if (height < 1) {
             throw new IllegalArgumentException(
-                    "height must be larger than 0 but was " + height); 
+                    "height must be larger than 0 but was " + height);
         }
         hourHeightCompressedProperty().set(height);
     }
@@ -449,7 +494,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     // Current time marker support.
 
     private final ReadOnlyBooleanWrapper showCurrentTimeMarker = new ReadOnlyBooleanWrapper(
-            this, "showCurrentTimeMarker", false); 
+            this, "showCurrentTimeMarker", false);
 
     /**
      * A read-only property used to indicate whether the view should show the
@@ -459,7 +504,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * thin red line (see red time label and line in image below).
      *
      * <img src="doc-files/current-time-marker.png" alt="Current Time Marker">
-     *
      *
      * @return true if the current time marker should be shown
      * @see #showCurrentTimeTodayMarkerProperty()
@@ -480,7 +524,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     private final ReadOnlyBooleanWrapper showCurrentTimeTodayMarker = new ReadOnlyBooleanWrapper(
-            this, "showCurrentTimeTodayMarker", false); 
+            this, "showCurrentTimeTodayMarker", false);
 
     /**
      * A read-only property used to indicate whether the view should show the
@@ -489,7 +533,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * marker is a red circle (see circle in the image below).
      *
      * <img src="doc-files/current-time-marker.png" alt="Current Time Marker">
-     *
      *
      * @return true if the current time marker should be shown
      * @see #showCurrentTimeMarkerProperty()
@@ -684,7 +727,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
     }
 
-    private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base"; 
+    private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";
 
     @Override
     public ObservableList<Item> getPropertySheetItems() {
@@ -714,12 +757,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Enable Scrolling"; 
+                return "Enable Scrolling";
             }
 
             @Override
             public String getDescription() {
-                return "Support scrolling to previous or next days"; 
+                return "Support scrolling to previous or next days";
             }
 
             @Override
@@ -752,12 +795,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Current time marker"; 
+                return "Current time marker";
             }
 
             @Override
             public String getDescription() {
-                return "Early / Late Hours Layout Strategy"; 
+                return "Early / Late Hours Layout Strategy";
             }
 
             @Override
@@ -790,12 +833,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Early / Late Hours"; 
+                return "Early / Late Hours";
             }
 
             @Override
             public String getDescription() {
-                return "Early / Late Hours Layout Strategy"; 
+                return "Early / Late Hours Layout Strategy";
             }
 
             @Override
@@ -828,12 +871,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Visible Hours"; 
+                return "Visible Hours";
             }
 
             @Override
             public String getDescription() {
-                return "Number of visible hours"; 
+                return "Number of visible hours";
             }
 
             @Override
@@ -866,12 +909,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Hour Height"; 
+                return "Hour Height";
             }
 
             @Override
             public String getDescription() {
-                return "Height of one hour"; 
+                return "Height of one hour";
             }
 
             @Override
@@ -904,12 +947,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Hour Height Compressed"; 
+                return "Hour Height Compressed";
             }
 
             @Override
             public String getDescription() {
-                return "Height of one hour when shown compressed (early / late hours)."; 
+                return "Height of one hour when shown compressed (early / late hours).";
             }
 
             @Override
@@ -942,12 +985,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Layout Strategy"; 
+                return "Layout Strategy";
             }
 
             @Override
             public String getDescription() {
-                return "Layout Strategy"; 
+                return "Layout Strategy";
             }
 
             @Override
@@ -980,12 +1023,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Trim Time Bounds"; 
+                return "Trim Time Bounds";
             }
 
             @Override
             public String getDescription() {
-                return "Adjust earliest / latest times shown"; 
+                return "Adjust earliest / latest times shown";
             }
 
             @Override
@@ -1017,12 +1060,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Earliest Time Used"; 
+                return "Earliest Time Used";
             }
 
             @Override
             public String getDescription() {
-                return "Earliest start time of any entry view"; 
+                return "Earliest start time of any entry view";
             }
 
             @Override
@@ -1059,12 +1102,12 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getName() {
-                return "Latest Time Used"; 
+                return "Latest Time Used";
             }
 
             @Override
             public String getDescription() {
-                return "Latest end time of any entry view"; 
+                return "Latest end time of any entry view";
             }
 
             @Override

@@ -16,6 +16,7 @@
 
 package impl.com.calendarfx.view;
 
+import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.TimeScaleView;
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
@@ -133,7 +134,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
         Instant time = scrollTime.toInstant().truncatedTo(ChronoUnit.HOURS);
 
-        double y = getInstantLocation(time);
+        double y = view.getLocation(time);
 
         int index = 0;
 
@@ -156,7 +157,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
             index++;
 
             time = time.plus(60, ChronoUnit.MINUTES);
-            y = getInstantLocation(time);
+            y = view.getLocation(time);
 
         } while (y < contentY + contentHeight);
 
