@@ -47,6 +47,7 @@ public final class DataLoader {
 
         LocalDate startDate = provider.getLoadStartDate();
         LocalDate endDate = provider.getLoadEndDate();
+
         ZoneId zoneId = provider.getZoneId();
 
         for (CalendarSource source : provider.getCalendarSources()) {

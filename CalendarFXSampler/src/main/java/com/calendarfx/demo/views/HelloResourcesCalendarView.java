@@ -25,6 +25,7 @@ import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -39,9 +40,10 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
         return "Resources Calendar View";
     }
 
+    ResourceCalendarView<String> resourceCalendarView = new ResourceCalendarView<>();
+
     @Override
     public Node getPanel(Stage stage) {
-        ResourceCalendarView<String> resourceCalendarView = new ResourceCalendarView<>();
 
         resourceCalendarView.setHeaderFactory(resource -> {
             Label label1 = new Label("IG-TR");
@@ -60,7 +62,7 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             label4.setAlignment(Pos.CENTER);
 
             VBox box = new VBox(5, label1, label2, label3, label4);
-            box.setStyle("-fx-background-color: rgba(255, 255, 255, .8);");
+            box.setFillWidth(true);
             return box;
         });
 
@@ -81,6 +83,13 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
     }
 
     @Override
+    public Node getControlPanel() {
+        CheckBox box = new CheckBox("Overlapping Header");
+        box.selectedProperty().bindBidirectional(resourceCalendarView.overlapHeaderProperty());
+        return box;
+    }
+
+    @Override
     protected Node createControl() {
         return null;
     }
@@ -98,7 +107,11 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
     class HelloDayViewCalendar extends Calendar {
 
         public HelloDayViewCalendar() {
+            createEntries(LocalDate.now().minusDays(2));
+            createEntries(LocalDate.now().minusDays(1));
             createEntries(LocalDate.now());
+            createEntries(LocalDate.now().plusDays(1));
+            createEntries(LocalDate.now().plusDays(2));
         }
 
         private void createEntries(LocalDate startDate) {

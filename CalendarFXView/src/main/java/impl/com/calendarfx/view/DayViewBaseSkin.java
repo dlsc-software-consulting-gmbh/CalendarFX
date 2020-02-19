@@ -20,17 +20,20 @@ import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import javafx.beans.InvalidationListener;
 
+import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 @SuppressWarnings("javadoc")
 public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
 
+    private static final double MILLIS_PER_HOUR = 3_600_000d;
+
     public DayViewBaseSkin(T view) {
         super(view);
 
         InvalidationListener layoutListener = it -> {
-            getSkinnable().autosize();
+//            getSkinnable().autosize();
             getSkinnable().requestLayout();
         };
 
@@ -46,6 +49,26 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
         view.enableCurrentTimeMarkerProperty().addListener(layoutListener);
         view.entryWidthPercentageProperty().addListener(layoutListener);
         view.showTodayProperty().addListener(layoutListener);
+
+        view.setOnScroll(evt -> {
+            if (view.isScrollingEnabled()) {
+                if (evt.isShortcutDown()) {
+                    view.setHourHeight(
+                            Math.min(getSkinnable().getMaxHourHeight(),
+                                    Math.max(getSkinnable().getMinHourHeight(), view.getHourHeight() + evt.getDeltaY())));
+                } else {
+                    view.setScrollTime(getSkinnable().getZonedDateTimeAt(0, -evt.getDeltaY()));
+                }
+            }
+        });
+    }
+
+    protected double getInstantLocation(Instant instant) {
+        final T view = getSkinnable();
+        final Instant scrollInstant = view.getScrollTime().toInstant();
+        final double mpp = MILLIS_PER_HOUR / view.getHourHeight();
+        final long millis = instant.toEpochMilli() - scrollInstant.toEpochMilli();
+        return millis / mpp;
     }
 
     @Override
@@ -78,8 +101,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
                 return hours * hourHeight + (earlyHours + lateHours) * hourHeightCompressed;
 
             default:
-                throw new IllegalArgumentException(
-                        "unsupported early / late hours strategy: " + strategy);
+                throw new IllegalArgumentException("unsupported early / late hours strategy: " + strategy);
         }
     }
 

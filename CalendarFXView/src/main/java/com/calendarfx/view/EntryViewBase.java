@@ -24,10 +24,12 @@ import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -321,17 +323,39 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * focus.
      */
     public final void bounce() {
-        ScaleTransition transition = new ScaleTransition(Duration.millis(200), this);
-        setCache(true);
-        setCacheHint(CacheHint.SCALE);
-        transition.setAutoReverse(true);
-        transition.setFromX(1);
-        transition.setToX(.8);
-        transition.setFromY(1);
-        transition.setToY(.8);
-        transition.setCycleCount(2);
-        transition.setOnFinished(evt -> setCache(false));
-        transition.play();
+        if (isEnableBounce()) {
+            ScaleTransition transition = new ScaleTransition(Duration.millis(200), this);
+            setCache(true);
+            setCacheHint(CacheHint.SCALE);
+            transition.setAutoReverse(true);
+            transition.setFromX(1);
+            transition.setToX(.8);
+            transition.setFromY(1);
+            transition.setToY(.8);
+            transition.setCycleCount(2);
+            transition.setOnFinished(evt -> setCache(false));
+            transition.play();
+        }
+    }
+
+    private final BooleanProperty enableBounce = new SimpleBooleanProperty(this, "enableBounce", false);
+
+    public final boolean isEnableBounce() {
+        return enableBounce.get();
+    }
+
+    /**
+     * Controls whether the entry should use a scale transition to bounce when it receives the
+     * focus. The default is false.
+     *
+     * @return true if the entry should bounce
+     */
+    public final BooleanProperty enableBounceProperty() {
+        return enableBounce;
+    }
+
+    public final void setEnableBounce(boolean enableBounce) {
+        this.enableBounce.set(enableBounce);
     }
 
     private InvalidationListener selectionListener = it -> updateSelection();

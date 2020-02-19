@@ -56,7 +56,10 @@ import java.util.stream.Collectors;
 @SuppressWarnings("javadoc")
 public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implements LoadDataSettingsProvider {
 
-    private static final double MILLIS_PER_HOUR = 3_600_000d;
+    private static final String MIDNIGHT_LINE_STYLE_CLASS = "midnight-line";
+    private static final String NOON_LINE_STYLE_CLASS = "noon-line";
+    private static final String HALF_HOUR_LINE_STYLE_CLASS = "half-hour-line";
+    private static final String FULL_HOUR_LINE_STYLE_CLASS = "full-hour-line";
 
     private List<Line> lines = new ArrayList<>();
 
@@ -79,25 +82,24 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         earlyHoursRegion = new Region();
         earlyHoursRegion.setMouseTransparent(true);
-        earlyHoursRegion.getStyleClass().add("early-hours-region"); 
+        earlyHoursRegion.getStyleClass().add("early-hours-region");
         earlyHoursRegion.setManaged(false);
         getChildren().add(earlyHoursRegion);
 
         lateHoursRegion = new Region();
         lateHoursRegion.setMouseTransparent(true);
-        lateHoursRegion.getStyleClass().add("late-hours-region"); 
+        lateHoursRegion.getStyleClass().add("late-hours-region");
         lateHoursRegion.setManaged(false);
         getChildren().add(lateHoursRegion);
 
-        for (int i = 1; i < 24; i++) {
-            createLine("half-hour-line"); 
-            createLine("full-hour-line"); 
+        if (!view.isScrollingEnabled()) {
+            // Static lines use different styling for early / late hours, we do not want that
+            // when scrolling is enabled. In that case all lines need to look the same.
+            createStaticLines();
         }
 
-        createLine("half-hour-line"); 
-
         currentTimeCircle = new Circle(4);
-        currentTimeCircle.getStyleClass().add("current-time-circle"); 
+        currentTimeCircle.getStyleClass().add("current-time-circle");
         currentTimeCircle.setManaged(false);
         currentTimeCircle.setMouseTransparent(true);
         currentTimeCircle.setOpacity(0);
@@ -105,7 +107,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         getChildren().add(currentTimeCircle);
 
         currentTimeLine = new Line();
-        currentTimeLine.getStyleClass().add("current-time-line"); 
+        currentTimeLine.getStyleClass().add("current-time-line");
         currentTimeLine.setManaged(false);
         currentTimeLine.setMouseTransparent(true);
         currentTimeLine.setOpacity(0);
@@ -130,9 +132,17 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         view.layoutProperty().addListener(it -> view.requestLayout());
 
         // infinite scrolling
-        view.scrollTimeProperty().addListener(it -> view.requestLayout());
+        view.scrollTimeProperty().addListener(it -> {
+            loadData("view scrolled");
+            view.requestLayout();
+        });
+
         view.scrollingEnabledProperty().addListener(it -> {
-            lines = lines.subList(0, 24);
+            if (view.isScrollingEnabled()) {
+                lines.clear();
+            } else {
+                createStaticLines();
+            }
             view.requestLayout();
         });
 
@@ -148,8 +158,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         view.suspendUpdatesProperty().addListener(evt -> loadData("suspend updates was set to false"));
         view.getCalendars().addListener((javafx.beans.Observable obs) -> loadData("list of calendars changed"));
 
-        updateLineStyling();
-
         final InvalidationListener styleLinesListener = it -> updateLineStyling();
         view.startTimeProperty().addListener(styleLinesListener);
         view.endTimeProperty().addListener(styleLinesListener);
@@ -157,12 +165,23 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         loadData("initial data loading");
 
-        view.setOnScroll(evt -> view.setScrollTime(view.getScrollTime().minusMinutes((long) evt.getDeltaY())));
+        view.hourHeightProperty().addListener(it -> loadData("hour height changed"));
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(view.widthProperty());
         clip.heightProperty().bind(view.heightProperty());
         view.setClip(clip);
+    }
+
+    private void createStaticLines() {
+        for (int i = 1; i < 24; i++) {
+            createLine(HALF_HOUR_LINE_STYLE_CLASS);
+            createLine(FULL_HOUR_LINE_STYLE_CLASS);
+        }
+
+        createLine(HALF_HOUR_LINE_STYLE_CLASS);
+
+        updateLineStyling();
     }
 
     @Override
@@ -219,7 +238,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             draggedEntryView = doAddEntryView(draggedEntry);
             draggedEntryView.toFront();
             draggedEntryView.setMouseTransparent(true);
-            draggedEntryView.getProperties().put("selected", true); 
+            draggedEntryView.getProperties().put("selected", true);
             draggedEntry.intervalProperty().addListener(weakLayoutListener);
         } else {
             if (draggedEntryView != null) {
@@ -238,11 +257,17 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         updateEntries(reason);
     }
 
+    private void createLine() {
+        createLine(null);
+    }
+
     private void createLine(String styleClass) {
         Line line = new Line();
         line.setManaged(false);
-        line.getStyleClass().add(styleClass);
         line.setMouseTransparent(true);
+        if (styleClass != null) {
+            line.getStyleClass().add(styleClass);
+        }
         lines.add(line);
         getChildren().add(line);
     }
@@ -277,13 +302,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             LocalTime time = LocalTime.of(hour, minute);
 
             if (time.isBefore(startTime)) {
-                if (!line.getStyleClass().contains("early-hour-line")) { 
-                    line.getStyleClass().add("early-hour-line"); 
+                if (!line.getStyleClass().contains("early-hour-line")) {
+                    line.getStyleClass().add("early-hour-line");
                 }
             }
             if (time.isAfter(endTime)) {
-                if (!line.getStyleClass().contains("late-hour-line")) { 
-                    line.getStyleClass().add("late-hour-line"); 
+                if (!line.getStyleClass().contains("late-hour-line")) {
+                    line.getStyleClass().add("late-hour-line");
                 }
             }
 
@@ -346,18 +371,37 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             LocalTime localTime = LocalTime.ofInstant(time, view.getZoneId());
 
             if (lineIndex >= lines.size()) {
-                if (localTime.getMinute() == 30) {
-                    createLine("half-hour-line");
-                } else {
-                    createLine("full-hour-line");
-                }
+                createLine();
+                Line line = lines.get(lineIndex);
+                line.toBack();
             }
 
             Line line = lines.get(lineIndex);
+            line.toBack();
+            line.setVisible(true);
 
-            line.setStartX(snapPositionX(contentX + 4));
+            line.getStyleClass().removeAll(HALF_HOUR_LINE_STYLE_CLASS, FULL_HOUR_LINE_STYLE_CLASS, MIDNIGHT_LINE_STYLE_CLASS, NOON_LINE_STYLE_CLASS);
+
+            if (localTime.getMinute() == 30) {
+                line.getStyleClass().add(HALF_HOUR_LINE_STYLE_CLASS);
+            } else {
+                line.getStyleClass().add(FULL_HOUR_LINE_STYLE_CLASS);
+            }
+
+            if (localTime.equals(LocalTime.MIDNIGHT)) {
+                line.getStyleClass().add(MIDNIGHT_LINE_STYLE_CLASS);
+                line.setStartX(snapPositionX(contentX));
+                line.setEndX(snapPositionX(contentX + contentWidth));
+            } else if (localTime.equals(LocalTime.NOON)) {
+                line.getStyleClass().add(NOON_LINE_STYLE_CLASS);
+                line.setStartX(snapPositionX(contentX));
+                line.setEndX(snapPositionX(contentX + contentWidth));
+            } else {
+                line.setStartX(snapPositionX(contentX + 4));
+                line.setEndX(snapPositionX(contentX + contentWidth - 4));
+            }
+
             line.setStartY(snapPositionY(y));
-            line.setEndX(snapPositionX(contentX + contentWidth - 4));
             line.setEndY(snapPositionY(y));
 
             lineIndex++;
@@ -367,16 +411,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         } while (y < contentY + contentHeight);
 
+        for (int i = lineIndex; i < lines.size(); i++) {
+            Line line = lines.get(i);
+            line.setVisible(false);
+        }
+
         layoutEntries(contentX, contentY, contentWidth, contentHeight);
         layoutCurrentTime(contentX, contentY, contentWidth);
-    }
-
-    private double getInstantLocation(Instant instant) {
-        final T view = getSkinnable();
-        final Instant scrollInstant = view.getScrollTime().toInstant();
-        final double mpp = MILLIS_PER_HOUR / view.getHourHeight();
-        final long millis = instant.toEpochMilli() - scrollInstant.toEpochMilli();
-        return millis / mpp;
     }
 
     protected void layoutChildrenStatic(double contentX, double contentY, double contentWidth, double contentHeight) {
@@ -399,6 +440,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         lateHoursRegion.resizeRelocate(snapPositionX(contentX), snapPositionY(lateHoursY), snapSizeX(contentWidth), snapSizeY(contentHeight - lateHoursY));
 
         for (int i = 0; i < lineCount; i++) {
+
             Line line = lines.get(i);
 
             int hour = (i + 1) / 2;
@@ -440,7 +482,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 layoutSwimlane(dayView, contentX, contentY, contentWidth, contentHeight);
                 break;
             default:
-                throw new IllegalArgumentException("unknown layout: " + dayView.getLayout()); 
+                throw new IllegalArgumentException("unknown layout: " + dayView.getLayout());
         }
     }
 
@@ -558,13 +600,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                         position = Position.FIRST;
                     }
 
-                    view.getProperties().put("position", position); 
+                    view.getProperties().put("position", position);
                 }
 
-                view.getProperties().put("startDate", viewDate); 
-                view.getProperties().put("endDate", viewDate); 
-                view.getProperties().put("startTime", viewStartTime); 
-                view.getProperties().put("endTime", viewEndTime); 
+                view.getProperties().put("startDate", viewDate);
+                view.getProperties().put("endDate", viewDate);
+                view.getProperties().put("startTime", viewStartTime);
+                view.getProperties().put("endTime", viewEndTime);
 
                 double minHeight = view.minHeight(contentWidth);
 
@@ -703,7 +745,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     private DayEntryView doAddEntryView(Entry<?> entry) {
         Callback<Entry<?>, DayEntryView> factory = getSkinnable().getEntryViewFactory();
         DayEntryView view = factory.call(entry);
-        view.getProperties().put("control", getSkinnable()); 
+        view.getProperties().put("control", getSkinnable());
         view.setManaged(false);
 
         int index = findIndex(entry);
@@ -739,40 +781,53 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private void updateEntries(String reason) {
+        System.out.println("updating " + reason);
         displayedDate = getSkinnable().getDate();
 
         getChildren().removeIf(node -> node instanceof DayEntryView);
 
         Map<LocalDate, List<Entry<?>>> dataMap = new HashMap<>();
         dataLoader.loadEntries(dataMap);
-        List<Entry<?>> entryList = dataMap.get(getSkinnable().getDate());
+
+        System.out.println("   sd: " + getLoadStartDate());
+        System.out.println("   ed: " + getLoadEndDate());
+        System.out.println();
+
+        LocalDate date = getLoadStartDate();
 
         LocalTime earliest = null;
         LocalTime latest = null;
 
-        if (entryList != null) {
-            entryList.removeIf(Entry::isFullDay);
+        do {
+            List<Entry<?>> entryList = dataMap.get(date);
 
-            for (Entry<?> entry : entryList) {
-                doAddEntryView(entry);
 
-                if (earliest == null || entry.getStartTime().isBefore(earliest)) {
-                    earliest = entry.getStartTime();
-                }
+            if (entryList != null) {
+                entryList.removeIf(Entry::isFullDay);
 
-                if (entry.getStartDate().isBefore(getSkinnable().getDate())) {
-                    earliest = LocalTime.MIN;
-                }
+                for (Entry<?> entry : entryList) {
+                    doAddEntryView(entry);
 
-                if (latest == null || entry.getEndTime().isAfter(latest)) {
-                    latest = entry.getEndTime();
-                }
+                    if (earliest == null || entry.getStartTime().isBefore(earliest)) {
+                        earliest = entry.getStartTime();
+                    }
 
-                if (entry.getEndDate().isAfter(getSkinnable().getDate())) {
-                    latest = LocalTime.MAX;
+                    if (entry.getStartDate().isBefore(getSkinnable().getDate())) {
+                        earliest = LocalTime.MIN;
+                    }
+
+                    if (latest == null || entry.getEndTime().isAfter(latest)) {
+                        latest = entry.getEndTime();
+                    }
+
+                    if (entry.getEndDate().isAfter(getSkinnable().getDate())) {
+                        latest = LocalTime.MAX;
+                    }
                 }
             }
-        }
+
+            date = date.plusDays(1);
+        } while (!date.isAfter(getLoadEndDate()));
 
         getSkinnable().getProperties().put("earliest.time.used", earliest);
         getSkinnable().getProperties().put("latest.time.used", latest);
@@ -784,7 +839,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     @Override
     public String getLoaderName() {
-        return "Day View"; 
+        return "Day View";
     }
 
     @Override
@@ -799,8 +854,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     @Override
     public LocalDate getLoadEndDate() {
         if (getSkinnable().isScrollingEnabled()) {
-            double height = getSkinnable().getHeight();
-            return getSkinnable().getZonedDateTimeAt(0, height).toLocalDate();
+            return getSkinnable().getZonedDateTimeAt(0, getSkinnable().getHeight()).toLocalDate();
         }
 
         return getSkinnable().getDate();

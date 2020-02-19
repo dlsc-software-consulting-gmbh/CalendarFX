@@ -327,7 +327,7 @@
  */
 
 .year-view .container {
-    -fx-background-color:white;
+    -fx-background-color: white;
 }
 
 /*
@@ -596,6 +596,17 @@
 
 .day-view > .full-hour-line {
     -fx-stroke: lightgray;
+}
+
+.day-view > .midnight-line {
+    -fx-stroke-width: 2;
+    -fx-stroke: darkgrey;
+}
+
+.day-view > .noon-line {
+    -fx-stroke-width: 2;
+    -fx-stroke: darkgrey;
+    -fx-stroke-dash-array: 6 6;
 }
 
 .day-view > .current-time-line {
@@ -1956,4 +1967,15 @@
 .week-fields > .content {
     -fx-hgap: 10;
     -fx-vgap: 10;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the ResourceCalendarView control.
+ */
+.resource-calendar-view {
+}
+
+.resource-calendar-view .header-background {
+    -fx-background-color: rgba(255, 255, 255, .8);
 }

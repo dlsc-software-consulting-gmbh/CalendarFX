@@ -22,10 +22,13 @@ import javafx.util.Callback;
 public class ResourceCalendarView<T> extends DayViewBase {
 
     public ResourceCalendarView() {
-        setScrollingEnabled(true);
-        setHoursLayoutStrategy(DayViewBase.HoursLayoutStrategy.FIXED_HOUR_HEIGHT);
-        setHourHeight(40);
+        getStyleClass().add("resource-calendar-view");
 
+        setEnableCurrentTimeMarker(false);
+        setScrollingEnabled(true);
+        setHourHeight(40);
+        setHoursLayoutStrategy(DayViewBase.HoursLayoutStrategy.FIXED_HOUR_HEIGHT);
+        
         ListChangeListener<? super T> l = change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
@@ -55,7 +58,7 @@ public class ResourceCalendarView<T> extends DayViewBase {
         Bindings.unbindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
     }
 
-    private final BooleanProperty overlapHeader = new SimpleBooleanProperty(this, "overlapHeader", true);
+    private final BooleanProperty overlapHeader = new SimpleBooleanProperty(this, "overlapHeader", false);
 
     public final boolean isOverlapHeader() {
         return overlapHeader.get();

@@ -218,7 +218,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     /**
      * Specifies a strategy for dealing with early / late hours. The idea behind
      * early / late hours is that often applications do not work with all 24
-     * hours of a day and hideing or compressing these hours allow the user to
+     * hours of a day and hiding or compressing these hours allow the user to
      * focus on the relevant hours.
      *
      * @return the early / late hours strategy
@@ -336,8 +336,47 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return visibleHoursProperty().get();
     }
 
-    private final DoubleProperty hourHeight = new SimpleDoubleProperty(this,
-            "hourHeight", 70); 
+    private final DoubleProperty minHourHeight = new SimpleDoubleProperty(this, "hourHeight", 20);
+
+    public final double getMinHourHeight() {
+        return minHourHeight.get();
+    }
+
+    /**
+     * Returns the minimum height of an hour interval. Used for zoom in / out operations.
+     *
+     * @return the minimum hour height
+     * @see #hourHeightProperty()
+     */
+    public final DoubleProperty minHourHeightProperty() {
+        return minHourHeight;
+    }
+
+    public final void setMinHourHeight(double minHourHeight) {
+        this.minHourHeight.set(minHourHeight);
+    }
+
+    private final DoubleProperty maxHourHeight = new SimpleDoubleProperty(this, "hourHeight", 200);
+
+    public final double getMaxHourHeight() {
+        return maxHourHeight.get();
+    }
+
+    /**
+     * Returns the maximum height of an hour interval. Used for zoom in / out operations.
+     *
+     * @return the maximum hour height
+     * @see #hourHeightProperty()
+     */
+    public final DoubleProperty maxHourHeightProperty() {
+        return maxHourHeight;
+    }
+
+    public final void setMaxHourHeight(double maxHourHeight) {
+        this.maxHourHeight.set(maxHourHeight);
+    }
+
+    private final DoubleProperty hourHeight = new SimpleDoubleProperty(this, "hourHeight", 70);
 
     /**
      * The height used for each hour shown by the view.

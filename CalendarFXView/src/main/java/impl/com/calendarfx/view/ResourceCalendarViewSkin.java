@@ -2,22 +2,30 @@ package impl.com.calendarfx.view;
 
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
+import com.calendarfx.view.TimeScaleView;
 import javafx.beans.InvalidationListener;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 
 public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalendarView<T>> {
 
     private GridPane gridPane = new GridPane();
 
+    private TimeScaleView timeScaleView = new TimeScaleView();
+
     public ResourceCalendarViewSkin(ResourceCalendarView view) {
         super(view);
 
+        timeScaleView.setScrollingEnabled(true);
+        view.bind(timeScaleView, true);
+
         gridPane.getStyleClass().add("resource-calendar-container");
+
         getChildren().add(gridPane);
 
         RowConstraints row1 = new RowConstraints();
@@ -32,6 +40,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         view.dayViewMapProperty().addListener(updateViewListener);
         view.overlapHeaderProperty().addListener(updateViewListener);
+
         updateView();
     }
 
@@ -40,30 +49,58 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         gridPane.getColumnConstraints().clear();
 
         final int columnCounts = getSkinnable().getResources().size();
-        for (int i = 0; i < columnCounts; i++) {
-            T resource = getSkinnable().getResources().get(i);
 
-            ColumnConstraints con = new ColumnConstraints();
+        ColumnConstraints con = new ColumnConstraints();
+        con.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        con.setFillWidth(true);
+
+        gridPane.getColumnConstraints().add(con);
+
+        if (getSkinnable().isOverlapHeader()) {
+            gridPane.add(timeScaleView, 0, 0);
+            GridPane.setRowSpan(timeScaleView, 2);
+        } else {
+            gridPane.add(timeScaleView, 0, 1);
+            GridPane.setRowSpan(timeScaleView, 1);
+        }
+
+        for (int i = 1; i <= columnCounts; i++) {
+            T resource = getSkinnable().getResources().get(i - 1);
+
+            con = new ColumnConstraints();
             con.setHalignment(HPos.CENTER);
-            con.setPercentWidth(100.0 / columnCounts);
             con.setFillWidth(true);
             con.setHgrow(Priority.ALWAYS);
             gridPane.getColumnConstraints().add(con);
 
             DayView dayView = getSkinnable().getDayView(resource);
-            Node header = getSkinnable().getHeaderFactory().call(resource);
 
             GridPane.setFillHeight(dayView, true);
             GridPane.setVgrow(dayView, Priority.ALWAYS);
 
             if (getSkinnable().isOverlapHeader()) {
                 gridPane.add(dayView, i, 0);
-                gridPane.add(header, i, 0);
                 GridPane.setRowSpan(dayView, 2);
             } else {
                 gridPane.add(dayView, i, 1);
-                gridPane.add(header, i, 0);
                 GridPane.setRowSpan(dayView, 1);
+            }
+        }
+
+        Region header = new Region();
+        header.getStyleClass().add("header-background");
+        gridPane.add(header, 0, 0);
+        GridPane.setColumnSpan(header, columnCounts + 1);
+
+        for (int i = 1; i <= columnCounts; i++) {
+            T resource = getSkinnable().getResources().get(i - 1);
+
+            Node columnHeader = getSkinnable().getHeaderFactory().call(resource);
+
+            if (getSkinnable().isOverlapHeader()) {
+                gridPane.add(columnHeader, i, 0);
+            } else {
+                gridPane.add(columnHeader, i, 0);
             }
         }
     }
