@@ -4,6 +4,8 @@ import com.calendarfx.model.Marker;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
 import com.calendarfx.view.TimeScaleView;
+import com.calendarfx.view.VirtualGrid;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
@@ -23,9 +25,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import org.controlsfx.control.PlusMinusSlider;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalendarView<T>> {
@@ -59,7 +63,6 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         final InvalidationListener updateGridPaneListener = it -> updateView();
 
         view.dayViewMapProperty().addListener(updateGridPaneListener);
-        view.overlapHeaderProperty().addListener(updateGridPaneListener);
         view.showScrollBarProperty().addListener(updateGridPaneListener);
         view.markersProperty().addListener(updateGridPaneListener);
 
@@ -96,11 +99,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
             Node columnHeader = getSkinnable().getHeaderFactory().call(resource);
 
-            if (getSkinnable().isOverlapHeader()) {
-                gridPane.add(columnHeader, i + 1, 0);
-            } else {
-                gridPane.add(columnHeader, i + 1, 0);
-            }
+            gridPane.add(columnHeader, i + 1, 0);
         }
 
         gridPane.add(innerGridPane, 1, 1);
@@ -131,7 +130,9 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
     public class CustomGridPane extends GridPane {
 
-        private InvalidationListener markerListener = it -> getSkinnable().requestLayout();
+        private MarkerLine draggedMarkerLine;
+
+        private InvalidationListener markerListener = it -> Platform.runLater(() -> getSkinnable().layout());
 
         private WeakInvalidationListener weakMarkerListener = new WeakInvalidationListener(markerListener);
 
@@ -143,27 +144,26 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
             addEventFilter(MouseEvent.MOUSE_PRESSED, evt -> {
                 startY = evt.getScreenY();
                 if (evt.getTarget() instanceof MarkerLine) {
-                    MarkerLine markerLine = (MarkerLine) evt.getTarget();
-                    markerLine.setCursor(Cursor.CLOSED_HAND);
+                    draggedMarkerLine = (MarkerLine) evt.getTarget();
+                    draggedMarkerLine.setCursor(Cursor.CLOSED_HAND);
                 }
             });
 
             addEventFilter(MouseEvent.MOUSE_RELEASED, evt -> {
-                if (evt.getTarget() instanceof MarkerLine) {
-                    MarkerLine markerLine = (MarkerLine) evt.getTarget();
-                    markerLine.setCursor(Cursor.HAND);
-
-
+                if (draggedMarkerLine != null) {
+                    draggedMarkerLine.setCursor(Cursor.HAND);
+                    final double y = draggedMarkerLine.getLayoutY();
+                    adjustLineLocation(draggedMarkerLine, y);
+                    draggedMarkerLine = null;
                 }
             });
 
             addEventFilter(MouseEvent.MOUSE_DRAGGED, evt -> {
-                if (evt.getTarget() instanceof MarkerLine) {
-                    MarkerLine markerLine = (MarkerLine) evt.getTarget();
+                if (draggedMarkerLine != null) {
                     double y = evt.getScreenY();
                     double delta = startY - y;
-                    double newLocation = markerLine.getLayoutY() - delta;
-                    markerLine.setLayoutY(newLocation);
+                    double newLocation = draggedMarkerLine.getLayoutY() - delta;
+                    draggedMarkerLine.setLayoutY(newLocation);
                     startY = y;
                 }
             });
@@ -185,6 +185,35 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
             final ObservableList<Marker> markers = getSkinnable().getMarkers();
             markers.forEach(marker -> addMarkerLine(marker));
+
+            Rectangle clip = new Rectangle();
+            clip.widthProperty().bind(widthProperty());
+            clip.heightProperty().bind(heightProperty());
+            setClip(clip);
+        }
+
+        private void adjustLineLocation(MarkerLine markerLine, double y) {
+            ZonedDateTime dropTime = getSkinnable().getZonedDateTimeAt(0, y);
+            final VirtualGrid virtualGrid = getSkinnable().getVirtualGrid();
+            if (virtualGrid != null) {
+
+                ZonedDateTime timeA = virtualGrid.adjustTime(dropTime, true, getSkinnable().getFirstDayOfWeek());
+                ZonedDateTime timeB = virtualGrid.adjustTime(dropTime, false, getSkinnable().getFirstDayOfWeek());
+
+                final long secondsA = Math.abs(timeA.until(dropTime, ChronoUnit.SECONDS));
+                final long secondsB = Math.abs(timeB.until(dropTime, ChronoUnit.SECONDS));
+
+                // "jump / snap" to the closes grid time
+                if (secondsA < secondsB) {
+                    dropTime = timeA;
+                } else {
+                    dropTime = timeB;
+                }
+            }
+
+            markerLine.getMarker().setTime(dropTime);
+            final double dropLocationY = getSkinnable().getLocation(dropTime);
+            markerLine.setLayoutY(dropLocationY - markerLine.prefHeight(-1));
         }
 
         private void addMarkerLine(Marker marker) {
@@ -201,16 +230,23 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
             markerLineMap.values().forEach(line -> {
                 final Marker marker = line.getMarker();
-                final ZonedDateTime time = marker.getTime();
-                final double location = getSkinnable().getLocation(time);
-                MarkerLine markerLine = markerLineMap.get(marker);
-                double ph = markerLine.prefHeight(-1);
-                markerLine.toFront();
 
-                double x = getInsets().getLeft();
-                double w = getWidth() - getInsets().getLeft() - getInsets().getRight();
+                /*
+                 * Very important not to lay out the currently dragged marker line.
+                 */
+                if (line != draggedMarkerLine) {
+                    final ZonedDateTime time = marker.getTime();
+                    final double location = getSkinnable().getLocation(time);
+                    MarkerLine markerLine = markerLineMap.get(marker);
+                    double ph = markerLine.prefHeight(-1);
 
-                markerLine.resizeRelocate(x, snapPositionY(location - ph / 2), snapSizeX(w), snapSizeY(ph));
+                    markerLine.toFront();
+
+                    double x = getInsets().getLeft();
+                    double w = getWidth() - getInsets().getLeft() - getInsets().getRight();
+
+                    markerLine.resizeRelocate(x, snapPositionY(location - ph / 2), snapSizeX(w), snapSizeY(ph));
+                }
             });
         }
 

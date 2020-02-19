@@ -29,6 +29,7 @@ import com.calendarfx.view.EntryViewBase.Position;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.Resolver;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.scene.Node;
@@ -167,6 +168,14 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         loadData("initial data loading");
 
+        view.heightProperty().addListener(it -> {
+            if (view.isScrollingEnabled()) {
+                // run later, or we cause flickering
+                Platform.runLater(() -> {
+                    loadData("height changed");
+                });
+            }
+        });
         view.hourHeightProperty().addListener(it -> loadData("hour height changed"));
 
         Rectangle clip = new Rectangle();

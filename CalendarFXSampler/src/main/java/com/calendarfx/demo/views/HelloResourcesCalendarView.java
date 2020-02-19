@@ -19,6 +19,7 @@ package com.calendarfx.demo.views;
 
 import com.calendarfx.demo.CalendarFXSample;
 import com.calendarfx.model.Calendar;
+import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Marker;
@@ -26,7 +27,6 @@ import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -70,8 +70,18 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
 
         for (int i = 0; i < 5; i++) {
             CalendarSource source = new CalendarSource("Default");
-            Calendar calendar = new HelloDayViewCalendar();
-            source.getCalendars().add(calendar);
+
+            Calendar calendar1 = new HelloDayViewCalendar();
+            calendar1.setStyle(Style.STYLE1);
+            source.getCalendars().add(calendar1);
+
+            Calendar calendar2 = new HelloDayViewCalendar();
+            calendar2.setStyle(Style.STYLE2);
+            source.getCalendars().add(calendar2);
+
+            Calendar calendar3 = new HelloDayViewCalendar();
+            calendar3.setStyle(Style.STYLE3);
+            source.getCalendars().add(calendar3);
 
             String resource = "Resource " + (i + 1);
             resourceCalendarView.getResources().add(resource);
@@ -80,19 +90,18 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             dayView.getCalendarSources().setAll(source);
         }
 
-        Marker marker = new Marker();
-        marker.setTitle("My Marker");
-        marker.setTime(ZonedDateTime.now());
-        resourceCalendarView.getMarkers().add(marker);
+        Marker marker1 = new Marker();
+        marker1.setTitle("My Marker 1");
+        marker1.setTime(ZonedDateTime.now());
+        resourceCalendarView.getMarkers().add(marker1);
+
+        Marker marker2 = new Marker();
+        marker2.setTitle("My Marker 2");
+        marker2.setTime(ZonedDateTime.now().plusHours(1));
+        marker2.getStyleClass().add("marker2");
+        resourceCalendarView.getMarkers().add(marker2);
 
         return resourceCalendarView;
-    }
-
-    @Override
-    public Node getControlPanel() {
-        CheckBox box = new CheckBox("Overlapping Header");
-        box.selectedProperty().bindBidirectional(resourceCalendarView.overlapHeaderProperty());
-        return box;
     }
 
     @Override
@@ -121,7 +130,7 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
         }
 
         private void createEntries(LocalDate startDate) {
-            for (int j = 0; j < 5 + (int) (Math.random() * 7); j++) {
+            for (int j = 0; j < 5 + (int) (Math.random() * 4); j++) {
                 Entry<?> entry = new Entry<>();
                 entry.changeStartDate(startDate);
                 entry.changeEndDate(startDate);

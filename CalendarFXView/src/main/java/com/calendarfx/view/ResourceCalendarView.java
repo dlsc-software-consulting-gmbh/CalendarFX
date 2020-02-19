@@ -87,20 +87,6 @@ public class ResourceCalendarView<T> extends DayViewBase {
         this.showScrollBar.set(showScrollBar);
     }
 
-    private final BooleanProperty overlapHeader = new SimpleBooleanProperty(this, "overlapHeader", false);
-
-    public final boolean isOverlapHeader() {
-        return overlapHeader.get();
-    }
-
-    public final BooleanProperty overlapHeaderProperty() {
-        return overlapHeader;
-    }
-
-    public final void setOverlapHeader(boolean overlapHeader) {
-        this.overlapHeader.set(overlapHeader);
-    }
-
     private final ObjectProperty<Callback<T, Node>> headerFactory = new SimpleObjectProperty<>(this, "headerFactory", it-> new Label("Header"));
 
     public final Callback<T, Node> getHeaderFactory() {
