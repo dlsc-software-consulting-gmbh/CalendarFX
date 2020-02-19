@@ -5,12 +5,14 @@ import com.calendarfx.view.ResourceCalendarView;
 import com.calendarfx.view.TimeScaleView;
 import javafx.beans.InvalidationListener;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
+import org.controlsfx.control.PlusMinusSlider;
 
 public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalendarView<T>> {
 
@@ -40,6 +42,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         view.dayViewMapProperty().addListener(updateViewListener);
         view.overlapHeaderProperty().addListener(updateViewListener);
+        view.showScrollBarProperty().addListener(updateViewListener);
 
         updateView();
     }
@@ -90,7 +93,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         Region header = new Region();
         header.getStyleClass().add("header-background");
         gridPane.add(header, 0, 0);
-        GridPane.setColumnSpan(header, columnCounts + 1);
+        GridPane.setColumnSpan(header, columnCounts + 2);
 
         for (int i = 1; i <= columnCounts; i++) {
             T resource = getSkinnable().getResources().get(i - 1);
@@ -102,6 +105,25 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
             } else {
                 gridPane.add(columnHeader, i, 0);
             }
+        }
+
+        if (getSkinnable().isShowScrollBar()) {
+            // slider column
+            con = new ColumnConstraints();
+            con.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            con.setFillWidth(true);
+            gridPane.getColumnConstraints().add(con);
+
+            PlusMinusSlider slider = new PlusMinusSlider();
+            slider.setOrientation(Orientation.VERTICAL);
+            gridPane.add(slider, columnCounts + 1, 1);
+            slider.setOnValueChanged(evt -> {
+                // exponential function to increase scrolling speed when reaching ends of slider
+                final double base = slider.getValue();
+                final double pow = Math.signum(slider.getValue()) * Math.pow(base, 2);
+                final double pixel = pow * -100;
+                getSkinnable().setScrollTime(getSkinnable().getZonedDateTimeAt(0, pixel));
+            });
         }
     }
 }

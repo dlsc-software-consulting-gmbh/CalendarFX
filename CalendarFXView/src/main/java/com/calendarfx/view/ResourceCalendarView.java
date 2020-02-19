@@ -58,6 +58,20 @@ public class ResourceCalendarView<T> extends DayViewBase {
         Bindings.unbindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
     }
 
+    private final BooleanProperty showScrollBar = new SimpleBooleanProperty(this, "showScrollBar", true);
+
+    public final boolean isShowScrollBar() {
+        return showScrollBar.get();
+    }
+
+    public final BooleanProperty showScrollBarProperty() {
+        return showScrollBar;
+    }
+
+    public final void setShowScrollBar(boolean showScrollBar) {
+        this.showScrollBar.set(showScrollBar);
+    }
+
     private final BooleanProperty overlapHeader = new SimpleBooleanProperty(this, "overlapHeader", false);
 
     public final boolean isOverlapHeader() {

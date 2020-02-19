@@ -77,6 +77,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     private LocalDate displayedDate;
 
+    private double startY;
+
     public DayViewSkin(T view) {
         super(view);
 
@@ -171,6 +173,15 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         clip.widthProperty().bind(view.widthProperty());
         clip.heightProperty().bind(view.heightProperty());
         view.setClip(clip);
+
+        getSkinnable().setOnMousePressed(evt -> startY = evt.getScreenY());
+
+        getSkinnable().setOnMouseDragged(evt -> {
+            if (view.isScrollingEnabled()) {
+                view.setScrollTime(view.getZonedDateTimeAt(0, startY - evt.getScreenY()));
+                startY = evt.getScreenY();
+            }
+        });
     }
 
     private void createStaticLines() {
@@ -781,17 +792,12 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private void updateEntries(String reason) {
-        System.out.println("updating " + reason);
         displayedDate = getSkinnable().getDate();
 
         getChildren().removeIf(node -> node instanceof DayEntryView);
 
         Map<LocalDate, List<Entry<?>>> dataMap = new HashMap<>();
         dataLoader.loadEntries(dataMap);
-
-        System.out.println("   sd: " + getLoadStartDate());
-        System.out.println("   ed: " + getLoadEndDate());
-        System.out.println();
 
         LocalDate date = getLoadStartDate();
 
