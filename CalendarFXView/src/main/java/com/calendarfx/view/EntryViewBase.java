@@ -63,7 +63,7 @@ import static javafx.scene.input.MouseButton.PRIMARY;
  * are specializations of this class for the {@link DayView}, the
  * {@link DetailedWeekView}, and the {@link MonthView}. Each date control class uses
  * their own entry factory to create entry view instances.
- *
+ * <p>
  * This view uses four pseudo classes:
  * <ul>
  * <li>dragged - when the user drags the view</li>
@@ -77,11 +77,9 @@ import static javafx.scene.input.MouseButton.PRIMARY;
  * the opacity of the original entry view will be set to 0, which means the view
  * will be invisible.
  *
+ * @param <T> the type of date control where the entry is being used
  * @see DayView#entryViewFactoryProperty()
  * @see MonthView#entryViewFactoryProperty()
- *
- * @param <T>
- *            the type of date control where the entry is being used
  */
 public abstract class EntryViewBase<T extends DateControl> extends CalendarFXControl implements Comparable<EntryViewBase<T>> {
 
@@ -110,8 +108,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
     /**
      * Constructs a new view for the given entry.
      *
-     * @param entry
-     *            the calendar entry
+     * @param entry the calendar entry
      */
     protected EntryViewBase(Entry<?> entry) {
         this.entry = requireNonNull(entry);
@@ -216,7 +213,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
             boolean contains = selections.contains(entry);
             selected.set(contains);
         });
-        
+
         addEventHandler(MouseEvent.MOUSE_PRESSED, this::performSelection);
 
         bindEntry(entry);
@@ -272,7 +269,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * {@link MonthView} where space is restricted).
      *
      * @return a read-only property used as a flag to signal whether the view is
-     *         hidden or not
+     * hidden or not
      */
     public final ReadOnlyBooleanProperty hiddenProperty() {
         if (hidden == null) {
@@ -285,7 +282,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * Returns the value of {@link #hiddenProperty()}.
      *
      * @return true if the view is currently hidden because of insufficient
-     *         space
+     * space
      */
     public final boolean isHidden() {
         return hidden == null ? _hidden : hidden.get();
@@ -431,7 +428,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * view is shown on the "first" day, the "last" day, or some day in the
      * "middle" of the span. If the entry is located on only one day then the
      * position will be "only".
-     *
+     * <p>
      * The image below illustrates this concept:
      *
      * <img src="doc-files/multi-days.png" alt="Multi Days">
@@ -475,14 +472,13 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * "middle" of the span. If the entry is located on only one day then the
      * position will be "only". This property is read-only and will be set by
      * the framework.
-     *
+     * <p>
      * The image below illustrates this concept:
      *
      * <img src="doc-files/multi-days.png" alt="Multi Day">
      *
-     *
      * @return the position of the view within the time range of the calendar
-     *         entry
+     * entry
      */
     public final ReadOnlyObjectProperty<Position> positionProperty() {
         if (position == null) {
@@ -834,9 +830,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * A flag used to indicate that the entry has been selected by the user.
      * This property triggers the "selected" pseudo class.
      *
-     * @see DateControl#getSelections()
-     *
      * @return true if the entry view has been selected
+     * @see DateControl#getSelections()
      */
     public final ReadOnlyBooleanProperty selectedProperty() {
         return selected.getReadOnlyProperty();
@@ -855,10 +850,9 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * Convenience method to check if this entry view intersects with the given
      * entry view. Delegates to {@link Entry#intersects(Entry)}.
      *
-     * @param otherView
-     *            the other view to check
+     * @param otherView the other view to check
      * @return true if the time intervals of the two entries / views overlap
-     *         each other
+     * each other
      */
     public final boolean intersects(EntryViewBase<?> otherView) {
         return getEntry().intersects(otherView.getEntry());
@@ -987,23 +981,29 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
             String disableFocusHandlingKey = "disable-focus-handling";
             getProperties().put(disableFocusHandlingKey, true);
             requestFocus();
-            
+
             DateControl control = getDateControl();
-            
+
+            if (control == null) {
+                return;
+            }
+
             if (!isMultiSelect(evt) && !control.getSelections().contains(entry)) {
                 control.clearSelection();
             }
-            
-            if(isMultiSelect(evt) && control.getSelections().contains(entry))
+
+            if (isMultiSelect(evt) && control.getSelections().contains(entry)) {
                 control.deselect(entry);
-            else control.getSelections().add(entry);
-            
+            } else {
+                control.getSelections().add(entry);
+            }
+
             getProperties().remove(disableFocusHandlingKey);
         }
     }
-    
+
     private boolean isMultiSelect(MouseEvent evt) {
         return (evt.isShiftDown() || evt.isShortcutDown()) && getDateControl().getSelectionMode().equals(MULTIPLE);
     }
-    
+
 }

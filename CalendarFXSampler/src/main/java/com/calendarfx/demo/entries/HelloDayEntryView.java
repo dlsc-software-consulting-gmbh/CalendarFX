@@ -20,6 +20,10 @@ package com.calendarfx.demo.entries;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.EntryViewBase;
+import javafx.geometry.Pos;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.Region;
 
 public class HelloDayEntryView extends HelloEntryViewBase {
 
@@ -31,6 +35,37 @@ public class HelloDayEntryView extends HelloEntryViewBase {
     @Override
     protected EntryViewBase<?> createEntryView(Entry<?> entry) {
         DayEntryView view = new DayEntryView(entry);
+        ContextMenu menu = new ContextMenu();
+        for (Pos pos : Pos.values()) {
+            MenuItem item = new MenuItem(pos.name());
+            item.setOnAction(evt -> {
+                view.clearNodes();
+
+                for (int i = 0; i < 3; i++) {
+                    Region region = new Region();
+
+                    switch (i) {
+                        case 0:
+                            region.setStyle("-fx-background-color: orange;");
+                            break;
+                        case 1:
+                            region.setStyle("-fx-background-color: yellow;");
+                            break;
+                        case 2:
+                            region.setStyle("-fx-background-color: blue;");
+                            break;
+                    }
+
+                    region.setPrefSize(8, 8);
+                    view.addNode(pos, region);
+                }
+
+            });
+
+            menu.getItems().add(item);
+        }
+
+        view.setContextMenu(menu);
         view.setPrefSize(200, 300);
         return view;
     }

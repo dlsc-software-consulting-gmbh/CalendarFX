@@ -848,8 +848,8 @@
 
 .default-style-entry {
     -fx-background-color: magenta;
-    -fx-background-radius: 0.0px;
-    -fx-background-insets: 0.0 2.0 0.0 2.0;
+    -fx-background-radius: 0px;
+    -fx-background-insets: 0.0 0.0 0.0 2.0;
     -fx-border-insets: 0.0 0.0 0.0 2.0;
     -fx-border-width: 0.0 0.0 0.0 4.0;
 }
@@ -865,6 +865,11 @@
 
 .default-style-entry:selected {
     -fx-border-width: 0.0;
+}
+
+.default-style-entry .icon-flow-pane {
+    -fx-hgap: 0px;
+    -fx-vgap: 0px;
 }
 
 .default-style-entry-time-label {
@@ -897,15 +902,13 @@
 }
 
 .default-style-visibility-checkbox > .box {
-    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border,
-    -fx-inner-border, -fx-body-color;
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
     -fx-background-radius: 3.0, 2.0, 1.0;
     -fx-padding: 0.166667em 0.166667em 0.25em 0.25em; /* 2 2 3 3 */
 }
 
 .default-style-visibility-checkbox:focused > .box {
-    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color,
-    -fx-faint-focus-color, -fx-body-color;
+    -fx-background-color: -fx-focus-color, -fx-inner-border, -fx-body-color, -fx-faint-focus-color, -fx-body-color;
     -fx-background-insets: -0.2, 1.0, 2.0, -1.4, 2.6;
     -fx-background-radius: 3.0, 2.0, 1.0, 4.0, 1.0;
 }

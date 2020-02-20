@@ -21,6 +21,7 @@ import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Marker;
+import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.application.Application;
@@ -33,7 +34,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -103,6 +107,40 @@ public class ResourceCalendarApp extends Application {
 
             DayView dayView = resourceCalendarView.getDayView(resource);
             dayView.getCalendarSources().setAll(source);
+            dayView.setEntryViewFactory(entry -> {
+                DayEntryView entryView = new DayEntryView(entry);
+
+                if (Math.random() > .7) {
+                    final FontIcon node = new FontIcon(FontAwesome.ERASER);
+                    node.setIconColor(Color.RED);
+                    node.setIconSize(16);
+                    entryView.addNode(Pos.BOTTOM_RIGHT, node);
+                }
+
+                if (Math.random() > .9) {
+                    final FontIcon node = new FontIcon(FontAwesome.CODE);
+                    node.setIconColor(Color.BLUE);
+                    node.setIconSize(16);
+                    entryView.addNode(Pos.BOTTOM_RIGHT, node);
+                }
+
+                if (Math.random() > .7) {
+                    final FontIcon node = new FontIcon(FontAwesome.QRCODE);
+                    node.setIconColor(Color.MEDIUMPURPLE);
+                    node.setIconSize(16);
+                    entryView.addNode(Pos.BOTTOM_RIGHT, node);
+                }
+
+
+                if (Math.random() > .7) {
+                    final FontIcon node = new FontIcon(FontAwesome.SIGN_IN);
+                    node.setIconColor(Color.MEDIUMSPRINGGREEN);
+                    node.setIconSize(16);
+                    entryView.addNode(Pos.TOP_RIGHT, node);
+                }
+
+                return entryView;
+            });
         }
 
         Marker marker1 = new Marker();

@@ -18,7 +18,15 @@ package com.calendarfx.view;
 
 import com.calendarfx.model.Entry;
 import impl.com.calendarfx.view.DayEntryViewSkin;
+import javafx.beans.property.ReadOnlyMapWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Skin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A view representing an entry inside the {@link DayView} control. Instances of
@@ -26,7 +34,6 @@ import javafx.scene.control.Skin;
  * The image below shows the default apperance of this view.
  *
  * <img src="doc-files/day-entry-view.png" alt="Day Entry View">
- *
  *
  * @see DayView#entryViewFactoryProperty()
  */
@@ -39,12 +46,71 @@ public class DayEntryView extends EntryViewBase<DayView> {
      */
     public DayEntryView(Entry<?> entry) {
         super(entry);
-
-//		setMinSize(0, 0);
     }
 
     @Override
     protected Skin<?> createDefaultSkin() {
         return new DayEntryViewSkin(this);
+    }
+
+    private ReadOnlyMapWrapper<Pos, List<Node>> nodes = new ReadOnlyMapWrapper<>(this, "nodes");
+
+    /**
+     * A day entry view can be decorated with symbols / nodes. These nodes are stored
+     * in a hash map where the position of the nodes is the key.
+     *
+     * @return the map of nodes
+     */
+    public final ObservableMap<Pos, List<Node>> getNodes() {
+        return nodes.getReadOnlyProperty();
+    }
+
+    /**
+     * Returns the hashmap used to store nodes used for decorating the entry view.
+     *
+     * @return the nodes map
+     */
+    public final ReadOnlyMapWrapper<Pos, List<Node>> nodesProperty() {
+        return nodes;
+    }
+
+    /**
+     * Removes all nodes from all positions.
+     */
+    public void clearNodes() {
+        if (nodes.get() != null) {
+            nodes.get().clear();
+        }
+    }
+
+    /**
+     * Adds a node to the given position to the entry view.
+     *
+     * @param pos the position for the node
+     * @param node the node itself
+     */
+    public void addNode(Pos pos, Node node) {
+        if (nodes.get() == null) {
+             nodes.set(FXCollections.observableHashMap());
+        }
+
+        // force map invalidation event by completely replacing the list instead of just
+        // adding the new node to the existing list
+        final List<Node> nodes = this.nodes.computeIfAbsent(pos, p -> new ArrayList<>());
+        final List<Node> newNodes = new ArrayList<>(nodes);
+        newNodes.add(node);
+
+        this.nodes.put(pos, newNodes);
+    }
+
+    /**
+     * Removes the given node from the entry view.
+     *
+     * @param node the node to remove
+     */
+    public void removeNode(Node node) {
+        if (nodes.get() != null) {
+            nodes.values().forEach(nodesList -> nodesList.remove(node));
+        }
     }
 }
