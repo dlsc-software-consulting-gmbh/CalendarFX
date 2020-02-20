@@ -44,6 +44,20 @@ public class Marker {
         this.title.set(title);
     }
 
+    private final StringProperty style = new SimpleStringProperty(this, "style");
+
+    public final String getStyle() {
+        return style.get();
+    }
+
+    public final StringProperty styleProperty() {
+        return style;
+    }
+
+    public final void setStyle(String style) {
+        this.style.set(style);
+    }
+
     private final ListProperty<String> styleClass = new SimpleListProperty<>(this, "styleClass", FXCollections.observableArrayList());
 
     public final ObservableList<String> getStyleClass() {

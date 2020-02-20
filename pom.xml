@@ -45,6 +45,7 @@
         <module>CalendarFXView</module>
         <module>CalendarFXGoogle</module>
         <module>CalendarFXApp</module>
+        <module>CalendarFXResourceApp</module>
         <module>CalendarFXiCal</module>
         <module>CalendarFXWeather</module>
     </modules>

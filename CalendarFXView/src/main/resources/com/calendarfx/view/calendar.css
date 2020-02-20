@@ -1977,7 +1977,8 @@
 }
 
 .resource-calendar-view .header-background {
-    -fx-background-color: rgba(255, 255, 255, .8);
+    -fx-background-color: grey, white;
+    -fx-background-insets: 0, 0 0 1 0;
 }
 
 .resource-calendar-view .marker-line {

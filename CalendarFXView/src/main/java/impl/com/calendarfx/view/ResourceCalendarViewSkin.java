@@ -117,7 +117,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
             slider = new PlusMinusSlider();
             slider.setOrientation(Orientation.VERTICAL);
-            gridPane.add(slider, columnCounts + 2, 1);
+            gridPane.add(slider, columnCounts + 1, 1);
             slider.setOnValueChanged(evt -> {
                 // exponential function to increase scrolling speed when reaching ends of slider
                 final double base = slider.getValue();
@@ -283,6 +283,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         public MarkerLine(Marker marker) {
             this.marker = marker;
 
+            styleProperty().bind(marker.styleProperty());
             marker.styleClassProperty().addListener((Observable it) -> updateStyleClass());
             updateStyleClass();
 
