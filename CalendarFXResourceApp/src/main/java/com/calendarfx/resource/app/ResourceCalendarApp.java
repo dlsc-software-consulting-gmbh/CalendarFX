@@ -108,11 +108,13 @@ public class ResourceCalendarApp extends Application {
         Marker marker1 = new Marker();
         marker1.setTitle("My Marker 1");
         marker1.setTime(ZonedDateTime.now());
+        marker1.setMovable(false);
         resourceCalendarView.getMarkers().add(marker1);
 
         Marker marker2 = new Marker();
         marker2.setTitle("My Marker 2");
         marker2.setTime(ZonedDateTime.now().plusHours(1));
+        marker2.setMovable(false);
         marker2.getStyleClass().add("marker2");
         resourceCalendarView.getMarkers().add(marker2);
 

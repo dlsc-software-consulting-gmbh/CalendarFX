@@ -141,11 +141,24 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         private double startY;
 
         public CustomGridPane() {
+
+            addEventFilter(MouseEvent.MOUSE_MOVED, evt -> {
+                if (evt.getTarget() instanceof MarkerLine) {
+                    final MarkerLine markerLine = (MarkerLine) evt.getTarget();
+                    if (markerLine.getMarker().isMovable()) {
+                        markerLine.setCursor(Cursor.HAND);
+                    }
+                }
+            });
+
             addEventFilter(MouseEvent.MOUSE_PRESSED, evt -> {
                 startY = evt.getScreenY();
                 if (evt.getTarget() instanceof MarkerLine) {
-                    draggedMarkerLine = (MarkerLine) evt.getTarget();
-                    draggedMarkerLine.setCursor(Cursor.CLOSED_HAND);
+                    final MarkerLine markerLine = (MarkerLine) evt.getTarget();
+                    if (markerLine.getMarker().isMovable()) {
+                        draggedMarkerLine = (MarkerLine) evt.getTarget();
+                        draggedMarkerLine.setCursor(Cursor.CLOSED_HAND);
+                    }
                 }
             });
 
@@ -286,8 +299,6 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
             styleProperty().bind(marker.styleProperty());
             marker.styleClassProperty().addListener((Observable it) -> updateStyleClass());
             updateStyleClass();
-
-            setCursor(Cursor.HAND);
 
             Tooltip tooltip = new Tooltip();
             tooltip.textProperty().bind(marker.titleProperty());

@@ -1,7 +1,9 @@
 package com.calendarfx.model;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +16,20 @@ import java.time.ZonedDateTime;
 public class Marker {
 
     public Marker() {
+    }
+
+    private final BooleanProperty movable = new SimpleBooleanProperty(this, "movable", true);
+
+    public final boolean isMovable() {
+        return movable.get();
+    }
+
+    public final BooleanProperty movableProperty() {
+        return movable;
+    }
+
+    public final void setMovable(boolean movable) {
+        this.movable.set(movable);
     }
 
     private final ObjectProperty<ZonedDateTime> time = new SimpleObjectProperty<>(this, "time", ZonedDateTime.now());
