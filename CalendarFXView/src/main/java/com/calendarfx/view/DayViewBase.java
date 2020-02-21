@@ -71,8 +71,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
                 if (change.getKey().equals("show.current.time.marker")) {
                     Boolean show = (Boolean) change.getValueAdded();
                     showCurrentTimeMarker.set(show);
-                } else if (change.getKey().equals(
-                        "show.current.time.today.marker")) {
+                } else if (change.getKey().equals("show.current.time.today.marker")) {
                     Boolean show = (Boolean) change.getValueAdded();
                     showCurrentTimeTodayMarker.set(show);
                 } else if (change.getKey().equals("earliest.time.used")) {
@@ -257,8 +256,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         HIDE
     }
 
-    private final ObjectProperty<EarlyLateHoursStrategy> earlyLateHoursStrategy = new SimpleObjectProperty<>(
-            this, "earlyLateHoursStrategy", EarlyLateHoursStrategy.SHOW);
+    private final ObjectProperty<EarlyLateHoursStrategy> earlyLateHoursStrategy = new SimpleObjectProperty<>(this, "earlyLateHoursStrategy", EarlyLateHoursStrategy.SHOW);
 
     /**
      * Specifies a strategy for dealing with early / late hours. The idea behind
@@ -455,8 +453,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return hourHeightProperty().get();
     }
 
-    private final DoubleProperty hourHeightCompressed = new SimpleDoubleProperty(
-            this, "hourHeightCompressed", 10);
+    private final DoubleProperty hourHeightCompressed = new SimpleDoubleProperty(this, "hourHeightCompressed", 10);
 
     /**
      * The height used for each early / late hour shown by the view when using
@@ -523,8 +520,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return showCurrentTimeMarker.get();
     }
 
-    private final ReadOnlyBooleanWrapper showCurrentTimeTodayMarker = new ReadOnlyBooleanWrapper(
-            this, "showCurrentTimeTodayMarker", false);
+    private final ReadOnlyBooleanWrapper showCurrentTimeTodayMarker = new ReadOnlyBooleanWrapper(this, "showCurrentTimeTodayMarker", false);
 
     /**
      * A read-only property used to indicate whether the view should show the

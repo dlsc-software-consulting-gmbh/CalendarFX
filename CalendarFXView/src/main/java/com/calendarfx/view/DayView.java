@@ -111,8 +111,7 @@ public class DayView extends DayViewBase {
 		return Optional.empty();
 	}
 
-	private final ObjectProperty<Callback<Entry<?>, DayEntryView>> entryViewFactory = new SimpleObjectProperty<>(
-			this, "entryViewFactory");
+	private final ObjectProperty<Callback<Entry<?>, DayEntryView>> entryViewFactory = new SimpleObjectProperty<>(this, "entryViewFactory");
 
 	/**
 	 * A factory used for creating instances of {@link DayEntryView} for each
@@ -139,8 +138,7 @@ public class DayView extends DayViewBase {
 	 * @param factory
 	 *            the entry view factory
 	 */
-	public final void setEntryViewFactory(
-			Callback<Entry<?>, DayEntryView> factory) {
+	public final void setEntryViewFactory(Callback<Entry<?>, DayEntryView> factory) {
 		requireNonNull(factory);
 		entryViewFactoryProperty().set(factory);
 	}

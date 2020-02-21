@@ -28,8 +28,7 @@ public final class Resolver {
     protected Resolver() {
     }
 
-    public static <T extends EntryViewBase<?>> List<Placement> resolve(
-            List<T> entryViews) {
+    public static <T extends EntryViewBase<?>> List<Placement> resolve(List<T> entryViews) {
         Collections.sort(entryViews);
 
         List<Placement> placements = new ArrayList<>();

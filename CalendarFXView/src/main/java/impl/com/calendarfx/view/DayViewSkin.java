@@ -25,7 +25,8 @@ import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
-import com.calendarfx.view.EntryViewBase.LayoutStrategy;
+import com.calendarfx.view.EntryViewBase.AlignmentStrategy;
+import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
 import com.calendarfx.view.EntryViewBase.Position;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.Resolver;
@@ -588,8 +589,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                     y2 = dayView.getLocation(entry.getEndTime());
                 }
 
-                if (view.getLayoutStrategy().equals(LayoutStrategy.COMPUTE_PREF_SIZE)) {
+                if (view.getHeightLayoutStrategy().equals(HeightLayoutStrategy.COMPUTE_PREF_SIZE)) {
+
                     y2 = y1 + view.prefHeight(contentWidth);
+
                 }
 
                 if (!dayView.isScrollingEnabled()) {
@@ -634,10 +637,28 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 double columnWidth = contentWidth / placement.getColumnCount();
                 double x = contentX + placement.getColumnIndex() * columnWidth;
 
+                double w = columnWidth;
+
+                if (!view.getAlignmentStrategy().equals(AlignmentStrategy.FILL)) {
+                    w = view.prefWidth(-1);
+                }
+
+                switch (view.getAlignmentStrategy()) {
+                    case ALIGN_RIGHT:
+                        x = columnWidth - w;
+                        break;
+                    case ALIGN_CENTER:
+                        x = x + columnWidth / 2 - w / 2;
+                        break;
+                    case ALIGN_LEFT:
+                    case FILL:
+                    default:
+                        break;
+                }
                 /*
                  * -2 on height to always have a gap between entries
                  */
-                view.resizeRelocate(snapPositionX(x), snapPositionY(y1), snapSizeX(columnWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
+                view.resizeRelocate(snapPositionX(x), snapPositionY(y1), snapSizeX(w), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
             }
         }
     }

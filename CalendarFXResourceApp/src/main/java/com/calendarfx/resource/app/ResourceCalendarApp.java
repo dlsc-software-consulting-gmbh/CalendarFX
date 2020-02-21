@@ -107,8 +107,29 @@ public class ResourceCalendarApp extends Application {
 
             DayView dayView = resourceCalendarView.getDayView(resource);
             dayView.getCalendarSources().setAll(source);
+
+            /* PSI:
+             * Setting a custom entry view factory will allow you to set icons on your entry
+             * views based on state information provided by your model.
+             */
             dayView.setEntryViewFactory(entry -> {
+
                 DayEntryView entryView = new DayEntryView(entry);
+
+                /* PSI:
+                 * Here you can experiment with the new alignment strategy that allows
+                 * applications to have entry views show up on the left, the center, or
+                 * the right of a day view with a given width.
+                 */
+                // entryView.setPrefWidth(10);
+                // entryView.setAlignmentStrategy(AlignmentStrategy.ALIGN_LEFT);
+
+                /* PSI:
+                 * Here you can experiment with the new height layout strategy that allows
+                 * applications to have entry views shop up with their preferred height instead
+                 * of a height determined by their start and end time.
+                 */
+                // entryView.setHeightLayoutStrategy(HeightLayoutStrategy.COMPUTE_PREF_SIZE);
 
                 if (Math.random() > .7) {
                     final FontIcon node = new FontIcon(FontAwesome.ERASER);
