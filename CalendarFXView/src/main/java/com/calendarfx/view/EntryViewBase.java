@@ -850,37 +850,70 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
 
     /**
-     * Different strategies for determining the size of an entry view. Normally
+     * Different strategies for determining the height of an entry view. Normally
      * the height of an entry is based on its start and end times. But sometimes
      * we might want to simply use the start time for its location and the required
      * height based on its content (e.g. the labels inside the entry view). The layout
-     * strategy {@link LayoutStrategy#COMPUTE_PREF_SIZE} disables changes to the end
+     * strategy {@link HeightLayoutStrategy#COMPUTE_PREF_SIZE} disables changes to the end
      * time of the entry as the bottom y coordiante of the view would not accurately
      * represent the end time of the entry.
      */
-    public enum LayoutStrategy {
+    public enum HeightLayoutStrategy {
         USE_START_AND_END_TIME,
-        COMPUTE_PREF_SIZE
+        COMPUTE_PREF_SIZE,
     }
 
-    private final ObjectProperty<LayoutStrategy> layoutStrategy = new SimpleObjectProperty<>(this, "layoutStrategy", LayoutStrategy.USE_START_AND_END_TIME);
+    private final ObjectProperty<HeightLayoutStrategy> heightLayoutStrategy = new SimpleObjectProperty<>(this, "heightLayoutStrategy", HeightLayoutStrategy.USE_START_AND_END_TIME);
 
-    public final LayoutStrategy getLayoutStrategy() {
-        return layoutStrategy.get();
+    public final HeightLayoutStrategy getHeightLayoutStrategy() {
+        return heightLayoutStrategy.get();
     }
 
     /**
-     * Stores the layout strategy that will be used for this entry view. For
-     * more information see {@link LayoutStrategy}.
+     * Stores the height layout strategy that will be used for this entry view. For
+     * more information see {@link HeightLayoutStrategy}.
      *
-     * @return the entry view's layout strategy
+     * @return the entry view's height layout strategy
      */
-    public final ObjectProperty<LayoutStrategy> layoutStrategyProperty() {
-        return layoutStrategy;
+    public final ObjectProperty<HeightLayoutStrategy> heightLayoutStrategyProperty() {
+        return heightLayoutStrategy;
     }
 
-    public final void setLayoutStrategy(LayoutStrategy layoutStrategy) {
-        this.layoutStrategy.set(layoutStrategy);
+    public final void setHeightLayoutStrategy(HeightLayoutStrategy heightLayoutStrategy) {
+        this.heightLayoutStrategy.set(heightLayoutStrategy);
+    }
+
+    /**
+     * Different strategies for aligning the entry view inside its day view. Normally
+     * an entry view fills the entire width of a {@link DayView} but special cases might
+     * require the entry to simply use the preferred width of the view and align the
+     * entry's view on the left, the center, or the middle.
+     */
+    public enum AlignmentStrategy {
+        FILL,
+        ALIGN_LEFT,
+        ALIGN_RIGHT,
+        ALIGN_CENTER
+    }
+
+    private final ObjectProperty<AlignmentStrategy> alignmentStrategy = new SimpleObjectProperty<>(this, "alignmentStrategy", AlignmentStrategy.FILL);
+
+    public final AlignmentStrategy getAlignmentStrategy() {
+        return alignmentStrategy.get();
+    }
+
+    /**
+     * Stores the alignment strategy that will be used for this entry view. For
+     * more information see {@link AlignmentStrategy}.
+     *
+     * @return the entry view's alignment strategy
+     */
+    public final ObjectProperty<AlignmentStrategy> alignmentStrategyProperty() {
+        return alignmentStrategy;
+    }
+
+    public final void setAlignmentStrategy(AlignmentStrategy alignmentStrategy) {
+        this.alignmentStrategy.set(alignmentStrategy);
     }
 
     /**
@@ -888,8 +921,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * entry view. Delegates to {@link Entry#intersects(Entry)}.
      *
      * @param otherView the other view to check
-     * @return true if the time intervals of the two entries / views overlap
-     * each other
+     * @return true if the time intervals of the two entries / views overlap each other
      */
     public final boolean intersects(EntryViewBase<?> otherView) {
         return getEntry().intersects(otherView.getEntry());
