@@ -23,6 +23,7 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.model.Marker;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
+import com.calendarfx.view.EntryViewBase.LayoutStrategy;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -109,6 +110,7 @@ public class ResourceCalendarApp extends Application {
             dayView.getCalendarSources().setAll(source);
             dayView.setEntryViewFactory(entry -> {
                 DayEntryView entryView = new DayEntryView(entry);
+                entryView.setLayoutStrategy(LayoutStrategy.COMPUTE_PREF_SIZE);
 
                 if (Math.random() > .7) {
                     final FontIcon node = new FontIcon(FontAwesome.ERASER);

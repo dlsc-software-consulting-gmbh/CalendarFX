@@ -25,11 +25,13 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -844,6 +846,41 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      */
     public final boolean isSelected() {
         return selectedProperty().get();
+    }
+
+
+    /**
+     * Different strategies for determining the size of an entry view. Normally
+     * the height of an entry is based on its start and end times. But sometimes
+     * we might want to simply use the start time for its location and the required
+     * height based on its content (e.g. the labels inside the entry view). The layout
+     * strategy {@link LayoutStrategy#COMPUTE_PREF_SIZE} disables changes to the end
+     * time of the entry as the bottom y coordiante of the view would not accurately
+     * represent the end time of the entry.
+     */
+    public enum LayoutStrategy {
+        USE_START_AND_END_TIME,
+        COMPUTE_PREF_SIZE
+    }
+
+    private final ObjectProperty<LayoutStrategy> layoutStrategy = new SimpleObjectProperty<>(this, "layoutStrategy", LayoutStrategy.USE_START_AND_END_TIME);
+
+    public final LayoutStrategy getLayoutStrategy() {
+        return layoutStrategy.get();
+    }
+
+    /**
+     * Stores the layout strategy that will be used for this entry view. For
+     * more information see {@link LayoutStrategy}.
+     *
+     * @return the entry view's layout strategy
+     */
+    public final ObjectProperty<LayoutStrategy> layoutStrategyProperty() {
+        return layoutStrategy;
+    }
+
+    public final void setLayoutStrategy(LayoutStrategy layoutStrategy) {
+        this.layoutStrategy.set(layoutStrategy);
     }
 
     /**

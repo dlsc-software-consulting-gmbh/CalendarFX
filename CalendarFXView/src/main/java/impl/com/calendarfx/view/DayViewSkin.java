@@ -25,6 +25,7 @@ import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
+import com.calendarfx.view.EntryViewBase.LayoutStrategy;
 import com.calendarfx.view.EntryViewBase.Position;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.Resolver;
@@ -585,7 +586,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
                     y1 = dayView.getLocation(entry.getStartTime());
                     y2 = dayView.getLocation(entry.getEndTime());
+                }
 
+                if (view.getLayoutStrategy().equals(LayoutStrategy.COMPUTE_PREF_SIZE)) {
+                    y2 = y1 + view.prefHeight(contentWidth);
                 }
 
                 if (!dayView.isScrollingEnabled()) {

@@ -25,6 +25,7 @@ import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
+import com.calendarfx.view.EntryViewBase.LayoutStrategy;
 import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.WeekView;
 import javafx.event.EventHandler;
@@ -107,12 +108,12 @@ public class DayViewEditController {
         LOGGER.finer("y-coordinate inside entry view: " + y);
 
         if (y > dayEntryView.getHeight() - 5) {
-            if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_END))) {
+            if (dayEntryView.getLayoutStrategy().equals(LayoutStrategy.USE_START_AND_END_TIME) && dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_END))) {
                 dragMode = DraggedEntry.DragMode.END_TIME;
                 handle = Handle.BOTTOM;
             }
         } else if (y < 5) {
-            if (dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_START))) {
+            if (dayEntryView.getLayoutStrategy().equals(LayoutStrategy.USE_START_AND_END_TIME) && dayView.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayView, entry, DateControl.EditOperation.CHANGE_START))) {
                 dragMode = DraggedEntry.DragMode.START_TIME;
                 handle = Handle.TOP;
             }
