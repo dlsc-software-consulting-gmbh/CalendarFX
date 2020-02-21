@@ -119,15 +119,17 @@ public class ResourceCalendarApp extends Application {
                 /* PSI:
                  * Here you can experiment with the new alignment strategy that allows
                  * applications to have entry views show up on the left, the center, or
-                 * the right of a day view with a given width.
+                 * the right of a day view with a given width. This is needed to support
+                 * "vertical bars".
                  */
                 // entryView.setPrefWidth(10);
                 // entryView.setAlignmentStrategy(AlignmentStrategy.ALIGN_LEFT);
 
                 /* PSI:
                  * Here you can experiment with the new height layout strategy that allows
-                 * applications to have entry views shop up with their preferred height instead
-                 * of a height determined by their start and end time.
+                 * applications to have entry views show up with their preferred height instead
+                 * of a height determined by their start and end time. This is required to
+                 * implement the Event Monitoring Panel.
                  */
                 // entryView.setHeightLayoutStrategy(HeightLayoutStrategy.COMPUTE_PREF_SIZE);
 
