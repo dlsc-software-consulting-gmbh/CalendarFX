@@ -107,6 +107,8 @@ public class ResourceCalendarApp extends Application {
 
             DayView dayView = resourceCalendarView.getDayView(resource);
             dayView.getCalendarSources().setAll(source);
+            dayView.setEnableCurrentTimeMarker(true);
+            dayView.setEnableCurrentTimeCircle(i == 0);
 
             /* PSI:
              * Setting a custom entry view factory will allow you to set icons on your entry
@@ -167,7 +169,7 @@ public class ResourceCalendarApp extends Application {
 
         Marker marker1 = new Marker();
         marker1.setTitle("My Marker 1");
-        marker1.setTime(ZonedDateTime.now());
+        marker1.setTime(ZonedDateTime.now().minusHours(1));
         marker1.setMovable(false);
         resourceCalendarView.getMarkers().add(marker1);
 

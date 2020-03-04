@@ -108,7 +108,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         currentTimeCircle.setManaged(false);
         currentTimeCircle.setMouseTransparent(true);
         currentTimeCircle.setOpacity(0);
-        currentTimeCircle.visibleProperty().bind(view.enableCurrentTimeMarkerProperty());
+        currentTimeCircle.visibleProperty().bind(view.enableCurrentTimeCircleProperty());
         getChildren().add(currentTimeCircle);
 
         currentTimeLine = new Line();

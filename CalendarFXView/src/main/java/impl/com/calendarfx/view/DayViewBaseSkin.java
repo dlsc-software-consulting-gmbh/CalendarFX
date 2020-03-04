@@ -31,10 +31,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
     public DayViewBaseSkin(T view) {
         super(view);
 
-        InvalidationListener layoutListener = it -> {
-//            getSkinnable().autosize();
-            getSkinnable().requestLayout();
-        };
+        InvalidationListener layoutListener = it -> getSkinnable().requestLayout();
 
         view.timeProperty().addListener(layoutListener);
         view.hourHeightProperty().addListener(layoutListener);

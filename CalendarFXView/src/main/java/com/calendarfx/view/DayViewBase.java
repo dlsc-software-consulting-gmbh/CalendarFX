@@ -548,6 +548,37 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return showCurrentTimeTodayMarker.get();
     }
 
+    private final BooleanProperty enableCurrentTimeCircle = new SimpleBooleanProperty(this, "enableCurrentTimeCircle", true);
+
+    /**
+     * A property used to signal whether the application wants to use the red (default) dot
+     * used for marking the current system time. The default value is true, so the dot will be
+     * shown.
+     *
+     * @return true if the current time will be marked with a red dot
+     */
+    public final BooleanProperty enableCurrentTimeCircleProperty() {
+        return enableCurrentTimeCircle;
+    }
+
+    /**
+     * Returns the value of {@link #enableCurrentTimeCircleProperty}.
+     *
+     * @return true if the current time will be marked with a red dot
+     */
+    public final boolean isEnableCurrentCircleMarker() {
+        return enableCurrentTimeCircle.get();
+    }
+
+    /**
+     * Sets the value of {@link #enableCurrentTimeCircleProperty}.
+     *
+     * @param enable if true the current time will be marked with a red dot
+     */
+    public final void setEnableCurrentTimeCircle(boolean enable) {
+        enableCurrentTimeCircle.set(enable);
+    }
+
     private final BooleanProperty enableCurrentTimeMarker = new SimpleBooleanProperty(this, "enableCurrentTimeMarker", true);
 
     /**

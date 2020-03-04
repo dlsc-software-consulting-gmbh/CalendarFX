@@ -92,12 +92,14 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             resourceCalendarView.getResources().add(resource);
 
             DayView dayView = resourceCalendarView.getDayView(resource);
+            dayView.setEnableCurrentTimeMarker(true);
+            dayView.setEnableCurrentTimeCircle(i == 0);
             dayView.getCalendarSources().setAll(source);
         }
 
         Marker marker1 = new Marker();
         marker1.setTitle("My Marker 1");
-        marker1.setTime(ZonedDateTime.now());
+        marker1.setTime(ZonedDateTime.now().minusHours(1));
         resourceCalendarView.getMarkers().add(marker1);
 
         Marker marker2 = new Marker();
