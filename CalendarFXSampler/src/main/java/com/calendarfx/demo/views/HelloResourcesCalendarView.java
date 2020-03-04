@@ -65,6 +65,11 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
 
             VBox box = new VBox(5, label1, label2, label3, label4);
             box.setFillWidth(true);
+
+            if (resource.equals("Resource 1")) {
+                box.setPrefWidth(400);
+            }
+
             return box;
         });
 

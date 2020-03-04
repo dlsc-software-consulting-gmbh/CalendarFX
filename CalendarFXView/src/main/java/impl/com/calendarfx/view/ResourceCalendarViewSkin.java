@@ -36,6 +36,8 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
     private GridPane gridPane = new GridPane();
 
+    private HeaderGridPane headerGridPane = new HeaderGridPane();
+
     private CustomGridPane innerGridPane = new CustomGridPane();
 
     private TimeScaleView timeScaleView = new TimeScaleView();
@@ -66,58 +68,53 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         view.showScrollBarProperty().addListener(updateGridPaneListener);
         view.markersProperty().addListener(updateGridPaneListener);
 
+        view.showScrollBarProperty().addListener(it -> updateColumnConstraints());
+
+        updateColumnConstraints();
         updateView();
+    }
+
+    private void updateColumnConstraints() {
+        ColumnConstraints con1 = new ColumnConstraints();
+        con1.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        con1.setFillWidth(true);
+
+        ColumnConstraints con2 = new ColumnConstraints();
+        con2.setFillWidth(true);
+        con2.setHgrow(Priority.ALWAYS);
+
+        gridPane.getColumnConstraints().setAll(con1, con2);
+
+        if (getSkinnable().isShowScrollBar()) {
+            ColumnConstraints con3 = new ColumnConstraints();
+            con3.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            con3.setFillWidth(true);
+            gridPane.getColumnConstraints().add(con3);
+        }
     }
 
     private void updateView() {
         gridPane.getChildren().clear();
-        gridPane.getColumnConstraints().clear();
-
-        ColumnConstraints con = new ColumnConstraints();
-        con.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        con.setFillWidth(true);
-
-        gridPane.getColumnConstraints().add(con);
-
         gridPane.add(timeScaleView, 0, 1);
-
-        final int columnCounts = getSkinnable().getResources().size();
 
         Region header = new Region();
         header.getStyleClass().add("header-background");
         gridPane.add(header, 0, 0);
-        GridPane.setColumnSpan(header, columnCounts + 2);
+        GridPane.setColumnSpan(header, 3);
 
-        for (int i = 0; i < columnCounts; i++) {
-            con = new ColumnConstraints();
-            con.setHalignment(HPos.CENTER);
-            con.setFillWidth(true);
-            con.setHgrow(Priority.ALWAYS);
-            gridPane.getColumnConstraints().add(con);
+        // header
+        headerGridPane.updateView();
+        gridPane.add(headerGridPane, 1, 0);
+        GridPane.setFillWidth(headerGridPane, true);
 
-            T resource = getSkinnable().getResources().get(i);
-
-            Node columnHeader = getSkinnable().getHeaderFactory().call(resource);
-
-            gridPane.add(columnHeader, i + 1, 0);
-        }
-
+        // day views
+        innerGridPane.updateView();
         gridPane.add(innerGridPane, 1, 1);
-        GridPane.setColumnSpan(innerGridPane, columnCounts);
         GridPane.setFillWidth(innerGridPane, true);
 
-        innerGridPane.updateView();
-
         if (getSkinnable().isShowScrollBar()) {
-            // slider column
-            con = new ColumnConstraints();
-            con.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            con.setFillWidth(true);
-            gridPane.getColumnConstraints().add(con);
-
             slider = new PlusMinusSlider();
             slider.setOrientation(Orientation.VERTICAL);
-            gridPane.add(slider, columnCounts + 1, 1);
             slider.setOnValueChanged(evt -> {
                 // exponential function to increase scrolling speed when reaching ends of slider
                 final double base = slider.getValue();
@@ -125,6 +122,41 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
                 final double pixel = pow * -100;
                 getSkinnable().setScrollTime(getSkinnable().getZonedDateTimeAt(0, pixel));
             });
+
+            gridPane.add(slider, 2, 1);
+        }
+    }
+
+    public class HeaderGridPane extends GridPane {
+
+        public HeaderGridPane() {
+        }
+
+        private void updateView() {
+            getChildren().clear();
+            getColumnConstraints().clear();
+
+            final int columnCounts = getSkinnable().getResources().size();
+
+            for (int i = 0; i < columnCounts; i++) {
+                ColumnConstraints con = new ColumnConstraints();
+                con.setHalignment(HPos.CENTER);
+                con.setFillWidth(true);
+                con.setHgrow(Priority.ALWAYS);
+                con.setPercentWidth(100d / columnCounts);
+
+                getColumnConstraints().add(con);
+
+                T resource = getSkinnable().getResources().get(i);
+
+                Node resourceHeader = getSkinnable().getHeaderFactory().call(resource);
+
+                GridPane.setFillHeight(resourceHeader, true);
+                GridPane.setVgrow(resourceHeader, Priority.ALWAYS);
+
+                add(resourceHeader, i, 1);
+                GridPane.setRowSpan(resourceHeader, 1);
+            }
         }
     }
 
@@ -276,14 +308,16 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
                 con.setHalignment(HPos.CENTER);
                 con.setFillWidth(true);
                 con.setHgrow(Priority.ALWAYS);
-                innerGridPane.getColumnConstraints().add(con);
+                con.setPercentWidth(100d / columnCounts);
+
+                getColumnConstraints().add(con);
 
                 DayView dayView = getSkinnable().getDayView(resource);
 
                 GridPane.setFillHeight(dayView, true);
                 GridPane.setVgrow(dayView, Priority.ALWAYS);
 
-                innerGridPane.add(dayView, i, 1);
+                add(dayView, i, 1);
                 GridPane.setRowSpan(dayView, 1);
             }
         }
