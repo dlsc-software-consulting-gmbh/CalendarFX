@@ -38,7 +38,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
     private HeaderGridPane headerGridPane = new HeaderGridPane();
 
-    private CustomGridPane innerGridPane = new CustomGridPane();
+    private BodyGridPane bodyGridPane = new BodyGridPane();
 
     private TimeScaleView timeScaleView = new TimeScaleView();
 
@@ -108,9 +108,9 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         GridPane.setFillWidth(headerGridPane, true);
 
         // day views
-        innerGridPane.updateView();
-        gridPane.add(innerGridPane, 1, 1);
-        GridPane.setFillWidth(innerGridPane, true);
+        bodyGridPane.updateView();
+        gridPane.add(bodyGridPane, 1, 1);
+        GridPane.setFillWidth(bodyGridPane, true);
 
         if (getSkinnable().isShowScrollBar()) {
             slider = new PlusMinusSlider();
@@ -160,7 +160,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         }
     }
 
-    public class CustomGridPane extends GridPane {
+    public class BodyGridPane extends GridPane {
 
         private MarkerLine draggedMarkerLine;
 
@@ -172,7 +172,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         private double startY;
 
-        public CustomGridPane() {
+        public BodyGridPane() {
 
             addEventFilter(MouseEvent.MOUSE_MOVED, evt -> {
                 if (evt.getTarget() instanceof MarkerLine) {
