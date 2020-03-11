@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>3.0.10</version>
+            <version>${ical4j.version}</version>
         </dependency>
 
     </dependencies>

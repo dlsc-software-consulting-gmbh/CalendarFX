@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-weathericons-pack</artifactId>
-            <version>11.3.4</version>
+            <version>${ikonli.version}</version>
         </dependency>
 
     </dependencies>

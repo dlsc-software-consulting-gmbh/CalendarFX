@@ -17,9 +17,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>13.0.1</javafx.version>
-        <javafx.maven.plugin.version>0.0.3</javafx.maven.plugin.version>
-        <controlsfx.version>11.0.0</controlsfx.version>
+        <javafx.version>14</javafx.version>
+        <javafx.maven.plugin.version>0.0.4</javafx.maven.plugin.version>
+        <controlsfx.version>11.0.1</controlsfx.version>
+        <ical4j.version>3.0.15</ical4j.version>
+        <ikonli.version>11.3.5</ikonli.version>
     </properties>
 
     <licenses>
@@ -80,7 +82,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13</version>
             <scope>test</scope>
         </dependency>
 
@@ -105,7 +107,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.1</version>
                 <configuration>
                     <windowtitle>CalendarFX API</windowtitle>
                     <show>protected</show>

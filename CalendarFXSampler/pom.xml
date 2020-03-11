@@ -86,7 +86,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.0.0</version>
+            <version>${controlsfx.version}</version>
         </dependency>
 
     </dependencies>
