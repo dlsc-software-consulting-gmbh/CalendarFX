@@ -86,7 +86,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.0.0</version>
+            <version>${controlsfx.version}</version>
         </dependency>
 
     </dependencies>
@@ -99,6 +99,9 @@
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>com.calendarfx.demo.CalendarFXSampler</mainClass>
+                    <options>
+                        <option>-Dnet.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

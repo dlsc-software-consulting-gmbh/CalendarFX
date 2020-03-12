@@ -49,15 +49,25 @@
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>3.0.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>backport-util-concurrent</groupId>
-            <artifactId>backport-util-concurrent</artifactId>
-            <version>3.1</version>
+            <version>${ical4j.version}</version>
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>com.calendarfx.ical.ICalCalendarApp</mainClass>
+                    <options>
+                        <option>-Dnet.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache</option>
+                    </options>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

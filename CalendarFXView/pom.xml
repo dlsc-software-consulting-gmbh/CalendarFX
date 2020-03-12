@@ -31,25 +31,25 @@
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
-            <version>11.3.4</version>
+            <version>${ikonli.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-fontawesome-pack</artifactId>
-            <version>11.3.4</version>
+            <version>${ikonli.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>3.0.10</version>
+            <version>${ical4j.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.0.0</version>
+            <version>${controlsfx.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.openjfx</groupId>
@@ -94,7 +94,7 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.3</version>
+                <version>1.6.0</version>
 
                 <executions>
                     <execution>
@@ -116,7 +116,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -137,7 +137,7 @@
                     <windowtitle>CalendarFX API</windowtitle>
                     <detectLinks>false</detectLinks>
                     <links>
-                        <link>https://openjfx.io/javadoc/13/</link>
+                        <link>https://openjfx.io/javadoc/14/</link>
                     </links>
 
                     <additionalJOptions>
@@ -175,7 +175,7 @@
                     <dependency>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
-                        <version>7.0</version>
+                        <version>7.3.1</version>
                     </dependency>
                 </dependencies>
                 <executions>

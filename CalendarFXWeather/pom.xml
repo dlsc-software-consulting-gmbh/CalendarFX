@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-weathericons-pack</artifactId>
-            <version>11.3.4</version>
+            <version>${ikonli.version}</version>
         </dependency>
 
     </dependencies>
@@ -63,6 +63,9 @@
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>com.calendarfx.weather.WeatherApp</mainClass>
+                    <options>
+                        <option>-Dnet.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>
