@@ -22,13 +22,13 @@ import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.PeriodRule;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Uid;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Year;
@@ -36,10 +36,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 
@@ -81,17 +79,8 @@ public class ICalCalendar extends com.calendarfx.model.Calendar {
         try {
             startBatchUpdates();
 
-            /*
-             * Convert start and end times from new java.time API to old API and then to ical API :-)
-             */
-            Period period = new Period(
-                    new DateTime(Date.from(st.toInstant())),
-                    new DateTime(Date.from(et.toInstant())));
-
-            Predicate[] rules = new Predicate[]{new PeriodRule(period)};
-            Filter filter = new Filter(rules, Filter.MATCH_ANY);
-
-            @SuppressWarnings("unchecked")
+            Period<Instant> period = new Period<>(st.toInstant(), et.toInstant());
+            Filter<VEvent> filter = new Filter<>(new PeriodRule<>(period));
             Collection<VEvent> events = filter.filter(calendar.getComponents(Component.VEVENT));
 
             for (VEvent evt : events) {
@@ -104,11 +93,8 @@ public class ICalCalendar extends com.calendarfx.model.Calendar {
 
                 ICalCalendarEntry entry = new ICalCalendarEntry(evt);
 
-                ZonedDateTime entryStart = ZonedDateTime.ofInstant(evt.getStartDate().getDate().toInstant(), ZoneId.systemDefault());
-
-                ZonedDateTime entryEnd = ZonedDateTime.ofInstant(evt
-                                .getEndDate().getDate().toInstant(),
-                        ZoneId.systemDefault());
+                ZonedDateTime entryStart = ZonedDateTime.ofInstant(Instant.from(evt.getStartDate().getDate()), ZoneId.systemDefault());
+                ZonedDateTime entryEnd = ZonedDateTime.ofInstant(Instant.from(evt.getEndDate().getDate()), ZoneId.systemDefault());
 
                 if (entryEnd.toLocalDate().isAfter(entryStart.toLocalDate())) {
                     entryEnd = entryEnd.minusDays(1);

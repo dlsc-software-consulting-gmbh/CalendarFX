@@ -26,7 +26,6 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollBar;
-import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
@@ -37,7 +36,6 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Objects;
@@ -75,7 +73,7 @@ public class Util {
                                               LocalDate startDate) {
 
         try {
-            Recur rule = new Recur(rrule.replaceFirst("^RRULE:", ""));
+            Recur<LocalDate> rule = new Recur<>(rrule.replaceFirst("^RRULE:", ""));
             StringBuilder sb = new StringBuilder();
 
             String granularity = "";
@@ -172,14 +170,13 @@ public class Util {
                     sb.append(MessageFormat.format(Messages.getString("Util.TIMES"), count));
                 }
             } else {
-                Date until = rule.getUntil();
+                LocalDate until = rule.getUntil();
                 if (until != null) {
-                    LocalDate localDate = until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     sb.append(
                             MessageFormat.format(Messages.getString("Util.UNTIL_DATE"),
                                     DateTimeFormatter
                                             .ofLocalizedDate(FormatStyle.LONG)
-                                            .format(localDate)));
+                                            .format(until)));
                 }
             }
 
