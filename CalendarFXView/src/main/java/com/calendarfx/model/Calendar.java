@@ -31,13 +31,13 @@ import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import net.fortuna.ical4j.model.Recur;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -353,7 +353,7 @@ public class Calendar implements EventTarget {
                         addEntryToResult(result, recurrence, startDate, endDate);
                     }
 
-                } catch (ParseException e) {
+                } catch (IllegalArgumentException | DateTimeParseException e) {
                     e.printStackTrace();
                 }
             } else {

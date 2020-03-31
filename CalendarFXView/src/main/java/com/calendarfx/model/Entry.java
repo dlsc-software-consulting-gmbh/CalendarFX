@@ -37,13 +37,13 @@ import javafx.collections.ObservableMap;
 import net.fortuna.ical4j.model.Recur;
 import org.controlsfx.control.PropertySheet.Item;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -693,7 +693,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                         try {
                             Recur<LocalDate> recur = new Recur<>(newRecurrence.replaceFirst("^RRULE:", ""));
                             setRecurrenceEnd(Objects.requireNonNullElse(recur.getUntil(), LocalDate.MAX));
-                        } catch (ParseException e) {
+                        } catch (IllegalArgumentException | DateTimeParseException e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -1520,7 +1520,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                     return true;
                 }
             }
-        } catch (ParseException ex) {
+        } catch (IllegalArgumentException | DateTimeParseException ex) {
             ex.printStackTrace();
         }
 

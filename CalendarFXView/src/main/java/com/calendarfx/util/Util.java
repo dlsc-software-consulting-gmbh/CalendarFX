@@ -33,10 +33,10 @@ import net.fortuna.ical4j.model.Recur.Frequency;
 
 import java.lang.ref.WeakReference;
 import java.text.MessageFormat;
-import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
 import java.util.Objects;
 
@@ -181,7 +181,7 @@ public class Util {
             }
 
             return sb.toString();
-        } catch (ParseException e) {
+        } catch (IllegalArgumentException | DateTimeParseException e) {
             e.printStackTrace();
             return Messages.getString("Util.INVALID_RULE");
         }

@@ -42,12 +42,12 @@ import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
 import net.fortuna.ical4j.model.WeekDay.Day;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.logging.Level;
@@ -369,7 +369,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
             summary.setText(Util.convertRFC2445ToText(rule,
                     getSkinnable().getStartDate()));
-        } catch (ParseException e) {
+        } catch (IllegalArgumentException | DateTimeParseException e) {
             e.printStackTrace();
         }
 
