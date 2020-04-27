@@ -313,8 +313,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         FIXED_HOUR_COUNT
     }
 
-    private final ObjectProperty<HoursLayoutStrategy> hoursLayoutStrategy = new SimpleObjectProperty<>(
-            this, "hoursLayoutStrategy", HoursLayoutStrategy.FIXED_HOUR_COUNT);
+    private final ObjectProperty<HoursLayoutStrategy> hoursLayoutStrategy = new SimpleObjectProperty<>(this, "hoursLayoutStrategy", HoursLayoutStrategy.FIXED_HOUR_COUNT);
 
     /**
      * The layout strategy used by this view for showing hours. The view can
@@ -347,8 +346,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return hoursLayoutStrategy.get();
     }
 
-    private final IntegerProperty visibleHours = new SimpleIntegerProperty(
-            this, "visibleHours", 10);
+    private final IntegerProperty visibleHours = new SimpleIntegerProperty(this, "visibleHours", 10);
 
     /**
      * The number of visible hours that the application wants to present to the
@@ -438,8 +436,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      */
     public final void setHourHeight(double height) {
         if (height < 1) {
-            throw new IllegalArgumentException(
-                    "height must be larger than 0 but was " + height);
+            throw new IllegalArgumentException("height must be larger than 0 but was " + height);
         }
         hourHeightProperty().set(height);
     }
@@ -473,8 +470,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      */
     public final void setHourHeightCompressed(double height) {
         if (height < 1) {
-            throw new IllegalArgumentException(
-                    "height must be larger than 0 but was " + height);
+            throw new IllegalArgumentException("height must be larger than 0 but was " + height);
         }
         hourHeightCompressedProperty().set(height);
     }
@@ -490,8 +486,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
     // Current time marker support.
 
-    private final ReadOnlyBooleanWrapper showCurrentTimeMarker = new ReadOnlyBooleanWrapper(
-            this, "showCurrentTimeMarker", false);
+    private final ReadOnlyBooleanWrapper showCurrentTimeMarker = new ReadOnlyBooleanWrapper(this, "showCurrentTimeMarker", false);
 
     /**
      * A read-only property used to indicate whether the view should show the
