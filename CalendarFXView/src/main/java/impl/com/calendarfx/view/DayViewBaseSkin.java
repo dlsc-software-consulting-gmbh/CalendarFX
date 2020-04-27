@@ -26,8 +26,6 @@ import java.time.temporal.ChronoUnit;
 @SuppressWarnings("javadoc")
 public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
 
-    private static final double MILLIS_PER_HOUR = 3_600_000d;
-
     public DayViewBaseSkin(T view) {
         super(view);
 
@@ -49,9 +47,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
         view.setOnScroll(evt -> {
             if (view.isScrollingEnabled()) {
                 if (evt.isShortcutDown()) {
-                    view.setHourHeight(
-                            Math.min(getSkinnable().getMaxHourHeight(),
-                                    Math.max(getSkinnable().getMinHourHeight(), view.getHourHeight() + evt.getDeltaY())));
+                    view.setHourHeight(Math.min(getSkinnable().getMaxHourHeight(), Math.max(getSkinnable().getMinHourHeight(), view.getHourHeight() + evt.getDeltaY())));
                 } else {
                     view.setScrollTime(getSkinnable().getZonedDateTimeAt(0, -evt.getDeltaY()));
                 }

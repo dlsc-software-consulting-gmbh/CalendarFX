@@ -93,7 +93,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
 
-    private Entry<?> entry;
+    private final Entry<?> entry;
 
     private final ListChangeListener<? super String> styleListener = change -> {
         while (change.next()) {
@@ -230,9 +230,9 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         return entry;
     }
 
-    private InvalidationListener calendarListener = it -> bindVisibility();
+    private final InvalidationListener calendarListener = it -> bindVisibility();
 
-    private WeakInvalidationListener weakCalendarListener = new WeakInvalidationListener(calendarListener);
+    private final WeakInvalidationListener weakCalendarListener = new WeakInvalidationListener(calendarListener);
 
     private void bindEntry(Entry<?> entry) {
         setStartDate(entry.getStartDate());
@@ -357,24 +357,20 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         this.enableBounce.set(enableBounce);
     }
 
-    private InvalidationListener selectionListener = it -> updateSelection();
+    private final InvalidationListener selectionListener = it -> updateSelection();
 
-    private WeakInvalidationListener weakSelectionListener = new WeakInvalidationListener(selectionListener);
+    private final WeakInvalidationListener weakSelectionListener = new WeakInvalidationListener(selectionListener);
 
-    private InvalidationListener draggedListener = it -> updateDragged();
+    private final InvalidationListener draggedListener = it -> updateDragged();
 
-    private WeakInvalidationListener weakDraggedListener = new WeakInvalidationListener(draggedListener);
+    private final WeakInvalidationListener weakDraggedListener = new WeakInvalidationListener(draggedListener);
 
     private void updateSelection() {
         DateControl control = getDateControl();
         if (control != null) {
             Entry<?> entry = getEntry();
 
-            if (control.getSelections().contains(entry)) {
-                selected.set(true);
-            } else {
-                selected.set(false);
-            }
+            selected.set(control.getSelections().contains(entry));
         }
     }
 
@@ -888,6 +884,14 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * an entry view fills the entire width of a {@link DayView} but special cases might
      * require the entry to simply use the preferred width of the view and align the
      * entry's view on the left, the center, or the middle.
+     * <p>
+     *     If the time intervals of two entries are overlapping then the entries might
+     *     be placed in two columns. The alignment strategry would then determine the layout
+     *     of the entry within its column.
+     * </p>
+     *
+     * @see #setAlignmentStrategy(AlignmentStrategy)
+     * @see DayViewBase#setAutoLayout(boolean)
      */
     public enum AlignmentStrategy {
         FILL,

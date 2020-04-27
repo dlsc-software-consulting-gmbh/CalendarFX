@@ -64,19 +64,19 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     private static final String HALF_HOUR_LINE_STYLE_CLASS = "half-hour-line";
     private static final String FULL_HOUR_LINE_STYLE_CLASS = "full-hour-line";
 
-    private List<Line> lines = new ArrayList<>();
+    private final List<Line> lines = new ArrayList<>();
 
-    private DataLoader dataLoader = new DataLoader(this);
+    private final DataLoader dataLoader = new DataLoader(this);
 
-    private Circle currentTimeCircle;
+    private final Circle currentTimeCircle;
 
-    private Line currentTimeLine;
+    private final Line currentTimeLine;
 
     private DayEntryView draggedEntryView;
 
-    private Region earlyHoursRegion;
+    private final Region earlyHoursRegion;
 
-    private Region lateHoursRegion;
+    private final Region lateHoursRegion;
 
     private LocalDate displayedDate;
 
@@ -249,9 +249,9 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         return isShowingTimeMarker();
     }
 
-    private InvalidationListener layoutListener = it -> getSkinnable().requestLayout();
+    private final InvalidationListener layoutListener = it -> getSkinnable().requestLayout();
 
-    private WeakInvalidationListener weakLayoutListener = new WeakInvalidationListener(layoutListener);
+    private final WeakInvalidationListener weakLayoutListener = new WeakInvalidationListener(layoutListener);
 
     private void addOrRemoveDraggedEntryView() {
         DayView view = getSkinnable();
@@ -341,21 +341,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                      * the end time b) lines directly on the start time or end time
                      * because they make the UI look messy
                      */
-                    if (time.isBefore(startTime) || time.equals(startTime) || time.isAfter(endTime) || time.equals(endTime)) {
-                        line.setVisible(false);
-                    } else {
-                        line.setVisible(true);
-                    }
+                    line.setVisible(!time.isBefore(startTime) && !time.equals(startTime) && !time.isAfter(endTime) && !time.equals(endTime));
                     break;
                 case SHOW:
                     line.setVisible(true);
                     break;
                 case SHOW_COMPRESSED:
-                    if (halfHourLine) {
-                        line.setVisible(false);
-                    } else {
-                        line.setVisible(true);
-                    }
+                    line.setVisible(!halfHourLine);
                     break;
                 default:
                     break;
@@ -634,8 +626,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
                 double minHeight = view.minHeight(contentWidth);
 
-                double columnWidth = contentWidth / placement.getColumnCount();
-                double x = contentX + placement.getColumnIndex() * columnWidth;
+                double columnWidth = contentWidth;
+                double x = contentX;
+
+                if (getSkinnable().isAutoLayout()) {
+                    x += placement.getColumnIndex() * columnWidth;
+                    columnWidth = columnWidth / placement.getColumnCount();
+                }
 
                 double w = columnWidth;
 
@@ -655,6 +652,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                     default:
                         break;
                 }
+
                 /*
                  * -2 on height to always have a gap between entries
                  */

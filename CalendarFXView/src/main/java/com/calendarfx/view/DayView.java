@@ -99,8 +99,7 @@ public class DayView extends DayViewBase {
 	@Override
 	public Optional<Calendar> getCalendarAt(double x, double y) {
 		if (getLayout().equals(Layout.SWIMLANE)) {
-			List<Calendar> visibleCalendars = getCalendars()
-					.filtered(this::isCalendarVisible);
+			List<Calendar> visibleCalendars = getCalendars().filtered(this::isCalendarVisible);
 			double calendarWidth = getWidth() / visibleCalendars.size();
 			int index = (int) (x / calendarWidth);
 			if (index < visibleCalendars.size()) {

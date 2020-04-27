@@ -97,6 +97,26 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         trimTimeBoundsProperty().addListener(trimListener);
     }
 
+    private final BooleanProperty autoLayout = new SimpleBooleanProperty(this, "autoLayout", true);
+
+    public final boolean isAutoLayout() {
+        return autoLayout.get();
+    }
+
+    /**
+     * Determines if entries with overlapping time intervals are automatically laid out so that
+     * they do not visually overlap. Default is "true".
+     *
+     * @return "true" if entries should not overlap
+     */
+    public final BooleanProperty autoLayoutProperty() {
+        return autoLayout;
+    }
+
+    public final void setAutoLayout(boolean autoLayout) {
+        this.autoLayout.set(autoLayout);
+    }
+
     private final ObjectProperty<ZonedDateTime> scrollTime = new SimpleObjectProperty<>(this, "scrollTime", ZonedDateTime.of(LocalDate.now(), LocalTime.MIN, ZoneId.systemDefault()));
 
     public final ZonedDateTime getScrollTime() {
@@ -733,6 +753,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.bindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
+        Bindings.bindBidirectional(otherControl.autoLayoutProperty(), autoLayoutProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -747,6 +768,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
+        Bindings.unbindBidirectional(otherControl.autoLayoutProperty(), autoLayoutProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";
