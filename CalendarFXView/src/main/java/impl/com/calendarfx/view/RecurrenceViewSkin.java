@@ -36,22 +36,20 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
 import net.fortuna.ical4j.model.WeekDay.Day;
-import net.fortuna.ical4j.model.parameter.Value;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
+import java.util.List;
 import java.util.logging.Level;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
@@ -311,7 +309,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             if (rule == null) {
                 return;
             }
-            Recur rrule = new Recur(rule.replaceFirst("^RRULE:", ""));
+            Recur<LocalDate> rrule = new Recur<>(rule.replaceFirst("^RRULE:", ""));
             switch (rrule.getFrequency()) {
                 case DAILY:
                     frequencyBox.setValue(Frequency.DAILY);
@@ -340,11 +338,10 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
             }
 
-            Date until = rrule.getUntil();
+            LocalDate until = rrule.getUntil();
             if (until != null) {
                 endsOnButton.setSelected(true);
-                endsOnDatePicker.setValue(
-                        until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                endsOnDatePicker.setValue(until);
             } else if (rrule.getCount() > 0) {
                 endsAfterButton.setSelected(true);
             } else {
@@ -372,7 +369,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
             summary.setText(Util.convertRFC2445ToText(rule,
                     getSkinnable().getStartDate()));
-        } catch (ParseException e) {
+        } catch (IllegalArgumentException | DateTimeParseException e) {
             e.printStackTrace();
         }
 
@@ -392,7 +389,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
     }
 
     private void updateRule() {
-        Recur.Builder rBuilder = new Recur.Builder();
+        Recur.Builder<LocalDate> rBuilder = new Recur.Builder<>();
         switch (frequencyBox.getValue()) {
             case DAILY:
                 rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.DAILY);
@@ -419,7 +416,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
 
         if (endsOnButton.isSelected()) {
             LocalDate date = endsOnDatePicker.getValue();
-            rBuilder.until(new Date(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())));
+            rBuilder.until(date);
         }
 
         if (endsAfterButton.isSelected()) {
@@ -502,18 +499,17 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             rBuilder.dayList(weekdays);
         }
 
-        Recur rule = rBuilder.build();
+        Recur<LocalDate> rule = rBuilder.build();
         getSkinnable().setRecurrenceRule(rule.toString());
 
         if (LoggingDomain.RECURRENCE.isLoggable(Level.FINE)) {
             LoggingDomain.RECURRENCE.fine(
                     "test dumping 10 recurrences starting with today's date");
 
-            Date today = new Date(Date.from(LocalDate.of(2015, 8, 18).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            DateList dates = rule.getDates(today, today, new Date(Long.MAX_VALUE), Value.DATE, 10);
+            LocalDate today = LocalDate.of(2015, 8, 18);
+            List<LocalDate> dates = rule.getDates(today, today, LocalDate.MAX, 10);
 
-            for (Date date : dates) {
-                LocalDate repeatingDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            for (LocalDate repeatingDate : dates) {
                 LoggingDomain.RECURRENCE.fine(repeatingDate.toString());
             }
         }

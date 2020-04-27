@@ -29,17 +29,15 @@ import javafx.event.Event;
 import javafx.event.EventDispatchChain;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Recur;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,7 +52,6 @@ import static com.calendarfx.util.LoggingDomain.MODEL;
 import static java.util.Objects.requireNonNull;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
-import static net.fortuna.ical4j.model.parameter.Value.DATE;
 
 /**
  * A calendar is responsible for storing calendar entries. It provides methods
@@ -311,60 +308,53 @@ public class Calendar implements EventTarget {
         for (Entry<?> entry : intersectingEntries) {
 
             if (entry.isRecurring()) {
-
-                /*
-                 * The recurring entry / entries.
-                 */
                 String recurrenceRule = entry.getRecurrenceRule().replaceFirst("^RRULE:", "");
-                if (recurrenceRule != null && !recurrenceRule.trim().equals("")) {
 
-                    Date utilStartDate = new Date(Date.from(entry.getStartAsZonedDateTime().toInstant()));
+                LocalDate utilStartDate = entry.getStartDate();
 
-                    try {
-                        Date utilEndDate = new Date(Date.from(et.toInstant()));
+                try {
+                    LocalDate utilEndDate = et.toLocalDate();
 
-                        /*
-                         * TODO: for performance reasons we should definitely
-                         * use the advanceTo() call, but unfortunately this
-                         * collides with the fact that e.g. the DetailedWeekView loads
-                         * data day by day. So a given day would not show
-                         * entries that start on the day before but intersect
-                         * with the given day. We have to find a solution for
-                         * this.
-                         */
-                        // iterator.advanceTo(st.toLocalDate());
+                    /*
+                     * TODO: for performance reasons we should definitely
+                     * use the advanceTo() call, but unfortunately this
+                     * collides with the fact that e.g. the DetailedWeekView loads
+                     * data day by day. So a given day would not show
+                     * entries that start on the day before but intersect
+                     * with the given day. We have to find a solution for
+                     * this.
+                     */
+                    // iterator.advanceTo(st.toLocalDate());
 
-                        DateList dateList = new Recur(recurrenceRule.replaceFirst("^RRULE:", "")).getDates(utilStartDate, utilEndDate, DATE);
+                    List<LocalDate> dateList = new Recur(recurrenceRule).getDates(utilStartDate, utilEndDate);
 
-                        for (Date date : dateList) {
-                            LocalDate repeatingDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                            ZonedDateTime zonedDateTime = ZonedDateTime.of(repeatingDate, LocalTime.MIN, zoneId);
+                    for (LocalDate repeatingDate : dateList) {
+                        ZonedDateTime zonedDateTime = ZonedDateTime.of(repeatingDate, LocalTime.MIN, zoneId);
 
-                            Entry recurrence = entry.createRecurrence();
-                            recurrence.setId(entry.getId());
-                            recurrence.getProperties().put("com.calendarfx.recurrence.source", entry);
-                            recurrence.getProperties().put("com.calendarfx.recurrence.id", zonedDateTime.toString());
-                            recurrence.setRecurrenceRule(entry.getRecurrenceRule());
+                        Entry recurrence = entry.createRecurrence();
+                        recurrence.setId(entry.getId());
+                        recurrence.getProperties().put("com.calendarfx.recurrence.source", entry);
+                        recurrence.getProperties().put("com.calendarfx.recurrence.id", zonedDateTime.toString());
+                        recurrence.setRecurrenceRule(entry.getRecurrenceRule());
 
-                            LocalDate recurrenceStartDate = zonedDateTime.toLocalDate();
-                            LocalDate recurrenceEndDate = recurrenceStartDate.plus(entry.getStartDate().until(entry.getEndDate()));
+                        LocalDate recurrenceStartDate = zonedDateTime.toLocalDate();
+                        LocalDate recurrenceEndDate = recurrenceStartDate.plus(entry.getStartDate().until(entry.getEndDate()));
 
-                            Interval recurrenceInterval = entry.getInterval().withDates(recurrenceStartDate, recurrenceEndDate);
+                        Interval recurrenceInterval = entry.getInterval().withDates(recurrenceStartDate, recurrenceEndDate);
 
-                            recurrence.setInterval(recurrenceInterval);
-                            recurrence.setUserObject(entry.getUserObject());
-                            recurrence.setTitle(entry.getTitle());
-                            recurrence.setMinimumDuration(entry.getMinimumDuration());
-                            recurrence.setFullDay(entry.isFullDay());
-                            recurrence.setLocation(entry.getLocation());
-                            recurrence.setCalendar(this);
+                        recurrence.setInterval(recurrenceInterval);
+                        recurrence.setUserObject(entry.getUserObject());
+                        recurrence.setTitle(entry.getTitle());
+                        recurrence.setMinimumDuration(entry.getMinimumDuration());
+                        recurrence.setFullDay(entry.isFullDay());
+                        recurrence.setLocation(entry.getLocation());
+                        recurrence.setCalendar(this);
 
-                            addEntryToResult(result, recurrence, startDate, endDate);
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        addEntryToResult(result, recurrence, startDate, endDate);
                     }
+
+                } catch (IllegalArgumentException | DateTimeParseException e) {
+                    e.printStackTrace();
                 }
             } else {
                 addEntryToResult(result, entry, startDate, endDate);

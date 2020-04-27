@@ -34,20 +34,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.parameter.Value;
 import org.controlsfx.control.PropertySheet.Item;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -640,7 +638,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
      * @see #recurrenceRuleProperty()
      */
     public final boolean isRecurring() {
-        return recurrenceRule != null && !(recurrenceRule.get() == null) && !recurrenceRule.get().trim().equals("");
+        return recurrenceRule != null && !(recurrenceRule.get() == null) && !recurrenceRule.get().isBlank();
     }
 
     /*
@@ -693,14 +691,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 private void updateRecurrenceEndProperty(String newRecurrence) {
                     if (newRecurrence != null && !newRecurrence.trim().equals("")) {
                         try {
-                            Recur recur = new Recur(newRecurrence.replaceFirst("^RRULE:", ""));
-                            Date until = recur.getUntil();
-                            if (until != null) {
-                                setRecurrenceEnd(until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                            } else {
-                                setRecurrenceEnd(LocalDate.MAX);
-                            }
-                        } catch (ParseException e) {
+                            Recur<LocalDate> recur = new Recur<>(newRecurrence.replaceFirst("^RRULE:", ""));
+                            setRecurrenceEnd(Objects.requireNonNullElse(recur.getUntil(), LocalDate.MAX));
+                        } catch (IllegalArgumentException | DateTimeParseException e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -1499,12 +1492,12 @@ public class Entry<T> implements Comparable<Entry<?>> {
     }
 
     private boolean isRecurrenceShowing(Entry<?> entry, ZonedDateTime st, ZonedDateTime et, ZoneId zoneId) {
-        String recurrenceRule = entry.getRecurrenceRule();
+        String recurrenceRule = entry.getRecurrenceRule().replaceFirst("^RRULE:", "");
 
-        Date utilStartDate = new Date(Date.from(entry.getStartAsZonedDateTime().toInstant()));
+        LocalDate utilStartDate = entry.getStartDate();
 
         try {
-            Date utilEndDate = new Date(Date.from(et.toInstant()));
+            LocalDate utilEndDate = et.toLocalDate();
 
             /*
              * TODO: for performance reasons we should definitely
@@ -1517,10 +1510,9 @@ public class Entry<T> implements Comparable<Entry<?>> {
              */
             // iterator.advanceTo(st.toLocalDate());
 
-            DateList dateList = new Recur(recurrenceRule.replaceFirst("^RRULE:", "")).getDates(utilStartDate, utilEndDate, Value.DATE);
+            List<LocalDate> dateList = new Recur<LocalDate>(recurrenceRule).getDates(utilStartDate, utilEndDate);
 
-            for (Date date : dateList) {
-                LocalDate repeatingDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            for (LocalDate repeatingDate : dateList) {
                 ZonedDateTime recurrenceStart = ZonedDateTime.of(repeatingDate, LocalTime.MIN, zoneId);
                 ZonedDateTime recurrenceEnd = recurrenceStart.plus(entry.getDuration());
 
@@ -1528,7 +1520,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                     return true;
                 }
             }
-        } catch (ParseException ex) {
+        } catch (IllegalArgumentException | DateTimeParseException ex) {
             ex.printStackTrace();
         }
 

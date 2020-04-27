@@ -28,8 +28,8 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Skin;
 import net.fortuna.ical4j.model.Recur;
 
-import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 import static java.util.Objects.requireNonNull;
 
@@ -104,7 +104,7 @@ public class RecurrenceView extends CalendarFXControl {
                     new Recur(newValue.replaceFirst("^RRULE:", ""));
                 }
                 super.set(newValue);
-            } catch (ParseException e) {
+            } catch (IllegalArgumentException | DateTimeParseException e) {
                 e.printStackTrace();
             }
         }

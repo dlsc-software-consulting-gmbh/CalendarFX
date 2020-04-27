@@ -20,7 +20,7 @@
         <javafx.version>14</javafx.version>
         <javafx.maven.plugin.version>0.0.4</javafx.maven.plugin.version>
         <controlsfx.version>11.0.1</controlsfx.version>
-        <ical4j.version>3.0.15</ical4j.version>
+        <ical4j.version>4.0.0-alpha2</ical4j.version>
         <ikonli.version>11.3.5</ikonli.version>
     </properties>
 
@@ -71,6 +71,16 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <net.fortuna.ical4j.timezone.cache.impl>net.fortuna.ical4j.util.MapTimeZoneCache</net.fortuna.ical4j.timezone.cache.impl>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
