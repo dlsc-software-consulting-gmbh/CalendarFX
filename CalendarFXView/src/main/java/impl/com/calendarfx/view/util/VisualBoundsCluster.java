@@ -17,24 +17,22 @@
 package impl.com.calendarfx.view.util;
 
 import com.calendarfx.model.Entry;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.EntryViewBase;
+import impl.com.calendarfx.view.util.VisualBoundsResolver.Range;
 
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("javadoc")
-public final class Cluster {
+public final class VisualBoundsCluster {
 
     private List<EntryViewBase<?>> entryViews;
 
-    private ZonedDateTime startTime;
+    private Range clusterRange;
 
-    private ZonedDateTime endTime;
-
-    private List<Column> columns;
+    private List<VisualBoundsColumn> columns;
 
     public int getColumnCount() {
         if (columns == null || columns.isEmpty()) {
@@ -44,71 +42,69 @@ public final class Cluster {
         return columns.size();
     }
 
-    public void add(EntryViewBase<?> view) {
+    public void add(EntryViewBase<?> entryView, DayView dayView, double contentWidth) {
         if (entryViews == null) {
             entryViews = new ArrayList<>();
         }
 
-        entryViews.add(view);
+        entryViews.add(entryView);
 
-        Entry<?> entry = view.getEntry();
+        Entry<?> entry = entryView.getEntry();
 
-        ZonedDateTime entryStartTime = entry.getStartAsZonedDateTime();
-        ZonedDateTime entryEndTime = entry.getEndAsZonedDateTime();
+        Range entryRange = VisualBoundsResolver.getRange(entryView, dayView, contentWidth);
 
         if (entry.isFullDay()) {
-            entryStartTime = entryStartTime.with(LocalTime.MIN);
-            entryEndTime = entryEndTime.with(LocalTime.MAX);
+            entryRange.y1 = 0;
+            entryRange.y2 = dayView.getHeight();
         }
 
-        if (startTime == null || entryStartTime.isBefore(startTime)) {
-            startTime = entryStartTime;
+        if (clusterRange == null) {
+            clusterRange = new Range();
+            clusterRange.title = "Cluster Range";
+            clusterRange.y1 = Double.MAX_VALUE;
+            clusterRange.y2 = Double.MIN_VALUE;
         }
 
-        if (endTime == null || entryEndTime.isAfter(endTime)) {
-            endTime = entryEndTime;
-        }
+        clusterRange.y1 = Math.min(clusterRange.y1, entryRange.y1);
+        clusterRange.y2 = Math.max(clusterRange.y2, entryRange.y2);
     }
 
-    public boolean intersects(EntryViewBase<?> view) {
-        if (startTime == null) {
+    public boolean intersects(EntryViewBase<?> entryView, DayView dayView, double contentWidth) {
+        if (clusterRange == null) {
             /*
              * The first added activity initializes the cluster.
              */
             return true;
         }
 
-        Entry<?> entry = view.getEntry();
+        Entry<?> entry = entryView.getEntry();
 
-        ZonedDateTime entryStartTime = entry.getStartAsZonedDateTime();
-        ZonedDateTime entryEndTime = entry.getEndAsZonedDateTime();
+        Range entryRange = VisualBoundsResolver.getRange(entryView, dayView, contentWidth);
 
         if (entry.isFullDay()) {
-            entryStartTime = entryStartTime.with(LocalTime.MIN);
-            entryEndTime = entryEndTime.with(LocalTime.MAX);
+            entryRange.y1 = 0;
+            entryRange.y2 = dayView.getHeight();
         }
 
-        return entryStartTime.isBefore(endTime)
-                && entryEndTime.isAfter(startTime);
-
+        return entryRange.y1 < clusterRange.y2 && entryRange.y2 > clusterRange.y1;
     }
 
-    public List<Placement> resolve() {
+    public List<Placement> resolve(DayView dayView, double contentWidth) {
         if (entryViews == null || entryViews.isEmpty()) {
             return Collections.emptyList();
         }
 
         columns = new ArrayList<>();
-        columns.add(new Column());
+        columns.add(new VisualBoundsColumn());
 
-        for (EntryViewBase<?> view : entryViews) {
+        for (EntryViewBase<?> entryView : entryViews) {
 
             boolean added = false;
 
             // Try to add the activity to an existing column.
-            for (Column column : columns) {
-                if (column.hasRoomFor(view)) {
-                    column.add(view);
+            for (VisualBoundsColumn column : columns) {
+                if (column.hasRoomFor(entryView, dayView, contentWidth)) {
+                    column.add(entryView);
                     added = true;
                     break;
                 }
@@ -116,9 +112,9 @@ public final class Cluster {
 
             // No column found, create a new column.
             if (!added) {
-                Column column = new Column();
+                VisualBoundsColumn column = new VisualBoundsColumn();
                 columns.add(column);
-                column.add(view);
+                column.add(entryView);
             }
         }
 
@@ -126,7 +122,7 @@ public final class Cluster {
         final int colCount = columns.size();
 
         for (int col = 0; col < columns.size(); col++) {
-            Column column = columns.get(col);
+            VisualBoundsColumn column = columns.get(col);
             for (EntryViewBase<?> view : column.getEntryViews()) {
                 placements.add(new Placement(view, col, colCount));
             }
@@ -135,7 +131,7 @@ public final class Cluster {
         return placements;
     }
 
-    public List<Column> getColumns() {
+    public List<VisualBoundsColumn> getColumns() {
         return columns;
     }
 }

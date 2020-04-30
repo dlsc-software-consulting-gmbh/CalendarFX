@@ -23,23 +23,23 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("javadoc")
-public final class Resolver {
+public final class TimeBoundsResolver {
 
-    protected Resolver() {
+    public TimeBoundsResolver() {
     }
 
     public static <T extends EntryViewBase<?>> List<Placement> resolve(List<T> entryViews) {
         Collections.sort(entryViews);
 
         List<Placement> placements = new ArrayList<>();
-        List<Cluster> clusters = new ArrayList<>();
+        List<TimeBoundsCluster> clusters = new ArrayList<>();
 
-        Cluster cluster = null;
+        TimeBoundsCluster cluster = null;
 
         for (T view : entryViews) {
             if (view.isVisible()) {
                 if (cluster == null || !cluster.intersects(view)) {
-                    cluster = new Cluster();
+                    cluster = new TimeBoundsCluster();
                     clusters.add(cluster);
                 }
 
@@ -47,7 +47,7 @@ public final class Resolver {
             }
         }
 
-        for (Cluster c : new ArrayList<>(clusters)) {
+        for (TimeBoundsCluster c : new ArrayList<>(clusters)) {
             placements.addAll(c.resolve());
         }
 

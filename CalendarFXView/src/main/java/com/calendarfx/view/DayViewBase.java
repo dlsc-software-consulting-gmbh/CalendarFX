@@ -97,26 +97,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         trimTimeBoundsProperty().addListener(trimListener);
     }
 
-    private final BooleanProperty autoLayout = new SimpleBooleanProperty(this, "autoLayout", true);
-
-    public final boolean isAutoLayout() {
-        return autoLayout.get();
-    }
-
-    /**
-     * Determines if entries with overlapping time intervals are automatically laid out so that
-     * they do not visually overlap. Default is "true".
-     *
-     * @return "true" if entries should not overlap
-     */
-    public final BooleanProperty autoLayoutProperty() {
-        return autoLayout;
-    }
-
-    public final void setAutoLayout(boolean autoLayout) {
-        this.autoLayout.set(autoLayout);
-    }
-
     private final ObjectProperty<ZonedDateTime> scrollTime = new SimpleObjectProperty<>(this, "scrollTime", ZonedDateTime.of(LocalDate.now(), LocalTime.MIN, ZoneId.systemDefault()));
 
     public final ZonedDateTime getScrollTime() {
@@ -245,6 +225,40 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
             throw new UnsupportedOperationException("this method can only be called if scrolling is disabled");
         }
         return ViewHelper.getTimeLocation(this, time);
+    }
+
+    /**
+     * An enum listing possible methods of determining overlapping entries. Calendar entries
+     * can either overlap because of their time intervals or because of their visual bounds.
+     *
+     * @see DayEntryView#alignmentStrategyProperty()
+     */
+    public enum OverlapResolutionStrategy {
+        TIME_BOUNDS,
+        VISUAL_BOUNDS,
+        OFF,
+    }
+
+    private final ObjectProperty<OverlapResolutionStrategy> overlapResolutionStrategy = new SimpleObjectProperty<>(this, "overlapCriteria", OverlapResolutionStrategy.TIME_BOUNDS);
+
+    /**
+     * A property used to instruct the view how to resolve overlapping
+     * entries, whether the resolution should be based on the time intervals of calendar
+     * entries or on their visual bounds or completely disabled. The default value is
+     * {@link OverlapResolutionStrategy#TIME_BOUNDS}.
+     *
+     * @return the overlap resolution strategy
+     */
+    public final ObjectProperty<OverlapResolutionStrategy> overlapResolutionStrategyProperty() {
+        return overlapResolutionStrategy;
+    }
+
+    public final OverlapResolutionStrategy getOverlapResolutionStrategy() {
+        return overlapResolutionStrategy.get();
+    }
+
+    public final void setOverlapResolutionStrategy(OverlapResolutionStrategy strategy) {
+        this.overlapResolutionStrategy.set(strategy);
     }
 
     /**
@@ -762,7 +776,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.bindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
-        Bindings.bindBidirectional(otherControl.autoLayoutProperty(), autoLayoutProperty());
+        Bindings.bindBidirectional(otherControl.overlapResolutionStrategyProperty(), overlapResolutionStrategyProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -777,7 +791,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
-        Bindings.unbindBidirectional(otherControl.autoLayoutProperty(), autoLayoutProperty());
+        Bindings.unbindBidirectional(otherControl.overlapResolutionStrategyProperty(), overlapResolutionStrategyProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";
@@ -1161,6 +1175,49 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
             @Override
             public String getDescription() {
                 return "Latest end time of any entry view";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(overlapResolutionStrategyProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setOverlapResolutionStrategy((OverlapResolutionStrategy) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getOverlapResolutionStrategy();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return OverlapResolutionStrategy.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Overlap Resolution";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Controls when entries are considered overlapping";
             }
 
             @Override

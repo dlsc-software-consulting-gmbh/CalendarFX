@@ -17,16 +17,16 @@
 package impl.com.calendarfx.view.util;
 
 import com.calendarfx.model.Entry;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
+import impl.com.calendarfx.view.util.VisualBoundsResolver.Range;
 
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("javadoc")
-public final class Column {
+public final class VisualBoundsColumn {
 
     private List<EntryViewBase<?>> entryViewBases;
 
@@ -38,37 +38,34 @@ public final class Column {
         entryViewBases.add(view);
     }
 
-    public boolean hasRoomFor(EntryViewBase<?> view) {
+    public boolean hasRoomFor(EntryViewBase<?> entryView, DayView dayView, double contentWidth) {
         if (entryViewBases == null) {
             return true;
         }
 
-        Entry<?> entry = view.getEntry();
-        ZonedDateTime entryStartTime = entry.getStartAsZonedDateTime();
-        ZonedDateTime entryEndTime = entry.getEndAsZonedDateTime();
+        Entry<?> entry = entryView.getEntry();
+
+        Range entryRange = VisualBoundsResolver.getRange(entryView, dayView, contentWidth);
 
         if (entry.isFullDay()) {
-            entryStartTime = entryStartTime.with(LocalTime.MIN);
-            entryEndTime = entryEndTime.with(LocalTime.MAX);
+            entryRange.y1 = 0;
+            entryRange.y2 = dayView.getHeight();
         }
 
         for (EntryViewBase<?> otherView : entryViewBases) {
 
-            if (isSameEntry(view, otherView)) {
+            if (isSameEntry(entryView, otherView)) {
                 continue;
             }
 
-            Entry<?> otherEntry = otherView.getEntry();
-            ZonedDateTime otherEntryStartTime = otherEntry.getStartAsZonedDateTime();
-            ZonedDateTime otherEntryEndTime = otherEntry.getEndAsZonedDateTime();
+            Range otherRange = VisualBoundsResolver.getRange(otherView, dayView, contentWidth);
 
             if (entry.isFullDay()) {
-                otherEntryStartTime = otherEntryStartTime.with(LocalTime.MIN);
-                otherEntryEndTime = otherEntryEndTime.with(LocalTime.MAX);
+                otherRange.y1 = 0;
+                otherRange.y2 = dayView.getHeight();
             }
 
-            if (Util.intersect(entryStartTime, entryEndTime,
-                    otherEntryStartTime, otherEntryEndTime)) {
+            if (entryRange.y1 < otherRange.y2 && entryRange.y2 > otherRange.y1) {
 
                 /*
                  * The two activities intersect, so we can not use this column

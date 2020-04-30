@@ -29,7 +29,6 @@ public class ResourceCalendarView<T> extends DayViewBase {
         setScrollingEnabled(true);
         setHourHeight(40);
         setHoursLayoutStrategy(DayViewBase.HoursLayoutStrategy.FIXED_HOUR_HEIGHT);
-        setAutoLayout(false);
 
         ListChangeListener<? super T> l = change -> {
             while (change.next()) {

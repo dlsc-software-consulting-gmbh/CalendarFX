@@ -23,13 +23,15 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.EntryViewBase.AlignmentStrategy;
 import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
 import com.calendarfx.view.EntryViewBase.Position;
 import impl.com.calendarfx.view.util.Placement;
-import impl.com.calendarfx.view.util.Resolver;
+import impl.com.calendarfx.view.util.TimeBoundsResolver;
+import impl.com.calendarfx.view.util.VisualBoundsResolver;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -553,19 +555,21 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private void layoutEntryViews(List<DayEntryView> entryViews, DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
-        List<Placement> placements = Resolver.resolve(entryViews);
+        List<Placement> placements;
+
+        if (dayView.getOverlapResolutionStrategy().equals(OverlapResolutionStrategy.VISUAL_BOUNDS)) {
+            placements = VisualBoundsResolver.resolve(entryViews, dayView, contentWidth);
+        } else {
+            placements = TimeBoundsResolver.resolve(entryViews);
+        }
 
         if (placements != null) {
             contentWidth = contentWidth * dayView.getEntryWidthPercentage() / 100d;
 
             for (Placement placement : placements) {
-                EntryViewBase<?> view = placement.getEntryView();
+                EntryViewBase<?> entryView = placement.getEntryView();
 
-                Entry<?> entry = view.getEntry();
-
-                LocalDate viewDate = dayView.getDate();
-                LocalTime viewStartTime = entry.getStartTime();
-                LocalTime viewEndTime = entry.getEndTime();
+                Entry<?> entry = entryView.getEntry();
 
                 double y1;
                 double y2;
@@ -581,11 +585,15 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                     y2 = dayView.getLocation(entry.getEndTime());
                 }
 
-                if (view.getHeightLayoutStrategy().equals(HeightLayoutStrategy.COMPUTE_PREF_SIZE)) {
+                if (entryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.COMPUTE_PREF_SIZE)) {
 
-                    y2 = y1 + view.prefHeight(contentWidth);
+                    y2 = y1 + entryView.prefHeight(contentWidth);
 
                 }
+
+                LocalDate viewDate = dayView.getDate();
+                LocalTime viewStartTime = entry.getStartTime();
+                LocalTime viewEndTime = entry.getEndTime();
 
                 if (!dayView.isScrollingEnabled()) {
                     boolean startsBefore = false;
@@ -616,31 +624,30 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                         position = Position.FIRST;
                     }
 
-                    view.getProperties().put("position", position);
+                    entryView.getProperties().put("position", position);
                 }
 
-                view.getProperties().put("startDate", viewDate);
-                view.getProperties().put("endDate", viewDate);
-                view.getProperties().put("startTime", viewStartTime);
-                view.getProperties().put("endTime", viewEndTime);
+                entryView.getProperties().put("startDate", viewDate);
+                entryView.getProperties().put("endDate", viewDate);
+                entryView.getProperties().put("startTime", viewStartTime);
+                entryView.getProperties().put("endTime", viewEndTime);
 
-                double minHeight = view.minHeight(contentWidth);
+                double minHeight = entryView.minHeight(contentWidth);
 
-                double columnWidth = contentWidth;
+                double columnWidth = contentWidth / placement.getColumnCount();
                 double x = contentX;
 
-                if (getSkinnable().isAutoLayout()) {
+                if (!dayView.getOverlapResolutionStrategy().equals(OverlapResolutionStrategy.OFF)) {
                     x += placement.getColumnIndex() * columnWidth;
-                    columnWidth = columnWidth / placement.getColumnCount();
                 }
 
                 double w = columnWidth;
 
-                if (!view.getAlignmentStrategy().equals(AlignmentStrategy.FILL)) {
-                    w = view.prefWidth(-1);
+                if (!entryView.getAlignmentStrategy().equals(AlignmentStrategy.FILL)) {
+                    w = entryView.prefWidth(-1);
                 }
 
-                switch (view.getAlignmentStrategy()) {
+                switch (entryView.getAlignmentStrategy()) {
                     case ALIGN_RIGHT:
                         x = columnWidth - w;
                         break;
@@ -649,6 +656,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                         break;
                     case ALIGN_LEFT:
                     case FILL:
+                        break;
                     default:
                         break;
                 }
@@ -656,7 +664,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 /*
                  * -2 on height to always have a gap between entries
                  */
-                view.resizeRelocate(snapPositionX(x), snapPositionY(y1), snapSizeX(w), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
+                entryView.resizeRelocate(snapPositionX(x), snapPositionY(y1), snapSizeX(w), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
             }
         }
     }

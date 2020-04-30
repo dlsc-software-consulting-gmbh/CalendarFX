@@ -27,7 +27,7 @@ import com.calendarfx.view.AllDayView;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
 import impl.com.calendarfx.view.util.Placement;
-import impl.com.calendarfx.view.util.Resolver;
+import impl.com.calendarfx.view.util.TimeBoundsResolver;
 import javafx.beans.InvalidationListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -56,8 +56,8 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
     private static final String ALL_DAY_BACKGROUND_REGION_TODAY = "today";
     private static final String ALL_DAY_BACKGROUND_REGION_WEEKEND = "weekend";
 
-    private DataLoader dataLoader;
-    private GridPane pane;
+    private final DataLoader dataLoader;
+    private final GridPane pane;
 
     public AllDayViewSkin(AllDayView view) {
         super(view);
@@ -296,12 +296,14 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         }
     }
 
+    private final TimeBoundsResolver resolver = new TimeBoundsResolver();
+
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 
         List<AllDayEntryView> entryViews = getChildren().stream().filter(node -> node instanceof AllDayEntryView).map(node -> (AllDayEntryView) node).collect(Collectors.toList());
 
-        List<Placement> placements = Resolver.resolve(entryViews);
+        List<Placement> placements = TimeBoundsResolver.resolve(entryViews);
 
         int maxPosition = 0;
         for (Placement p : placements) {
@@ -339,7 +341,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
 
         List<AllDayEntryView> entryViews = getChildren().stream().filter(node -> node instanceof AllDayEntryView).map(node -> (AllDayEntryView) node).collect(Collectors.toList());
 
-        List<Placement> placements = Resolver.resolve(entryViews);
+        List<Placement> placements = TimeBoundsResolver.resolve(entryViews);
 
         for (Placement placement : placements) {
             EntryViewBase<?> view = placement.getEntryView();

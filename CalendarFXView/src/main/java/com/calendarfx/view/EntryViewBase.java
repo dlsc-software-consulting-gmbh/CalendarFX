@@ -20,6 +20,7 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.EntryContextMenuParameter;
 import com.calendarfx.view.DateControl.EntryDetailsParameter;
+import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
@@ -853,6 +854,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * strategy {@link HeightLayoutStrategy#COMPUTE_PREF_SIZE} disables changes to the end
      * time of the entry as the bottom y coordiante of the view would not accurately
      * represent the end time of the entry.
+     *
+     * @see DayViewBase#setOverlapResolutionStrategy(OverlapResolutionStrategy)
      */
     public enum HeightLayoutStrategy {
         USE_START_AND_END_TIME,
@@ -891,7 +894,6 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * </p>
      *
      * @see #setAlignmentStrategy(AlignmentStrategy)
-     * @see DayViewBase#setAutoLayout(boolean)
      */
     public enum AlignmentStrategy {
         FILL,
