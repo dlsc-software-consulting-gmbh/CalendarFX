@@ -669,6 +669,15 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
     private final BooleanProperty trimTimeBounds = new SimpleBooleanProperty(this, "timTimeBounds", false);
 
+    /**
+     * A property to control whether the view should automatically adjust the earliest and latest
+     * time used properties based on the currently showing entries.
+     *
+     * @return true if the time bounds will be automatically trimmed
+     *
+     * @see #earliestTimeUsedProperty()
+     * @see #latestTimeUsedProperty()
+     */
     public final BooleanProperty trimTimeBoundsProperty() {
         return trimTimeBounds;
     }
