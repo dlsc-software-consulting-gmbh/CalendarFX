@@ -63,9 +63,6 @@
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>com.calendarfx.weather.WeatherApp</mainClass>
-                    <options>
-                        <option>-Dnet.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache</option>
-                    </options>
                 </configuration>
             </plugin>
         </plugins>
