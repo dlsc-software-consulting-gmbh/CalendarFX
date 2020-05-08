@@ -841,6 +841,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         LocalTime earliest = null;
         LocalTime latest = null;
 
+        List<Entry> processedEntries = new ArrayList<>();
+
         do {
             List<Entry<?>> entryList = dataMap.get(date);
 
@@ -849,6 +851,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 entryList.removeIf(Entry::isFullDay);
 
                 for (Entry<?> entry : entryList) {
+
+                    if (processedEntries.contains(entry)) {
+                        continue;
+                    }
+
+                    processedEntries.add(entry);
+
                     doAddEntryView(entry);
 
                     if (earliest == null || entry.getStartTime().isBefore(earliest)) {

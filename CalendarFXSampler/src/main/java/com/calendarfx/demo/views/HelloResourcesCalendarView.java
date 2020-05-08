@@ -23,7 +23,9 @@ import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Marker;
+import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -47,6 +49,7 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
     @Override
     public Node getPanel(Stage stage) {
 
+        resourceCalendarView.setOverlapResolutionStrategy(OverlapResolutionStrategy.VISUAL_BOUNDS);
         resourceCalendarView.setHeaderFactory(resource -> {
             Label label1 = new Label("IG-TR");
             Label label2 = new Label("29.000");
@@ -73,20 +76,20 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             return box;
         });
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             CalendarSource source = new CalendarSource("Default");
 
             Calendar calendar1 = new HelloDayViewCalendar();
             calendar1.setStyle(Style.STYLE1);
             source.getCalendars().add(calendar1);
 
-            Calendar calendar2 = new HelloDayViewCalendar();
-            calendar2.setStyle(Style.STYLE2);
-            source.getCalendars().add(calendar2);
-
-            Calendar calendar3 = new HelloDayViewCalendar();
-            calendar3.setStyle(Style.STYLE3);
-            source.getCalendars().add(calendar3);
+//            Calendar calendar2 = new HelloDayViewCalendar();
+//            calendar2.setStyle(Style.STYLE2);
+//            source.getCalendars().add(calendar2);
+//
+//            Calendar calendar3 = new HelloDayViewCalendar();
+//            calendar3.setStyle(Style.STYLE3);
+//            source.getCalendars().add(calendar3);
 
             String resource = "Resource " + (i + 1);
             resourceCalendarView.getResources().add(resource);
@@ -95,6 +98,12 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             dayView.setEnableCurrentTimeMarker(true);
             dayView.setEnableCurrentTimeCircle(i == 0);
             dayView.getCalendarSources().setAll(source);
+            dayView.setEntryViewFactory(entry -> new DayEntryView(entry) {
+                {
+                    setPrefHeight(25);
+                    setHeightLayoutStrategy(HeightLayoutStrategy.COMPUTE_PREF_SIZE);
+                }
+            });
         }
 
         Marker marker1 = new Marker();
@@ -129,18 +138,19 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
     class HelloDayViewCalendar extends Calendar {
 
         public HelloDayViewCalendar() {
-            createEntries(LocalDate.now().minusDays(2));
-            createEntries(LocalDate.now().minusDays(1));
+//            createEntries(LocalDate.now().minusDays(2));
+//            createEntries(LocalDate.now().minusDays(1));
             createEntries(LocalDate.now());
-            createEntries(LocalDate.now().plusDays(1));
-            createEntries(LocalDate.now().plusDays(2));
+//            createEntries(LocalDate.now().plusDays(1));
+//            createEntries(LocalDate.now().plusDays(2));
         }
 
         private void createEntries(LocalDate startDate) {
-            for (int j = 0; j < 5 + (int) (Math.random() * 4); j++) {
+            for (int j = 0; j < 1; j++) {
                 Entry<?> entry = new Entry<>();
                 entry.changeStartDate(startDate);
                 entry.changeEndDate(startDate);
+                entry.setRecurrenceRule("RRULE:FREQ=DAILY");
 
                 entry.setTitle("Entry " + (j + 1));
 
