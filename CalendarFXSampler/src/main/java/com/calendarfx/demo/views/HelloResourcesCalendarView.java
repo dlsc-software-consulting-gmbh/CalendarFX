@@ -79,17 +79,17 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
         for (int i = 0; i < 1; i++) {
             CalendarSource source = new CalendarSource("Default");
 
-            Calendar calendar1 = new HelloDayViewCalendar();
+            Calendar calendar1 = new HelloDayViewCalendar("cal1");
             calendar1.setStyle(Style.STYLE1);
             source.getCalendars().add(calendar1);
 
-//            Calendar calendar2 = new HelloDayViewCalendar();
-//            calendar2.setStyle(Style.STYLE2);
-//            source.getCalendars().add(calendar2);
-//
-//            Calendar calendar3 = new HelloDayViewCalendar();
-//            calendar3.setStyle(Style.STYLE3);
-//            source.getCalendars().add(calendar3);
+            Calendar calendar2 = new HelloDayViewCalendar("cal2");
+            calendar2.setStyle(Style.STYLE2);
+            source.getCalendars().add(calendar2);
+
+            Calendar calendar3 = new HelloDayViewCalendar("cal3");
+            calendar3.setStyle(Style.STYLE3);
+            source.getCalendars().add(calendar3);
 
             String resource = "Resource " + (i + 1);
             resourceCalendarView.getResources().add(resource);
@@ -137,20 +137,20 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
 
     class HelloDayViewCalendar extends Calendar {
 
-        public HelloDayViewCalendar() {
-//            createEntries(LocalDate.now().minusDays(2));
-//            createEntries(LocalDate.now().minusDays(1));
+        public HelloDayViewCalendar(String name) {
+            setName(name);
+            createEntries(LocalDate.now().minusDays(2));
+            createEntries(LocalDate.now().minusDays(1));
             createEntries(LocalDate.now());
-//            createEntries(LocalDate.now().plusDays(1));
-//            createEntries(LocalDate.now().plusDays(2));
+            createEntries(LocalDate.now().plusDays(1));
+            createEntries(LocalDate.now().plusDays(2));
         }
 
         private void createEntries(LocalDate startDate) {
-            for (int j = 0; j < 1; j++) {
+            for (int j = 0; j < 5 + (int) (Math.random() * 7); j++) {
                 Entry<?> entry = new Entry<>();
                 entry.changeStartDate(startDate);
                 entry.changeEndDate(startDate);
-                entry.setRecurrenceRule("RRULE:FREQ=DAILY");
 
                 entry.setTitle("Entry " + (j + 1));
 

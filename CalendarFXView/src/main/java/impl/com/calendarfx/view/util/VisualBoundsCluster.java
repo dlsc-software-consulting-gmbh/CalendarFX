@@ -61,12 +61,12 @@ public final class VisualBoundsCluster {
         if (clusterRange == null) {
             clusterRange = new Range();
             clusterRange.title = "Cluster Range";
-            clusterRange.y1 = Double.MAX_VALUE;
-            clusterRange.y2 = Double.MIN_VALUE;
+            clusterRange.y1 = entryRange.y1;
+            clusterRange.y2 = entryRange.y2;
+        } else {
+            clusterRange.y1 = Math.min(clusterRange.y1, entryRange.y1);
+            clusterRange.y2 = Math.max(clusterRange.y2, entryRange.y2);
         }
-
-        clusterRange.y1 = Math.min(clusterRange.y1, entryRange.y1);
-        clusterRange.y2 = Math.max(clusterRange.y2, entryRange.y2);
     }
 
     public boolean intersects(EntryViewBase<?> entryView, DayView dayView, double contentWidth) {
@@ -86,7 +86,13 @@ public final class VisualBoundsCluster {
             entryRange.y2 = dayView.getHeight();
         }
 
-        return entryRange.y1 < clusterRange.y2 && entryRange.y2 > clusterRange.y1;
+        boolean inter = entryRange.y1 < clusterRange.y2 && entryRange.y2 > clusterRange.y1;
+
+        if (inter && entryView.getEntry().getTitle().equals("Entry 1 of cal1")) {
+            System.out.println("stop");
+        }
+
+        return inter;
     }
 
     public List<Placement> resolve(DayView dayView, double contentWidth) {

@@ -35,7 +35,7 @@ public final class VisualBoundsResolver {
 
         @Override
         public String toString() {
-            return "entry = " + title + ", y1 = " + y1 + ", y2 = " + y2;
+            return "title = " + title + ", y1 = " + y1 + ", y2 = " + y2;
         }
     }
 
