@@ -90,7 +90,7 @@ public final class VisualBoundsResolver {
 
             if (range1.y1 < range2.y1) {
                 return -1;
-            } else if (range1.y1 > range2.y2) {
+            } else if (range1.y1 > range2.y1) {
                 return +1;
             }
 
