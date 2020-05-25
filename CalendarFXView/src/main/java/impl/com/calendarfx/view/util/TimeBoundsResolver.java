@@ -19,7 +19,7 @@ package impl.com.calendarfx.view.util;
 import com.calendarfx.view.EntryViewBase;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings("javadoc")
@@ -28,8 +28,37 @@ public final class TimeBoundsResolver {
     public TimeBoundsResolver() {
     }
 
-    public static <T extends EntryViewBase<?>> List<Placement> resolve(List<T> entryViews) {
-        Collections.sort(entryViews);
+    private static Comparator<EntryViewBase<?>> additionalComparator;
+
+    /**
+     * The resolver always sorts entries based on their time bounds but when
+     * entries have the same bounds the application might want to sort them based on
+     * additional criteria. This can be implemented this way.
+     *
+     * @return
+     */
+    public static Comparator<EntryViewBase<?>> getAdditionalComparator() {
+        return additionalComparator;
+    }
+
+    public static void setAdditionalComparator(Comparator<EntryViewBase<?>> additionalComparator) {
+        TimeBoundsResolver.additionalComparator = additionalComparator;
+    }
+
+    public static <T extends EntryViewBase> List<Placement> resolve(List<T> entryViews) {
+
+        final Comparator<T> comparator = (o1, o2) -> {
+
+            int result = o1.compareTo(o2);
+
+            if (result == 0 && additionalComparator != null) {
+                return additionalComparator.compare(o1, o2);
+            }
+
+            return 0;
+        };
+
+        entryViews.sort(comparator);
 
         List<Placement> placements = new ArrayList<>();
         List<TimeBoundsCluster> clusters = new ArrayList<>();

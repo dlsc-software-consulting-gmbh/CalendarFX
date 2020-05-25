@@ -23,6 +23,7 @@ import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings("javadoc")
@@ -63,8 +64,26 @@ public final class VisualBoundsResolver {
         return range;
     }
 
-    public static <T extends EntryViewBase<?>> List<Placement> resolve(List<T> entryViews, DayView dayView, double contentWidth) {
-        Collections.sort(entryViews, (o1, o2) -> {
+
+    private static Comparator<EntryViewBase<?>> additionalComparator;
+
+    /**
+     * The resolver always sorts entries based on their visual bounds but when
+     * entries have the same bounds the application might want to sort them based on
+     * additional criteria. This can be implemented this way.
+     *
+     * @return
+     */
+    public static Comparator<EntryViewBase<?>> getAdditionalComparator() {
+        return additionalComparator;
+    }
+
+    public static void setAdditionalComparator(Comparator<EntryViewBase<?>> additionalComparator) {
+        VisualBoundsResolver.additionalComparator = additionalComparator;
+    }
+
+    public static <T extends EntryViewBase> List<Placement> resolve(List<T> entryViews, DayView dayView, double contentWidth) {
+        final Comparator<T> comparator = (o1, o2) -> {
 
             final Range range1 = getRange(o1, dayView, contentWidth);
             final Range range2 = getRange(o1, dayView, contentWidth);
@@ -75,8 +94,14 @@ public final class VisualBoundsResolver {
                 return +1;
             }
 
+            if (additionalComparator != null) {
+                return additionalComparator.compare(o1, o2);
+            }
+
             return 0;
-        });
+        };
+
+        Collections.sort(entryViews, comparator);
 
         List<Placement> placements = new ArrayList<>();
         List<VisualBoundsCluster> clusters = new ArrayList<>();
