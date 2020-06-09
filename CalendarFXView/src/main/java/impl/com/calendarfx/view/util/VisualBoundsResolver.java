@@ -86,7 +86,7 @@ public final class VisualBoundsResolver {
         final Comparator<T> comparator = (o1, o2) -> {
 
             final Range range1 = getRange(o1, dayView, contentWidth);
-            final Range range2 = getRange(o1, dayView, contentWidth);
+            final Range range2 = getRange(o2, dayView, contentWidth);
 
             if (range1.y1 < range2.y1) {
                 return -1;
