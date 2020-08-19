@@ -326,8 +326,7 @@ public abstract class DateControl extends CalendarFXControl {
             });
             contextMenu.getItems().add(informationItem);
 
-            String stylesheet = CalendarView.class.getResource("calendar.css")
-                    .toExternalForm();
+            String stylesheet = CalendarView.class.getResource("calendar.css").toExternalForm();
 
             /*
              * Assign entry to different calendars.
@@ -521,7 +520,7 @@ public abstract class DateControl extends CalendarFXControl {
      *
      * @param time the time where the entry will be created (the entry start
      *             time)
-     * @return the new calendar entry
+     * @return the new calendar entry or null if no entry could be created
      * @see #setEntryFactory(Callback)
      * @see #setVirtualGrid(VirtualGrid)
      */
@@ -542,7 +541,7 @@ public abstract class DateControl extends CalendarFXControl {
      *                 time)
      * @param calendar the calendar to which the new entry will be added (if null the
      *                 default calendar provider will be invoked)
-     * @return the new calendar entry
+     * @return the new calendar entry or null if no entry could be created
      * @see #setEntryFactory(Callback)
      * @see #setVirtualGrid(VirtualGrid)
      */
@@ -565,6 +564,10 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         if (calendar != null) {
+            if (calendar.isReadOnly()) {
+                return null;
+            }
+
             /*
              * We have to ensure that the calendar is visible, otherwise the new
              * entry would not be shown to the user.
@@ -706,8 +709,8 @@ public abstract class DateControl extends CalendarFXControl {
 
     private abstract static class ContextMenuParameterBase {
 
-        private DateControl dateControl;
-        private ContextMenuEvent contextMenuEvent;
+        private final DateControl dateControl;
+        private final ContextMenuEvent contextMenuEvent;
 
         public ContextMenuParameterBase(ContextMenuEvent contextMenuEvent, DateControl dateControl) {
             this.contextMenuEvent = requireNonNull(contextMenuEvent);
@@ -869,7 +872,7 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public static final class CreateCalendarSourceParameter {
 
-        private DateControl dateControl;
+        private final DateControl dateControl;
 
         /**
          * Constructs a new parameter object.
@@ -950,7 +953,7 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public static final class EntryContextMenuParameter extends ContextMenuParameterBase {
 
-        private EntryViewBase<?> entryView;
+        private final EntryViewBase<?> entryView;
 
         /**
          * Constructs a new context menu parameter object.
@@ -1208,8 +1211,8 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public static final class ContextMenuParameter extends ContextMenuParameterBase {
 
-        private Calendar calendar;
-        private ZonedDateTime zonedDateTime;
+        private final Calendar calendar;
+        private final ZonedDateTime zonedDateTime;
 
         /**
          * Constructs a new parameter object.
@@ -1383,11 +1386,11 @@ public abstract class DateControl extends CalendarFXControl {
 
     private abstract static class DetailsParameter {
 
-        private InputEvent inputEvent;
-        private DateControl dateControl;
-        private Node owner;
-        private double screenX;
-        private double screenY;
+        private final InputEvent inputEvent;
+        private final DateControl dateControl;
+        private final Node owner;
+        private final double screenX;
+        private final double screenY;
 
         /**
          * Constructs a new parameter object.
@@ -1466,7 +1469,7 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final static class EntryDetailsParameter extends DetailsParameter {
 
-        private Entry<?> entry;
+        private final Entry<?> entry;
 
         /**
          * Constructs a new parameter object.
@@ -1503,7 +1506,7 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final static class DateDetailsParameter extends DetailsParameter {
 
-        private LocalDate localDate;
+        private final LocalDate localDate;
 
         /**
          * Constructs a new parameter object.
@@ -1650,13 +1653,13 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final static class EntryDetailsPopOverContentParameter {
 
-        private DateControl dateControl;
+        private final DateControl dateControl;
 
-        private Node node;
+        private final Node node;
 
-        private Entry<?> entry;
+        private final Entry<?> entry;
 
-        private PopOver popOver;
+        private final PopOver popOver;
 
         /**
          * Constructs a new parameter object.
@@ -2252,7 +2255,7 @@ public abstract class DateControl extends CalendarFXControl {
         return layoutProperty().get();
     }
 
-    private ObservableSet<DayOfWeek> weekendDays = FXCollections.observableSet();
+    private final ObservableSet<DayOfWeek> weekendDays = FXCollections.observableSet();
 
     /**
      * Returns the days of the week that are considered to be weekend days, for
@@ -2330,7 +2333,7 @@ public abstract class DateControl extends CalendarFXControl {
         return result;
     }
 
-    private List<DateControl> boundDateControls = FXCollections.observableArrayList();
+    private final List<DateControl> boundDateControls = FXCollections.observableArrayList();
 
     /**
      * Returns all data controls that are bound to this control.
