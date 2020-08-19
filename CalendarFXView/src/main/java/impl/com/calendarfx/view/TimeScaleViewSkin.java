@@ -132,7 +132,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         final T view = getSkinnable();
         final ZonedDateTime scrollTime = view.getScrollTime();
 
-        Instant time = scrollTime.toInstant().truncatedTo(ChronoUnit.HOURS);
+        Instant time = scrollTime.withHour(0).toInstant().truncatedTo(ChronoUnit.HOURS);
 
         double y = view.getLocation(time);
 
@@ -172,13 +172,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
             if (!labelVisible) {
 
-                /*
-                 * The label might not be visible but we still want to show it if is either displaying midnight (date)
-                 * or it is an "even" label. Without the "even" checks the labels will start jumping around while
-                 * scrolling.
-                 */
-
-                if (localTime.getHour() % 2 == 0 || midnight) {
+                if (midnight) {
                     labelVisible = true;
                 }
 
