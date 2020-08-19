@@ -21,6 +21,7 @@ import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import javafx.beans.InvalidationListener;
 
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 @SuppressWarnings("javadoc")
@@ -45,9 +46,21 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
         view.showTodayProperty().addListener(layoutListener);
 
         view.setOnScroll(evt -> {
+            final double oldLocation = evt.getY();
+            final ZonedDateTime time = view.getZonedDateTimeAt(0, oldLocation);
+
             if (view.isScrollingEnabled()) {
                 if (evt.isShortcutDown()) {
-                    view.setHourHeight(Math.min(getSkinnable().getMaxHourHeight(), Math.max(getSkinnable().getMinHourHeight(), view.getHourHeight() + evt.getDeltaY())));
+                    // first compute new hour height
+                    final double delta = Math.max(-5, Math.min(5, evt.getDeltaY()));
+                    view.setHourHeight(Math.min(getSkinnable().getMaxHourHeight(), Math.max(getSkinnable().getMinHourHeight(), view.getHourHeight() + delta)));
+
+                    // then adjust scroll time to make sure the time found at mouse location stays where it is
+                    final double newLocation = view.getLocation(time);
+                    final double locationDelta = newLocation - oldLocation;
+                    final ZonedDateTime newScrollTime = view.getZonedDateTimeAt(0, locationDelta);
+                    view.setScrollTime(newScrollTime);
+
                 } else {
                     view.setScrollTime(getSkinnable().getZonedDateTimeAt(0, -evt.getDeltaY()));
                 }
