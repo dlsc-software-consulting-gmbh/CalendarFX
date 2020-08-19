@@ -30,13 +30,8 @@ import static java.util.Objects.requireNonNull;
  * A control used for displaying a vertical time scale.
  *
  * <img src="doc-files/time-scale-view.png" alt="Time Scale View">
- *
  */
 public class TimeScaleView extends DayViewBase {
-
-    private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
-            this, "formatter",
-            DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
 
     /**
      * Constructs a new scale view.
@@ -50,34 +45,70 @@ public class TimeScaleView extends DayViewBase {
         return new TimeScaleViewSkin<>(this);
     }
 
+    // DATE FORMATTER
+
+    private final ObjectProperty<DateTimeFormatter> dateFormatter = new SimpleObjectProperty<>(this, "dateFormatter", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+
     /**
-     * Gets the DateTimeFormatter property, which is use to provide the format
-     * on the TimeScale Labels. By default it has a value of
-     * {@link FormatStyle#SHORT}, can be Overriden.
-     * 
+     * Gets the DateTimeFormatter instance, which is used to provide the format
+     * on the TimeScale for those labels that are displaying a date.
+     * By default it has a value of {@link FormatStyle#SHORT}.
+     *
      * @return the date formatter.
      */
-    protected ObjectProperty<DateTimeFormatter> dateTimeFormatterProperty() {
-        return formatter;
+    public final ObjectProperty<DateTimeFormatter> dateFormatterProperty() {
+        return dateFormatter;
     }
 
     /**
-     * Returns the value of {@link #dateTimeFormatterProperty()}
-     * 
-     * @return a date time formatter
+     * Returns the value of {@link #dateFormatterProperty()}
+     *
+     * @return the date formatter
      */
-    public final DateTimeFormatter getDateTimeFormatter() {
-        return dateTimeFormatterProperty().get();
+    public final DateTimeFormatter getDateFormatter() {
+        return dateFormatter.get();
     }
 
     /**
-     * Sets the value of {@link #dateTimeFormatterProperty()}
-     * 
-     * @param formatter
-     *            a date time formatter, not {@code null}
+     * Sets the value of {@link #dateFormatterProperty()}
+     *
+     * @param formatter the date formatter, not {@code null}
      */
-    public void setDateTimeFormatter(DateTimeFormatter formatter) {
+    public final void setDateFormatter(DateTimeFormatter formatter) {
+        this.dateFormatter.set(formatter);
+    }
+
+    // TIME FORMATTER
+
+    private final ObjectProperty<DateTimeFormatter> timeFormatter = new SimpleObjectProperty<>(this, "timeFormatter", DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
+
+    /**
+     * Gets the DateTimeFormatter instance, which is used to provide the format
+     * on the TimeScale for those labels that are displaying the time of day.
+     * By default it has a value of {@link FormatStyle#SHORT}.
+     *
+     * @return the time of day formatter.
+     */
+    protected ObjectProperty<DateTimeFormatter> timeFormatterProperty() {
+        return timeFormatter;
+    }
+
+    /**
+     * Returns the value of {@link #timeFormatterProperty()}
+     *
+     * @return the time of day formatter
+     */
+    public final DateTimeFormatter getTimeFormatter() {
+        return timeFormatterProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #timeFormatterProperty()}
+     *
+     * @param formatter the time of day formatter, not {@code null}
+     */
+    public void setTimeFormatter(DateTimeFormatter formatter) {
         requireNonNull(formatter);
-        dateTimeFormatterProperty().set(formatter);
+        timeFormatterProperty().set(formatter);
     }
 }

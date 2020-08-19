@@ -95,6 +95,7 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             resourceCalendarView.getResources().add(resource);
 
             DayView dayView = resourceCalendarView.getDayView(resource);
+            dayView.setHourHeight(8);
             dayView.setEnableCurrentTimeMarker(true);
             dayView.setEnableCurrentTimeCircle(i == 0);
             dayView.getCalendarSources().setAll(source);

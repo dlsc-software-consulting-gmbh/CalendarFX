@@ -80,13 +80,13 @@ public class WeekTimeScaleView extends TimeScaleView {
     }
 
     @Override
-    protected ObjectProperty<DateTimeFormatter> dateTimeFormatterProperty() {
+    protected ObjectProperty<DateTimeFormatter> timeFormatterProperty() {
         return formatter;
     }
 
     @Override
-    public void setDateTimeFormatter(DateTimeFormatter formatter) {
-        dateTimeFormatterProperty().set(formatter);
+    public void setTimeFormatter(DateTimeFormatter formatter) {
+        timeFormatterProperty().set(formatter);
     }
 
 }

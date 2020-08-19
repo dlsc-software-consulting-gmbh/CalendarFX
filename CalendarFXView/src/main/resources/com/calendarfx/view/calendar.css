@@ -658,6 +658,14 @@
     -fx-text-fill: gray;
 }
 
+.time-scale > .date-label {
+    -fx-font-size: 0.8em;
+    -fx-background-color: gray;
+    -fx-background-radius: 2px;
+    -fx-padding: 2px 4px;
+    -fx-text-fill: white;
+}
+
 .time-scale > .current-time-label {
     -fx-font-size: 0.8em;
     -fx-text-fill: firebrick;

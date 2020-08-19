@@ -20,6 +20,7 @@ import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.TimeScaleView;
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -28,6 +29,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -39,9 +41,9 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
     private static final String EARLY_HOUR_LATER = "early-hour-label";
     private static final String LATE_HOUR_LATER = "late-hour-label";
 
-    private List<Label> timeLabels = new ArrayList<>();
+    private final List<Label> timeLabels = new ArrayList<>();
 
-    private Label currentTimeLabel;
+    private final Label currentTimeLabel;
 
     public TimeScaleViewSkin(T view) {
         super(view);
@@ -79,7 +81,6 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         label.setManaged(false);
         label.setMaxWidth(Double.MAX_VALUE);
         label.setAlignment(Pos.CENTER_RIGHT);
-        label.getStyleClass().add("time-label");
         label.setTextOverrun(OverrunStyle.CLIP);
         timeLabels.add(label);
         getChildren().add(label);
@@ -109,8 +110,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
     private void updateShowMarkers() {
         T view = getSkinnable();
-        view.getProperties().put("show.current.time.marker",
-                isShowingTimeMarker());
+        view.getProperties().put("show.current.time.marker", isShowingTimeMarker());
     }
 
     protected boolean isShowingTimeMarker() {
@@ -138,7 +138,12 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
         int index = 0;
 
+        Bounds lastBoundsUsed = null;
+
         do {
+            final LocalTime localTime = LocalTime.ofInstant(time, view.getZoneId());
+            boolean midnight = localTime.equals(LocalTime.MIN);
+
             Label label;
 
             if (index < timeLabels.size()) {
@@ -147,12 +152,44 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
                 label = createTimeLabel();
             }
 
-            label.setVisible(true);
+            if (midnight) {
+                label.getStyleClass().setAll("label", "date-label");
+            } else {
+                label.getStyleClass().setAll("label", "time-label");
+            }
 
             double prefHeight = label.prefHeight(contentWidth);
 
-            label.setText(ZonedDateTime.ofInstant(time, view.getZoneId()).toLocalTime().format(getSkinnable().getDateTimeFormatter()));
-            label.resizeRelocate(snapPositionX(contentX), snapPositionY(y - prefHeight / 2), snapSizeX(contentWidth), snapSizeY(prefHeight));
+            if (midnight) {
+                label.setText(LocalDate.ofInstant(time, view.getZoneId()).format(getSkinnable().getDateFormatter()));
+            } else {
+                label.setText(ZonedDateTime.ofInstant(time, view.getZoneId()).toLocalTime().format(getSkinnable().getTimeFormatter()));
+            }
+
+            final BoundingBox layoutBounds = new BoundingBox(snapPositionX(contentX), snapPositionY(y - prefHeight / 2), snapSizeX(contentWidth), snapSizeY(prefHeight));
+
+            boolean labelVisible = lastBoundsUsed == null || !layoutBounds.intersects(lastBoundsUsed);
+
+            if (!labelVisible) {
+
+                /*
+                 * The label might not be visible but we still want to show it if is either displaying midnight (date)
+                 * or it is an "even" label. Without the "even" checks the labels will start jumping around while
+                 * scrolling.
+                 */
+
+                if (localTime.getHour() % 2 == 0 || midnight) {
+                    labelVisible = true;
+                }
+
+            }
+            label.setVisible(labelVisible);
+
+            if (labelVisible) {
+                label.resizeRelocate(layoutBounds.getMinX(), layoutBounds.getMinY(), layoutBounds.getWidth(), layoutBounds.getHeight());
+                lastBoundsUsed = layoutBounds;
+            }
+
 
             index++;
 
@@ -169,7 +206,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
     private void layoutChildrenStatic(double contentX, double contentY, double contentWidth, double contentHeight) {
         // now label
         LocalTime now = getSkinnable().getTime();
-        currentTimeLabel.setText(now.format(getSkinnable().getDateTimeFormatter()));
+        currentTimeLabel.setText(now.format(getSkinnable().getTimeFormatter()));
         placeLabel(currentTimeLabel, now, contentX, contentY, contentWidth, contentHeight);
 
         // hour labels
@@ -184,6 +221,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
                 label = timeLabels.get(hour);
             } else {
                 label = createTimeLabel();
+                label.getStyleClass().add("time-label");
             }
 
             label.getStyleClass().removeAll(EARLY_HOUR_LATER, LATE_HOUR_LATER);
@@ -193,11 +231,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
             Bounds localToParent1 = currentTimeLabel.localToParent(currentTimeLabel.getLayoutBounds());
             Bounds localToParent2 = label.localToParent(label.getLayoutBounds());
 
-            if (currentTimeLabel.isVisible() && getSkinnable().isShowCurrentTimeMarker() && localToParent1.intersects(localToParent2)) {
-                label.setVisible(false);
-            } else {
-                label.setVisible(true);
-            }
+            label.setVisible(!currentTimeLabel.isVisible() || !getSkinnable().isShowCurrentTimeMarker() || !localToParent1.intersects(localToParent2));
 
             if (time.isBefore(startTime) && !label.getStyleClass().contains(EARLY_HOUR_LATER)) {
                 label.getStyleClass().add(EARLY_HOUR_LATER);
@@ -239,7 +273,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
          */
         y = Math.min(contentHeight - label.getFont().getSize(), Math.max(0, ((int) (y - prefHeight / 2)) + .5));
 
-        label.setText(time.format(getSkinnable().getDateTimeFormatter()));
+        label.setText(time.format(getSkinnable().getTimeFormatter()));
         label.resizeRelocate(snapPositionX(contentX), snapPositionY(y), snapSizeX(contentWidth), snapSizeY(prefHeight));
     }
 
