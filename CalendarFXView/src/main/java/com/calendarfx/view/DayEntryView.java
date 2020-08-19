@@ -18,7 +18,9 @@ package com.calendarfx.view;
 
 import com.calendarfx.model.Entry;
 import impl.com.calendarfx.view.DayEntryViewSkin;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyMapWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.geometry.Pos;
@@ -53,7 +55,7 @@ public class DayEntryView extends EntryViewBase<DayView> {
         return new DayEntryViewSkin(this);
     }
 
-    private ReadOnlyMapWrapper<Pos, List<Node>> nodes = new ReadOnlyMapWrapper<>(this, "nodes");
+    private final ReadOnlyMapWrapper<Pos, List<Node>> nodes = new ReadOnlyMapWrapper<>(this, "nodes");
 
     /**
      * A day entry view can be decorated with symbols / nodes. These nodes are stored
@@ -112,5 +114,26 @@ public class DayEntryView extends EntryViewBase<DayView> {
         if (nodes.get() != null) {
             nodes.values().forEach(nodesList -> nodesList.remove(node));
         }
+    }
+
+    // MIN HEIGHT / TITLE HEIGHT
+
+    private final BooleanProperty minHeightEqualToTitleHeight = new SimpleBooleanProperty(this, "minHeightEqualToTitleHeight", true);
+
+    /**
+     * Controls whether the day entry view will at least always have the height of the title label.
+     *
+     * @return true if the entry has a minimum height that guarantees the visibility of the title label
+     */
+    public final BooleanProperty minHeightEqualToTitleHeightProperty() {
+        return minHeightEqualToTitleHeight;
+    }
+
+    public final boolean isMinHeightEqualToTitleHeight() {
+        return minHeightEqualToTitleHeight.get();
+    }
+
+    public final void setMinHeightEqualToTitleHeight(boolean minHeightEqualToTitleHeight) {
+        this.minHeightEqualToTitleHeight.set(minHeightEqualToTitleHeight);
     }
 }

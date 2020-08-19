@@ -48,7 +48,7 @@ import java.util.Set;
  */
 public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
     protected Label startTimeLabel;
     protected Label titleLabel;
@@ -329,7 +329,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     @Override
     protected double computeMinHeight(double width, double topInset,
                                       double rightInset, double bottomInset, double leftInset) {
-        if (titleLabel != null) {
+        if (titleLabel != null && getSkinnable().isMinHeightEqualToTitleHeight()) {
             // For this pref height calculation we do not consider the available
             // width because
             // we only want to show a single line of text anyways.
