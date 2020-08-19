@@ -20,11 +20,10 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
-import com.calendarfx.util.LoggingDomain;
+import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
 import com.calendarfx.view.popover.EntryPopOverContentPane;
-import com.calendarfx.util.ViewHelper;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -214,32 +213,15 @@ public abstract class DateControl extends CalendarFXControl {
         setDefaultCalendarProvider(control -> {
             List<CalendarSource> sources = getCalendarSources();
             if (sources != null) {
-                boolean calendarsDefined = false;
                 for (CalendarSource s : sources) {
                     List<? extends Calendar> calendars = s.getCalendars();
                     if (calendars != null && !calendars.isEmpty()) {
-                        calendarsDefined = true;
                         for (Calendar c : calendars) {
                             if (!c.isReadOnly() && isCalendarVisible(c)) {
                                 return c;
                             }
                         }
                     }
-                }
-                if (calendarsDefined) {
-                    Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
-                    alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"));
-                    String newLine = System.getProperty("line.separator");
-                    alert.setContentText(MessageFormat.format(Messages.getString("DateControl.CONTENT_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"),
-                            newLine));
-                    alert.show();
-                } else {
-                    Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
-                    alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_NO_CALENDARS_DEFINED"));
-                    alert.setContentText(Messages.getString("DateControl.CONTENT_TEXT_NO_CALENDARS_DEFINED"));
-                    alert.show();
                 }
             }
 
@@ -586,8 +568,16 @@ public abstract class DateControl extends CalendarFXControl {
             }
 
             return entry;
+
         } else {
-            LoggingDomain.EDITING.warning("No calendar found for adding a new entry.");
+
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
+            alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"));
+            String newLine = System.getProperty("line.separator");
+            alert.setContentText(MessageFormat.format(Messages.getString("DateControl.CONTENT_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"), newLine));
+            alert.show();
+
         }
 
         return null;
@@ -1220,12 +1210,12 @@ public abstract class DateControl extends CalendarFXControl {
          * @param evt         the event that triggered the context menu
          * @param dateControl the date control where the event occurred
          * @param calendar    the (default) calendar where newly created entries should
-         *                    be added
+         *                    be added (can be null if no editable calendar was found)
          * @param time        the time where the mouse click occurred
          */
         public ContextMenuParameter(ContextMenuEvent evt, DateControl dateControl, Calendar calendar, ZonedDateTime time) {
             super(evt, dateControl);
-            this.calendar = requireNonNull(calendar);
+            this.calendar = calendar;
             this.zonedDateTime = time;
         }
 
@@ -1251,8 +1241,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         @Override
         public String toString() {
-            return "ContextMenuParameter [calendar=" + calendar
-                    + ", zonedDateTime=" + zonedDateTime + "]";
+            return "ContextMenuParameter [calendar=" + calendar + ", zonedDateTime=" + zonedDateTime + "]";
         }
     }
 
