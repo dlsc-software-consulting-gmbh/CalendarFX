@@ -95,7 +95,6 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             resourceCalendarView.getResources().add(resource);
 
             DayView dayView = resourceCalendarView.getDayView(resource);
-            dayView.setHourHeight(8);
             dayView.setEnableCurrentTimeMarker(true);
             dayView.setEnableCurrentTimeCircle(i == 0);
             dayView.getCalendarSources().setAll(source);
@@ -105,6 +104,10 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
                     setHeightLayoutStrategy(HeightLayoutStrategy.COMPUTE_PREF_SIZE);
                 }
             });
+
+            if (i % 2 == 1) {
+                dayView.setStyle("-fx-background-color: #e9e9e9;");
+            }
         }
 
         Marker marker1 = new Marker();
