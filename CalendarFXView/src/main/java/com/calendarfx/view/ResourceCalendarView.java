@@ -53,6 +53,25 @@ public class ResourceCalendarView<T> extends DayViewBase {
         return new ResourceCalendarViewSkin(this);
     }
 
+    private final BooleanProperty showTimeScale = new SimpleBooleanProperty(this, "showTimeScale", true);
+
+    /**
+     * Controls whether the time scale shold be shown on the left-hand side or not.
+     *
+     * @return true if the scale should be shown
+     */
+    public BooleanProperty showTimeScaleProperty() {
+        return showTimeScale;
+    }
+
+    public boolean isShowTimeScale() {
+        return showTimeScale.get();
+    }
+
+    public void setShowTimeScale(boolean showTimeScale) {
+        this.showTimeScale.set(showTimeScale);
+    }
+
     private final ListProperty<Marker> markers = new SimpleListProperty<>(this, "markers", FXCollections.observableArrayList());
 
     public final ObservableList<Marker> getMarkers() {

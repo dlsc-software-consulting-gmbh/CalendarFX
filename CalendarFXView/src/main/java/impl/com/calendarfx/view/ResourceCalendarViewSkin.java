@@ -34,13 +34,13 @@ import java.util.HashMap;
 
 public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalendarView<T>> {
 
-    private GridPane gridPane = new GridPane();
+    private final GridPane gridPane = new GridPane();
 
-    private HeaderGridPane headerGridPane = new HeaderGridPane();
+    private final HeaderGridPane headerGridPane = new HeaderGridPane();
 
-    private BodyGridPane bodyGridPane = new BodyGridPane();
+    private final BodyGridPane bodyGridPane = new BodyGridPane();
 
-    private TimeScaleView timeScaleView = new TimeScaleView();
+    private final TimeScaleView timeScaleView = new TimeScaleView();
 
     private PlusMinusSlider slider;
 
@@ -48,6 +48,8 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
         super(view);
 
         timeScaleView.setScrollingEnabled(true);
+        timeScaleView.visibleProperty().bind(view.showTimeScaleProperty());
+        timeScaleView.managedProperty().bind(view.showTimeScaleProperty());
         view.bind(timeScaleView, true);
 
         gridPane.getStyleClass().add("resource-calendar-container");
@@ -164,11 +166,11 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         private MarkerLine draggedMarkerLine;
 
-        private InvalidationListener markerListener = it -> Platform.runLater(() -> getSkinnable().layout());
+        private final InvalidationListener markerListener = it -> Platform.runLater(() -> getSkinnable().layout());
 
-        private WeakInvalidationListener weakMarkerListener = new WeakInvalidationListener(markerListener);
+        private final WeakInvalidationListener weakMarkerListener = new WeakInvalidationListener(markerListener);
 
-        private ObservableMap<Marker, MarkerLine> markerLineMap = FXCollections.observableMap(new HashMap<>());
+        private final ObservableMap<Marker, MarkerLine> markerLineMap = FXCollections.observableMap(new HashMap<>());
 
         private double startY;
 
