@@ -24,6 +24,7 @@
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
         <version>11.8.3</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
@@ -197,7 +198,32 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>calendar.css</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.sun.javafx.css.parser.Css2Bin
+                            </mainClass>
+                            <arguments>
+                                <argument>
+                                    ${project.basedir}/src/main/resources/com/calendarfx/view/calendar.css
+                                </argument>
+                                <argument>
+                                    ${project.basedir}/target/classes/com/calendarfx/view/calendar.bss
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
