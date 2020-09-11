@@ -22,7 +22,7 @@
         <controlsfx.version>11.0.1</controlsfx.version>
         <ical4j.version>4.0.0-alpha2</ical4j.version>
         <ikonli.version>11.3.5</ikonli.version>
-        <sonar.projectKey>dlsc-software-consulting-gmbh_CalendarFX
+        <sonar.projectKey>dlsc-software-consulting-gmbh_CalendarFX2
         </sonar.projectKey>
         <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
