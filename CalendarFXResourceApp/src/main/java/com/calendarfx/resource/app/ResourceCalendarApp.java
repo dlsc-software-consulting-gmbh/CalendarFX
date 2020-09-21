@@ -21,13 +21,17 @@ import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Marker;
-import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourceCalendarView;
+import com.calendarfx.view.segments.SegmentedDayEntryView;
+import com.calendarfx.view.segments.basic.AlignedEntrySegment;
+import com.calendarfx.view.segments.basic.EntrySegment;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -35,6 +39,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -42,6 +47,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResourceCalendarApp extends Application {
 
@@ -116,7 +123,29 @@ public class ResourceCalendarApp extends Application {
              */
             dayView.setEntryViewFactory(entry -> {
 
-                DayEntryView entryView = new DayEntryView(entry);
+                SegmentedDayEntryView entryView = new SegmentedDayEntryView(entry);
+
+                /* Some additional visual elements to quickly demonstrate how segments API works.
+                 *
+                 * Description (weight: 5) is less important than footer (weight: 8).
+                 *
+                 * Additionally we add some simple graphical representation of entry status (without logic),
+                 * here in a form of three centered rectangles (weight: 6).
+                 * To place it before description segment we set the order to -1.
+                 *
+                 * All of additional segments are less important than title (weight: 10) and start time (weight: 9).
+                 * Title and start time segments are created by default (this can be override).
+                 *
+                 * Depending on how much space is available some segments can be hidden to free space for more
+                 * important ones - in other words: entries with less that required available space will not show
+                 * all segments.
+                 */
+                entryView.addSegment(new EntrySegment(5, VPos.CENTER,
+                        createLabel("#description: some additional information")));
+                entryView.addSegment(new EntrySegment(8, VPos.BOTTOM,
+                        createLabel("#footer")));
+                entryView.addSegment(new AlignedEntrySegment(6, VPos.CENTER, -1,
+                        createStatusRectangles()));
 
                 /* PSI:
                  * Here you can experiment with the new alignment strategy that allows
@@ -215,6 +244,29 @@ public class ResourceCalendarApp extends Application {
         primaryStage.setHeight(1000);
         primaryStage.centerOnScreen();
         primaryStage.show();
+    }
+
+    private Label createLabel(String text) {
+        Label label = new Label(text);
+        label.setMouseTransparent(true);
+        label.setWrapText(true);
+        return label;
+    }
+
+    private List<AlignedEntrySegment.AlignedNode> createStatusRectangles() {
+        return Arrays.asList(
+            new AlignedEntrySegment.AlignedNode(createRectangle(10, Color.GREEN), HPos.CENTER),
+            new AlignedEntrySegment.AlignedNode(createRectangle(10, Color.YELLOW), HPos.CENTER),
+            new AlignedEntrySegment.AlignedNode(createRectangle(10, Color.RED), HPos.CENTER)
+        );
+    }
+
+    private Rectangle createRectangle(double size, Color color) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setWidth(size);
+        rectangle.setHeight(size);
+        rectangle.setFill(color);
+        return rectangle;
     }
 
     class HelloDayViewCalendar extends Calendar {

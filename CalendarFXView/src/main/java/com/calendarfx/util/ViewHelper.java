@@ -16,9 +16,13 @@
 
 package com.calendarfx.util;
 
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
+import com.calendarfx.view.DraggedEntry;
+import com.calendarfx.view.EntryViewBase;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -269,5 +273,21 @@ public final class ViewHelper {
         if (requestedTime != null) {
             scrollPane.scrollToTime(requestedTime);
         }
+    }
+
+    public static Entry<?> getEntry(EntryViewBase<?> entryView) {
+        final Entry<?> entry = entryView.getEntry();
+        if (entry.isRecurrence()) {
+            return entry.getRecurrenceSourceEntry();
+        }
+        return entry;
+    }
+
+    public static Calendar getCalendar(EntryViewBase<?> entryView) {
+        final Entry<?> entry = getEntry(entryView);
+        if (entry instanceof DraggedEntry) {
+            return ((DraggedEntry) entry).getOriginalCalendar();
+        }
+        return entry.getCalendar();
     }
 }

@@ -15,12 +15,17 @@ module com.calendarfx.view {
     exports com.calendarfx.view.page;
     exports com.calendarfx.view.popover;
     exports com.calendarfx.view.print;
+    exports com.calendarfx.view.segments;
+    exports com.calendarfx.view.segments.base;
+    exports com.calendarfx.view.segments.basic;
+    exports com.calendarfx.view.segments.traits;
 
     exports impl.com.calendarfx.view;
     exports impl.com.calendarfx.view.page;
     exports impl.com.calendarfx.view.popover;
     exports impl.com.calendarfx.view.print;
     exports impl.com.calendarfx.view.util;
+    exports impl.com.calendarfx.view.segments;
 
     opens com.calendarfx.view;
 }
