@@ -18,7 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>14</javafx.version>
-        <javafx.maven.plugin.version>0.0.5-SNAPSHOT</javafx.maven.plugin.version>
+        <javafx.maven.plugin.version>0.0.5</javafx.maven.plugin.version>
         <controlsfx.version>11.0.2</controlsfx.version>
         <ical4j.version>4.0.0-alpha2</ical4j.version>
         <ikonli.version>11.3.5</ikonli.version>
