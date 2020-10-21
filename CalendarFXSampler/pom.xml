@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>fxsampler</artifactId>
-            <version>1.0.10</version>
+            <version>1.0.11</version>
         </dependency>
 
         <dependency>
@@ -98,7 +98,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>com.calendarfx.demo.CalendarFXSampler</mainClass>
+                    <mainClass>org.controlsfx.fxsampler/fxsampler.FXSampler</mainClass>
                 </configuration>
             </plugin>
         </plugins>
