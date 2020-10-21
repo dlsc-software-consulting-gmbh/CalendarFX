@@ -326,7 +326,7 @@ public class DetailedWeekView extends DayViewBase {
     private final BooleanProperty showScrollBar = new SimpleBooleanProperty(this, "showScrollBar", true);
 
     /**
-     * A property used to control the visibility of the vertial scrollbar.
+     * A property used to control the visibility of the vertical scrollbar.
      *
      * @return true if the scrollbar should be shown to the user
      */
