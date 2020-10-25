@@ -1,4 +1,6 @@
 module com.calendarfx.weather {
+    requires transitive javafx.graphics;
+
     requires javafx.controls;
     requires com.calendarfx.view;
     requires org.kordamp.ikonli.javafx;

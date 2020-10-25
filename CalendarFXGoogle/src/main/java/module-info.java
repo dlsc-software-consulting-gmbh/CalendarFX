@@ -1,4 +1,5 @@
 module com.calendarfx.google {
+    requires transitive javafx.graphics;
 
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome;
@@ -7,7 +8,6 @@ module com.calendarfx.google {
     requires com.calendarfx.view;
     requires javafx.base;
     requires com.google.api.services.calendar;
-    requires javafx.graphics;
     requires org.controlsfx.controls;
     requires javafx.controls;
     requires javafx.web;
