@@ -17,14 +17,12 @@
 package com.calendarfx.google.view.data;
 
 import com.calendarfx.google.model.GoogleEntry;
-import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static java.util.Comparator.naturalOrder;
+import java.util.TreeSet;
 
 /**
  * Class storing data about the entries loaded from google for one single calendar.
@@ -46,12 +44,12 @@ public final class GoogleCalendarData {
     /**
      * Set of slices already loaded for this calendar.
      */
-    private final Set<Slice> loadedSlices = Sets.newTreeSet(naturalOrder());
+    private final Set<Slice> loadedSlices = new TreeSet<>();
 
     /**
      * Set of slices being loaded in background.
      */
-    private final Set<Slice> inProgressSlices = Sets.newTreeSet(naturalOrder());
+    private final Set<Slice> inProgressSlices = new TreeSet<>();
 
     /**
      * Takes the list of slices and removes those already loaded.
