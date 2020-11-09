@@ -21,7 +21,7 @@
     <name>CalendarFXView</name>
 
     <parent>
-        <groupId>com.calendarfx</groupId>
+        <groupId>su.medsoft.calendarfx</groupId>
         <artifactId>calendar</artifactId>
         <version>11.8.3</version>
         <relativePath>../pom.xml</relativePath>
@@ -224,6 +224,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 </project>

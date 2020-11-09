@@ -2,7 +2,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.calendarfx</groupId>
+    <groupId>su.medsoft.calendarfx</groupId>
     <artifactId>calendar</artifactId>
     <version>11.8.3</version>
     <packaging>pom</packaging>
@@ -57,14 +57,25 @@
         <module>CalendarFXWeather</module>
     </modules>
 
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>bintray-dlsc-oss-repository</id>-->
+<!--            <name>dlsc-oss-repository</name>-->
+<!--            <url>-->
+<!--                https://api.bintray.com/maven/dlsc-oss/repository/CalendarFX/;publish=1-->
+<!--            </url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
+
     <distributionManagement>
         <repository>
-            <id>bintray-dlsc-oss-repository</id>
-            <name>dlsc-oss-repository</name>
-            <url>
-                https://api.bintray.com/maven/dlsc-oss/repository/CalendarFX/;publish=1
-            </url>
+            <id>quasar</id>
+            <url>https://nexus.medsoft.su/repository/quasar/</url>
         </repository>
+        <snapshotRepository>
+            <id>quasar</id>
+            <url>https://nexus.medsoft.su/repository/quasar/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>
@@ -88,6 +99,25 @@
                             net.fortuna.ical4j.util.MapTimeZoneCache
                         </net.fortuna.ical4j.timezone.cache.impl>
                     </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.5.1</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <serverId>nexus</serverId>
+                    <nexusUrl>https://nexus.medsoft.su/repository/quasar/</nexusUrl>
+                    <skipStaging>true</skipStaging>
                 </configuration>
             </plugin>
         </plugins>
