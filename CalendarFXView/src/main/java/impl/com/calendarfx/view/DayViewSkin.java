@@ -28,6 +28,7 @@ import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.EntryViewBase.AlignmentStrategy;
 import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
+import com.calendarfx.view.EntryViewBase.Layer;
 import com.calendarfx.view.EntryViewBase.Position;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.TimeBoundsResolver;
@@ -52,6 +53,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -524,8 +527,16 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private void layoutStandard(DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
-        List<DayEntryView> entryViews = getChildren().stream().filter(node -> node instanceof DayEntryView).map(node -> (DayEntryView) node).collect(Collectors.toList());
-        layoutEntryViews(entryViews, dayView, contentX, contentY, contentWidth, contentHeight);
+        Map<Layer, List<DayEntryView>> layerGroupedEntryViews = getChildren().stream()
+                .filter(DayEntryView.class::isInstance)
+                .map(DayEntryView.class::cast)
+                .collect(Collectors.groupingBy(EntryViewBase::getLayer));
+
+        List<DayEntryView> baseEntryViews = layerGroupedEntryViews.getOrDefault(Layer.BASE, Collections.emptyList());
+        List<DayEntryView> topEntryViews = layerGroupedEntryViews.getOrDefault(Layer.TOP, Collections.emptyList());
+
+        layoutBaseEntryViews(baseEntryViews, dayView, contentX, contentY, contentWidth, contentHeight);
+        layoutTopEntryViews(topEntryViews, dayView, contentX, contentY, contentWidth, contentHeight);
     }
 
     private void layoutSwimlane(DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
@@ -534,27 +545,40 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         double x = contentX;
         double w = contentWidth / (visibleCalendars.size());
 
+        Map<Calendar, List<DayEntryView>> calendarGroupedEntryViews = getChildren().stream()
+                .filter(DayEntryView.class::isInstance)
+                .map(DayEntryView.class::cast)
+                .filter(view -> visibleCalendars.contains(getEntryCalendar(view)))
+                .collect(Collectors.groupingBy(this::getEntryCalendar));
+
         for (Calendar calendar : visibleCalendars) {
 
-            List<DayEntryView> entryViews = getChildren().stream().filter(node -> node instanceof DayEntryView).map(node -> (DayEntryView) node).filter(view -> {
-                Calendar cal;
-                Entry<?> entry = view.getEntry();
-                if (entry instanceof DraggedEntry) {
-                    DraggedEntry draggedEntry = (DraggedEntry) view.getEntry();
-                    cal = draggedEntry.getOriginalCalendar();
-                } else {
-                    cal = entry.getCalendar();
-                }
-                return cal != null && cal.equals(calendar);
-            }).collect(Collectors.toList());
+            Map<Layer, List<DayEntryView>> layerGroupedEntryViews = calendarGroupedEntryViews.get( calendar ).stream()
+                    .collect(Collectors.groupingBy(EntryViewBase::getLayer));
 
-            layoutEntryViews(entryViews, dayView, x, contentY, w, contentHeight);
+            List<DayEntryView> baseEntryViews = layerGroupedEntryViews.getOrDefault(Layer.BASE, Collections.emptyList());
+            List<DayEntryView> topEntryViews = layerGroupedEntryViews.getOrDefault(Layer.TOP, Collections.emptyList());
+
+            layoutBaseEntryViews(baseEntryViews, dayView, x, contentY, w, contentHeight);
+            layoutTopEntryViews(topEntryViews, dayView, x, contentY, w, contentHeight);
             x += w;
 
         }
     }
 
-    private void layoutEntryViews(List<DayEntryView> entryViews, DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
+    private Calendar getEntryCalendar(DayEntryView view) {
+        Calendar cal;
+        Entry<?> entry = view.getEntry();
+        if (entry instanceof DraggedEntry) {
+            DraggedEntry draggedEntry = (DraggedEntry) view.getEntry();
+            cal = draggedEntry.getOriginalCalendar();
+        } else {
+            cal = entry.getCalendar();
+        }
+        return cal;
+    }
+
+    protected void layoutBaseEntryViews(List<DayEntryView> entryViews, DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
         List<Placement> placements;
 
         if (dayView.getOverlapResolutionStrategy().equals(OverlapResolutionStrategy.VISUAL_BOUNDS)) {
@@ -641,31 +665,77 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                     x += placement.getColumnIndex() * columnWidth;
                 }
 
-                double w = columnWidth;
-
-                if (!entryView.getAlignmentStrategy().equals(AlignmentStrategy.FILL)) {
-                    w = entryView.prefWidth(-1);
-                }
-
-                switch (entryView.getAlignmentStrategy()) {
-                    case ALIGN_RIGHT:
-                        x = columnWidth - w;
-                        break;
-                    case ALIGN_CENTER:
-                        x = x + columnWidth / 2 - w / 2;
-                        break;
-                    case ALIGN_LEFT:
-                    case FILL:
-                        break;
-                    default:
-                        break;
-                }
+                double entryWidth = computeEntryWidth(entryView, columnWidth);
+                double entryLeftOffset = computeEntryLeftOffset(entryView, entryWidth, columnWidth);
 
                 /*
                  * -2 on height to always have a gap between entries
                  */
-                entryView.resizeRelocate(snapPositionX(x), snapPositionY(y1), snapSizeX(w), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
+                entryView.resizeRelocate(snapPositionX(x + entryLeftOffset), snapPositionY(y1), snapSizeX(entryWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
             }
+        }
+    }
+
+    protected void layoutTopEntryViews(List<DayEntryView> entryViews, DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
+
+        entryViews.sort(Comparator.comparing(EntryViewBase::getStartDate));
+
+        for (DayEntryView entryView : entryViews) {
+            Entry<?> entry = entryView.getEntry();
+
+            double y1;
+            double y2;
+
+            if (dayView.isScrollingEnabled()) {
+
+                y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
+                y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
+
+            } else {
+
+                y1 = dayView.getLocation(entry.getStartTime());
+                y2 = dayView.getLocation(entry.getEndTime());
+
+            }
+
+            double entryWidth = computeEntryWidth(entryView, contentWidth);
+            double entryLeftOffset = computeEntryLeftOffset(entryView, entryWidth, contentWidth);
+
+            double minHeight = entryView.minHeight(entryWidth);
+
+            entryView.resizeRelocate(snapPositionX(contentX + entryLeftOffset), snapPositionY(y1),
+                    snapSizeX(entryWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
+            entryView.toFront();
+        }
+    }
+
+    /**
+     * Compute entry width during layout phase.
+     *
+     * @param entryView view entry
+     * @param availableWidth maximum available horizontal space for entry view
+     */
+    private double computeEntryWidth(EntryViewBase<?> entryView, double availableWidth) {
+        if (entryView.getAlignmentStrategy().equals(AlignmentStrategy.FILL)) {
+            return availableWidth;
+        }
+        double preferredWidth = entryView.prefWidth(-1);
+        if (preferredWidth != 0.0) {
+            return preferredWidth;
+        }
+        return availableWidth * (entryView.getWidthPercentage() * 0.01);
+    }
+
+    private double computeEntryLeftOffset(EntryViewBase<?> entryView, double entryWidth, double availableWidth) {
+        switch (entryView.getAlignmentStrategy()) {
+            default:
+            case FILL:
+            case ALIGN_LEFT:
+                return 0.0;
+            case ALIGN_CENTER:
+                return (availableWidth - entryWidth) * 0.5;
+            case ALIGN_RIGHT:
+                return (availableWidth - entryWidth);
         }
     }
 
