@@ -21,6 +21,7 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
@@ -28,7 +29,7 @@ import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.EntryViewBase.AlignmentStrategy;
 import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
-import com.calendarfx.view.EntryViewBase.Layer;
+import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.EntryViewBase.Position;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.TimeBoundsResolver;
@@ -58,6 +59,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -140,6 +143,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         view.showCurrentTimeTodayMarkerProperty().addListener(it -> updateTimelineVisibility());
 
         view.layoutProperty().addListener(it -> view.requestLayout());
+        view.visibleLayersProperty().addListener((InvalidationListener) it -> view.requestLayout());
 
         // infinite scrolling
         view.scrollTimeProperty().addListener(it -> {
@@ -527,16 +531,12 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private void layoutStandard(DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
-        Map<Layer, List<DayEntryView>> layerGroupedEntryViews = getChildren().stream()
-                .filter(DayEntryView.class::isInstance)
-                .map(DayEntryView.class::cast)
-                .collect(Collectors.groupingBy(EntryViewBase::getLayer));
 
-        List<DayEntryView> baseEntryViews = layerGroupedEntryViews.getOrDefault(Layer.BASE, Collections.emptyList());
-        List<DayEntryView> topEntryViews = layerGroupedEntryViews.getOrDefault(Layer.TOP, Collections.emptyList());
+        Predicate<DayEntryView> isRelatedToVisibleLayer = view -> dayView.visibleLayersProperty().contains(view.getLayer());
 
-        layoutBaseEntryViews(baseEntryViews, dayView, contentX, contentY, contentWidth, contentHeight);
-        layoutTopEntryViews(topEntryViews, dayView, contentX, contentY, contentWidth, contentHeight);
+        Map<Layer, List<DayEntryView>> layerGroupedEntryViews = groupEntryViewsBy(EntryViewBase::getLayer, isRelatedToVisibleLayer);
+
+        layoutOnLayers(layerGroupedEntryViews, dayView, contentX, contentY, contentWidth, contentHeight);
     }
 
     private void layoutSwimlane(DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
@@ -545,28 +545,38 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         double x = contentX;
         double w = contentWidth / (visibleCalendars.size());
 
-        Map<Calendar, List<DayEntryView>> calendarGroupedEntryViews = getChildren().stream()
-                .filter(DayEntryView.class::isInstance)
-                .map(DayEntryView.class::cast)
-                .filter(view -> visibleCalendars.contains(getEntryCalendar(view)))
-                .collect(Collectors.groupingBy(this::getEntryCalendar));
+        Predicate<DayEntryView> isRelatedToVisibleLayer = view -> dayView.visibleLayersProperty().contains(view.getLayer());
+        Predicate<DayEntryView> isRelatedToVisibleCalendar = view -> visibleCalendars.contains(getEntryViewCalendar(view));
+
+        Predicate<DayEntryView> entryViewFilter = isRelatedToVisibleLayer.and(isRelatedToVisibleCalendar);
+        Map<Calendar, List<DayEntryView>> calendarGroupedEntryViews = groupEntryViewsBy(this::getEntryViewCalendar, entryViewFilter);
 
         for (Calendar calendar : visibleCalendars) {
-
             Map<Layer, List<DayEntryView>> layerGroupedEntryViews = calendarGroupedEntryViews.get( calendar ).stream()
                     .collect(Collectors.groupingBy(EntryViewBase::getLayer));
 
-            List<DayEntryView> baseEntryViews = layerGroupedEntryViews.getOrDefault(Layer.BASE, Collections.emptyList());
-            List<DayEntryView> topEntryViews = layerGroupedEntryViews.getOrDefault(Layer.TOP, Collections.emptyList());
-
-            layoutBaseEntryViews(baseEntryViews, dayView, x, contentY, w, contentHeight);
-            layoutTopEntryViews(topEntryViews, dayView, x, contentY, w, contentHeight);
+            layoutOnLayers(layerGroupedEntryViews, dayView, x, contentY, w, contentHeight);
             x += w;
-
         }
     }
 
-    private Calendar getEntryCalendar(DayEntryView view) {
+    private <G> Map<G, List<DayEntryView>> groupEntryViewsBy(Function<DayEntryView, G> groupByFunction, Predicate<DayEntryView> viewEntryFilter) {
+        return getChildren().stream()
+                .filter(DayEntryView.class::isInstance)
+                .map(DayEntryView.class::cast)
+                .filter(viewEntryFilter)
+                .collect(Collectors.groupingBy(groupByFunction));
+    }
+
+    private void layoutOnLayers(Map<Layer, List<DayEntryView>> layerGroupedViewEntries, DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
+        List<DayEntryView> baseEntryViews = layerGroupedViewEntries.getOrDefault(DateControl.Layer.BASE, Collections.emptyList());
+        layoutBaseEntryViews(baseEntryViews, dayView, contentX, contentY, contentWidth, contentHeight);
+
+        List<DayEntryView> topEntryViews = layerGroupedViewEntries.getOrDefault(DateControl.Layer.TOP, Collections.emptyList());
+        layoutTopEntryViews(topEntryViews, dayView, contentX, contentY, contentWidth, contentHeight);
+    }
+
+    private Calendar getEntryViewCalendar(DayEntryView view) {
         Calendar cal;
         Entry<?> entry = view.getEntry();
         if (entry instanceof DraggedEntry) {

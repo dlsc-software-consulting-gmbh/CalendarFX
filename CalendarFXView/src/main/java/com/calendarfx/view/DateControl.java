@@ -423,6 +423,29 @@ public abstract class DateControl extends CalendarFXControl {
         prop.set(visible);
     }
 
+    public enum Layer {
+
+        /**
+         * Base (and default) presentation layer for entry views.
+         */
+        BASE,
+
+        /**
+         * Top presentation layer for entry views. Presented view entries will be visible above base layer.
+         * Uses simple layout system, which does not support resolving of overlapping entries.
+         */
+        TOP
+    }
+
+    private final ObservableSet<Layer> visibleLayers = FXCollections.observableSet(Layer.BASE, Layer.TOP);
+
+    /**
+     * Collection of layers which should be visible/presented.
+     */
+    public final ObservableSet<Layer> visibleLayersProperty() {
+        return visibleLayers;
+    }
+
     /**
      * Requests that the date control should reload its data and recreate its
      * entry views. Normally applications do not have to call this method. It is
@@ -697,6 +720,8 @@ public abstract class DateControl extends CalendarFXControl {
         PopOver datePopOver = new DatePopOver(this, date);
         datePopOver.show(owner);
     }
+
+
 
     private abstract static class ContextMenuParameterBase {
 
@@ -2980,6 +3005,87 @@ public abstract class DateControl extends CalendarFXControl {
             }
         });
 
+        items.add(new Item() {
+            @Override
+            public Optional<ObservableValue<? extends Object>> getObservableValue() {
+                return Optional.empty();
+            }
+
+            @Override
+            public void setValue(Object value) {
+                if ((Boolean) value) {
+                    visibleLayersProperty().add(Layer.BASE);
+                } else {
+                    visibleLayersProperty().remove(Layer.BASE);
+                }
+            }
+
+            @Override
+            public Object getValue() {
+                return visibleLayersProperty().contains(Layer.BASE);
+            }
+
+            @Override
+			public Class<?> getType() {
+				return Boolean.class;
+			}
+
+            @Override
+            public String getName() {
+                return "Base Layer";
+            }
+
+			@Override
+			public String getDescription() {
+				return "Base Layer visible / hidden";
+			}
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+		});
+
+        items.add(new Item() {
+            @Override
+            public Optional<ObservableValue<? extends Object>> getObservableValue() {
+                return Optional.empty();
+            }
+
+            @Override
+            public void setValue(Object value) {
+                if ((Boolean) value) {
+                    visibleLayersProperty().add(Layer.TOP);
+                } else {
+                    visibleLayersProperty().remove(Layer.TOP);
+                }
+            }
+
+            @Override
+            public Object getValue() {
+                return visibleLayersProperty().contains(Layer.TOP);
+            }
+
+            @Override
+            public Class<?> getType() {
+                return Boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Top Layer";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Top Layer visible / hidden";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
 
         return items;
     }

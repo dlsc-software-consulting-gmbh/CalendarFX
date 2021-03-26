@@ -20,11 +20,13 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.EntryContextMenuParameter;
 import com.calendarfx.view.DateControl.EntryDetailsParameter;
+import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -222,6 +224,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         addEventHandler(MouseEvent.MOUSE_PRESSED, this::performSelection);
 
         bindEntry(entry);
+
+        layerProperty().addListener(weakLayerListener);
     }
 
     /**
@@ -236,6 +240,10 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
     private final InvalidationListener calendarListener = it -> bindVisibility();
 
     private final WeakInvalidationListener weakCalendarListener = new WeakInvalidationListener(calendarListener);
+
+    private final InvalidationListener layerListener = it -> bindVisibility();
+
+    private final WeakInvalidationListener weakLayerListener = new WeakInvalidationListener(layerListener);
 
     private void bindEntry(Entry<?> entry) {
         setStartDate(entry.getStartDate());
@@ -256,12 +264,22 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     private void bindVisibility() {
         Entry<?> entry = getEntry();
-        if (entry != null) {
+        if (entry != null && getDateControl() != null) {
             Calendar calendar = entry.getCalendar();
+
             if (calendar != null) {
-                visibleProperty().bind(Bindings.and(getDateControl().getCalendarVisibilityProperty(calendar), Bindings.not(hiddenProperty())));
+                BooleanBinding binding = Bindings.and(getDateControl().getCalendarVisibilityProperty(calendar), Bindings.not(hiddenProperty()));
+                if (getLayer() != null) {
+                    binding = binding.and(Bindings.createBooleanBinding(this::isAssignedLayerVisible, getDateControl().visibleLayersProperty()));
+                }
+                visibleProperty().bind(binding);
             }
         }
+    }
+
+    private boolean isAssignedLayerVisible()
+    {
+        return getDateControl().visibleLayersProperty().contains(getLayer());
     }
 
     private boolean _hidden = false;
@@ -461,20 +479,6 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
          * view is shown on that day.
          */
         ONLY
-    }
-
-    public enum Layer {
-
-        /**
-         * Base (and default) presentation layer for entry views.
-         */
-        BASE,
-
-        /**
-         * Top presentation layer for entry views. Presented view entries will be visible above base layer.
-         * Uses simple layout system, which does not support resolving of overlapping entries.
-         */
-        TOP
     }
 
     private Position _position = Position.ONLY;

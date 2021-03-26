@@ -21,10 +21,10 @@ import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Marker;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.EntryViewBase;
-import com.calendarfx.view.EntryViewBase.Layer;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -141,7 +141,7 @@ public class ResourceCalendarApp extends Application {
                 if (entry instanceof TopEntry) {
                     entryView.setWidthPercentage(25.0);
                     entryView.setAlignmentStrategy(EntryViewBase.AlignmentStrategy.ALIGN_RIGHT);
-                    entryView.setLayer(Layer.TOP);
+                    entryView.setLayer(DateControl.Layer.TOP);
                 }
 
                 /* PSI:
