@@ -552,7 +552,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         Map<Calendar, List<DayEntryView>> calendarGroupedEntryViews = groupEntryViewsBy(this::getEntryViewCalendar, entryViewFilter);
 
         for (Calendar calendar : visibleCalendars) {
-            Map<Layer, List<DayEntryView>> layerGroupedEntryViews = calendarGroupedEntryViews.get( calendar ).stream()
+            Map<Layer, List<DayEntryView>> layerGroupedEntryViews = calendarGroupedEntryViews.getOrDefault(calendar, Collections.emptyList()).stream()
                     .collect(Collectors.groupingBy(EntryViewBase::getLayer));
 
             layoutOnLayers(layerGroupedEntryViews, dayView, x, contentY, w, contentHeight);
