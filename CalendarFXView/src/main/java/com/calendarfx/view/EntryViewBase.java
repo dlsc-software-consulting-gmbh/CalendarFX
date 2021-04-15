@@ -20,18 +20,22 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.EntryContextMenuParameter;
 import com.calendarfx.view.DateControl.EntryDetailsParameter;
+import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -220,6 +224,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         addEventHandler(MouseEvent.MOUSE_PRESSED, this::performSelection);
 
         bindEntry(entry);
+
+        layerProperty().addListener(weakLayerListener);
     }
 
     /**
@@ -234,6 +240,10 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
     private final InvalidationListener calendarListener = it -> bindVisibility();
 
     private final WeakInvalidationListener weakCalendarListener = new WeakInvalidationListener(calendarListener);
+
+    private final InvalidationListener layerListener = it -> bindVisibility();
+
+    private final WeakInvalidationListener weakLayerListener = new WeakInvalidationListener(layerListener);
 
     private void bindEntry(Entry<?> entry) {
         setStartDate(entry.getStartDate());
@@ -254,12 +264,22 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     private void bindVisibility() {
         Entry<?> entry = getEntry();
-        if (entry != null) {
+        if (entry != null && getDateControl() != null) {
             Calendar calendar = entry.getCalendar();
+
             if (calendar != null) {
-                visibleProperty().bind(Bindings.and(getDateControl().getCalendarVisibilityProperty(calendar), Bindings.not(hiddenProperty())));
+                BooleanBinding binding = Bindings.and(getDateControl().getCalendarVisibilityProperty(calendar), Bindings.not(hiddenProperty()));
+                if (getLayer() != null) {
+                    binding = binding.and(Bindings.createBooleanBinding(this::isAssignedLayerVisible, getDateControl().visibleLayersProperty()));
+                }
+                visibleProperty().bind(binding);
             }
         }
+    }
+
+    private boolean isAssignedLayerVisible()
+    {
+        return getDateControl().visibleLayersProperty().contains(getLayer());
     }
 
     private boolean _hidden = false;
@@ -845,6 +865,109 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         return selectedProperty().get();
     }
 
+    /**
+     * Entry presentation layer.
+     */
+
+    private Layer _layer = Layer.BASE;
+
+    private ObjectProperty<Layer> layer;
+
+    /**
+     * Layer on which entry will be presented. For possible values please check {@link Layer}.
+     *
+     * @return the entry presentation layer
+     */
+    public final ObjectProperty<Layer> layerProperty() {
+        if (layer == null) {
+            layer = new SimpleObjectProperty<>(this, "layer", _layer);
+        }
+        return layer;
+    }
+
+    /**
+     * Returns the value of {@link #layerProperty()}.
+     *
+     * @return the entry presentation layer
+     */
+    public final Layer getLayer() {
+        return layer == null ? _layer : layer.get();
+    }
+
+    /**
+     * Sets the value of {@link #layerProperty()}.
+     *
+     * @param layer the entry presentation layer
+     */
+    public final void setLayer(Layer layer) {
+        if (this.layer == null) {
+            _layer = layer;
+        } else {
+            this.layer.set(layer);
+        }
+    }
+
+    /**
+     * Width percentage of entry view.
+     */
+
+    private Double _widthPercentage = 100.0;
+
+    private DoubleProperty widthPercentage;
+
+    /**
+     * A percentage value used to specify how much of the available width inside the
+     * view will be utilized by the entry views. The default value is 100%, however
+     * applications might want to set a smaller value to allow the user to click and
+     * create new entries in already used time intervals.
+     * <p>
+     * Width percentage is only used for width computation when {@link #prefWidthProperty()}
+     * of view entry has no defined value and when {@link #alignmentStrategyProperty()}
+     * is not {@link AlignmentStrategy#FILL}.
+     *</p>
+     * @return the entry percentage width
+     */
+    public final DoubleProperty widthPercentageProperty() {
+        if (widthPercentage == null) {
+            widthPercentage = new SimpleDoubleProperty(this, "widthPercentage", _widthPercentage) {
+                @Override
+                public void set(double percentage) {
+                    validateWidthPercentageProperty(percentage);
+                    super.set(percentage);
+                }
+            };
+        }
+        return widthPercentage;
+    }
+
+    /**
+     * Returns the value of {@link #widthPercentageProperty()}.
+     *
+     * @return the entry percentage width
+     */
+    public double getWidthPercentage() {
+        return widthPercentage == null ? _widthPercentage : widthPercentage.get();
+    }
+
+    /**
+     * Sets the value of {@link #widthPercentage}.
+     *
+     * @param widthPercentage the new entry percentage width
+     */
+    public final void setWidthPercentage(double widthPercentage) {
+        if (this.widthPercentage == null) {
+            validateWidthPercentageProperty(widthPercentage);
+            _widthPercentage = widthPercentage;
+        } else {
+            this.widthPercentage.set(widthPercentage);
+        }
+    }
+
+    private void validateWidthPercentageProperty(double newValue) {
+        if (newValue < 0.0 || newValue > 100.0) {
+            throw new IllegalArgumentException("percentage width must be between 0 and 100 but was " + newValue);
+        }
+    }
 
     /**
      * Different strategies for determining the height of an entry view. Normally
@@ -852,7 +975,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * we might want to simply use the start time for its location and the required
      * height based on its content (e.g. the labels inside the entry view). The layout
      * strategy {@link HeightLayoutStrategy#COMPUTE_PREF_SIZE} disables changes to the end
-     * time of the entry as the bottom y coordiante of the view would not accurately
+     * time of the entry as the bottom y coordinate of the view would not accurately
      * represent the end time of the entry.
      *
      * @see DayViewBase#setOverlapResolutionStrategy(OverlapResolutionStrategy)
@@ -889,7 +1012,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * entry's view on the left, the center, or the middle.
      * <p>
      *     If the time intervals of two entries are overlapping then the entries might
-     *     be placed in two columns. The alignment strategry would then determine the layout
+     *     be placed in two columns. The alignment strategy would then determine the layout
      *     of the entry within its column.
      * </p>
      *

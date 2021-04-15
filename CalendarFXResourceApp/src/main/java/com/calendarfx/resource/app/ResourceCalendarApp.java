@@ -21,8 +21,10 @@ import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Marker;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
+import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.ResourceCalendarView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,8 +44,14 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class ResourceCalendarApp extends Application {
+
+    public static final int DATA_GENERATION_SEED = 11011;
+
+    final Random random = new Random(DATA_GENERATION_SEED);
 
     @Override
     public void start(Stage primaryStage) {
@@ -90,17 +98,25 @@ public class ResourceCalendarApp extends Application {
         for (int i = 0; i < 5; i++) {
             CalendarSource source = new CalendarSource("Default");
 
-            Calendar calendar1 = new HelloDayViewCalendar();
+            HelloDayViewCalendar calendar1 = new HelloDayViewCalendar(random.nextLong());
+            calendar1.generateBaseEntries();
             calendar1.setStyle(Style.STYLE1);
             source.getCalendars().add(calendar1);
 
-            Calendar calendar2 = new HelloDayViewCalendar();
+            HelloDayViewCalendar calendar2 = new HelloDayViewCalendar(random.nextLong());
+            calendar2.generateBaseEntries();
             calendar2.setStyle(Style.STYLE2);
             source.getCalendars().add(calendar2);
 
-            Calendar calendar3 = new HelloDayViewCalendar();
+            HelloDayViewCalendar calendar3 = new HelloDayViewCalendar(random.nextLong());
+            calendar3.generateBaseEntries();
             calendar3.setStyle(Style.STYLE3);
             source.getCalendars().add(calendar3);
+
+            HelloDayViewCalendar calendar4 = new HelloDayViewCalendar(random.nextLong());
+            calendar4.generateTopEntries();
+            calendar4.setStyle(Style.STYLE4);
+            source.getCalendars().add(calendar4);
 
             String resource = "Resource " + (i + 1);
             resourceCalendarView.getResources().add(resource);
@@ -114,9 +130,19 @@ public class ResourceCalendarApp extends Application {
              * Setting a custom entry view factory will allow you to set icons on your entry
              * views based on state information provided by your model.
              */
+
+            Random iconsRandom = new Random();
+
             dayView.setEntryViewFactory(entry -> {
+                iconsRandom.setSeed(entry.getTitle().hashCode());
 
                 DayEntryView entryView = new DayEntryView(entry);
+
+                if (entry instanceof TopEntry) {
+                    entryView.setWidthPercentage(25.0);
+                    entryView.setAlignmentStrategy(EntryViewBase.AlignmentStrategy.ALIGN_RIGHT);
+                    entryView.setLayer(DateControl.Layer.TOP);
+                }
 
                 /* PSI:
                  * Here you can experiment with the new alignment strategy that allows
@@ -135,28 +161,28 @@ public class ResourceCalendarApp extends Application {
                  */
                 // entryView.setHeightLayoutStrategy(HeightLayoutStrategy.COMPUTE_PREF_SIZE);
 
-                if (Math.random() > .7) {
+                if (iconsRandom.nextDouble() > .7) {
                     final FontIcon node = new FontIcon(FontAwesome.ERASER);
                     node.setIconColor(Color.RED);
                     node.setIconSize(16);
                     entryView.addNode(Pos.BOTTOM_RIGHT, node);
                 }
 
-                if (Math.random() > .9) {
+                if (iconsRandom.nextDouble() > .9) {
                     final FontIcon node = new FontIcon(FontAwesome.CODE);
                     node.setIconColor(Color.BLUE);
                     node.setIconSize(16);
                     entryView.addNode(Pos.BOTTOM_RIGHT, node);
                 }
 
-                if (Math.random() > .7) {
+                if (iconsRandom.nextDouble() > .7) {
                     final FontIcon node = new FontIcon(FontAwesome.QRCODE);
                     node.setIconColor(Color.MEDIUMPURPLE);
                     node.setIconSize(16);
                     entryView.addNode(Pos.BOTTOM_RIGHT, node);
                 }
 
-                if (Math.random() > .7) {
+                if (iconsRandom.nextDouble() > .7) {
                     final FontIcon node = new FontIcon(FontAwesome.SIGN_IN);
                     node.setIconColor(Color.MEDIUMSPRINGGREEN);
                     node.setIconSize(16);
@@ -219,24 +245,35 @@ public class ResourceCalendarApp extends Application {
 
     class HelloDayViewCalendar extends Calendar {
 
-        public HelloDayViewCalendar() {
-            createEntries(LocalDate.now().minusDays(2));
-            createEntries(LocalDate.now().minusDays(1));
-            createEntries(LocalDate.now());
-            createEntries(LocalDate.now().plusDays(1));
-            createEntries(LocalDate.now().plusDays(2));
+        final Random dataRandom = new Random();
+
+        public HelloDayViewCalendar(long dataSeed) {
+            dataRandom.setSeed(dataSeed);
         }
 
-        private void createEntries(LocalDate startDate) {
-            for (int j = 0; j < 5 + (int) (Math.random() * 4); j++) {
-                Entry<?> entry = new Entry<>();
+        public void generateBaseEntries() {
+            createEntries(LocalDate.now().minusDays(2), Entry::new);
+            createEntries(LocalDate.now().minusDays(1), Entry::new);
+            createEntries(LocalDate.now(), Entry::new);
+            createEntries(LocalDate.now().plusDays(1), Entry::new);
+            createEntries(LocalDate.now().plusDays(2), Entry::new);
+        }
+
+        public void generateTopEntries() {
+            createEntries(LocalDate.now(), TopEntry::new);
+        }
+
+        private <T extends Entry<?>> void createEntries(LocalDate startDate, Supplier<T> entryProducer) {
+            for (int j = 0; j < 5 + (int) (dataRandom.nextDouble() * 4); j++) {
+                T entry = entryProducer.get();
                 entry.changeStartDate(startDate);
                 entry.changeEndDate(startDate);
 
-                entry.setTitle("Entry " + (j + 1));
+                String s = entry.getClass().getSimpleName();
+                entry.setTitle(s + (j + 1));
 
-                int hour = (int) (Math.random() * 23);
-                int durationInHours = Math.max(1, Math.min(24 - hour, (int) (Math.random() * 4)));
+                int hour = (int) (dataRandom.nextDouble() * 23);
+                int durationInHours = Math.max(1, Math.min(24 - hour, (int) (dataRandom.nextDouble() * 4)));
 
                 LocalTime startTime = LocalTime.of(hour, 0);
                 LocalTime endTime = startTime.plusHours(durationInHours);
@@ -251,5 +288,9 @@ public class ResourceCalendarApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static class TopEntry<T> extends Entry<T>
+    {
     }
 }
