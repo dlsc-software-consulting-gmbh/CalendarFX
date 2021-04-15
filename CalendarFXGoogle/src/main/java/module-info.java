@@ -3,7 +3,7 @@ module com.calendarfx.google {
 
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome;
-    requires org.kordamp.iconli.core;
+    requires org.kordamp.ikonli.core;
 
     requires com.calendarfx.view;
     requires javafx.base;
