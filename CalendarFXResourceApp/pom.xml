@@ -18,12 +18,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>resources</artifactId>
-    <name>CalendarFXApp</name>
+    <name>CalendarFXResourceApp</name>
 
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>11.8.3</version>
+        <version>11.9.0</version>
     </parent>
 
     <properties>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
-            <version>11.8.3</version>
+            <version>11.9.0</version>
         </dependency>
 
     </dependencies>

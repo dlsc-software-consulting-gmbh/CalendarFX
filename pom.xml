@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.calendarfx</groupId>
     <artifactId>calendar</artifactId>
-    <version>11.8.3</version>
+    <version>11.9.0</version>
     <packaging>pom</packaging>
     <name>CalendarFX</name>
     <description>The parent project for the various CalendarFX modules.
@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>16</javafx.version>
         <javafx.maven.plugin.version>0.0.5</javafx.maven.plugin.version>
-        <controlsfx.version>11.0.3</controlsfx.version>
+        <controlsfx.version>11.1.0</controlsfx.version>
         <ical4j.version>4.0.0-alpha2</ical4j.version>
         <ikonli.version>12.2.0</ikonli.version>
         <sonar.projectKey>dlsc-software-consulting-gmbh_CalendarFX2

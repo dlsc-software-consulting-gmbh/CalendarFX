@@ -1,4 +1,4 @@
-module com.calendarfx.app {
+module com.calendarfx.resource.app {
     requires transitive javafx.graphics;
 
     requires javafx.controls;
