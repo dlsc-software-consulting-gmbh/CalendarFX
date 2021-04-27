@@ -30,6 +30,7 @@ import javafx.util.Duration;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -161,11 +162,13 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
             double prefHeight = label.prefHeight(contentWidth);
 
             if (midnight) {
-                label.setText(LocalDate.ofInstant(time, view.getZoneId()).format(getSkinnable().getDateFormatter()));
-                label.setStyle(getSkinnable().getDateStyleProvider().getStyle(time));
+                LocalDateTime dateTime = LocalDateTime.ofInstant(time, view.getZoneId());
+                label.setText(dateTime.toLocalDate().format(view.getDateFormatter()));
+                label.setStyle(view.getDateStyleProvider().getStyle(dateTime));
             } else {
-                label.setText(ZonedDateTime.ofInstant(time, view.getZoneId()).toLocalTime().format(getSkinnable().getTimeFormatter()));
-                label.setStyle(getSkinnable().getTimeStyleProvider().getStyle(time));
+                ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(time, view.getZoneId());
+                label.setText(zonedDateTime.toLocalTime().format(view.getTimeFormatter()));
+                label.setStyle(view.getTimeStyleProvider().getStyle(zonedDateTime.toLocalDateTime()));
             }
 
             final BoundingBox layoutBounds = new BoundingBox(snapPositionX(contentX), snapPositionY(y - prefHeight / 2), snapSizeX(contentWidth), snapSizeY(prefHeight));
@@ -218,6 +221,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
             } else {
                 label = createTimeLabel();
                 label.getStyleClass().add("time-label");
+                label.setStyle(getSkinnable().getTimeStyleProvider().getStyle(time.atDate(getSkinnable().getDate())));
             }
 
             label.getStyleClass().removeAll(EARLY_HOUR_LATER, LATE_HOUR_LATER);

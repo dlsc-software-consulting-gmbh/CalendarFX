@@ -21,7 +21,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Skin;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -38,7 +39,7 @@ public class TimeScaleView extends DayViewBase {
      * Interface for providing additional style properties.
      */
     public interface TimeScaleStyleProvider {
-        String getStyle(Instant time);
+        String getStyle(LocalDateTime time);
     }
 
     /**
