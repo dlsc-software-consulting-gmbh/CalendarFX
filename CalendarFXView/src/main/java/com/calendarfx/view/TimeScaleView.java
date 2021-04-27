@@ -21,6 +21,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Skin;
 
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -32,6 +33,13 @@ import static java.util.Objects.requireNonNull;
  * <img src="doc-files/time-scale-view.png" alt="Time Scale View">
  */
 public class TimeScaleView extends DayViewBase {
+
+    /**
+     * Interface for providing additional style properties.
+     */
+    public interface TimeScaleStyleProvider {
+        String getStyle(Instant time);
+    }
 
     /**
      * Constructs a new scale view.
@@ -110,5 +118,69 @@ public class TimeScaleView extends DayViewBase {
     public void setTimeFormatter(DateTimeFormatter formatter) {
         requireNonNull(formatter);
         timeFormatterProperty().set(formatter);
+    }
+
+    // STYLE PROVIDERS
+
+    private static final TimeScaleStyleProvider DEFAULT_STYLE_PROVIDER = (time) -> null;
+
+    private final ObjectProperty<TimeScaleStyleProvider> timeStyleProvider = new SimpleObjectProperty<>(this, "timeStyleProvider", DEFAULT_STYLE_PROVIDER);
+
+    private final ObjectProperty<TimeScaleStyleProvider> dateStyleProvider = new SimpleObjectProperty<>(this, "dateStyleProvider", DEFAULT_STYLE_PROVIDER);
+
+    /**
+     * Gets the {@link TimeScaleStyleProvider} instance, which is used to provide
+     * additional style properties for time labels of TimeScale.
+     *
+     * @return the style provider
+     */
+    public ObjectProperty<TimeScaleStyleProvider> timeStyleProviderProperty() {
+        return timeStyleProvider;
+    }
+
+    /**
+     * Returns the value of {@link #timeStyleProviderProperty()}.
+     *
+     * @return the style provider
+     */
+    public TimeScaleStyleProvider getTimeStyleProvider() {
+        return timeStyleProvider.get();
+    }
+
+    /**
+     * Sets the value of {@link #timeStyleProviderProperty()}.
+     *
+     * @param styleProvider time labels style provider, not {@code null}
+     */
+    public void setTimeStyleProvider(TimeScaleStyleProvider styleProvider) {
+        this.timeStyleProvider.set(styleProvider);
+    }
+
+    /**
+     * Gets the {@link TimeScaleStyleProvider} instance, which is used to provide
+     * additional style properties for date labels of TimeScale.
+     *
+     * @return the style provider
+     */
+    public ObjectProperty<TimeScaleStyleProvider> dateStyleProviderProperty() {
+        return dateStyleProvider;
+    }
+
+    /**
+     * Returns the value of {@link #dateStyleProviderProperty()}.
+     *
+     * @return the style provider
+     */
+    public TimeScaleStyleProvider getDateStyleProvider() {
+        return dateStyleProvider.get();
+    }
+
+    /**
+     * Sets the value of {@link #dateStyleProviderProperty()}.
+     *
+     * @param styleProvider date labels style provider, not {@code null}
+     */
+    public void setDateStyleProvider(TimeScaleStyleProvider styleProvider) {
+        this.dateStyleProvider.set(styleProvider);
     }
 }
