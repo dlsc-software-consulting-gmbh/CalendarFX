@@ -220,10 +220,10 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
             } else {
                 label = createTimeLabel();
                 label.getStyleClass().add("time-label");
-                label.setStyle(getSkinnable().getTimeStyleProvider().getStyle(time.atDate(getSkinnable().getDate())));
             }
 
             label.getStyleClass().removeAll(EARLY_HOUR_LATER, LATE_HOUR_LATER);
+            label.setStyle(getSkinnable().getTimeStyleProvider().getStyle(time.atDate(getSkinnable().getDate())));
 
             placeLabel(label, time, contentX, contentY, contentWidth, contentHeight);
 
