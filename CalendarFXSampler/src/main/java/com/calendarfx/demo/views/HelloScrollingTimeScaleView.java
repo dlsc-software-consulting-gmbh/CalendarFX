@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
-public class HelloScrolledTimeScaleView extends CalendarFXSample {
+public class HelloScrollingTimeScaleView extends CalendarFXSample {
 
     public static final String STYLE_LABEL_TIME_EVEN_HOURS = "-fx-text-fill: gray;";
     public static final String STYLE_LABEL_TIME_ODD_HOURS = "-fx-text-fill: darkblue;";
@@ -37,7 +37,7 @@ public class HelloScrolledTimeScaleView extends CalendarFXSample {
 
     @Override
     public String getSampleName() {
-        return "Time Scale";
+        return "Time Scale (Scrolling)";
     }
 
     @Override
