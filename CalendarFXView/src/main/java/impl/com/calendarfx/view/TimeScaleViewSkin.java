@@ -29,7 +29,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;

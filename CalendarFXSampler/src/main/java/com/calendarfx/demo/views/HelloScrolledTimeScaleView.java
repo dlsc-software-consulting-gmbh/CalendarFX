@@ -48,7 +48,6 @@ public class HelloScrolledTimeScaleView extends CalendarFXSample {
     @Override
     public Node getPanel(Stage stage) {
         TimeScaleView view = new TimeScaleView();
-
         view.setTimeStyleProvider(this::provideTimeStyle);
         view.setDateStyleProvider(this::provideDateStyle);
         view.setScrollingEnabled(true);
