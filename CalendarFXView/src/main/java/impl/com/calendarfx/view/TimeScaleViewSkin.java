@@ -162,10 +162,10 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
             if (midnight) {
                 label.setText(LocalDate.ofInstant(time, view.getZoneId()).format(getSkinnable().getDateFormatter()));
-                label.setStyle(getSkinnable().getTimeStyleProvider().getStyle(time));
+                label.setStyle(getSkinnable().getDateStyleProvider().getStyle(time));
             } else {
                 label.setText(ZonedDateTime.ofInstant(time, view.getZoneId()).toLocalTime().format(getSkinnable().getTimeFormatter()));
-                label.setStyle(getSkinnable().getDateStyleProvider().getStyle(time));
+                label.setStyle(getSkinnable().getTimeStyleProvider().getStyle(time));
             }
 
             final BoundingBox layoutBounds = new BoundingBox(snapPositionX(contentX), snapPositionY(y - prefHeight / 2), snapSizeX(contentWidth), snapSizeY(prefHeight));
