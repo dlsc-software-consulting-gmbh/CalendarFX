@@ -19,25 +19,25 @@ package com.calendarfx.demo.views;
 
 import com.calendarfx.demo.CalendarFXSample;
 import com.calendarfx.view.TimeScaleView;
-import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
-public class HelloTimeScaleView extends CalendarFXSample {
+public class HelloScrollingTimeScaleView extends CalendarFXSample {
 
     public static final String STYLE_LABEL_TIME_EVEN_HOURS = "-fx-text-fill: gray;";
     public static final String STYLE_LABEL_TIME_ODD_HOURS = "-fx-text-fill: darkblue;";
+    public static final String STYLE_LABEL_DATE_SUNDAY = "-fx-background-color: red;";
 
     @Override
     public String getSampleName() {
-        return "Time Scale";
+        return "Time Scale (Scrolling)";
     }
 
     @Override
@@ -49,10 +49,10 @@ public class HelloTimeScaleView extends CalendarFXSample {
     public Node getPanel(Stage stage) {
         TimeScaleView view = new TimeScaleView();
         view.setTimeStyleProvider(this::provideTimeStyle);
+        view.setDateStyleProvider(this::provideDateStyle);
+        view.setScrollingEnabled(true);
 
-        final DayViewScrollPane scrollPane = new DayViewScrollPane(view, new ScrollBar());
-        scrollPane.setPrefHeight(2000);
-        return wrap(scrollPane);
+        return wrap(view);
     }
 
     @Override
@@ -71,6 +71,8 @@ public class HelloTimeScaleView extends CalendarFXSample {
         stackPane.getChildren().add(node);
         stackPane.setEffect(new Reflection());
 
+        stackPane.setPrefHeight(2000);
+
         return box;
     }
 
@@ -86,6 +88,10 @@ public class HelloTimeScaleView extends CalendarFXSample {
 
     private String provideTimeStyle(LocalDateTime dateTime) {
         return dateTime.getHour() % 2 == 0 ? STYLE_LABEL_TIME_EVEN_HOURS : STYLE_LABEL_TIME_ODD_HOURS;
+    }
+
+    private String provideDateStyle(LocalDateTime dateTime) {
+        return dateTime.getDayOfWeek() == DayOfWeek.SUNDAY ? STYLE_LABEL_DATE_SUNDAY : null;
     }
 
     public static void main(String[] args) {
