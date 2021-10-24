@@ -266,7 +266,7 @@ public class AgendaView extends DateControl {
      */
     public static class AgendaEntry implements Comparable<AgendaEntry> {
 
-        private LocalDate date;
+        private final LocalDate date;
 
         public AgendaEntry(LocalDate date) {
             this.date = requireNonNull(date);

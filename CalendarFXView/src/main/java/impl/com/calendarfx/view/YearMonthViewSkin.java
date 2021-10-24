@@ -47,8 +47,6 @@ import com.calendarfx.view.YearMonthView;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -83,19 +81,19 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView>
     private static final String WEEKEND_DAY = "weekend-day";
     private static final String SELECTED_MONTH_DATE = "selected-month-date";
 
-    private GridPane gridPane;
+    private final GridPane gridPane;
 
-    private Label monthLabel;
+    private final Label monthLabel;
 
-    private Label yearLabel;
+    private final Label yearLabel;
 
-    private Map<String, YearMonthView.DateCell> cellsMap = new HashMap<>();
+    private final Map<String, YearMonthView.DateCell> cellsMap = new HashMap<>();
 
-    private Label[] dayOfWeekLabels = new Label[7];
+    private final Label[] dayOfWeekLabels = new Label[7];
 
-    private Label[] weekNumberLabels = new Label[6];
+    private final Label[] weekNumberLabels = new Label[6];
 
-    private DataLoader dataLoader;
+    private final DataLoader dataLoader;
 
     private YearMonth displayedYearMonth;
 
@@ -145,14 +143,9 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView>
         view.getCalendars().addListener((Observable it) -> updateUsageColors(
                 "list of calendars changed"));
 
-        view.dateProperty().addListener(new ChangeListener<LocalDate>() {
-
-            @Override
-            public void changed(ObservableValue<? extends LocalDate> observable,
-                    LocalDate oldValue, LocalDate newValue) {
-                if (oldValue.getYear() != newValue.getYear()) {
-                    updateUsageColors("Year has changed.");
-                }
+        view.dateProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue.getYear() != newValue.getYear()) {
+                updateUsageColors("Year has changed.");
             }
         });
 

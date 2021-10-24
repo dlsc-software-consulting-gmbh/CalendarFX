@@ -90,12 +90,12 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
     protected void refreshData() {
     }
 
-    private InvalidationListener calendarVisibilityChanged = it -> calendarVisibilityChanged();
+    private final InvalidationListener calendarVisibilityChanged = it -> calendarVisibilityChanged();
 
     protected void calendarVisibilityChanged() {
     }
 
-    private EventHandler<CalendarEvent> calendarListener = this::calendarChanged;
+    private final EventHandler<CalendarEvent> calendarListener = this::calendarChanged;
 
     private void calendarListChanged(Change<? extends Calendar> change) {
         C dateControl = getSkinnable();

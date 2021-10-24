@@ -57,25 +57,23 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
         getChildren().add(listView);
     }
 
-    public class SearchResultCellFactory
-            implements Callback<ListView<Entry<?>>, ListCell<Entry<?>>> {
-
+    public static class SearchResultCellFactory implements Callback<ListView<Entry<?>>, ListCell<Entry<?>>> {
         @Override
         public ListCell<Entry<?>> call(ListView<Entry<?>> param) {
             return new SearchResultListViewCell();
         }
     }
 
-    public class SearchResultListViewCell extends ListCell<Entry<?>> {
+    public static class SearchResultListViewCell extends ListCell<Entry<?>> {
 
         private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
         private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
-        private Circle colorCircle;
-        private Label titleLabel;
-        private Label dateLabel;
-        private Label timeLabel;
-        private BorderPane borderPane;
+        private final Circle colorCircle;
+        private final Label titleLabel;
+        private final Label dateLabel;
+        private final Label timeLabel;
+        private final BorderPane borderPane;
 
         public SearchResultListViewCell() {
             setPrefWidth(0);

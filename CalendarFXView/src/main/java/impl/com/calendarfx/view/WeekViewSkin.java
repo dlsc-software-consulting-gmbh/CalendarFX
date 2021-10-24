@@ -35,7 +35,7 @@ import static java.time.temporal.ChronoField.DAY_OF_WEEK;
 
 public class WeekViewSkin extends SkinBase<WeekView> {
 
-    private GridPane dayGridPane = new GridPane();
+    private final GridPane dayGridPane = new GridPane();
 
     public WeekViewSkin(WeekView view) {
         super(view);
@@ -112,9 +112,6 @@ public class WeekViewSkin extends SkinBase<WeekView> {
 
             Bindings.bindBidirectional(weekDayView.startTimeProperty(), weekView.startTimeProperty());
             Bindings.bindBidirectional(weekDayView.endTimeProperty(), weekView.endTimeProperty());
-
-//            weekDayView.startTimeProperty().bind(weekView.startTimeProperty());
-//            weekDayView.endTimeProperty().bind(weekView.endTimeProperty());
 
             dayGridPane.add(weekDayView, i, 0);
 

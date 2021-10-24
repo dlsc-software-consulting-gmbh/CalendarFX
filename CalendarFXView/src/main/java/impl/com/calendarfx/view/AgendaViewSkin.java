@@ -49,11 +49,11 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView>
 
     private static final String AGENDA_VIEW_PLACEHOLDER_LABEL = "placeholder-label";
 
-    private ListView<AgendaEntry> listView;
+    private final ListView<AgendaEntry> listView;
 
-    private DataLoader dataLoader = new DataLoader(this);
+    private final DataLoader dataLoader = new DataLoader(this);
 
-    private Label statusLabel;
+    private final Label statusLabel;
 
     public AgendaViewSkin(AgendaView view) {
         super(view);
@@ -99,10 +99,10 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView>
         view.dateProperty().addListener(reloadListener);
     }
 
-    private InvalidationListener calendarVisibilityChanged = it -> updateList(
+    private final InvalidationListener calendarVisibilityChanged = it -> updateList(
             "calendar visibility changed");
 
-    private WeakInvalidationListener weakCalendarVisibilityChanged = new WeakInvalidationListener(
+    private final WeakInvalidationListener weakCalendarVisibilityChanged = new WeakInvalidationListener(
             calendarVisibilityChanged);
 
     private void listenToCalendars() {

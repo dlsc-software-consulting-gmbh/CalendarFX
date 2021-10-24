@@ -182,9 +182,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         view.heightProperty().addListener(it -> {
             if (view.isScrollingEnabled()) {
                 // run later, or we cause flickering
-                Platform.runLater(() -> {
-                    loadData("height changed");
-                });
+                Platform.runLater(() -> loadData("height changed"));
             }
         });
         view.hourHeightProperty().addListener(it -> loadData("hour height changed"));
@@ -828,7 +826,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         }
     }
 
-    private boolean removeEntryView(Entry<?> entry) {
+    private void removeEntryView(Entry<?> entry) {
         boolean removed = getChildren().removeIf(node -> {
             if (node instanceof DayEntryView) {
                 DayEntryView view = (DayEntryView) node;
@@ -853,7 +851,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             LoggingDomain.VIEW.fine("successfully removed the entry view of entry " + entry);
         }
 
-        return removed;
     }
 
     private void addEntryView(Entry<?> entry) {

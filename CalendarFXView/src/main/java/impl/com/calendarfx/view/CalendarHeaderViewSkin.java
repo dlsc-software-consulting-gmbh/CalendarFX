@@ -35,11 +35,10 @@ import java.util.stream.Collectors;
 @SuppressWarnings("javadoc")
 public class CalendarHeaderViewSkin extends SkinBase<CalendarHeaderView> {
 
-    private GridPane pane;
-
-    private PseudoClass FIRST_COLUMN = PseudoClass.getPseudoClass("first");
-    private PseudoClass MIDDLE_COLUMN = PseudoClass.getPseudoClass("middle");
-    private PseudoClass LAST_COLUMN = PseudoClass.getPseudoClass("last");
+    private final GridPane pane;
+    private final PseudoClass FIRST_COLUMN = PseudoClass.getPseudoClass("first");
+    private final PseudoClass MIDDLE_COLUMN = PseudoClass.getPseudoClass("middle");
+    private final PseudoClass LAST_COLUMN = PseudoClass.getPseudoClass("last");
 
     /**
      * Constructs a new header view skin.

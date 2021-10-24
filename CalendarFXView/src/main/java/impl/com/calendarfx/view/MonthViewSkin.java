@@ -81,11 +81,11 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
     private static final String DAY_OF_WEEKEND_LABEL = "day-of-weekend-label";
 
-    private GridPane gridPane;
+    private final GridPane gridPane;
 
-    private Map<LocalDate, MonthDayView> controlsMap = new HashMap<>();
+    private final Map<LocalDate, MonthDayView> controlsMap = new HashMap<>();
 
-    private DataLoader dataLoader;
+    private final DataLoader dataLoader;
 
     private YearMonth displayedYearMonth;
 
@@ -203,7 +203,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         }
     }
 
-    private PseudoClass selectedClass = PseudoClass.getPseudoClass("selected");
+    private final PseudoClass selectedClass = PseudoClass.getPseudoClass("selected");
 
     private void updateDaySelection() {
         for (MonthDayView view : controlsMap.values()) {
@@ -285,7 +285,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         updateEntries("view was updated after a view property change");
     }
 
-    private List<Map<Object, Integer>> positionMaps = new ArrayList<>();
+    private final List<Map<Object, Integer>> positionMaps = new ArrayList<>();
 
     private int[][] numberOfFullDayEntries;
 
@@ -456,9 +456,9 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         private static final String WEEK_OF_YEAR_LABEL = "week-of-year-label";
         private static final String CURRENT_WEEK_OF_YEAR_LABEL = "current-week-of-year-label";
 
-        private MonthDayEntriesPane entriesPane;
+        private final MonthDayEntriesPane entriesPane;
 
-        private LocalDate date;
+        private final LocalDate date;
 
         MonthDayView(LocalDate date, int week, int day) {
             this.date = date;
@@ -588,10 +588,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         private static final String MONTH_DAY_MORE_LABEL = "more-label";
         private static final String SPACE = " ";
 
-        private Label moreLabel;
-        private LocalDate date;
-        private int week;
-        private int day;
+        private final Label moreLabel;
+        private final LocalDate date;
+        private final int week;
+        private final int day;
 
         MonthDayEntriesPane(LocalDate date, int week, int day) {
             getStyleClass().add("entries-pane");
@@ -773,7 +773,6 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         }           
     }
 
-    
     public ZonedDateTime getZonedDateTimeAt(double x, double y) {
         Point2D location = getSkinnable().localToScreen(x, y);
         for (MonthDayView view : controlsMap.values()) {
@@ -781,7 +780,6 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
                 return ZonedDateTime.of(view.getDate(), LocalTime.NOON, getSkinnable().getZoneId());
             }
         }
-
         return null;
     }
 }
