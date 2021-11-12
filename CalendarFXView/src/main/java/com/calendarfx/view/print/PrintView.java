@@ -32,12 +32,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.print.JobSettings;
-import javafx.print.PageLayout;
-import javafx.print.PageOrientation;
-import javafx.print.Paper;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
+import javafx.print.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -552,12 +547,14 @@ public class PrintView extends ViewTypeControl {
             pageToPrint.setTranslateX(translateX);
             pageToPrint.setTranslateY(translateY);
 
-            PrinterJob job = PrinterJob.createPrinterJob(printer);
+            PrinterJob job = PrinterJob.createPrinterJob();
             JobSettings settings = job.getJobSettings();
             settings.setJobName(Messages.getString("PrintView.TITLE_LABEL"));
             settings.setPageLayout(layout);
+            settings.setPrintColor(PrintColor.COLOR);
+            boolean proceed = job.showPrintDialog(dialog.getOwner().getScene().getWindow());
 
-            if (job.showPrintDialog(getScene().getWindow())) {
+            if (proceed) {
                 do {
                     boolean success = job.printPage(pageToPrint);
                     if (!success) {
