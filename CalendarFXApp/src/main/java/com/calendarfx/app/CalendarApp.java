@@ -43,6 +43,8 @@ public class CalendarApp extends Application {
         Calendar birthdays = new Calendar("Birthdays");
         Calendar holidays = new Calendar("Holidays");
 
+        dirk.addEventHandler(evt -> System.out.println(evt));
+
         katja.setShortName("K");
         dirk.setShortName("D");
         philip.setShortName("P");

@@ -25,6 +25,7 @@
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
         <version>11.10.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
@@ -43,13 +44,11 @@
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
-            <version>11.10.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>${ical4j.version}</version>
         </dependency>
 
     </dependencies>

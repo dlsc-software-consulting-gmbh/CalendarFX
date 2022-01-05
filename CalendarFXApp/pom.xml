@@ -24,6 +24,7 @@
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
         <version>11.10.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
@@ -31,13 +32,10 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
-            <version>11.10.1</version>
         </dependency>
-
     </dependencies>
 
     <build>
