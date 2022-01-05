@@ -105,7 +105,7 @@ public class ICalCalendarApp extends Application {
         calendarView.setCalendarSourceFactory(new ICalWebSourceFactory(primaryStage));
         calendarView.getCalendarSources().setAll(ICalRepository.familyCalendars, ICalRepository.communityCalendars);
 
-        Task<Void> task = new Task<Void>() {
+        Task<Void> task = new Task<>() {
 
             @Override
             protected Void call() throws Exception {

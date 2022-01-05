@@ -70,7 +70,7 @@ public final class ICalRepository {
 
         if (familyCalendars.getCalendars().isEmpty()) {
             totalWorkProperty.set(10);
-//            createWebCalendar("https://www.nasa.gov/templateimages/redesign/calendar/iCal/nasa_calendar.ics", "NASA", Calendar.Style.STYLE1, communityCalendars);
+            createWebCalendar("https://www.nasa.gov/templateimages/redesign/calendar/iCal/nasa_calendar.ics", "NASA", Calendar.Style.STYLE1, communityCalendars);
             workDoneProperty.set(1);
             createWebCalendar("https://cantonbecker.com/astronomy-calendar/astrocal.ics", "Moon / Astro", Calendar.Style.STYLE2, communityCalendars);
             workDoneProperty.set(2);
