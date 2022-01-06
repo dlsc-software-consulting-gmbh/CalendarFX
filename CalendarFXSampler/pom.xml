@@ -91,7 +91,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>org.controlsfx.fxsampler/fxsampler.FXSampler</mainClass>
+                    <mainClass>com.calendarfx.demo.CalendarFXSampler</mainClass>
                 </configuration>
             </plugin>
         </plugins>
