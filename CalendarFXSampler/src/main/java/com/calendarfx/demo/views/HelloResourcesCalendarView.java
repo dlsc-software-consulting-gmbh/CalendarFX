@@ -44,10 +44,9 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
         return "Resources Calendar View";
     }
 
-    ResourceCalendarView<String> resourceCalendarView = new ResourceCalendarView<>();
-
     @Override
     public Node getPanel(Stage stage) {
+        ResourceCalendarView<String> resourceCalendarView = new ResourceCalendarView<>();
 
         resourceCalendarView.setOverlapResolutionStrategy(OverlapResolutionStrategy.VISUAL_BOUNDS);
         resourceCalendarView.setHeaderFactory(resource -> {

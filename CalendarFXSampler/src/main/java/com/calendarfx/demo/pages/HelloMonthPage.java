@@ -86,9 +86,8 @@ public class HelloMonthPage extends CalendarFXDateControlSample {
 
                     entry.setTitle("Entry " + (j + 1));
 
-                    int hour = (int) (Math.random() * 22);
-                    int durationInHours = Math.min(24 - hour,
-                            (int) (Math.random() * 4));
+                    int hour = (int) (Math.random() * 21);
+                    int durationInHours = Math.min(24 - hour, (int) (Math.random() * 4));
 
                     LocalTime startTime = LocalTime.of(hour, 0);
                     LocalTime endTime = startTime.plusHours(durationInHours);
