@@ -415,8 +415,12 @@ public class PrintView extends ViewTypeControl {
         if (dialog != null) {
             dialog.show();
         } else {
+            Scene ownerScene = owner.getScene();
+
             TimeRangeView timeRange = getSettingsView().getTimeRangeView();
             Scene scene = new Scene(this);
+            scene.getStylesheets().addAll(ownerScene.getStylesheets());
+
             dialog = new Stage();
             dialog.initOwner(owner);
             dialog.setScene(scene);
