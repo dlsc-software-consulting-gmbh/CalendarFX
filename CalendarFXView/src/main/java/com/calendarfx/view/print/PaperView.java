@@ -16,6 +16,9 @@
 
 package com.calendarfx.view.print;
 
+import java.util.Objects;
+import java.util.Set;
+
 import impl.com.calendarfx.view.print.PaperViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -29,9 +32,6 @@ import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterAttributes;
 import javafx.scene.control.Skin;
-
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * A control for specifying the paper size, the view type (day, week, month),
