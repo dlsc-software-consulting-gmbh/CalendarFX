@@ -303,7 +303,7 @@ public abstract class DateControl extends CalendarFXControl {
                 Callback<EntryDetailsParameter, Boolean> detailsCallback = getEntryDetailsCallback();
                 if (detailsCallback != null) {
                     ContextMenuEvent ctxEvent = param.getContextMenuEvent();
-                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), this, ctxEvent.getScreenX(), ctxEvent.getScreenY());
+                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, ctxEvent.getScreenX(), ctxEvent.getScreenY());
                     detailsCallback.call(entryDetailsParam);
                 }
             });
