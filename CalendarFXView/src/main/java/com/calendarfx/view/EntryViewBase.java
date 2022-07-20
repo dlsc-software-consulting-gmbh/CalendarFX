@@ -129,7 +129,6 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         addEventHandler(MouseEvent.MOUSE_CLICKED, evt -> showDetails(evt, evt.getScreenX(), evt.getScreenY()));
         addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, evt -> {
-            evt.consume();
             DateControl dateControl = getDateControl();
             if (dateControl != null) {
                 /*
@@ -141,11 +140,11 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
                     EntryContextMenuParameter param = new EntryContextMenuParameter(evt, dateControl, EntryViewBase.this);
                     ContextMenu menu = callback.call(param);
                     if (menu != null) {
-                        setContextMenu(menu);
-                        menu.show(EntryViewBase.this, evt.getScreenX(), evt.getScreenY());
+                        menu.show(this, evt.getScreenX(), evt.getScreenY());
                     }
                 }
             }
+            evt.consume();
         });
 
         @SuppressWarnings("unchecked")
