@@ -43,6 +43,7 @@ public class TimeField extends CalendarFXControl {
      * Constructs a new field.
      */
     public TimeField() {
+        getStyleClass().add("time-field");
     }
 
     @Override
@@ -50,8 +51,7 @@ public class TimeField extends CalendarFXControl {
         return new TimeFieldSkin(this);
     }
 
-    private final BooleanProperty rollOver = new SimpleBooleanProperty(this,
-            "rollOver", true);
+    private final BooleanProperty rollOver = new SimpleBooleanProperty(this, "rollOver", true);
 
     /**
      * Determines if the field for hours will jump from 23 to 0 when the user
@@ -82,8 +82,7 @@ public class TimeField extends CalendarFXControl {
         rollOver.set(roll);
     }
 
-    private final ObjectProperty<LocalTime> value = new SimpleObjectProperty<>(
-            this, "value", LocalTime.now());
+    private final ObjectProperty<LocalTime> value = new SimpleObjectProperty<>(this, "value", LocalTime.now());
 
     /**
      * The current local time value of the field.

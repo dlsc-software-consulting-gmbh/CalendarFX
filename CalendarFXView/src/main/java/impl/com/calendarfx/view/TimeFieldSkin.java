@@ -17,6 +17,7 @@
 package impl.com.calendarfx.view;
 
 import com.calendarfx.view.TimeField;
+import javafx.beans.InvalidationListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
@@ -56,10 +57,8 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
             }
         };
 
-        TextFormatter<String> hourFormatter = new TextFormatter<>(
-                valueConverter, "0");
-        TextFormatter<String> minuteFormatter = new TextFormatter<>(
-                valueConverter, "0");
+        TextFormatter<String> hourFormatter = new TextFormatter<>(valueConverter, "0");
+        TextFormatter<String> minuteFormatter = new TextFormatter<>(valueConverter, "0");
 
         hourField = new NumericTextField(23);
         hourField.setOnKeyPressed(new RollingHandler(hourField, 23));
@@ -79,7 +78,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
         getChildren().add(box);
 
         field.valueProperty().addListener(it -> {
-            if (!updatingFields) {
+            if (!updatingValue) {
                 updateFields();
             }
         });
@@ -88,55 +87,70 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
 
         // Install the listener after setting the values, avoid unnecessary
         // notifications
-        hourField.textProperty().addListener(it -> updateValue());
-        minuteField.textProperty().addListener(it -> updateValue());
+        InvalidationListener updateValueListener = it -> {
+            if (!updatingTextFields) {
+                updateValue();
+            }
+        };
+
+        hourField.textProperty().addListener(updateValueListener);
+        minuteField.textProperty().addListener(updateValueListener);
     }
 
-    private boolean updatingFields;
+    private boolean updatingTextFields;
 
     private void updateFields() {
-        updatingFields = true;
+        updatingTextFields = true;
 
-        TimeField timeField = getSkinnable();
-        LocalTime localTime = timeField.getValue();
-        if (localTime != null) {
-            hourField.setText(Integer.toString(localTime.getHour()));
-            minuteField.setText(Integer.toString(localTime.getMinute()));
-        } else {
-            hourField.setText("");
-            minuteField.setText("");
+        try {
+            TimeField timeField = getSkinnable();
+            LocalTime localTime = timeField.getValue();
+            if (localTime != null) {
+                hourField.setText(Integer.toString(localTime.getHour()));
+                minuteField.setText(Integer.toString(localTime.getMinute()));
+            } else {
+                hourField.setText("");
+                minuteField.setText("");
+            }
+        } finally {
+            updatingTextFields = false;
         }
-
-        updatingFields = false;
     }
 
+    private boolean updatingValue;
+
     private void updateValue() {
-        int hour = 0;
-        int minute = 0;
+        updatingValue = true;
         try {
-            hour = Math.max(0, Math.min(23, Integer.parseInt(hourField.getText())));
-            minute = Math.max(0, Math.min(59, Integer.parseInt(minuteField.getText())));
-        } catch (NumberFormatException ex) {
-            // do nothing
-        }
-
-        /*
-         * LocalTime is immutable, hence we have to create new instances over
-         * and over again, which causes property change events. So we have to
-         * have this check here to ensure that the value has really changed. And
-         * we only care about hours and minutes, so we are not using
-         * LocalTime.equals().
-         */
-        LocalTime oldTime = getSkinnable().getValue();
-        LocalTime newTime = LocalTime.of(hour, minute);
-
-        if (oldTime != null && newTime != null) {
-            if (!(oldTime.getHour() == newTime.getHour() && oldTime.getMinute() == newTime.getMinute())) {
-                getSkinnable().setValue(newTime);
+            int hour = 0;
+            int minute = 0;
+            try {
+                hour = Math.max(0, Math.min(23, Integer.parseInt(hourField.getText())));
+                minute = Math.max(0, Math.min(59, Integer.parseInt(minuteField.getText())));
+            } catch (NumberFormatException ex) {
+                // do nothing
             }
-        } else if (newTime == null) {
-            getSkinnable().setValue(null);
 
+            /*
+             * LocalTime is immutable, hence we have to create new instances over
+             * and over again, which causes property change events. So we have to
+             * have this check here to ensure that the value has really changed. And
+             * we only care about hours and minutes, so we are not using
+             * LocalTime.equals().
+             */
+            LocalTime oldTime = getSkinnable().getValue();
+            LocalTime newTime = LocalTime.of(hour, minute);
+
+            if (oldTime != null && newTime != null) {
+                if (!(oldTime.getHour() == newTime.getHour() && oldTime.getMinute() == newTime.getMinute())) {
+                    getSkinnable().setValue(newTime);
+                }
+            } else if (newTime == null) {
+                getSkinnable().setValue(null);
+
+            }
+        } finally {
+            updatingValue = false;
         }
     }
 
