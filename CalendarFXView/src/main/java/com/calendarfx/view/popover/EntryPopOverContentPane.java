@@ -21,6 +21,7 @@ import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
 import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
@@ -32,6 +33,22 @@ public class EntryPopOverContentPane extends PopOverContentPane {
     private final DateControl dateControl;
     private final PopOver popOver;
 
+    private final InvalidationListener hideListener = it -> {
+        if (getEntry().getCalendar() == null) {
+            getPopOver().hide(Duration.ZERO);
+        }
+    };
+
+    private final WeakInvalidationListener weakHideListener = new WeakInvalidationListener(hideListener);
+
+    private final InvalidationListener fullDayListener = obs -> {
+        if (getEntry().isFullDay() && !getPopOver().isDetached()) {
+            getPopOver().setDetached(true);
+        }
+    };
+
+    private final WeakInvalidationListener weakFullDayListener = new WeakInvalidationListener(fullDayListener);
+
     public EntryPopOverContentPane(PopOver popOver, DateControl dateControl, Entry<?> entry) {
         getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
@@ -41,9 +58,7 @@ public class EntryPopOverContentPane extends PopOverContentPane {
 
         EntryDetailsView details = new EntryDetailsView(entry);
 
-        PopOverTitledPane detailsPane = new PopOverTitledPane(Messages.getString("EntryPopOverContentPane.DETAILS"),
-                details);
-
+        PopOverTitledPane detailsPane = new PopOverTitledPane(Messages.getString("EntryPopOverContentPane.DETAILS"), details);
 
         EntryHeaderView header = new EntryHeaderView(entry, dateControl.getCalendars());
         setHeader(header);
@@ -58,20 +73,10 @@ public class EntryPopOverContentPane extends PopOverContentPane {
 
         setExpandedPane(detailsPane);
 
-        InvalidationListener listener = obs -> {
-            if (entry.isFullDay() && !popOver.isDetached()) {
-                popOver.setDetached(true);
-            }
-        };
+        entry.fullDayProperty().addListener(weakFullDayListener);
+        popOver.setOnHidden(evt -> entry.fullDayProperty().removeListener(weakFullDayListener));
 
-        entry.fullDayProperty().addListener(listener);
-        popOver.setOnHidden(evt -> entry.fullDayProperty().removeListener(listener));
-
-        entry.calendarProperty().addListener(it -> {
-            if (entry.getCalendar() == null) {
-                popOver.hide(Duration.ZERO);
-            }
-        });
+        entry.calendarProperty().addListener(weakHideListener);
     }
 
     public final PopOver getPopOver() {

@@ -40,6 +40,7 @@ import com.calendarfx.view.DeveloperConsole;
 import com.calendarfx.view.VirtualGrid;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
@@ -259,21 +260,34 @@ public class GoogleCalendarAppViewSkin extends SkinBase<GoogleCalendarAppView> {
      * Created by gdiaz on 5/05/2017.
      */
     private static class GoogleEntryPopOverContentProvider implements Callback<DateControl.EntryDetailsPopOverContentParameter, Node> {
+        private PopOver popOver;
+        private GoogleEntry entry;
+
+        private final InvalidationListener detachListener = obs -> {
+            if (getEntry().isFullDay() && !getPopOver().isDetached()) {
+                getPopOver().setDetached(true);
+            }
+        };
+
+        private final WeakInvalidationListener weakListener = new WeakInvalidationListener(detachListener);
+
         @Override
         public Node call(DateControl.EntryDetailsPopOverContentParameter param) {
-            PopOver popOver = param.getPopOver();
-            GoogleEntry entry = (GoogleEntry) param.getEntry();
+            popOver = param.getPopOver();
+            entry = (GoogleEntry) param.getEntry();
 
-            InvalidationListener listener = obs -> {
-                if (entry.isFullDay() && !popOver.isDetached()) {
-                    popOver.setDetached(true);
-                }
-            };
-
-            entry.fullDayProperty().addListener(listener);
-            popOver.setOnHidden(evt -> entry.fullDayProperty().removeListener(listener));
+            entry.fullDayProperty().addListener(weakListener);
+            popOver.setOnHidden(evt -> entry.fullDayProperty().removeListener(weakListener));
 
             return new GoogleEntryPopOverContentPane(entry, param.getDateControl().getCalendars());
+        }
+
+        public PopOver getPopOver() {
+            return popOver;
+        }
+
+        public GoogleEntry getEntry() {
+            return entry;
         }
     }
 

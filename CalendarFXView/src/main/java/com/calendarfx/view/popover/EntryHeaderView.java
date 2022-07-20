@@ -22,6 +22,8 @@ import com.calendarfx.view.CalendarSelector;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.Messages;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.geometry.VPos;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
@@ -39,15 +41,28 @@ public class EntryHeaderView extends GridPane {
 
     private final Entry<?> entry;
 
+    private final TextField titleField = new TextField();
+
+    private final ChangeListener<Calendar> calendarChangeListener = (observable, oldCalendar, newCalendar) -> {
+        if (oldCalendar != null) {
+            titleField.getStyleClass().remove(oldCalendar.getStyle() + "-entry-popover-title");
+        }
+        if (newCalendar != null) {
+            titleField.getStyleClass().add(newCalendar.getStyle() + "-entry-popover-title");
+        }
+    };
+
+    private final WeakChangeListener<Calendar> weakCalendarChangeListener = new WeakChangeListener<>(calendarChangeListener);
+
     public EntryHeaderView(Entry<?> entry, List<Calendar> calendars) {
         this.entry = requireNonNull(entry);
         requireNonNull(calendars);
 
         getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
-        TextField titleField = new TextField(entry.getTitle());
         Bindings.bindBidirectional(titleField.textProperty(), entry.titleProperty());
 
+        titleField.setText(entry.getTitle());
         titleField.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
         TextField locationField = new TextField(entry.getLocation());
@@ -100,15 +115,7 @@ public class EntryHeaderView extends GridPane {
 
         titleField.getStyleClass().add(calendar.getStyle() + "-entry-popover-title");
 
-        entry.calendarProperty()
-                .addListener((observable, oldCalendar, newCalendar) -> {
-                    if (oldCalendar != null) {
-                        titleField.getStyleClass().remove(oldCalendar.getStyle() + "-entry-popover-title");
-                    }
-                    if (newCalendar != null) {
-                        titleField.getStyleClass().add(newCalendar.getStyle() + "-entry-popover-title");
-                    }
-                });
+        entry.calendarProperty().addListener(weakCalendarChangeListener);
     }
 
     /**

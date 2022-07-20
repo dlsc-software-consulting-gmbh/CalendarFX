@@ -21,6 +21,8 @@ import com.calendarfx.util.Util;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RecurrenceView;
 import com.calendarfx.view.TimeField;
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,11 +50,41 @@ public class EntryDetailsView extends EntryPopOverPane {
 
     private final Label summaryLabel;
     private final MenuButton recurrenceButton;
+    private final TimeField startTimeField = new TimeField();
+    private final TimeField endTimeField = new TimeField();
+    private final DatePicker startDatePicker = new DatePicker();
+    private final DatePicker endDatePicker = new DatePicker();
+    private final Entry<?> entry;
 
     private boolean updatingFields;
 
+    private final InvalidationListener entryIntervalListener = it -> {
+        updatingFields = true;
+        try {
+            Entry<?> entry = getEntry();
+            startTimeField.setValue(entry.getStartTime());
+            endTimeField.setValue(entry.getEndTime());
+            startDatePicker.setValue(entry.getStartDate());
+            endDatePicker.setValue(entry.getEndDate());
+        } finally {
+            updatingFields = false;
+        }
+    };
+
+    private final WeakInvalidationListener weakEntryIntervalListener = new WeakInvalidationListener(entryIntervalListener);
+
+    private final InvalidationListener recurrenceRuleListener = it -> updateRecurrenceRuleButton(getEntry());
+
+    private final WeakInvalidationListener weakRecurrenceRuleListener = new WeakInvalidationListener(recurrenceRuleListener);
+
+    private final InvalidationListener updateSummaryLabelListener = it -> updateSummaryLabel(getEntry());
+
+    private final WeakInvalidationListener weakUpdateSummaryLabelListener = new WeakInvalidationListener(updateSummaryLabelListener);
+
     public EntryDetailsView(Entry<?> entry) {
         super();
+
+        this.entry = entry;
 
         getStyleClass().add("entry-details-view");
 
@@ -69,33 +101,19 @@ public class EntryDetailsView extends EntryPopOverPane {
         CheckBox fullDay = new CheckBox();
         fullDay.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
-        TimeField startTimeField = new TimeField();
         startTimeField.setValue(entry.getStartTime());
         startTimeField.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
-        TimeField endTimeField = new TimeField();
         endTimeField.setValue(entry.getEndTime());
         endTimeField.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
-        DatePicker startDatePicker = new DatePicker();
         startDatePicker.setValue(entry.getStartDate());
         startDatePicker.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
-        DatePicker endDatePicker = new DatePicker();
         endDatePicker.setValue(entry.getEndDate());
         endDatePicker.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
-        entry.intervalProperty().addListener(it -> {
-            updatingFields = true;
-            try {
-                startTimeField.setValue(entry.getStartTime());
-                endTimeField.setValue(entry.getEndTime());
-                startDatePicker.setValue(entry.getStartDate());
-                endDatePicker.setValue(entry.getEndDate());
-            } finally {
-                updatingFields = false;
-            }
-        });
+        entry.intervalProperty().addListener(weakEntryIntervalListener);
 
         HBox startDateBox = new HBox(10);
         HBox endDateBox = new HBox(10);
@@ -220,11 +238,15 @@ public class EntryDetailsView extends EntryPopOverPane {
         // zone Id
         zoneBox.setOnAction(evt -> entry.setZoneId(zoneBox.getValue()));
 
-        entry.recurrenceRuleProperty().addListener(it -> updateRecurrenceRuleButton(entry));
+        entry.recurrenceRuleProperty().addListener(weakRecurrenceRuleListener);
 
         updateRecurrenceRuleButton(entry);
 
-        entry.recurrenceRuleProperty().addListener(it -> updateSummaryLabel(entry));
+        entry.recurrenceRuleProperty().addListener(weakUpdateSummaryLabelListener);
+    }
+
+    public final Entry<?> getEntry() {
+        return entry;
     }
 
     private void updateSummaryLabel(Entry<?> entry) {
