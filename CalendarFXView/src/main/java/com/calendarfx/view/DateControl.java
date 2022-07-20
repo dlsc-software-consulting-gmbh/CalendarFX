@@ -685,7 +685,6 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
-
     private void showEntryDetails(Entry<?> entry, Node owner, double screenY) {
         Callback<EntryDetailsPopOverContentParameter, Node> contentCallback = getEntryDetailsPopOverContentCallback();
         if (contentCallback == null) {
@@ -720,7 +719,6 @@ public abstract class DateControl extends CalendarFXControl {
         PopOver datePopOver = new DatePopOver(this, date);
         datePopOver.show(owner);
     }
-
 
 
     private abstract static class ContextMenuParameterBase {
@@ -3026,25 +3024,25 @@ public abstract class DateControl extends CalendarFXControl {
             }
 
             @Override
-			public Class<?> getType() {
-				return Boolean.class;
-			}
+            public Class<?> getType() {
+                return Boolean.class;
+            }
 
             @Override
             public String getName() {
                 return "Base Layer";
             }
 
-			@Override
-			public String getDescription() {
-				return "Base Layer visible / hidden";
-			}
+            @Override
+            public String getDescription() {
+                return "Base Layer visible / hidden";
+            }
 
             @Override
             public String getCategory() {
                 return DATE_CONTROL_CATEGORY;
             }
-		});
+        });
 
         items.add(new Item() {
             @Override
