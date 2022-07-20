@@ -49,6 +49,8 @@ public class EntryDetailsView extends EntryPopOverPane {
     private final Label summaryLabel;
     private final MenuButton recurrenceButton;
 
+    private boolean updatingFields;
+
     public EntryDetailsView(Entry<?> entry) {
         super();
 
@@ -84,10 +86,15 @@ public class EntryDetailsView extends EntryPopOverPane {
         endDatePicker.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
         entry.intervalProperty().addListener(it -> {
-            startTimeField.setValue(entry.getStartTime());
-            endTimeField.setValue(entry.getEndTime());
-            startDatePicker.setValue(entry.getStartDate());
-            endDatePicker.setValue(entry.getEndDate());
+            updatingFields = true;
+            try {
+                startTimeField.setValue(entry.getStartTime());
+                endTimeField.setValue(entry.getEndTime());
+                startDatePicker.setValue(entry.getStartDate());
+                endDatePicker.setValue(entry.getEndDate());
+            } finally {
+                updatingFields = false;
+            }
         });
 
         HBox startDateBox = new HBox(10);
@@ -118,7 +125,7 @@ public class EntryDetailsView extends EntryPopOverPane {
 
         ComboBox<ZoneId> zoneBox = new ComboBox<>(zoneIds);
         zoneBox.disableProperty().bind(entry.getCalendar().readOnlyProperty());
-        zoneBox.setConverter(new StringConverter<ZoneId>() {
+        zoneBox.setConverter(new StringConverter<>() {
 
             @Override
             public String toString(ZoneId object) {
@@ -182,12 +189,30 @@ public class EntryDetailsView extends EntryPopOverPane {
         endTimeField.visibleProperty().bind(Bindings.not(entry.fullDayProperty()));
 
         // start date and time
-        startDatePicker.valueProperty().addListener(evt -> entry.changeStartDate(startDatePicker.getValue(), true));
-        startTimeField.valueProperty().addListener(evt -> entry.changeStartTime(startTimeField.getValue(), true));
+        startDatePicker.valueProperty().addListener(evt -> {
+            if (!updatingFields) {
+                entry.changeStartDate(startDatePicker.getValue(), true);
+            }
+        });
+
+        startTimeField.valueProperty().addListener(evt -> {
+            if (!updatingFields) {
+                entry.changeStartTime(startTimeField.getValue(), true);
+            }
+        });
 
         // end date and time
-        endDatePicker.valueProperty().addListener(evt -> entry.changeEndDate(endDatePicker.getValue(), false));
-        endTimeField.valueProperty().addListener(evt -> entry.changeEndTime(endTimeField.getValue(), false));
+        endDatePicker.valueProperty().addListener(evt -> {
+            if (!updatingFields) {
+                entry.changeEndDate(endDatePicker.getValue(), false);
+            }
+        });
+
+        endTimeField.valueProperty().addListener(evt -> {
+            if (!updatingFields) {
+                entry.changeEndTime(endTimeField.getValue(), false);
+            }
+        });
 
         // full day
         fullDay.setOnAction(evt -> entry.setFullDay(fullDay.isSelected()));
@@ -204,9 +229,12 @@ public class EntryDetailsView extends EntryPopOverPane {
 
     private void updateSummaryLabel(Entry<?> entry) {
         String rule = entry.getRecurrenceRule();
-        String text = Util.convertRFC2445ToText(rule,
-                entry.getStartDate());
-        summaryLabel.setText(text);
+        if (rule != null && !rule.trim().equals("")) {
+            String text = Util.convertRFC2445ToText(rule, entry.getStartDate());
+            summaryLabel.setText(text);
+        } else {
+            summaryLabel.setText("");
+        }
     }
 
     private void showRecurrenceEditor(Entry<?> entry) {
@@ -222,8 +250,7 @@ public class EntryDetailsView extends EntryPopOverPane {
             entry.setRecurrenceRule(rrule);
         });
 
-        Point2D anchor = recurrenceButton.localToScreen(0,
-                recurrenceButton.getHeight());
+        Point2D anchor = recurrenceButton.localToScreen(0, recurrenceButton.getHeight());
         popup.show(recurrenceButton, anchor.getX(), anchor.getY());
     }
 
