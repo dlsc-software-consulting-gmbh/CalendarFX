@@ -28,9 +28,9 @@ import java.util.Objects;
 
 public class EntryPopOverContentPane extends PopOverContentPane {
 
-    private Entry<?> entry;
-    private DateControl dateControl;
-    private PopOver popOver;
+    private final Entry<?> entry;
+    private final DateControl dateControl;
+    private final PopOver popOver;
 
     public EntryPopOverContentPane(PopOver popOver, DateControl dateControl, Entry<?> entry) {
         getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());

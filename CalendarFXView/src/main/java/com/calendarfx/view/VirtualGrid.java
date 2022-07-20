@@ -63,10 +63,10 @@ public class VirtualGrid {
         }
     };
 
-    private String name;
-    private String shortName;
-    private ChronoUnit unit;
-    private int amount;
+    private final String name;
+    private final String shortName;
+    private final ChronoUnit unit;
+    private final int amount;
 
     /**
      * Constructs a new virtual grid.

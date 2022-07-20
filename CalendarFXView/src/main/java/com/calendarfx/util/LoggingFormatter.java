@@ -105,7 +105,7 @@ public class LoggingFormatter extends Formatter {
             PrintWriter pw = new PrintWriter(sw);
             record.getThrown().printStackTrace(pw);
             pw.close();
-            sb.append(sw.toString());
+            sb.append(sw);
         }
         return sb.toString();
     }

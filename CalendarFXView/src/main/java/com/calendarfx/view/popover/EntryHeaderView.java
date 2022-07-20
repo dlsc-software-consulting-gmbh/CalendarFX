@@ -37,7 +37,7 @@ public class EntryHeaderView extends GridPane {
 
     private final CalendarSelector calendarSelector;
 
-    private Entry<?> entry;
+    private final Entry<?> entry;
 
     public EntryHeaderView(Entry<?> entry, List<Calendar> calendars) {
         this.entry = requireNonNull(entry);

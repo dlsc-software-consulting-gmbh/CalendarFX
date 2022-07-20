@@ -25,6 +25,7 @@ import com.google.api.services.calendar.model.Event;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -182,7 +183,7 @@ public class GoogleCalendarService {
 
         ZonedDateTime st = ZonedDateTime.of(startDate, LocalTime.MIN, zoneId);
         ZonedDateTime et = ZonedDateTime.of(endDate, LocalTime.MAX, zoneId);
-        String calendarId = URLDecoder.decode(calendar.getId(), "UTF-8");
+        String calendarId = URLDecoder.decode(calendar.getId(), StandardCharsets.UTF_8);
 
         List<Event> events = dao.events()
                 .list(calendarId)
@@ -210,7 +211,7 @@ public class GoogleCalendarService {
             return new ArrayList<>(0);
         }
 
-        String calendarId = URLDecoder.decode(calendar.getId(), "UTF-8");
+        String calendarId = URLDecoder.decode(calendar.getId(), StandardCharsets.UTF_8);
 
         List<Event> events = dao.events()
                 .list(calendarId)

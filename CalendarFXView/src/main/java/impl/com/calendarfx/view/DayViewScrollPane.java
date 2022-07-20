@@ -46,7 +46,7 @@ import java.util.Objects;
  */
 public class DayViewScrollPane extends Pane {
 
-    private DayViewBase dayView;
+    private final DayViewBase dayView;
 
     private LocalTime cachedStartTime;
 
@@ -146,7 +146,7 @@ public class DayViewScrollPane extends Pane {
 
     // visible start time support
 
-    private ReadOnlyObjectWrapper<LocalTime> startTime = new ReadOnlyObjectWrapper<>(this, "startTime", LocalTime.MIN);
+    private final ReadOnlyObjectWrapper<LocalTime> startTime = new ReadOnlyObjectWrapper<>(this, "startTime", LocalTime.MIN);
 
     public final ReadOnlyObjectProperty<LocalTime> startTimeProperty() {
         return startTime.getReadOnlyProperty();
@@ -158,7 +158,7 @@ public class DayViewScrollPane extends Pane {
 
     // visible end time support
 
-    private ReadOnlyObjectWrapper<LocalTime> endTime = new ReadOnlyObjectWrapper<>(this, "endTime", LocalTime.MIN);
+    private final ReadOnlyObjectWrapper<LocalTime> endTime = new ReadOnlyObjectWrapper<>(this, "endTime", LocalTime.MIN);
 
     public final ReadOnlyObjectProperty<LocalTime> endTimeProperty() {
         return endTime.getReadOnlyProperty();

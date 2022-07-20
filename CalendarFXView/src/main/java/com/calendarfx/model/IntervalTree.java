@@ -39,7 +39,7 @@ class IntervalTree<E extends Entry<?>> {
 
     private TreeEntry<E> root;
     private int treeSize;
-    private Set<String> entryIDs = new HashSet<>();
+    private final Set<String> entryIDs = new HashSet<>();
 
     public final Instant getEarliestTimeUsed() {
         if (root != null) {
@@ -673,9 +673,9 @@ class IntervalTree<E extends Entry<?>> {
 
     private class TimeInterval {
 
-        private Instant startTime;
+        private final Instant startTime;
 
-        private Instant endTime;
+        private final Instant endTime;
 
         public TimeInterval(Instant startTime, Instant endTime) {
             requireNonNull(startTime);

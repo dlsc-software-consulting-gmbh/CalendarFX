@@ -29,7 +29,7 @@ import javafx.scene.layout.VBox;
 @SuppressWarnings("javadoc")
 public class SourceViewSkin extends SkinBase<SourceView> {
 
-    private VBox vbox;
+    private final VBox vbox;
 
     private final InvalidationListener updater = obs -> updateView();
 

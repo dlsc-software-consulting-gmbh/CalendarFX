@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class DataLoader {
 
-    private LoadDataSettingsProvider provider;
+    private final LoadDataSettingsProvider provider;
 
     public DataLoader(LoadDataSettingsProvider provider) {
         this.provider = requireNonNull(provider);

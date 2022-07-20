@@ -16,23 +16,6 @@
 
 package impl.com.calendarfx.view;
 
-import static java.lang.Double.MAX_VALUE;
-import static java.time.format.TextStyle.SHORT;
-import static javafx.geometry.Pos.CENTER;
-import static javafx.scene.control.SelectionMode.SINGLE;
-import static javafx.scene.layout.Priority.ALWAYS;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
@@ -44,7 +27,6 @@ import com.calendarfx.view.DateControl.DateDetailsParameter;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.YearMonthView;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -66,6 +48,23 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.util.Callback;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static java.lang.Double.MAX_VALUE;
+import static java.time.format.TextStyle.SHORT;
+import static javafx.geometry.Pos.CENTER;
+import static javafx.scene.control.SelectionMode.SINGLE;
+import static javafx.scene.layout.Priority.ALWAYS;
+
 public class YearMonthViewSkin extends DateControlSkin<YearMonthView>
         implements LoadDataSettingsProvider {
 
@@ -83,19 +82,19 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView>
     private static final String WEEKEND_DAY = "weekend-day";
     private static final String SELECTED_MONTH_DATE = "selected-month-date";
 
-    private GridPane gridPane;
+    private final GridPane gridPane;
 
-    private Label monthLabel;
+    private final Label monthLabel;
 
-    private Label yearLabel;
+    private final Label yearLabel;
 
-    private Map<String, YearMonthView.DateCell> cellsMap = new HashMap<>();
+    private final Map<String, YearMonthView.DateCell> cellsMap = new HashMap<>();
 
-    private Label[] dayOfWeekLabels = new Label[7];
+    private final Label[] dayOfWeekLabels = new Label[7];
 
-    private Label[] weekNumberLabels = new Label[6];
+    private final Label[] weekNumberLabels = new Label[6];
 
-    private DataLoader dataLoader;
+    private final DataLoader dataLoader;
 
     private YearMonth displayedYearMonth;
 

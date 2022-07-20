@@ -33,7 +33,7 @@ public class WeekDayHeaderViewSkin extends SkinBase<WeekDayHeaderView> {
 
     private static final String TODAY = "today";
 
-    private GridPane pane;
+    private final GridPane pane;
 
     public WeekDayHeaderViewSkin(WeekDayHeaderView view) {
         super(view);

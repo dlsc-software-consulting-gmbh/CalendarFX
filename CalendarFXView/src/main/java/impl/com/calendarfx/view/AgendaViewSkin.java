@@ -16,6 +16,23 @@
 
 package impl.com.calendarfx.view;
 
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarEvent;
+import com.calendarfx.model.CalendarSource;
+import com.calendarfx.model.Entry;
+import com.calendarfx.util.LoggingDomain;
+import com.calendarfx.view.AgendaView;
+import com.calendarfx.view.AgendaView.AgendaEntry;
+import com.calendarfx.view.Messages;
+import impl.com.calendarfx.view.util.Util;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.BorderPane;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -26,34 +43,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import com.calendarfx.model.Calendar;
-import com.calendarfx.model.CalendarEvent;
-import com.calendarfx.model.CalendarSource;
-import com.calendarfx.model.Entry;
-import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.view.AgendaView;
-import com.calendarfx.view.AgendaView.AgendaEntry;
-import com.calendarfx.view.Messages;
-
-import impl.com.calendarfx.view.util.Util;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.WeakInvalidationListener;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
-
 public class AgendaViewSkin extends DateControlSkin<AgendaView>
         implements LoadDataSettingsProvider {
 
     private static final String AGENDA_VIEW_PLACEHOLDER_LABEL = "placeholder-label";
 
-    private ListView<AgendaEntry> listView;
+    private final ListView<AgendaEntry> listView;
 
-    private DataLoader dataLoader = new DataLoader(this);
+    private final DataLoader dataLoader = new DataLoader(this);
 
-    private Label statusLabel;
+    private final Label statusLabel;
 
     public AgendaViewSkin(AgendaView view) {
         super(view);
@@ -99,10 +98,10 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView>
         view.dateProperty().addListener(reloadListener);
     }
 
-    private InvalidationListener calendarVisibilityChanged = it -> updateList(
+    private final InvalidationListener calendarVisibilityChanged = it -> updateList(
             "calendar visibility changed");
 
-    private WeakInvalidationListener weakCalendarVisibilityChanged = new WeakInvalidationListener(
+    private final WeakInvalidationListener weakCalendarVisibilityChanged = new WeakInvalidationListener(
             calendarVisibilityChanged);
 
     private void listenToCalendars() {

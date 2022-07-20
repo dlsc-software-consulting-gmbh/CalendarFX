@@ -85,8 +85,8 @@ public class GoogleEntryReminder {
 
         POPUP("popup", "Popup"), EMAIL("email", "Email");
 
-        private String id;
-        private String name;
+        private final String id;
+        private final String name;
 
         RemindMethod(String id, String name) {
             this.id = id;

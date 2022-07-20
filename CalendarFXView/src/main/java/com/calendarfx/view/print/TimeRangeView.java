@@ -809,8 +809,8 @@ public class TimeRangeView extends ViewTypeControl {
 
     private class TimeRangeOldValues {
 
-        private TimeRangeField startField;
-        private TimeRangeField endField;
+        private final TimeRangeField startField;
+        private final TimeRangeField endField;
 
         public TimeRangeOldValues() {
             startField = new TimeRangeField();

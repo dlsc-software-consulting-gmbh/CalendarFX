@@ -71,15 +71,15 @@ public final class LoadEvent extends Event {
     public static final EventType<LoadEvent> LOAD = new EventType<>(Event.ANY,
             "LOAD");
 
-    private List<CalendarSource> calendarSources;
+    private final List<CalendarSource> calendarSources;
 
-    private LocalDate startDate;
+    private final LocalDate startDate;
 
-    private LocalDate endDate;
+    private final LocalDate endDate;
 
-    private ZoneId zoneId;
+    private final ZoneId zoneId;
 
-    private String sourceName;
+    private final String sourceName;
 
     /**
      * Constructs a new load event.

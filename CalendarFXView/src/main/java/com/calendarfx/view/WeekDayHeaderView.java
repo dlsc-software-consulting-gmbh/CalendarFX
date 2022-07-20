@@ -225,7 +225,7 @@ public class WeekDayHeaderView extends DateControl {
      */
     public static class WeekDayCell extends Label {
 
-        private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Messages.getString("WeekDayHeaderView.CELL_DATE_FORMAT"));
+        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Messages.getString("WeekDayHeaderView.CELL_DATE_FORMAT"));
 
         /**
          * Constructs a new date cell.

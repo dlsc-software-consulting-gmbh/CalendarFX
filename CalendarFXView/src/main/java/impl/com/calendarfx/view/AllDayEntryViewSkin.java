@@ -49,9 +49,9 @@ public class AllDayEntryViewSkin extends SkinBase<AllDayEntryView> {
         getChildren().addAll(titleLabel);
     }
 
-    private InvalidationListener updateViewListener = it -> updateView();
+    private final InvalidationListener updateViewListener = it -> updateView();
 
-    private WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(updateViewListener);
+    private final WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(updateViewListener);
 
     protected void updateView() {
         final AllDayEntryView view = getSkinnable();

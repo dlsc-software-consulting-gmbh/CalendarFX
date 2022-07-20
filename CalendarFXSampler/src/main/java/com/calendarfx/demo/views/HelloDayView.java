@@ -31,7 +31,7 @@ import java.time.LocalTime;
 
 public class HelloDayView extends CalendarFXSample {
 
-    private DayView dayView = new DayView();
+    private final DayView dayView = new DayView();
 
     @Override
     public String getSampleName() {

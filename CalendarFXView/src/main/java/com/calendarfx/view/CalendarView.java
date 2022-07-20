@@ -64,23 +64,23 @@ public class CalendarView extends DateControl {
 
     private static final String SELECTED_PAGE = "com.calendarfx.selectedPage";
 
-    private SourceView sourceView;
+    private final SourceView sourceView;
 
-    private SearchResultView searchResultView;
+    private final SearchResultView searchResultView;
 
-    private YearMonthView yearMonthView;
+    private final YearMonthView yearMonthView;
 
-    private DayPage dayPage;
+    private final DayPage dayPage;
 
-    private WeekPage weekPage;
+    private final WeekPage weekPage;
 
-    private MonthPage monthPage;
+    private final MonthPage monthPage;
 
-    private YearPage yearPage;
+    private final YearPage yearPage;
 
     private DeveloperConsole developerConsole;
 
-    private CustomTextField searchField;
+    private final CustomTextField searchField;
 
     private PrintView printView;
 

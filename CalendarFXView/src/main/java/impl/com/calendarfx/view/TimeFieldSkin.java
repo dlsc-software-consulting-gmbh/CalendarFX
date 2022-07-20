@@ -31,13 +31,13 @@ import java.time.LocalTime;
 @SuppressWarnings("javadoc")
 public class TimeFieldSkin extends SkinBase<TimeField> {
 
-    private NumericTextField hourField;
-    private NumericTextField minuteField;
+    private final NumericTextField hourField;
+    private final NumericTextField minuteField;
 
     public TimeFieldSkin(TimeField field) {
         super(field);
 
-        StringConverter<String> valueConverter = new StringConverter<String>() {
+        StringConverter<String> valueConverter = new StringConverter<>() {
 
             @Override
             public String fromString(String text) {
@@ -142,8 +142,8 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
 
     public class RollingHandler implements EventHandler<KeyEvent> {
 
-        private int max;
-        private TextField field;
+        private final int max;
+        private final TextField field;
 
         public RollingHandler(TextField field, int max) {
             this.field = field;

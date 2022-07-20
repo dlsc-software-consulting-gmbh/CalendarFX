@@ -40,13 +40,13 @@ public final class Interval {
 
     private static final ZoneId defaultZoneId = ZoneId.systemDefault();
 
-    private LocalDate startDate;
+    private final LocalDate startDate;
 
-    private LocalDate endDate;
+    private final LocalDate endDate;
 
-    private LocalTime startTime;
+    private final LocalTime startTime;
 
-    private LocalTime endTime;
+    private final LocalTime endTime;
 
     private ZonedDateTime zonedStartDateTime;
 
@@ -56,7 +56,7 @@ public final class Interval {
 
     private LocalDateTime endDateTime;
 
-    private ZoneId zoneId;
+    private final ZoneId zoneId;
 
     private long startMillis = Long.MIN_VALUE;
 

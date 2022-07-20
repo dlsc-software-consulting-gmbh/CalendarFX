@@ -47,7 +47,7 @@ public class DayViewEditController {
     private static final Logger LOGGER = LoggingDomain.EDITING;
 
     private boolean dragging;
-    private DayViewBase dayView;
+    private final DayViewBase dayView;
     private DayEntryView dayEntryView;
     private Entry<?> entry;
     private DraggedEntry.DragMode dragMode;

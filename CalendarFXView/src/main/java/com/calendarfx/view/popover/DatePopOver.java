@@ -39,8 +39,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class DatePopOver extends PopOver {
 
-    private DateControl dateControl;
-    private LocalDate date;
+    private final DateControl dateControl;
+    private final LocalDate date;
 
     /**
      * Constructs a new popover for the given date.

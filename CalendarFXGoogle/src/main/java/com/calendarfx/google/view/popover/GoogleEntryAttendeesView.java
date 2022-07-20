@@ -55,9 +55,9 @@ public class GoogleEntryAttendeesView extends EntryPopOverPane {
 
     private static final PseudoClass INVALID = PseudoClass.getPseudoClass("invalid");
 
-    private GoogleEntry entry;
-    private TextField txtEmail;
-    private Button btAdd;
+    private final GoogleEntry entry;
+    private final TextField txtEmail;
+    private final Button btAdd;
 
     public GoogleEntryAttendeesView(GoogleEntry entry) {
         super();
@@ -187,11 +187,11 @@ public class GoogleEntryAttendeesView extends EntryPopOverPane {
      */
     private class GoogleEntryAttendeeItem extends HBox {
 
-        private Label optionalIcon;
-        private Label statusIcon;
-        private Label name;
-        private Label removeButton;
-        private EventAttendee attendee;
+        private final Label optionalIcon;
+        private final Label statusIcon;
+        private final Label name;
+        private final Label removeButton;
+        private final EventAttendee attendee;
 
         public GoogleEntryAttendeeItem(EventAttendee attendee) {
             this.attendee = Objects.requireNonNull(attendee);

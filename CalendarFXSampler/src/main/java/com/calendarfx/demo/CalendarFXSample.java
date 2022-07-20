@@ -60,7 +60,7 @@ public abstract class CalendarFXSample extends SampleBase {
 
     @Override
     public String getProjectVersion() {
-        return CalendarFX.getVersion().toString();
+        return CalendarFX.getVersion();
     }
 
     @Override

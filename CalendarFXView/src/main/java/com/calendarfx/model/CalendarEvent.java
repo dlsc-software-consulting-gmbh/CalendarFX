@@ -120,7 +120,7 @@ public class CalendarEvent extends Event {
 
     private Entry<?> entry;
 
-    private Calendar calendar;
+    private final Calendar calendar;
 
     private boolean oldFullDay;
 

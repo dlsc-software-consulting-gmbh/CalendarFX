@@ -74,7 +74,7 @@ public final class GoogleConnector {
     private final GoogleClientSecrets secrets;
 
     /**  Factory to create the data store object. */
-    private DataStoreFactory dataStoreFactory;
+    private final DataStoreFactory dataStoreFactory;
 
     /** Flow to get the access token. */
     private AuthorizationCodeFlow flow;

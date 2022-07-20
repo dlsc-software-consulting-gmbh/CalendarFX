@@ -28,8 +28,8 @@ import java.time.temporal.WeekFields;
 
 public class WeekFieldsViewSkin extends SkinBase<WeekFieldsView> {
 
-    private ComboBox<DayOfWeek> dayOfWeekComboBox;
-    private ComboBox<Integer> minimalDaysInFirstWeekComboBox;
+    private final ComboBox<DayOfWeek> dayOfWeekComboBox;
+    private final ComboBox<Integer> minimalDaysInFirstWeekComboBox;
 
     public WeekFieldsViewSkin(final WeekFieldsView view) {
         super(view);

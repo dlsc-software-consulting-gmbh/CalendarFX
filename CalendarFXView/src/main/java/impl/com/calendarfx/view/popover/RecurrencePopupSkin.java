@@ -30,8 +30,8 @@ import javafx.scene.layout.StackPane;
 @SuppressWarnings("javadoc")
 public class RecurrencePopupSkin implements Skin<RecurrencePopup> {
 
-    private StackPane stackPane;
-    private RecurrencePopup popup;
+    private final StackPane stackPane;
+    private final RecurrencePopup popup;
 
     public RecurrencePopupSkin(RecurrencePopup popup) {
         super();

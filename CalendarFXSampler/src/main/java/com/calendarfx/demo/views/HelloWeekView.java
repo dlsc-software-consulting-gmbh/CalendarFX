@@ -31,7 +31,7 @@ import javafx.stage.Stage;
 
 public class HelloWeekView extends CalendarFXSample {
 
-    private WeekView weekView = new WeekView();
+    private final WeekView weekView = new WeekView();
 
     @Override
     public String getSampleName() {

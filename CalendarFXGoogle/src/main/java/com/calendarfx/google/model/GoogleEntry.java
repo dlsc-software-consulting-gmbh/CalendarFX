@@ -247,7 +247,7 @@ public class GoogleEntry extends Entry<Event> {
 
         CANCELLED("cancelled");
 
-        private String name;
+        private final String name;
 
         Status(String name) {
             this.name = name;

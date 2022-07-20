@@ -43,9 +43,9 @@ import static java.util.Objects.requireNonNull;
 
 public class ICalCalendar extends com.calendarfx.model.Calendar {
 
-    private Set<Integer> alreadyLoadedYears = new HashSet<>();
+    private final Set<Integer> alreadyLoadedYears = new HashSet<>();
 
-    private Calendar calendar;
+    private final Calendar calendar;
 
     private final Set<Uid> loadedEventIds = new HashSet<>();
 

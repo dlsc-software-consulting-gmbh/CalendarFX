@@ -23,11 +23,11 @@ import java.util.Objects;
 @SuppressWarnings("javadoc")
 public final class Placement {
 
-    private int columnIndex;
+    private final int columnIndex;
 
-    private int columnCount;
+    private final int columnCount;
 
-    private EntryViewBase<?> entryViewBase;
+    private final EntryViewBase<?> entryViewBase;
 
     public Placement(EntryViewBase<?> activity, int columnIndex, int columnCount) {
         this.entryViewBase = Objects.requireNonNull(activity);

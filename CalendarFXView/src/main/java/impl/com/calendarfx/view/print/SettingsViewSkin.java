@@ -68,7 +68,7 @@ public class SettingsViewSkin extends SkinBase<SettingsView> {
 
     private static class SectionTitle extends HBox {
 
-        private Label titleLabel;
+        private final Label titleLabel;
 
         public SectionTitle(String name) {
             getStyleClass().add("section-title");

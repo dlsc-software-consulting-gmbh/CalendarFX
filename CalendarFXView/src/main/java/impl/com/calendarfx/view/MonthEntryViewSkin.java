@@ -35,7 +35,7 @@ import javafx.scene.shape.Circle;
 @SuppressWarnings("javadoc")
 public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
-    private DateTimeFormatter formatter = DateTimeFormatter
+    private final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedTime(FormatStyle.SHORT);
     protected Label titleLabel;
     protected Label timeLabel;
@@ -112,9 +112,9 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                 + topInset + bottomInset;
     }
 
-    private InvalidationListener updateViewListener = it -> updateView();
+    private final InvalidationListener updateViewListener = it -> updateView();
 
-    private WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(
+    private final WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(
             updateViewListener);
 
     protected void updateView() {

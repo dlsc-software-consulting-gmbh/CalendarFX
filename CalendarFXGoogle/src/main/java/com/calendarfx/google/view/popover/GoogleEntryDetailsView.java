@@ -51,7 +51,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GoogleEntryDetailsView extends EntryDetailsView {
 
-    private GoogleEntry entry;
+    private final GoogleEntry entry;
 
     public GoogleEntryDetailsView(GoogleEntry entry) {
         super(requireNonNull(entry));
@@ -118,11 +118,11 @@ public class GoogleEntryDetailsView extends EntryDetailsView {
      */
     private class GoogleEntryReminderItem extends HBox {
 
-        private GoogleEntryReminder reminder;
-        private ComboBox<RemindMethod> methodCombo;
-        private ComboBox<TimeUnit> unitCombo;
-        private TextField valueTxt;
-        private Label removeIcon;
+        private final GoogleEntryReminder reminder;
+        private final ComboBox<RemindMethod> methodCombo;
+        private final ComboBox<TimeUnit> unitCombo;
+        private final TextField valueTxt;
+        private final Label removeIcon;
 
         private GoogleEntryReminderItem(GoogleEntryReminder reminder) {
             this.reminder = requireNonNull(reminder);

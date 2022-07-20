@@ -86,25 +86,25 @@ import static javafx.scene.control.SelectionMode.SINGLE;
 
 public class CalendarViewSkin extends SkinBase<CalendarView> {
 
-    private MasterDetailPane leftMasterDetailPane;
-    private ToggleButton trayButton;
-    private Button addCalendarButton;
-    private Button printButton;
-    private SearchResultView searchResultView;
-    private StackPane stackPane;
+    private final MasterDetailPane leftMasterDetailPane;
+    private final ToggleButton trayButton;
+    private final Button addCalendarButton;
+    private final Button printButton;
+    private final SearchResultView searchResultView;
+    private final StackPane stackPane;
 
-    private DayPage dayPage;
-    private WeekPage weekPage;
-    private MonthPage monthPage;
-    private YearPage yearPage;
+    private final DayPage dayPage;
+    private final WeekPage weekPage;
+    private final MonthPage monthPage;
+    private final YearPage yearPage;
 
-    private List<PageBase> pageList = new ArrayList<>();
-    private ToggleButton showYear;
-    private ToggleButton showMonth;
-    private ToggleButton showWeek;
-    private ToggleButton showDay;
-    private HBox leftToolBarBox;
-    private SegmentedButton switcher;
+    private final List<PageBase> pageList = new ArrayList<>();
+    private final ToggleButton showYear;
+    private final ToggleButton showMonth;
+    private final ToggleButton showWeek;
+    private final ToggleButton showDay;
+    private final HBox leftToolBarBox;
+    private final SegmentedButton switcher;
 
     private SourceView sourceView;
     private final InvalidationListener entriesVisibilityListener = obs -> updateCalendarVisibility();
@@ -638,7 +638,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
     class TrayPane extends BorderPane {
 
-        private YearMonthView yearMonthView;
+        private final YearMonthView yearMonthView;
 
         public TrayPane() {
             // source view

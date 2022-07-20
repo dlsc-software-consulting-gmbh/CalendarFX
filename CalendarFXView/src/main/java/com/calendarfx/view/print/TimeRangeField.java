@@ -528,8 +528,8 @@ public class TimeRangeField extends ViewTypeControl {
             }
         };
 
-        private int order;
-        private String messageKey;
+        private final int order;
+        private final String messageKey;
 
         TimeRangeFieldValue(int order, String messageKey) {
             this.order = order;

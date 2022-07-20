@@ -33,7 +33,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class MonthPage extends PageBase {
 
-    private MonthView monthView;
+    private final MonthView monthView;
 
     /**
      * Constructs a new month page.

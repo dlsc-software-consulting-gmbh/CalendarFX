@@ -797,8 +797,8 @@ public class MonthSheetView extends DateControl {
      */
     public static final class DateParameter {
 
-        private MonthSheetView view;
-        private LocalDate date;
+        private final MonthSheetView view;
+        private final LocalDate date;
 
         /**
          * Constructs a new parameter object.
@@ -835,8 +835,8 @@ public class MonthSheetView extends DateControl {
      */
     public static final class HeaderParameter {
 
-        private MonthSheetView view;
-        private YearMonth yearMonth;
+        private final MonthSheetView view;
+        private final YearMonth yearMonth;
 
         public HeaderParameter(MonthSheetView view, YearMonth yearMonth) {
             this.view = Objects.requireNonNull(view);
@@ -1385,7 +1385,7 @@ public class MonthSheetView extends DateControl {
      */
     public static class DetailedDateCell extends SimpleDateCell {
 
-        private DetailCanvas canvas;
+        private final DetailCanvas canvas;
 
         private static final Map<String, Color> calendarColors = new HashMap<>();
 
@@ -1552,7 +1552,7 @@ public class MonthSheetView extends DateControl {
      */
     public static class BadgeDateCell extends SimpleDateCell {
 
-        private Label counterLabel;
+        private final Label counterLabel;
 
         /**
          * Constructs a new badge date cell.

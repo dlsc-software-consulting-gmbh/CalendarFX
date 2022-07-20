@@ -33,8 +33,8 @@ import java.util.List;
 @SuppressWarnings("javadoc")
 public class CalendarSelectorSkin extends SkinBase<CalendarSelector> {
 
-    private MenuButton button;
-    private Rectangle buttonIcon;
+    private final MenuButton button;
+    private final Rectangle buttonIcon;
 
     public CalendarSelectorSkin(CalendarSelector selector) {
         super(selector);

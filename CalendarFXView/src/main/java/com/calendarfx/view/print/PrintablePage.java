@@ -873,7 +873,7 @@ public class PrintablePage extends DateControl {
     private static final class PrintPeriodSplitter
             implements InvalidationListener {
 
-        private PrintablePage page;
+        private final PrintablePage page;
         private PageSlice slice;
 
         public PrintPeriodSplitter(PrintablePage page) {
@@ -955,9 +955,9 @@ public class PrintablePage extends DateControl {
 
     private static final class PageSlice {
 
-        private int number;
-        private LocalDate start;
-        private LocalDate end;
+        private final int number;
+        private final LocalDate start;
+        private final LocalDate end;
         private PageSlice next;
         private PageSlice back;
 

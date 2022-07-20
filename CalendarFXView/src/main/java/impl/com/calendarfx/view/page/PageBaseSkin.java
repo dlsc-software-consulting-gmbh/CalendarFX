@@ -30,9 +30,9 @@ import java.time.format.DateTimeFormatter;
 
 public abstract class PageBaseSkin<C extends PageBase> extends SkinBase<C> {
 
-    private Text dateText;
-    private BorderPane headerPane;
-    private BorderPane borderPane;
+    private final Text dateText;
+    private final BorderPane headerPane;
+    private final BorderPane borderPane;
 
     public PageBaseSkin(C page) {
         super(page);

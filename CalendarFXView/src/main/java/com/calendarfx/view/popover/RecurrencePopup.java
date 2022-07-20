@@ -33,9 +33,9 @@ public class RecurrencePopup extends PopupControl {
 
     private static final String DEFAULT_STYLE = "recurrence-popup";
 
-    private RecurrenceView recurrenceView;
+    private final RecurrenceView recurrenceView;
 
-    private StackPane root;
+    private final StackPane root;
 
     public RecurrencePopup() {
         getStyleClass().add(DEFAULT_STYLE);
@@ -68,7 +68,7 @@ public class RecurrencePopup extends PopupControl {
     private class RecurrencePopupEventHandlerProperty
             extends SimpleObjectProperty<EventHandler<RecurrencePopupEvent>> {
 
-        private EventType<RecurrencePopupEvent> eventType;
+        private final EventType<RecurrencePopupEvent> eventType;
 
         public RecurrencePopupEventHandlerProperty(final String name,
                                                    final EventType<RecurrencePopupEvent> eventType) {

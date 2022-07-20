@@ -59,17 +59,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class DeveloperConsoleSkin extends SkinBase<DeveloperConsole> {
 
-    private TableView<LogEntry> tableView;
-    private FilteredList<LogEntry> filteredList;
-    private ToggleButton showLoadEvents;
-    private ToggleButton showCalendarEvents;
-    private ToggleButton showRequestEvents;
-    private DatePicker datePicker;
-    private DatePicker todayPicker;
-    private TimeField timeField;
+    private final TableView<LogEntry> tableView;
+    private final FilteredList<LogEntry> filteredList;
+    private final ToggleButton showLoadEvents;
+    private final ToggleButton showCalendarEvents;
+    private final ToggleButton showRequestEvents;
+    private final DatePicker datePicker;
+    private final DatePicker todayPicker;
+    private final TimeField timeField;
 
-    private ObservableList<LogEntry> masterData = FXCollections.observableArrayList();
-    private EventHandler<CalendarEvent> calendarListener = evt -> addEvent(evt, LogEntryType.CALENDAR_EVENT);
+    private final ObservableList<LogEntry> masterData = FXCollections.observableArrayList();
+    private final EventHandler<CalendarEvent> calendarListener = evt -> addEvent(evt, LogEntryType.CALENDAR_EVENT);
 
     public DeveloperConsoleSkin(DeveloperConsole view) {
         super(view);
@@ -299,13 +299,13 @@ public class DeveloperConsoleSkin extends SkinBase<DeveloperConsole> {
 
         private static int counter = 0;
 
-        private LocalDateTime timestamp = LocalDateTime.now();
+        private final LocalDateTime timestamp = LocalDateTime.now();
 
-        private LogEntryType logEntryType;
+        private final LogEntryType logEntryType;
 
-        private Event event;
+        private final Event event;
 
-        private int count;
+        private final int count;
 
         public LogEntry(LogEntryType type, Event event) {
             this.logEntryType = type;

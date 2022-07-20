@@ -90,12 +90,12 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
     protected void refreshData() {
     }
 
-    private InvalidationListener calendarVisibilityChanged = it -> calendarVisibilityChanged();
+    private final InvalidationListener calendarVisibilityChanged = it -> calendarVisibilityChanged();
 
     protected void calendarVisibilityChanged() {
     }
 
-    private EventHandler<CalendarEvent> calendarListener = this::calendarChanged;
+    private final EventHandler<CalendarEvent> calendarListener = this::calendarChanged;
 
     private void calendarListChanged(Change<? extends Calendar> change) {
         C dateControl = getSkinnable();
@@ -117,7 +117,7 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
     private void calendarChanged(CalendarEvent evt) {
 
         if (LoggingDomain.EVENTS.isLoggable(Level.FINE) && !(evt.getEntry() instanceof DraggedEntry)) {
-            LoggingDomain.EVENTS.fine("calendar event in " + getSkinnable().getClass().getSimpleName() + ": " + evt.getEventType() + ", details: " + evt.toString());
+            LoggingDomain.EVENTS.fine("calendar event in " + getSkinnable().getClass().getSimpleName() + ": " + evt.getEventType() + ", details: " + evt);
         }
 
         if (getSkinnable().isSuspendUpdates()) {

@@ -52,9 +52,9 @@ import java.util.Optional;
  */
 public class YearPage extends PageBase {
 
-    private YearView yearView;
-    private MonthSheetView monthSheetView;
-    private ToggleButton displayModeButton;
+    private final YearView yearView;
+    private final MonthSheetView monthSheetView;
+    private final ToggleButton displayModeButton;
 
     /**
      * Constructs a new year page.

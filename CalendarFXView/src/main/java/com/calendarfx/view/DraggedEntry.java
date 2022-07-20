@@ -53,8 +53,8 @@ public final class DraggedEntry extends Entry<Object> {
     }
 
     private Duration offsetDuration;
-    private Entry<?> originalEntry;
-    private Calendar originalCalendar;
+    private final Entry<?> originalEntry;
+    private final Calendar originalCalendar;
     private DragMode dragMode;
 
     /**

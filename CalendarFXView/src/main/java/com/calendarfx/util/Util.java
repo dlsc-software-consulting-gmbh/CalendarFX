@@ -311,9 +311,9 @@ public class Util {
 
     private static class BidirectionalConversionBinding<L, R> implements InvalidationListener, WeakListener {
 
-        private WeakReference<Property<L>> leftReference;
-        private WeakReference<Property<R>> rightReference;
-        private Converter<L, R> converter;
+        private final WeakReference<Property<L>> leftReference;
+        private final WeakReference<Property<R>> rightReference;
+        private final Converter<L, R> converter;
         private boolean updating;
 
         private BidirectionalConversionBinding(Property<L> leftProperty, Property<R> rightProperty, Converter<L, R> converter) {

@@ -42,7 +42,7 @@ public class YearView extends DateControl {
 
     private static final String DEFAULT_STYLE_CLASS = "year-view";
 
-    private Map<Month, YearMonthView> viewMap = new HashMap<>();
+    private final Map<Month, YearMonthView> viewMap = new HashMap<>();
 
     /**
      * Constructs a new year view.

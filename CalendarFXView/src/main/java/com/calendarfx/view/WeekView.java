@@ -195,7 +195,7 @@ public class WeekView extends DayViewBase {
      */
     public static final class WeekDayParameter {
 
-        private WeekView weekView;
+        private final WeekView weekView;
 
         /**
          * Constructs a new parameter object.

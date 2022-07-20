@@ -59,10 +59,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class DayPage extends PageBase {
 
-    private AgendaView agendaView;
-    private YearMonthView yearMonthView;
-    private DetailedDayView detailedDayView;
-    private Node toolBarControls;
+    private final AgendaView agendaView;
+    private final YearMonthView yearMonthView;
+    private final DetailedDayView detailedDayView;
+    private final Node toolBarControls;
     private HBox toolbarControls;
 
     /**

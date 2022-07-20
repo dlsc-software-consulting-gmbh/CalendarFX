@@ -107,8 +107,8 @@ public class GoogleAutoRefreshThread extends Thread {
 
         EVERY_30_MINUTES(1000 * 60 * 30, "Every 30 Minutes");
 
-        private long time;
-        private String name;
+        private final long time;
+        private final String name;
 
         RefreshInterval(long time, String name) {
             this.time = time;

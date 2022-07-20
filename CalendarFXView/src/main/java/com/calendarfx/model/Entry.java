@@ -557,11 +557,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 @Override
                 public void set(Entry<T> newEntry) {
                     super.set(newEntry);
-                    if (newEntry != null) {
-                        setRecurrence(true);
-                    } else {
-                        setRecurrence(false);
-                    }
+                    setRecurrence(newEntry != null);
                 }
             };
         }
@@ -827,7 +823,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
     /*
      * Calendar support.
      */
-    private SimpleObjectProperty<Calendar> calendar = new SimpleObjectProperty<Calendar>(this, "calendar") {
+    private final SimpleObjectProperty<Calendar> calendar = new SimpleObjectProperty<Calendar>(this, "calendar") {
 
         @Override
         public void set(Calendar newCalendar) {

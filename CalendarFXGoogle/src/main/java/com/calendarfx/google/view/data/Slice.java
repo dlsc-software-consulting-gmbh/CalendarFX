@@ -77,14 +77,8 @@ public final class Slice implements Comparable {
         }
 
         if (end == null) {
-            if (other.end != null) {
-                return false;
-            }
-        } else if (!end.equals(other.end)) {
-            return false;
-        }
-
-        return true;
+            return other.end == null;
+        } else return end.equals(other.end);
     }
 
     @Override
