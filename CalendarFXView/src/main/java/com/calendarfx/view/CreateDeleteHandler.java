@@ -48,7 +48,7 @@ class CreateDeleteHandler {
             ZonedDateTime time = ZonedDateTime.now();
             if (dateControl instanceof ZonedDateTimeProvider) {
                 ZonedDateTimeProvider provider = (ZonedDateTimeProvider) dateControl;
-                time = provider.getZonedDateTimeAt(evt.getX(), evt.getY());
+                time = provider.getZonedDateTimeAt(evt.getX(), evt.getY(), dateControl.getZoneId());
             }
 
             if (dateControl.getCalendars().isEmpty()) {

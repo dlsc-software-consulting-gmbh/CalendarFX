@@ -50,6 +50,7 @@ import javafx.scene.CacheHint;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
@@ -204,13 +205,9 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         });
 
         addEventHandler(KeyEvent.KEY_PRESSED, evt -> {
-            switch (evt.getCode()) {
-                case ENTER:
-                    Point2D localToScreen = localToScreen(0, 0);
-                    showDetails(evt, localToScreen.getX() + getWidth(), localToScreen.getY() + getHeight() / 2);
-                    break;
-                default:
-                    break;
+            if (evt.getCode() == KeyCode.ENTER) {
+                Point2D localToScreen = localToScreen(0, 0);
+                showDetails(evt, localToScreen.getX() + getWidth(), localToScreen.getY() + getHeight() / 2);
             }
         });
 
@@ -276,8 +273,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         }
     }
 
-    private boolean isAssignedLayerVisible()
-    {
+    private boolean isAssignedLayerVisible() {
         return getDateControl().visibleLayersProperty().contains(getLayer());
     }
 

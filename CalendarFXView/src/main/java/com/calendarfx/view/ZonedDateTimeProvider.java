@@ -16,6 +16,7 @@
 
 package com.calendarfx.view;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
@@ -32,7 +33,9 @@ public interface ZonedDateTimeProvider {
      *            the x coordinate of the input event
      * @param y
      *            the y coordinate of the input event
+     * @param zoneId
+     *            the zoneID for which we query the time
      * @return the time at the given location
      */
-    ZonedDateTime getZonedDateTimeAt(double x, double y);
+    ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId);
 }

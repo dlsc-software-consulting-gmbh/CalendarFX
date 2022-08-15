@@ -74,6 +74,7 @@ public final class DraggedEntry extends Entry<Object> {
         setUserObject(entry.getUserObject());
         setFullDay(entry.isFullDay());
         setInterval(entry.getInterval());
+        setZoneId(entry.getZoneId());
 
         getStyleClass().add("dragged-entry");
     }

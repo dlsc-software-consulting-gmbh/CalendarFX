@@ -47,7 +47,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
 
         view.setOnScroll(evt -> {
             final double oldLocation = evt.getY();
-            final ZonedDateTime time = view.getZonedDateTimeAt(0, oldLocation);
+            final ZonedDateTime time = view.getZonedDateTimeAt(0, oldLocation, view.getZoneId());
 
             if (view.isScrollingEnabled()) {
                 if (evt.isShortcutDown()) {
@@ -58,11 +58,11 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
                     // then adjust scroll time to make sure the time found at mouse location stays where it is
                     final double newLocation = view.getLocation(time);
                     final double locationDelta = newLocation - oldLocation;
-                    final ZonedDateTime newScrollTime = view.getZonedDateTimeAt(0, locationDelta);
+                    final ZonedDateTime newScrollTime = view.getZonedDateTimeAt(0, locationDelta, view.getZoneId());
                     view.setScrollTime(newScrollTime);
 
                 } else {
-                    view.setScrollTime(getSkinnable().getZonedDateTimeAt(0, -evt.getDeltaY()));
+                    view.setScrollTime(getSkinnable().getZonedDateTimeAt(0, -evt.getDeltaY(), view.getZoneId()));
                 }
             }
         });

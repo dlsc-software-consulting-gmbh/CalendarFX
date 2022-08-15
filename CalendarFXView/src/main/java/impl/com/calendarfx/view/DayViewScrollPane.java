@@ -137,8 +137,8 @@ public class DayViewScrollPane extends Pane {
             return;
         }
 
-        final LocalTime startTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY()).toLocalTime();
-        final LocalTime endTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY() + getHeight()).toLocalTime();
+        final LocalTime startTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY(), dayView.getZoneId()).toLocalTime();
+        final LocalTime endTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY() + getHeight(), dayView.getZoneId()).toLocalTime();
 
         this.startTime.set(startTime);
         this.endTime.set(endTime);

@@ -165,7 +165,7 @@ public class DayViewEditController {
         LOGGER.finer("mouse event source: " + evt.getSource());
         LOGGER.finer("mouse event target: " + evt.getTarget());
         LOGGER.finer("mouse event y-coordinate:" + evt.getY());
-        LOGGER.finer("time: " + dayView.getZonedDateTimeAt(evt.getX(), evt.getY()));
+        LOGGER.finer("time: " + dayView.getZonedDateTimeAt(evt.getX(), evt.getY(), dayView.getZoneId()));
 
         if (!(evt.getTarget() instanceof EntryViewBase)) {
             return;
@@ -190,7 +190,7 @@ public class DayViewEditController {
                     dragging = true;
                     dayEntryView.getProperties().put("dragged", true); 
 
-                    LocalDateTime time = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
+                    LocalDateTime time = dayView.getZonedDateTimeAt(evt.getX(), evt.getY(), entry.getZoneId()).toLocalDateTime();
                     offsetDuration = Duration.between(entry.getStartAsLocalDateTime(), time);
                     entryDuration = entry.getDuration();
 
@@ -302,7 +302,9 @@ public class DayViewEditController {
     }
 
     private void changeStartTime(MouseEvent evt) {
-        LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
+        DraggedEntry draggedEntry = dayView.getDraggedEntry();
+
+        LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY(), draggedEntry.getZoneId()).toLocalDateTime();
         LocalDateTime time = grid(locationTime);
 
         if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
@@ -310,8 +312,6 @@ public class DayViewEditController {
         }
 
         LOGGER.finer("changing start time, time = " + time); 
-
-        DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
         if (isMinimumDuration(entry, entry.getEndAsLocalDateTime(), locationTime)) {
 
@@ -342,10 +342,10 @@ public class DayViewEditController {
     }
 
     private void changeEndTime(MouseEvent evt) {
-        LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
-        LocalDateTime time = grid(locationTime);
-
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
+
+        LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY(), draggedEntry.getZoneId()).toLocalDateTime();
+        LocalDateTime time = grid(locationTime);
 
         if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
             time = LocalDateTime.of(entry.getEndDate(), time.toLocalTime());
@@ -387,8 +387,9 @@ public class DayViewEditController {
 
     private void changeStartAndEndTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
-        LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY()).toLocalDateTime();
+        LocalDateTime locationTime = dayView.getZonedDateTimeAt(evt.getX(), evt.getY(), draggedEntry.getZoneId()).toLocalDateTime();
 
+        System.out.println("zone id of dragged entry: " + draggedEntry.getZoneId());
         LOGGER.fine("changing start/end time, time = " + locationTime + " offset duration = " + offsetDuration);
 
         if (locationTime != null && offsetDuration != null) {

@@ -390,7 +390,7 @@ public abstract class DateControl extends CalendarFXControl {
                     ZonedDateTime time = ZonedDateTime.now();
                     if (DateControl.this instanceof ZonedDateTimeProvider) {
                         ZonedDateTimeProvider provider = (ZonedDateTimeProvider) DateControl.this;
-                        time = provider.getZonedDateTimeAt(evt.getX(), evt.getY());
+                        time = provider.getZonedDateTimeAt(evt.getX(), evt.getY(), getZoneId());
                     }
                     ContextMenuParameter param = new ContextMenuParameter(evt, DateControl.this, calendar, time);
                     ContextMenu menu = callback.call(param);

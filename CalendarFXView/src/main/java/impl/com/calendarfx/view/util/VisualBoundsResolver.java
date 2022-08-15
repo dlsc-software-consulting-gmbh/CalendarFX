@@ -52,8 +52,8 @@ public final class VisualBoundsResolver {
 
         } else {
 
-            range.y1 = dayView.getLocation(entry.getStartTime());
-            range.y2 = dayView.getLocation(entry.getEndTime());
+            range.y1 = dayView.getLocation(entry.getStartTime(), entry.getZoneId());
+            range.y2 = dayView.getLocation(entry.getEndTime(), entry.getZoneId());
         }
 
         if (entryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.COMPUTE_PREF_SIZE)) {

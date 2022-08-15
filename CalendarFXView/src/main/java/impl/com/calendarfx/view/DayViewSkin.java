@@ -198,7 +198,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         getSkinnable().setOnMouseDragged(evt -> {
             if (view.isScrollingEnabled()) {
-                view.setScrollTime(view.getZonedDateTimeAt(0, startY - evt.getScreenY()));
+                view.setScrollTime(view.getZonedDateTimeAt(0, startY - evt.getScreenY(), view.getZoneId()));
                 startY = evt.getScreenY();
             }
         });
@@ -615,8 +615,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
                 } else {
 
-                    y1 = dayView.getLocation(entry.getStartTime());
-                    y2 = dayView.getLocation(entry.getEndTime());
+                    y1 = dayView.getLocation(entry.getStartTime(), entry.getZoneId());
+                    y2 = dayView.getLocation(entry.getEndTime(), entry.getZoneId());
                 }
 
                 if (entryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.COMPUTE_PREF_SIZE)) {
@@ -703,8 +703,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
             } else {
 
-                y1 = dayView.getLocation(entry.getStartTime());
-                y2 = dayView.getLocation(entry.getEndTime());
+                y1 = dayView.getLocation(entry.getStartTime(), entry.getZoneId());
+                y2 = dayView.getLocation(entry.getEndTime(), entry.getZoneId());
 
             }
 
@@ -986,7 +986,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     @Override
     public LocalDate getLoadEndDate() {
         if (getSkinnable().isScrollingEnabled()) {
-            return getSkinnable().getZonedDateTimeAt(0, getSkinnable().getHeight()).toLocalDate();
+            return getSkinnable().getZonedDateTimeAt(0, getSkinnable().getHeight(), getSkinnable().getZoneId()).toLocalDate();
         }
 
         return getSkinnable().getDate();

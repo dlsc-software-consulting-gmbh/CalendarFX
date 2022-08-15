@@ -169,7 +169,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     private static final double MILLIS_PER_HOUR = 3_600_000d;
 
     @Override
-    public ZonedDateTime getZonedDateTimeAt(double x, double y) {
+    public ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         if (isScrollingEnabled()) {
 
             final double mpp = MILLIS_PER_HOUR / getHourHeight();
@@ -178,7 +178,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
         } else {
 
-            return ZonedDateTime.of(ViewHelper.getLocationTime(this, y, false, true), getZoneId());
+            return ViewHelper.getLocationTime(this, y, false, true, zoneId);
 
         }
     }
@@ -214,17 +214,32 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     /**
-     * Returns the y coordinate for the given time.
+     * Returns the y coordinate for the given time. This method delegates
+     * to {@link #getLocation(LocalTime, ZoneId)} using the time zone of
+     * the control.
      *
      * @param time the time for which to return the coordinate
      * @return the y coordinate
      * @throws UnsupportedOperationException if {@link #scrollingEnabled} is set to true
      */
     public double getLocation(LocalTime time) {
+        return getLocation(time, getZoneId());
+    }
+
+    /**
+     * Returns the y coordinate for the given time.
+     *
+     * @param time the time for which to return the coordinate
+     * @param zoneId the time zone for which the location is being requested (might be different from the control's time zone)
+     * @return the y coordinate
+     *
+     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is set to true
+     */
+    public double getLocation(LocalTime time, ZoneId zoneId) {
         if (isScrollingEnabled()) {
             throw new UnsupportedOperationException("this method can only be called if scrolling is disabled");
         }
-        return ViewHelper.getTimeLocation(this, time);
+        return ViewHelper.getTimeLocation(this, time, zoneId);
     }
 
     /**
