@@ -266,10 +266,31 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
         date = Util.adjustToFirstDayOfWeek(date, getSkinnable().getFirstDayOfWeek());
 
-        for (int week = 0; week < 6; week++) {
-            for (int day = 0; day < 7; day++) {
-                // TODO: this should be done via a factory (cell factory already defined on MonthViewBase
+        final int firstWeek = 0;
+        final int lastWeek = 5;
+        final int firstDay = 0;
+        final int lastDay = 6;
+
+        for (int week = firstWeek; week <= lastWeek; week++) {
+            for (int day = firstDay; day <= lastDay; day++) {
+                // TODO: this should be done via a factory (cell factory already defined on MonthViewBase)
                 MonthDayView dayOfMonthLabel = new MonthDayView(date, week, day);
+                if (week == firstWeek) {
+                    dayOfMonthLabel.getStyleClass().add("first-week");
+                } else if (week == lastWeek) {
+                    dayOfMonthLabel.getStyleClass().add("last-week");
+                } else {
+                    dayOfMonthLabel.getStyleClass().add("middle-week");
+                }
+
+                if (day == firstDay) {
+                    dayOfMonthLabel.getStyleClass().add("first-day");
+                } else if (day == lastDay) {
+                    dayOfMonthLabel.getStyleClass().add("last-day");
+                } else {
+                    dayOfMonthLabel.getStyleClass().add("middle-day");
+                }
+
                 controlsMap.put(date, dayOfMonthLabel);
                 GridPane.setHgrow(dayOfMonthLabel, ALWAYS);
                 GridPane.setVgrow(dayOfMonthLabel, ALWAYS);
