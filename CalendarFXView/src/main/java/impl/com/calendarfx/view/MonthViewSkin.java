@@ -45,6 +45,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -109,17 +110,13 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         gridPane.getColumnConstraints().add(colCon);
 
         RowConstraints rowHeaderCon = new RowConstraints();
-
-        RowConstraints rowCon = new RowConstraints();
-        rowCon.setPercentHeight(100d / 6d);
-
+        rowHeaderCon.setMinHeight(Region.USE_PREF_SIZE);
         gridPane.getRowConstraints().add(rowHeaderCon);
-        gridPane.getRowConstraints().add(rowCon);
-        gridPane.getRowConstraints().add(rowCon);
-        gridPane.getRowConstraints().add(rowCon);
-        gridPane.getRowConstraints().add(rowCon);
-        gridPane.getRowConstraints().add(rowCon);
-        gridPane.getRowConstraints().add(rowCon);
+
+        for (int i = 0; i < 6; i++) {
+            RowConstraints rowCon = new RowConstraints();
+            gridPane.getRowConstraints().add(rowCon);
+        }
 
         gridPane.getStyleClass().add("container");
 
