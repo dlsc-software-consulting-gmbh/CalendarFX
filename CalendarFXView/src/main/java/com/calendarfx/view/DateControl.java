@@ -1920,6 +1920,16 @@ public abstract class DateControl extends CalendarFXControl {
         return timeProperty().get();
     }
 
+    /**
+     * Returns the zoned date time version of the current time.
+     *
+     * @see #getTime()
+     * @return the zoned date time version of the current time property
+     */
+    public final ZonedDateTime getZonedDateTime() {
+        return ZonedDateTime.of(getDate(), getTime(), getZoneId());
+    }
+
     private final ObjectProperty<LocalTime> startTime = new SimpleObjectProperty<>(this, "startTime", LocalTime.of(6, 0));
 
     /**
