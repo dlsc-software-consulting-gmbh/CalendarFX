@@ -124,14 +124,14 @@
     -fx-font-size: 2.2em;
 }
 
-.calendar-page > .container > .header > .navigation-button-bar {
+.calendar-page > .container > .header > .navigate-date-view {
 }
 
-.calendar-page > .container > .header > .navigation-button-bar > .container > .previous-date-button {
+.calendar-page > .container > .header > .navigate-date-view > .container > .previous-date-button {
     -fx-padding: 3 7 3 7;
 }
 
-.calendar-page > .container > .header > .navigation-button-bar > .container > .next-date-button {
+.calendar-page > .container > .header > .navigate-date-view > .container > .next-date-button {
     -fx-padding: 3 7 3 7;
 }
 

@@ -61,8 +61,8 @@ public class HelloTimezones extends CalendarFXSample {
         calendarSource.getCalendars().add(timeZoneCalendar);
 
         dayView.setZoneId(ZoneId.of("Europe/Paris"));
-        dayView.setStartTime(LocalTime.MIN);
-        dayView.setEndTime(LocalTime.MAX);
+        dayView.setStartTime(LocalTime.of(6, 0));
+        dayView.setEndTime(LocalTime.of(20, 0));
         dayView.setLayout(Layout.SWIMLANE);
         dayView.getCalendarSources().setAll(calendarSource);
         dayView.setHoursLayoutStrategy(DayViewBase.HoursLayoutStrategy.FIXED_HOUR_HEIGHT);

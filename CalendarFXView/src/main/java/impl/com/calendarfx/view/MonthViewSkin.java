@@ -247,6 +247,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
         if (view.isShowWeekdays()) {
             for (int i = 0; i < 7; i++) {
+                // TODO: provide a factory for these labels
                 Label dayOfWeekLabel = new Label(dayOfWeek.getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()));
                 dayOfWeekLabel.setAlignment(Pos.CENTER_RIGHT);
                 dayOfWeekLabel.setMaxSize(MAX_VALUE, MAX_VALUE);

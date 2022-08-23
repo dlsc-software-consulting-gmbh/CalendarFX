@@ -49,7 +49,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * The common superclass for all date controls that are used to display the 24
- * hours of a day: day view, week day view, time scale, week time scale, and
+ * hours of a day: day view, week day view, timescale, week timescale, and
  * week view. Instances of this type can be configured to display hours at a
  * fixed height or alternatively a fixed number of hours for a given viewport
  * height (see {@link HoursLayoutStrategy}). This control also supports an early /
@@ -95,6 +95,60 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         earliestTimeUsedProperty().addListener(trimListener);
         latestTimeUsedProperty().addListener(trimListener);
         trimTimeBoundsProperty().addListener(trimListener);
+    }
+
+    /**
+     * Returns the zoned start time of the day view for the view's current date,
+     * its start time, and its time zone.
+     *
+     * @see #getDate()
+     * @see #getStartTime()
+     * @see #getZoneId()
+     *
+     * @return the zoned start time of the view
+     */
+    public final ZonedDateTime getZonedDateTimeStart() {
+        return ZonedDateTime.of(getDate(), getStartTime(), getZoneId());
+    }
+
+    /**
+     * Returns the zoned minimum time of the day view for the view's current date,
+     * for {@link LocalTime#MIN}, and its time zone.
+     *
+     * @see #getDate()
+     * @see #getZoneId()
+     *
+     * @return the zoned minimum time of the view
+     */
+    public final ZonedDateTime getZonedDateTimeMin() {
+        return ZonedDateTime.of(getDate(), LocalTime.MIN, getZoneId());
+    }
+
+    /**
+     * Returns the zoned end time of the day view for the view's current date,
+     * its end time, and its time zone.
+     *
+     * @see #getDate()
+     * @see #getEndTime() ()
+     * @see #getZoneId()
+     *
+     * @return the zoned end time of the view
+     */
+    public final ZonedDateTime getZonedDateTimeEnd() {
+        return ZonedDateTime.of(getDate(), getEndTime(), getZoneId());
+    }
+
+    /**
+     * Returns the zoned maximum time of the day view for the view's current date,
+     * for {@link LocalTime#MAX}, and its time zone.
+     *
+     * @see #getDate()
+     * @see #getZoneId()
+     *
+     * @return the zoned maximum time of the view
+     */
+    public final ZonedDateTime getZonedDateTimeMax() {
+        return ZonedDateTime.of(getDate(), LocalTime.MAX, getZoneId());
     }
 
     private final ObjectProperty<ZonedDateTime> scrollTime = new SimpleObjectProperty<>(this, "scrollTime", ZonedDateTime.of(LocalDate.now(), LocalTime.MIN, ZoneId.systemDefault()));
@@ -178,20 +232,20 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
         } else {
 
-            return ViewHelper.getLocationTime(this, y, false, true, zoneId);
+            return ZonedDateTime.ofInstant(ViewHelper.getInstantAt(this, y, false, true), getZoneId());
 
         }
     }
 
     /**
-     * Returns the y coordinate for the given time.
+     * Returns the zoned date time version of the given time for the view and
+     * its current date and time zone.
      *
-     * @param time the time for which to return the coordinate
-     * @return the y coordinate
-     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is not set to true
+     * @param time the local time to convert to a zoned date time
+     * @return the zoned date time version of the given time
      */
-    public final double getLocation(ZonedDateTime time) {
-        return getLocation(time.toInstant());
+    public final ZonedDateTime getZonedDateTime(LocalTime time) {
+        return ZonedDateTime.of(getDate(), time, getZoneId());
     }
 
     /**
@@ -200,7 +254,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      *
      * @param instant the time for which to return the coordinate
      * @return the y coordinate
-     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is not set to true
      */
     public final double getLocation(Instant instant) {
         if (isScrollingEnabled()) {
@@ -210,36 +263,30 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
             return millis / mpp;
         }
 
-        throw new UnsupportedOperationException("this method can only be called if scrolling is enabled");
+        return ViewHelper.getTimeLocation(this, instant);
     }
 
     /**
      * Returns the y coordinate for the given time. This method delegates
-     * to {@link #getLocation(LocalTime, ZoneId)} using the time zone of
-     * the control.
+     * to {@link ViewHelper#getTimeLocation(DayViewBase, ZonedDateTime)}.
      *
      * @param time the time for which to return the coordinate
      * @return the y coordinate
      * @throws UnsupportedOperationException if {@link #scrollingEnabled} is set to true
      */
-    public double getLocation(LocalTime time) {
-        return getLocation(time, getZoneId());
+    public final double getLocation(ZonedDateTime time) {
+        return ViewHelper.getTimeLocation(this, time);
     }
 
+
     /**
-     * Returns the y coordinate for the given time.
+     * Returns the time instant at the given location.
      *
-     * @param time the time for which to return the coordinate
-     * @param zoneId the time zone for which the location is being requested (might be different from the control's time zone)
-     * @return the y coordinate
-     *
-     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is set to true
+     * @param y the vertical location inside the view
+     * @return the time instant at the given location
      */
-    public double getLocation(LocalTime time, ZoneId zoneId) {
-        if (isScrollingEnabled()) {
-            throw new UnsupportedOperationException("this method can only be called if scrolling is disabled");
-        }
-        return ViewHelper.getTimeLocation(this, time, zoneId);
+    public final Instant getInstantAt(double y) {
+        return ViewHelper.getInstantAt(this, y, false, false);
     }
 
     /**

@@ -19,6 +19,7 @@ package impl.com.calendarfx.view;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
@@ -27,23 +28,23 @@ import java.time.temporal.ChronoUnit;
 @SuppressWarnings("javadoc")
 public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
 
+    private final InvalidationListener layoutListener = it -> getSkinnable().requestLayout();
+
     public DayViewBaseSkin(T view) {
         super(view);
 
-        InvalidationListener layoutListener = it -> getSkinnable().requestLayout();
-
-        view.timeProperty().addListener(layoutListener);
-        view.hourHeightProperty().addListener(layoutListener);
-        view.hourHeightCompressedProperty().addListener(layoutListener);
-        view.visibleHoursProperty().addListener(layoutListener);
-        view.earlyLateHoursStrategyProperty().addListener(layoutListener);
-        view.hoursLayoutStrategyProperty().addListener(layoutListener);
-        view.startTimeProperty().addListener(layoutListener);
-        view.endTimeProperty().addListener(layoutListener);
-        view.getCalendars().addListener(layoutListener);
-        view.enableCurrentTimeMarkerProperty().addListener(layoutListener);
-        view.entryWidthPercentageProperty().addListener(layoutListener);
-        view.showTodayProperty().addListener(layoutListener);
+        registerLayoutListener(view.timeProperty());
+        registerLayoutListener(view.hourHeightProperty());
+        registerLayoutListener(view.hourHeightCompressedProperty());
+        registerLayoutListener(view.visibleHoursProperty());
+        registerLayoutListener(view.earlyLateHoursStrategyProperty());
+        registerLayoutListener(view.hoursLayoutStrategyProperty());
+        registerLayoutListener(view.startTimeProperty());
+        registerLayoutListener(view.endTimeProperty());
+        registerLayoutListener(view.getCalendars());
+        registerLayoutListener(view.enableCurrentTimeMarkerProperty());
+        registerLayoutListener(view.entryWidthPercentageProperty());
+        registerLayoutListener(view.showTodayProperty());
 
         view.setOnScroll(evt -> {
             final double oldLocation = evt.getY();
@@ -68,6 +69,9 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
         });
     }
 
+    private void registerLayoutListener(Observable obs) {
+        obs.addListener(layoutListener);
+    }
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 
