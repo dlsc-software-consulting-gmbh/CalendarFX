@@ -25,6 +25,7 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.Layout;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
+import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import impl.com.calendarfx.view.CalendarPropertySheet;
 import javafx.scene.Node;
 
@@ -61,6 +62,7 @@ public class HelloTimezones extends CalendarFXSample {
         calendarSource.getCalendars().add(timeZoneCalendar);
 
         dayView.setZoneId(ZoneId.of("Europe/Paris"));
+        dayView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.SHOW_COMPRESSED);
         dayView.setStartTime(LocalTime.of(6, 0));
         dayView.setEndTime(LocalTime.of(20, 0));
         dayView.setLayout(Layout.SWIMLANE);
@@ -107,7 +109,7 @@ public class HelloTimezones extends CalendarFXSample {
             Entry<?> entry = new Entry<>();
             entry.setTitle("Paris");
 
-            int hour = 8;
+            int hour = 2;
             int durationInHours = 4;
 
             LocalTime startTime = LocalTime.of(hour, 0);

@@ -91,11 +91,15 @@ public final class ViewHelper {
 
                 return ((int) ((epochMilli - startMillis) / mpp)) + .5;
             case SHOW_COMPRESSED:
+                ZonedDateTime minTime = view.getZonedDateTimeMin();
+                ZonedDateTime maxTime = view.getZonedDateTimeMax();
+
                 startTime = view.getZonedDateTimeStart();
                 endTime = view.getZonedDateTimeEnd();
 
-                long earlyHours = ChronoUnit.HOURS.between(LocalTime.MIN, view.getStartTime());
-                long lateHours = ChronoUnit.HOURS.between(view.getEndTime(), LocalTime.MAX) + 1;
+                long earlyHours = ChronoUnit.HOURS.between(minTime,startTime);
+                long lateHours = ChronoUnit.HOURS.between(endTime, maxTime) + 1;
+
                 double hourHeightCompressed = view.getHourHeightCompressed();
                 double earlyHeight = hourHeightCompressed * earlyHours;
                 double lateHeight = hourHeightCompressed * lateHours;
@@ -104,7 +108,7 @@ public final class ViewHelper {
                     /*
                      * Early compressed hours.
                      */
-                    startMillis = 0;
+                    startMillis = minTime.toInstant().toEpochMilli();
                     endMillis = startTime.toInstant().toEpochMilli();
 
                     mpp = (endMillis - startMillis) / earlyHeight;
@@ -115,7 +119,7 @@ public final class ViewHelper {
                      * Late compressed hours.
                      */
                     startMillis = endTime.toInstant().toEpochMilli();
-                    endMillis = ZonedDateTime.of(view.getDate(), LocalTime.MAX, view.getZoneId()).toInstant().toEpochMilli();
+                    endMillis = maxTime.toInstant().toEpochMilli();
 
                     mpp = (endMillis - startMillis) / lateHeight;
 
@@ -137,7 +141,6 @@ public final class ViewHelper {
 
     public static Instant getInstantAt(DayViewBase view, double y, boolean trim, boolean prefHeight) {
 
-        //System.out.println("getLocationTime.zoneID: " + zoneId);
         /**
          * When the early and late hours are not showing then we have to trim for sure.
          */
@@ -152,22 +155,19 @@ public final class ViewHelper {
             availableHeight = view.prefHeight(-1);
         }
 
-        if (y < 0) {
-            if (trim) {
-                return view.getZonedDateTimeStart().toInstant();
-            }
-            y = availableHeight + y;
-            zonedDateTime = zonedDateTime.minusDays(1);
-        } else if (y > availableHeight) {
-            if (trim) {
-                return view.getZonedDateTimeEnd().toInstant();
-            }
-            y = y - availableHeight;
-            zonedDateTime = zonedDateTime.plusDays(1);
-        }
-
-        ZonedDateTime startTime = view.getZonedDateTimeStart();
-        ZonedDateTime endTime = view.getZonedDateTimeEnd();
+//        if (y < 0) {
+//            if (trim) {
+//                return view.getZonedDateTimeStart().toInstant();
+//            }
+//            y = availableHeight + y;
+//            zonedDateTime = zonedDateTime.minusDays(1);
+//        } else if (y > availableHeight) {
+//            if (trim) {
+//                return view.getZonedDateTimeEnd().toInstant();
+//            }
+//            y = y - availableHeight;
+//            zonedDateTime = zonedDateTime.plusDays(1);
+//        }
 
         switch (view.getEarlyLateHoursStrategy()) {
             case SHOW:
@@ -176,21 +176,31 @@ public final class ViewHelper {
 
                 double mpp = (endMillis - startMillis) / availableHeight;
 
-                long millis = Math.min(endMillis, (long) (mpp * y));
+                long millis = (long) (mpp * y) + startMillis;
 
-                return Instant.ofEpochMilli(startMillis + millis);
+                return Instant.ofEpochMilli(millis);
             case HIDE:
+                ZonedDateTime startTime = view.getZonedDateTimeStart();
+                ZonedDateTime endTime = view.getZonedDateTimeEnd();
+
                 startMillis = startTime.toInstant().toEpochMilli();
                 endMillis = endTime.toInstant().toEpochMilli();
 
                 mpp = (endMillis - startMillis) / availableHeight;
 
-                millis = Math.min(endMillis, (long) (mpp * y) + startMillis);
+                millis = (long) (mpp * y) + startMillis;
 
                 return Instant.ofEpochMilli(millis);
             case SHOW_COMPRESSED:
-                long earlyHours = ChronoUnit.HOURS.between(LocalTime.MIN, view.getStartTime());
-                long lateHours = ChronoUnit.HOURS.between(view.getEndTime(), LocalTime.MAX) + 1;
+                startTime = view.getZonedDateTimeStart();
+                endTime = view.getZonedDateTimeEnd();
+
+                ZonedDateTime minTime = view.getZonedDateTimeMin();
+                ZonedDateTime maxTime = view.getZonedDateTimeMax();
+
+                long earlyHours = ChronoUnit.HOURS.between(minTime,startTime);
+                long lateHours = ChronoUnit.HOURS.between(endTime, maxTime) + 1;
+
                 double hourHeightCompressed = view.getHourHeightCompressed();
                 double earlyHeight = hourHeightCompressed * earlyHours;
                 double lateHeight = hourHeightCompressed * lateHours;
@@ -199,12 +209,12 @@ public final class ViewHelper {
                     /*
                      * Early compressed hours.
                      */
-                    startMillis = LocalTime.MIN.toNanoOfDay();
+                    startMillis = minTime.toInstant().toEpochMilli();
                     endMillis = startTime.toInstant().toEpochMilli();
 
                     mpp = (endMillis - startMillis) / earlyHeight;
 
-                    millis = Math.min(LocalTime.MAX.toNanoOfDay(), (long) (mpp * y));
+                    millis = (long) (mpp * y) + startMillis;
 
                     return Instant.ofEpochMilli(millis);
                 } else if (y > availableHeight - lateHeight) {
@@ -212,11 +222,11 @@ public final class ViewHelper {
                      * Late compressed hours.
                      */
                     startMillis = endTime.toInstant().toEpochMilli();
-                    endMillis = ZonedDateTime.of(view.getDate(), LocalTime.MAX, view.getZoneId()).toInstant().toEpochMilli();
+                    endMillis = maxTime.toInstant().toEpochMilli();
 
                     mpp = (endMillis - startMillis) / lateHeight;
 
-                    millis = Math.min(endMillis, (long) (mpp * (y - (availableHeight - lateHeight))) + startMillis);
+                    millis = (long) (mpp * (y - (availableHeight - lateHeight))) + startMillis;
 
                     return Instant.ofEpochMilli(millis);
                 } else {
@@ -228,7 +238,7 @@ public final class ViewHelper {
 
                     mpp = (endMillis - startMillis) / (availableHeight - earlyHeight - lateHeight);
 
-                    millis = Math.min(endMillis, (long) (mpp * (y - earlyHeight)) + startMillis);
+                    millis = (long) (mpp * (y - earlyHeight)) + startMillis;
 
                     return Instant.ofEpochMilli(millis);
                 }

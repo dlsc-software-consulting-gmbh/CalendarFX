@@ -113,9 +113,6 @@ public class WeekViewSkin extends SkinBase<WeekView> {
             Bindings.bindBidirectional(weekDayView.startTimeProperty(), weekView.startTimeProperty());
             Bindings.bindBidirectional(weekDayView.endTimeProperty(), weekView.endTimeProperty());
 
-//            weekDayView.startTimeProperty().bind(weekView.startTimeProperty());
-//            weekDayView.endTimeProperty().bind(weekView.endTimeProperty());
-
             dayGridPane.add(weekDayView, i, 0);
 
             weekDayViews.add(weekDayView);

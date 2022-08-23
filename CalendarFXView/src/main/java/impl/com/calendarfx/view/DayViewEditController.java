@@ -316,7 +316,12 @@ public class DayViewEditController {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
         Instant locationTime = dayView.getInstantAt(evt.getY());
+
         Instant gridTime = grid(locationTime);
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+        System.out.println("location time: " + dateTimeFormatter.format(ZonedDateTime.ofInstant(locationTime, dayView.getZoneId())) +
+                "grid time: " + dateTimeFormatter.format(ZonedDateTime.ofInstant(gridTime, dayView.getZoneId())));
 
 //        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
 //            time = ZonedDateTime.of(entry.getStartDate(), time.toLocalTime(), draggedEntry.getZoneId());
@@ -402,6 +407,8 @@ public class DayViewEditController {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
         Instant locationTime = dayView.getInstantAt(evt.getY());
+
+        System.out.println("location time: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(ZonedDateTime.ofInstant(locationTime, dayView.getZoneId())));
 
         LOGGER.fine("changing start/end time, time = " + locationTime + " offset duration = " + offsetDuration);
 

@@ -25,6 +25,7 @@ import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
@@ -444,8 +445,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         T dayView = getSkinnable();
 
-        boolean showEarlyHoursRegion = dayView.getStartTime().isAfter(LocalTime.MIN);
-        boolean showLateHoursRegion = dayView.getEndTime().isBefore(LocalTime.MAX);
+        boolean showEarlyHoursRegion = dayView.getStartTime().isAfter(LocalTime.MIN) && !dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE);
+        boolean showLateHoursRegion = dayView.getEndTime().isBefore(LocalTime.MAX) && !dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE);
 
         earlyHoursRegion.setVisible(showEarlyHoursRegion);
         lateHoursRegion.setVisible(showLateHoursRegion);
