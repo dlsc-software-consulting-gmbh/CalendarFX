@@ -18,14 +18,15 @@ package com.calendarfx.view.popover;
 
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.Util;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RecurrenceView;
 import com.calendarfx.view.TimeField;
+import impl.com.calendarfx.view.ZoneIdStringConverter;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -40,11 +41,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.util.StringConverter;
 
 import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.Set;
 
 public class EntryDetailsView extends EntryPopOverPane {
 
@@ -54,6 +52,7 @@ public class EntryDetailsView extends EntryPopOverPane {
     private final TimeField endTimeField = new TimeField();
     private final DatePicker startDatePicker = new DatePicker();
     private final DatePicker endDatePicker = new DatePicker();
+    private final ComboBox<ZoneId> zoneBox = new ComboBox<>();
     private final Entry<?> entry;
 
     private boolean updatingFields;
@@ -66,6 +65,7 @@ public class EntryDetailsView extends EntryPopOverPane {
             endTimeField.setValue(entry.getEndTime());
             startDatePicker.setValue(entry.getStartDate());
             endDatePicker.setValue(entry.getEndDate());
+            zoneBox.setValue(entry.getZoneId());
         } finally {
             updatingFields = false;
         }
@@ -81,7 +81,7 @@ public class EntryDetailsView extends EntryPopOverPane {
 
     private final WeakInvalidationListener weakUpdateSummaryLabelListener = new WeakInvalidationListener(updateSummaryLabelListener);
 
-    public EntryDetailsView(Entry<?> entry) {
+    public EntryDetailsView(Entry<?> entry, DateControl dateControl) {
         super();
 
         this.entry = entry;
@@ -128,34 +128,19 @@ public class EntryDetailsView extends EntryPopOverPane {
         startDatePicker.setValue(entry.getStartDate());
         endDatePicker.setValue(entry.getEndDate());
 
-        Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
-        ObservableList<ZoneId> zoneIds = FXCollections.observableArrayList();
-        for (String id : availableZoneIds) {
-            ZoneId zoneId = ZoneId.of(id);
-            if (!zoneIds.contains(zoneId)) {
-                zoneIds.add(zoneId);
-            }
-        }
-
-        zoneIds.sort(Comparator.comparing(ZoneId::getId));
-
         Label zoneLabel = new Label(Messages.getString("EntryDetailsView.TIMEZONE"));
+        zoneLabel.visibleProperty().bind(dateControl.enableTimeZoneSupportProperty());
+        zoneLabel.managedProperty().bind(dateControl.enableTimeZoneSupportProperty());
 
-        ComboBox<ZoneId> zoneBox = new ComboBox<>(zoneIds);
+        SortedList<ZoneId> sortedZones = new SortedList<>(dateControl.getAvailableZoneIds());
+        sortedZones.setComparator(new ZoneIdComparator());
+
+        zoneBox.setItems(sortedZones);
         zoneBox.disableProperty().bind(entry.getCalendar().readOnlyProperty());
-        zoneBox.setConverter(new StringConverter<>() {
-
-            @Override
-            public String toString(ZoneId object) {
-                return object.getId();
-            }
-
-            @Override
-            public ZoneId fromString(String string) {
-                return null;
-            }
-        });
+        zoneBox.setConverter(new ZoneIdStringConverter());
         zoneBox.setValue(entry.getZoneId());
+        zoneBox.visibleProperty().bind(dateControl.enableTimeZoneSupportProperty());
+        zoneBox.managedProperty().bind(dateControl.enableTimeZoneSupportProperty());
 
         recurrenceButton = new MenuButton(Messages.getString("EntryDetailsView.MENU_BUTTON_NONE"));
 
@@ -232,11 +217,14 @@ public class EntryDetailsView extends EntryPopOverPane {
             }
         });
 
+        zoneBox.valueProperty().addListener(evt -> {
+            if (!updatingFields && zoneBox.getValue() != null) {
+                entry.changeZoneId(zoneBox.getValue());
+            }
+        });
+
         // full day
         fullDay.setOnAction(evt -> entry.setFullDay(fullDay.isSelected()));
-
-        // zone Id
-        zoneBox.setOnAction(evt -> entry.setZoneId(zoneBox.getValue()));
 
         entry.recurrenceRuleProperty().addListener(weakRecurrenceRuleListener);
 

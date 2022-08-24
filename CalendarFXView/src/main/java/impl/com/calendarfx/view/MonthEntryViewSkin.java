@@ -16,15 +16,11 @@
 
 package impl.com.calendarfx.view;
 
-import java.text.MessageFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.MonthEntryView;
-
+import com.calendarfx.view.MonthView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.collections.ObservableList;
@@ -32,11 +28,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.shape.Circle;
 
+import java.text.MessageFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
+import java.util.Locale;
+import java.util.Objects;
+
 @SuppressWarnings("javadoc")
 public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter
-            .ofLocalizedTime(FormatStyle.SHORT);
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+
     protected Label titleLabel;
     protected Label timeLabel;
     protected Circle colorDot;
@@ -90,32 +94,23 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
         if (contentWidth > 120) {
             pw = timeLabel.prefWidth(-1);
-            timeLabel.resizeRelocate(snapPosition(contentX + contentWidth - pw),
-                    snapPosition(contentY), snapSize(pw),
-                    snapSize(contentHeight));
-            titleLabel.resizeRelocate(snapPosition(contentX),
-                    snapPosition(contentY), snapSize(contentWidth - pw),
-                    snapSize(contentHeight));
+            timeLabel.resizeRelocate(snapPositionX(contentX + contentWidth - pw), snapPositionY(contentY), snapSizeX(pw), snapSizeY(contentHeight));
+            titleLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth - pw), snapSizeY(contentHeight));
             timeLabel.setVisible(true);
         } else {
-            titleLabel.resizeRelocate(snapPosition(contentX),
-                    snapPosition(contentY), snapSize(contentWidth - pw),
-                    snapSize(contentHeight));
+            titleLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth - pw), snapSizeY(contentHeight));
             timeLabel.setVisible(false);
         }
     }
 
     @Override
-    protected double computePrefHeight(double width, double topInset,
-            double rightInset, double bottomInset, double leftInset) {
-        return Math.max(titleLabel.prefHeight(-1), timeLabel.prefHeight(-1))
-                + topInset + bottomInset;
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        return Math.max(titleLabel.prefHeight(-1), timeLabel.prefHeight(-1)) + topInset + bottomInset;
     }
 
     private final InvalidationListener updateViewListener = it -> updateView();
 
-    private final WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(
-            updateViewListener);
+    private final WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(updateViewListener);
 
     protected void updateView() {
         final MonthEntryView view = getSkinnable();
@@ -145,29 +140,18 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
         if (calendar != null) {
             // color dot style
-            colorDot.getStyleClass().setAll("default-style-icon-small",
-                    calendar.getStyle() + "-icon-small");
+            colorDot.getStyleClass().setAll("default-style-icon-small", calendar.getStyle() + "-icon-small");
 
             // title style
-            titleLabel.getStyleClass().setAll(
-                    "default-style-entry-small-title-label",
-                    calendar.getStyle() + "-entry-small-title-label");
+            titleLabel.getStyleClass().setAll("default-style-entry-small-title-label", calendar.getStyle() + "-entry-small-title-label");
 
             // time label style
-            timeLabel.getStyleClass().setAll(
-                    "default-style-entry-small-time-label",
-                    calendar.getStyle() + "-entry-small-time-label");
+            timeLabel.getStyleClass().setAll("default-style-entry-small-time-label", calendar.getStyle() + "-entry-small-time-label");
 
             // title style
             if (entry.isMultiDay() || entry.isFullDay()) {
-                titleLabel.getStyleClass().addAll(
-                        "default-style-entry-small-title-label-full-day",
-                        calendar.getStyle()
-                                + "-entry-small-title-label-full-day");
-                timeLabel.getStyleClass().addAll(
-                        "default-style-entry-small-time-label-full-day",
-                        calendar.getStyle()
-                                + "-entry-small-time-label-full-day");
+                titleLabel.getStyleClass().addAll("default-style-entry-small-title-label-full-day", calendar.getStyle() + "-entry-small-title-label-full-day");
+                timeLabel.getStyleClass().addAll("default-style-entry-small-time-label-full-day", calendar.getStyle() + "-entry-small-time-label-full-day");
             }
         } else {
             // Calendar might be null when the entry is a "dummy" entry.
@@ -175,19 +159,15 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
             colorDot.getStyleClass().setAll("default-style-icon-small");
 
             // title style
-            titleLabel.getStyleClass()
-                    .setAll("default-style-entry-small-title-label");
+            titleLabel.getStyleClass().setAll("default-style-entry-small-title-label");
 
             // time label style
-            timeLabel.getStyleClass()
-                    .setAll("default-style-entry-small-time-label");
+            timeLabel.getStyleClass().setAll("default-style-entry-small-time-label");
 
             // title style
             if (entry.isMultiDay() || entry.isFullDay()) {
-                titleLabel.getStyleClass().addAll(
-                        "default-style-entry-small-title-label-full-day");
-                timeLabel.getStyleClass().addAll(
-                        "default-style-entry-small-time-label-full-day");
+                titleLabel.getStyleClass().addAll("default-style-entry-small-title-label-full-day");
+                timeLabel.getStyleClass().addAll("default-style-entry-small-time-label-full-day");
             }
         }
 
@@ -211,17 +191,22 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
             break;
         }
 
-        styleClass.add("default-style-entry-small-"
-                + view.getPosition().toString().toLowerCase());
+        styleClass.add("default-style-entry-small-" + view.getPosition().toString().toLowerCase());
 
         // time label text
         if (!entry.isFullDay()) {
+            DateTimeFormatter dateTimeFormatter = getDateTimeFormatter();
+            MonthView dateControl = getSkinnable().getDateControl();
+            ZoneId entryZoneId = entry.getZoneId();
+            ZoneId dateControlZoneId = dateControl.getZoneId();
             if (entry.isMultiDay()) {
                 switch (view.getPosition()) {
                 case LAST:
-                    timeLabel.setText(MessageFormat.format(
-                            Messages.getString("MonthEntryViewSkin.ENDS_AT"),
-                            getDateTimeFormatter().format(entry.getEndTime())));
+                    if (!Objects.equals(entryZoneId, dateControlZoneId)) {
+                        timeLabel.setText(MessageFormat.format(Messages.getString("MonthEntryViewSkin.ENDS_AT"), dateTimeFormatter.format(entry.getEndAsZonedDateTime().withZoneSameInstant(dateControlZoneId).toLocalTime()) + " (" + entryZoneId.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")"));
+                    } else {
+                        timeLabel.setText(MessageFormat.format(Messages.getString("MonthEntryViewSkin.ENDS_AT"), dateTimeFormatter.format(entry.getEndTime())));
+                    }
                     break;
                 case FIRST:
                     /*
@@ -232,8 +217,11 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                      * interval).
                      */
                     if (view.getStartDate().equals(entry.getStartDate())) {
-                        timeLabel.setText(getDateTimeFormatter()
-                                .format(entry.getStartTime()));
+                        if (!Objects.equals(entryZoneId, dateControlZoneId)) {
+                            timeLabel.setText(dateTimeFormatter.format(entry.getStartAsZonedDateTime().withZoneSameInstant(dateControlZoneId).toLocalTime()) + " (" + entryZoneId.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")");
+                        } else {
+                            timeLabel.setText(dateTimeFormatter.format(entry.getStartTime()));
+                        }
                     }
                     break;
                 default:
@@ -241,8 +229,11 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                     break;
                 }
             } else {
-                timeLabel.setText(
-                        getDateTimeFormatter().format(entry.getStartTime()));
+                if (!Objects.equals(entryZoneId, dateControlZoneId)) {
+                    timeLabel.setText(dateTimeFormatter.format(entry.getStartAsZonedDateTime().withZoneSameInstant(dateControlZoneId).toLocalTime()) + " (" + entryZoneId.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")");
+                } else {
+                    timeLabel.setText(dateTimeFormatter.format(entry.getStartTime()));
+                }
             }
         }
 

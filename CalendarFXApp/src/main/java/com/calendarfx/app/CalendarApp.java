@@ -34,6 +34,7 @@ public class CalendarApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         CalendarView calendarView = new CalendarView();
+        calendarView.setEnableTimeZoneSupport(true);
 
         Calendar katja = new Calendar("Katja");
         Calendar dirk = new Calendar("Dirk");

@@ -541,6 +541,16 @@ public class Entry<T> implements Comparable<Entry<?>> {
         }
     }
 
+    /**
+     * Changes the zone ID of the entry interval.
+     *
+     * @param zoneId the new zone
+     */
+    public final void changeZoneId(ZoneId zoneId) {
+        requireNonNull(zoneId);
+        setInterval(getInterval().withZoneId(zoneId));
+    }
+
     private ReadOnlyObjectWrapper<Entry<T>> recurrenceSource;
 
     /**

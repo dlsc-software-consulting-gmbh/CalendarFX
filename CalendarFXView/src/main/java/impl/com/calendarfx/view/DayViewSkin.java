@@ -726,6 +726,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     @Override
+    protected void zoneIdChanged() {
+        if (!getSkinnable().isSuspendUpdates()) {
+            loadData("zone ID changed");
+        }
+    }
+
+    @Override
     protected void calendarChanged(Calendar calendar) {
         if (!getSkinnable().isSuspendUpdates()) {
             loadData("changes in calendar " + calendar.getName());

@@ -45,6 +45,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
         registerLayoutListener(view.enableCurrentTimeMarkerProperty());
         registerLayoutListener(view.entryWidthPercentageProperty());
         registerLayoutListener(view.showTodayProperty());
+        registerLayoutListener(view.zoneIdProperty());
 
         view.setOnScroll(evt -> {
             final double oldLocation = evt.getY();

@@ -105,6 +105,10 @@
     -fx-icon-size: 14.0px;
 }
 
+.right-toolbar-container {
+    -fx-spacing: 10px;
+}
+
 /*
  * --------------------------------------------------------------------------------------------------------------
  * Styles for the PageBase abstract superclass of the day, week, month, and year page.
@@ -1995,4 +1999,12 @@
 .resource-calendar-view .marker-line {
     -fx-pref-height: 5px;
     -fx-background-color: orange;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the TimeField control.
+ */
+.time-field > .box {
+    -fx-spacing: 2px;
 }

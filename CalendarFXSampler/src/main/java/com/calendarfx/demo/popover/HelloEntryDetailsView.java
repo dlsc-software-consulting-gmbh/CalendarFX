@@ -20,6 +20,7 @@ package com.calendarfx.demo.popover;
 import com.calendarfx.demo.CalendarFXSample;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.popover.EntryDetailsView;
 import javafx.scene.Node;
 
@@ -32,9 +33,10 @@ public class HelloEntryDetailsView extends CalendarFXSample {
 
     @Override
     protected Node createControl() {
+        DayView dayView = new DayView();
         Entry<String> entry = new Entry<>("Hello Entry");
         entry.setCalendar(new Calendar("Dummy Calendar"));
-        return new EntryDetailsView(entry);
+        return new EntryDetailsView(entry, dayView);
     }
 
     @Override

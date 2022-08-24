@@ -65,11 +65,10 @@ public class DayViewEditController {
 
         final EventHandler<MouseEvent> mouseReleasedHandler = this::mouseReleased;
 
-        dayView.addEventFilter(MouseEvent.MOUSE_MOVED, evt -> {
-            Instant instantAt = dayView.getInstantAt(evt.getY());
-            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instantAt, dayView.getZoneId());
-            System.out.println("time: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(zonedDateTime));
-        });
+//        dayView.addEventFilter(MouseEvent.MOUSE_MOVED, evt -> {
+//            Instant instantAt = dayView.getInstantAt(evt.getX(), evt.getY());
+//            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instantAt, dayView.getZoneId());
+//        });
 
         dayView.addEventFilter(MouseEvent.MOUSE_PRESSED, this::mousePressed);
         dayView.addEventFilter(MouseEvent.MOUSE_DRAGGED, this::mouseDragged);
@@ -202,7 +201,7 @@ public class DayViewEditController {
                     dragging = true;
                     dayEntryView.getProperties().put("dragged", true); 
 
-                    Instant time = dayView.getInstantAt(evt.getY());
+                    Instant time = dayView.getInstantAt(evt);
                     offsetDuration = Duration.between(entry.getStartAsZonedDateTime().toInstant(), time);
                     entryDuration = entry.getDuration();
 
@@ -315,7 +314,7 @@ public class DayViewEditController {
     private void changeStartTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        Instant locationTime = dayView.getInstantAt(evt.getY());
+        Instant locationTime = dayView.getInstantAt(evt);
 
         Instant gridTime = grid(locationTime);
 
@@ -362,7 +361,7 @@ public class DayViewEditController {
     private void changeEndTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        Instant locationTime = dayView.getInstantAt(evt.getY());
+        Instant locationTime = dayView.getInstantAt(evt);
         Instant gridTime = grid(locationTime);
 
 //        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
@@ -406,7 +405,7 @@ public class DayViewEditController {
     private void changeStartAndEndTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        Instant locationTime = dayView.getInstantAt(evt.getY());
+        Instant locationTime = dayView.getInstantAt(evt);
 
         System.out.println("location time: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(ZonedDateTime.ofInstant(locationTime, dayView.getZoneId())));
 

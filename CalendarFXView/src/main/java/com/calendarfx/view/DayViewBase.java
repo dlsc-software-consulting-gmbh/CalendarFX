@@ -35,6 +35,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseEvent;
 import org.controlsfx.control.PropertySheet.Item;
 
 import java.time.Instant;
@@ -101,11 +102,10 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * Returns the zoned start time of the day view for the view's current date,
      * its start time, and its time zone.
      *
+     * @return the zoned start time of the view
      * @see #getDate()
      * @see #getStartTime()
      * @see #getZoneId()
-     *
-     * @return the zoned start time of the view
      */
     public final ZonedDateTime getZonedDateTimeStart() {
         return ZonedDateTime.of(getDate(), getStartTime(), getZoneId());
@@ -115,10 +115,9 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * Returns the zoned minimum time of the day view for the view's current date,
      * for {@link LocalTime#MIN}, and its time zone.
      *
+     * @return the zoned minimum time of the view
      * @see #getDate()
      * @see #getZoneId()
-     *
-     * @return the zoned minimum time of the view
      */
     public final ZonedDateTime getZonedDateTimeMin() {
         return ZonedDateTime.of(getDate(), LocalTime.MIN, getZoneId());
@@ -128,11 +127,10 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * Returns the zoned end time of the day view for the view's current date,
      * its end time, and its time zone.
      *
+     * @return the zoned end time of the view
      * @see #getDate()
      * @see #getEndTime() ()
      * @see #getZoneId()
-     *
-     * @return the zoned end time of the view
      */
     public final ZonedDateTime getZonedDateTimeEnd() {
         return ZonedDateTime.of(getDate(), getEndTime(), getZoneId());
@@ -142,10 +140,9 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * Returns the zoned maximum time of the day view for the view's current date,
      * for {@link LocalTime#MAX}, and its time zone.
      *
+     * @return the zoned maximum time of the view
      * @see #getDate()
      * @see #getZoneId()
-     *
-     * @return the zoned maximum time of the view
      */
     public final ZonedDateTime getZonedDateTimeMax() {
         return ZonedDateTime.of(getDate(), LocalTime.MAX, getZoneId());
@@ -222,6 +219,38 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
     private static final double MILLIS_PER_HOUR = 3_600_000d;
 
+    /**
+     * Returns the time instant at the location of the given mouse event.
+     *
+     * @param evt the mouse event
+     * @return the time at the mouse event location
+     */
+    public Instant getInstantAt(MouseEvent evt) {
+        return getInstantAt(evt.getX(), evt.getY());
+    }
+
+    /**
+     * Returns the time instant at the given location.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the time at the given location
+     */
+    public Instant getInstantAt(double x, double y) {
+        return getZonedDateTimeAt(x, y).toInstant();
+    }
+
+    /**
+     * Returns the zoned date time at the given location.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the time at the given location
+     */
+    public ZonedDateTime getZonedDateTimeAt(double x, double y) {
+        return getZonedDateTimeAt(x, y, getZoneId());
+    }
+
     @Override
     public ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         if (isScrollingEnabled()) {
@@ -276,17 +305,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      */
     public final double getLocation(ZonedDateTime time) {
         return ViewHelper.getTimeLocation(this, time);
-    }
-
-
-    /**
-     * Returns the time instant at the given location.
-     *
-     * @param y the vertical location inside the view
-     * @return the time instant at the given location
-     */
-    public final Instant getInstantAt(double y) {
-        return ViewHelper.getInstantAt(this, y, false, false);
     }
 
     /**
@@ -750,7 +768,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * time used properties based on the currently showing entries.
      *
      * @return true if the time bounds will be automatically trimmed
-     *
      * @see #earliestTimeUsedProperty()
      * @see #latestTimeUsedProperty()
      */
