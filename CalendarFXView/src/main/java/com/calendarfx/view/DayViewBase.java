@@ -852,6 +852,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
         Bindings.bindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
         Bindings.bindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.bindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeMarkerProperty());
         Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.bindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
@@ -867,6 +868,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
         Bindings.unbindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
         Bindings.unbindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.unbindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeMarkerProperty());
         Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
