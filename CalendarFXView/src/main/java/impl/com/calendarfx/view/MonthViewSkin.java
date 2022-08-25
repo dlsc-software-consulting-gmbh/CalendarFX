@@ -164,6 +164,11 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
     }
 
     @Override
+    protected void zoneIdChanged() {
+        updateEntries("time zone changed");
+    }
+
+    @Override
     protected void calendarChanged(Calendar calendar) {
         updateEntries("changes in calendar " + calendar.getName());
     }
