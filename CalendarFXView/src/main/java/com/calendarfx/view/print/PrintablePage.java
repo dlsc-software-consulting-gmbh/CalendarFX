@@ -716,6 +716,7 @@ public class PrintablePage extends DateControl {
         DetailedDayView newDetailedDayView = new DetailedDayView();
         newDetailedDayView.setShowScrollBar(false);
         newDetailedDayView.setShowToday(false);
+        newDetailedDayView.setEnableCurrentTimeCircle(false);
         newDetailedDayView.setEnableCurrentTimeMarker(false);
         newDetailedDayView.weekFieldsProperty().bind(weekFieldsProperty());
         newDetailedDayView.showAllDayViewProperty().bind(showAllDayEntriesProperty());
@@ -756,6 +757,7 @@ public class PrintablePage extends DateControl {
         DetailedWeekView newDetailedWeekView = new DetailedWeekView();
         newDetailedWeekView.setShowScrollBar(false);
         newDetailedWeekView.layoutProperty().bind(layoutProperty());
+        newDetailedWeekView.setEnableCurrentTimeCircle(false);
         newDetailedWeekView.setEnableCurrentTimeMarker(false);
         newDetailedWeekView.showAllDayViewProperty().bind(showAllDayEntriesProperty());
         newDetailedWeekView.weekFieldsProperty().bind(weekFieldsProperty());
