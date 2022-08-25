@@ -51,7 +51,7 @@ public class DatePopOver extends PopOver {
     public DatePopOver(DateControl control, LocalDate date) {
         this.dateControl = requireNonNull(control);
         this.date = requireNonNull(date);
-        EntriesPane entriesPane = new EntriesPane();
+        EntriesPane entriesPane = new EntriesPane(control);
 
         getRoot().getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
         getRoot().getStyleClass().add("root");

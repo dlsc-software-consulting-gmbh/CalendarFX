@@ -729,7 +729,6 @@ public abstract class DateControl extends CalendarFXControl {
         datePopOver.show(owner);
     }
 
-
     private abstract static class ContextMenuParameterBase {
 
         private final DateControl dateControl;

@@ -402,8 +402,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
      * of view or check/uncheck any CalendarSource in Print dialog.
      */
     private void updatePrintVisibility() {
-        PrintablePage printablePage = printView.getPreviewPane()
-                .getPrintablePage();
+        PrintablePage printablePage = printView.getPreviewPane().getPrintablePage();
 
         if (printablePage.getViewType() == ViewType.DAY_VIEW) {
             printablePage.getDayView().refreshData();
@@ -444,10 +443,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             leftToolBarBox.getChildren().add(addCalendarButton);
         }
 
-        if (!leftToolBarBox.getChildren().isEmpty()
-                && getSkinnable().isShowPrintButton()) {
-            leftToolBarBox.getChildren()
-                    .add(new Separator(Orientation.VERTICAL));
+        if (!leftToolBarBox.getChildren().isEmpty() && getSkinnable().isShowPrintButton()) {
+            leftToolBarBox.getChildren().add(new Separator(Orientation.VERTICAL));
         }
 
         if (getSkinnable().isShowPrintButton()) {
@@ -458,12 +455,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             PageBase page = getSkinnable().getSelectedPage();
             Node toolBarControls = page.getToolBarControls();
 
-            if (toolBarControls != null && !((toolBarControls instanceof Pane)
-                    && ((Pane) toolBarControls).getChildrenUnmodifiable()
-                    .isEmpty())) {
+            if (toolBarControls != null && !((toolBarControls instanceof Pane) && ((Pane) toolBarControls).getChildrenUnmodifiable().isEmpty())) {
                 if (!leftToolBarBox.getChildren().isEmpty()) {
-                    leftToolBarBox.getChildren()
-                            .add(new Separator(Orientation.VERTICAL));
+                    leftToolBarBox.getChildren().add(new Separator(Orientation.VERTICAL));
                 }
                 leftToolBarBox.getChildren().add(toolBarControls);
             }
@@ -558,12 +552,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             zoomIn = pageList.indexOf(newPage) < pageList.indexOf(oldPage);
 
             KeyValue oldOpacity = new KeyValue(oldPage.opacityProperty(), 0);
-            KeyValue oldScaleX = new KeyValue(oldPage.scaleXProperty(),
-                    zoomIn ? large : small);
-            KeyValue oldScaleY = new KeyValue(oldPage.scaleYProperty(),
-                    zoomIn ? large : small);
-            KeyFrame frame1 = new KeyFrame(duration, oldOpacity, oldScaleX,
-                    oldScaleY);
+            KeyValue oldScaleX = new KeyValue(oldPage.scaleXProperty(), zoomIn ? large : small);
+            KeyValue oldScaleY = new KeyValue(oldPage.scaleYProperty(), zoomIn ? large : small);
+            KeyFrame frame1 = new KeyFrame(duration, oldOpacity, oldScaleX, oldScaleY);
             timeline.getKeyFrames().add(frame1);
 
             oldPage.setCache(true);
@@ -601,8 +592,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         KeyValue newScaleX = new KeyValue(newPage.scaleXProperty(), 1);
         KeyValue newScaleY = new KeyValue(newPage.scaleYProperty(), 1);
 
-        KeyFrame frame2 = new KeyFrame(duration, newOpacity, newScaleX,
-                newScaleY);
+        KeyFrame frame2 = new KeyFrame(duration, newOpacity, newScaleX, newScaleY);
         timeline.getKeyFrames().add(frame2);
 
         timeline.play();
@@ -634,8 +624,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             yearMonthView.getSelectedDates().add(getSkinnable().getDate());
             yearMonthView.getSelectedDates().addListener((Observable evt) -> {
                 if (!yearMonthView.getSelectedDates().isEmpty()) {
-                    yearMonthView.setDate(
-                            yearMonthView.getSelectedDates().iterator().next());
+                    yearMonthView.setDate(yearMonthView.getSelectedDates().iterator().next());
                 }
             });
 
@@ -644,12 +633,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
                 yearMonthView.getSelectedDates().add(getSkinnable().getDate());
             });
 
-            Bindings.bindBidirectional(yearMonthView.todayProperty(),
-                    getSkinnable().todayProperty());
-            Bindings.bindBidirectional(yearMonthView.dateProperty(),
-                    getSkinnable().dateProperty());
-            yearMonthView.weekFieldsProperty()
-                    .bind(getSkinnable().weekFieldsProperty());
+            Bindings.bindBidirectional(yearMonthView.todayProperty(), getSkinnable().todayProperty());
+            Bindings.bindBidirectional(yearMonthView.dateProperty(), getSkinnable().dateProperty());
+            yearMonthView.weekFieldsProperty().bind(getSkinnable().weekFieldsProperty());
 
             ScrollPane scrollPane = new ScrollPane(sourceView);
 
@@ -665,57 +651,47 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         if (printView == null) {
             printView = getSkinnable().getPrintView();
             printView.dateProperty().bind(getSkinnable().dateProperty());
+            printView.zoneIdProperty().bind(getSkinnable().zoneIdProperty());
         }
 
         printView.setToday(getSkinnable().getToday());
-        printView.getPreviewPane().getPrintablePage()
-                .setPageStartDate(getSkinnable().getDate());
+        printView.getPreviewPane().getPrintablePage().setPageStartDate(getSkinnable().getDate());
 
         printView.setWeekFields(getSkinnable().getWeekFields());
-        printView.getCalendarSources()
-                .setAll(getSkinnable().getCalendarSources());
+        printView.getCalendarSources().setAll(getSkinnable().getCalendarSources());
         printView.setLayout(getSkinnable().getSelectedPage().getLayout());
-        printView.setViewType(
-                getSkinnable().getSelectedPage().getPrintViewType());
+        printView.setViewType(getSkinnable().getSelectedPage().getPrintViewType());
         printView.loadDropDownValues(getSkinnable().getDate());
 
         printView.show(getSkinnable().getScene().getWindow());
 
         Platform.runLater(() -> {
 
-            SourceView printSource = printView.getSettingsView()
-                    .getSourceView();
+            SourceView printSource = printView.getSettingsView().getSourceView();
 
-            for (Calendar calendar : printSource.getCalendarVisibilityMap()
-                    .keySet()) {
-                printSource.getCalendarVisibilityProperty(calendar)
-                        .removeListener(printEntriesVisibilityListener);
-                printSource.getCalendarVisibilityProperty(calendar)
-                        .addListener(printEntriesVisibilityListener);
+            for (Calendar calendar : printSource.getCalendarVisibilityMap().keySet()) {
+                printSource.getCalendarVisibilityProperty(calendar).removeListener(printEntriesVisibilityListener);
+                printSource.getCalendarVisibilityProperty(calendar).addListener(printEntriesVisibilityListener);
             }
 
         });
     }
 
     @Override
-    protected double computePrefHeight(double width, double topInset,
-                                       double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         double dayHeight = dayPage.prefHeight(-1);
         double weekHeight = weekPage.prefHeight(-1);
         double monthHeight = monthPage.prefHeight(-1);
         double yearHeight = yearPage.prefHeight(-1);
-        return Math.max(dayHeight,
-                Math.max(weekHeight, Math.max(monthHeight, yearHeight)));
+        return Math.max(dayHeight, Math.max(weekHeight, Math.max(monthHeight, yearHeight)));
     }
 
     @Override
-    protected double computePrefWidth(double width, double topInset,
-                                      double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefWidth(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         double dayWidth = dayPage.prefWidth(-1);
         double weekWidth = weekPage.prefWidth(-1);
         double monthWidth = monthPage.prefWidth(-1);
         double yearWidth = yearPage.prefWidth(-1);
-        return Math.max(dayWidth,
-                Math.max(weekWidth, Math.max(monthWidth, yearWidth)));
+        return Math.max(dayWidth, Math.max(weekWidth, Math.max(monthWidth, yearWidth)));
     }
 }

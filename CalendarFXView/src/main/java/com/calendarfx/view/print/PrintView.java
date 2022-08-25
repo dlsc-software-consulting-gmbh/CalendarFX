@@ -45,6 +45,7 @@ import javafx.stage.Window;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.WeekFields;
 
 import static java.util.Objects.requireNonNull;
@@ -83,44 +84,31 @@ public class PrintView extends ViewTypeControl {
         paperView.viewTypeProperty().bindBidirectional(viewTypeProperty());
         timeRangeView.weekFieldsProperty().bind(weekFieldsProperty());
         timeRangeView.todayProperty().bind(todayProperty());
-        Util.bindBidirectional(optionsView.showSwimlaneLayoutProperty(),
-                layoutProperty(), LAYOUT_BOOLEAN_CONVERTER);
+        Util.bindBidirectional(optionsView.showSwimlaneLayoutProperty(), layoutProperty(), LAYOUT_BOOLEAN_CONVERTER);
 
         printablePage.weekFieldsProperty().bind(weekFieldsProperty());
-
+        printablePage.zoneIdProperty().bind(zoneIdProperty());
         printablePage.viewTypeProperty().bind(paperView.viewTypeProperty());
         printablePage.paperProperty().bind(paperView.paperProperty());
         printablePage.marginTypeProperty().bind(paperView.marginTypeProperty());
-        printablePage.bottomMarginProperty()
-                .bind(paperView.bottomMarginProperty());
+        printablePage.bottomMarginProperty().bind(paperView.bottomMarginProperty());
         printablePage.leftMarginProperty().bind(paperView.leftMarginProperty());
-        printablePage.rightMarginProperty()
-                .bind(paperView.rightMarginProperty());
+        printablePage.rightMarginProperty().bind(paperView.rightMarginProperty());
         printablePage.topMarginProperty().bind(paperView.topMarginProperty());
 
-        printablePage.printStartDateProperty()
-                .bind(timeRangeView.startDateProperty());
-        printablePage.printEndDateProperty()
-                .bind(timeRangeView.endDateProperty());
-        printablePage.showAllDayEntriesProperty()
-                .bind(optionsView.showAllDayEntriesProperty());
-        printablePage.showMiniCalendarsProperty()
-                .bind(optionsView.showMiniCalendarsProperty());
-        printablePage.showCalendarKeysProperty()
-                .bind(optionsView.showCalendarKeysProperty());
-        printablePage.showTimedEntriesProperty()
-                .bind(optionsView.showTimedEntriesProperty());
-        printablePage.showEntryDetailsProperty()
-                .bind(optionsView.showEntryDetailsProperty());
+        printablePage.printStartDateProperty().bind(timeRangeView.startDateProperty());
+        printablePage.printEndDateProperty().bind(timeRangeView.endDateProperty());
+        printablePage.showAllDayEntriesProperty().bind(optionsView.showAllDayEntriesProperty());
+        printablePage.showMiniCalendarsProperty().bind(optionsView.showMiniCalendarsProperty());
+        printablePage.showCalendarKeysProperty().bind(optionsView.showCalendarKeysProperty());
+        printablePage.showTimedEntriesProperty().bind(optionsView.showTimedEntriesProperty());
+        printablePage.showEntryDetailsProperty().bind(optionsView.showEntryDetailsProperty());
         printablePage.layoutProperty().bindBidirectional(layoutProperty());
 
-        Bindings.bindContent(sourceView.getCalendarSources(),
-                getCalendarSources());
-        Bindings.bindContent(sourceView.getCalendarVisibilityMap(),
-                printablePage.getCalendarVisibilityMap());
+        Bindings.bindContent(sourceView.getCalendarSources(), getCalendarSources());
+        Bindings.bindContent(sourceView.getCalendarVisibilityMap(), printablePage.getCalendarVisibilityMap());
 
-        Bindings.bindContent(printablePage.getCalendarSources(),
-                getCalendarSources());
+        Bindings.bindContent(printablePage.getCalendarSources(), getCalendarSources());
     }
 
     private final ObservableList<CalendarSource> calendarSources = FXCollections
@@ -135,8 +123,7 @@ public class PrintView extends ViewTypeControl {
         return calendarSources;
     }
 
-    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(
-            this, "today", LocalDate.now());
+    private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now());
 
     /**
      * Stores the date that is considered to represent "today". This property is
@@ -189,8 +176,7 @@ public class PrintView extends ViewTypeControl {
        return dateProperty().get();
     }
     
-    private final ObjectProperty<DateControl.Layout> layout = new SimpleObjectProperty<>(
-            this, "layout", DateControl.Layout.STANDARD);
+    private final ObjectProperty<DateControl.Layout> layout = new SimpleObjectProperty<>(this, "layout", DateControl.Layout.STANDARD);
 
     /**
      * Stores the strategy used by the view to layout the entries of several
@@ -227,8 +213,7 @@ public class PrintView extends ViewTypeControl {
         return layoutProperty().get();
     }
 
-    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(
-            this, "weekFields", WeekFields.ISO);
+    private final ObjectProperty<WeekFields> weekFields = new SimpleObjectProperty<>(this, "weekFields", WeekFields.ISO);
 
     /**
      * Week fields are used to determine the first day of a week (e.g. "Monday"
@@ -301,8 +286,7 @@ public class PrintView extends ViewTypeControl {
         return settingsView;
     }
 
-    private final ObjectProperty<EventHandler<ActionEvent>> onContinue = new SimpleObjectProperty<>(
-            this, "onContinue", evt -> doPrint());
+    private final ObjectProperty<EventHandler<ActionEvent>> onContinue = new SimpleObjectProperty<>(this, "onContinue", evt -> doPrint());
 
     /**
      * Stores an event handler that will be invoked when the user clicks on the
@@ -334,8 +318,7 @@ public class PrintView extends ViewTypeControl {
         onContinueProperty().set(handler);
     }
 
-    private final ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(
-            this, "onCancel", evt -> hide());
+    private final ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(this, "onCancel", evt -> hide());
 
     /**
      * Stores an event handler that will be invoked when the user clicks on the
@@ -369,8 +352,7 @@ public class PrintView extends ViewTypeControl {
 
     private Stage dialog;
 
-    private final ObjectProperty<Image> printIcon = new SimpleObjectProperty<Image>(
-            this, "printIcon", null);
+    private final ObjectProperty<Image> printIcon = new SimpleObjectProperty<Image>(this, "printIcon", null);
 
     /**
      * Stores the image of Print dialog. This property is null by default, but
@@ -406,8 +388,7 @@ public class PrintView extends ViewTypeControl {
      * Creates an application-modal dialog and shows it after adding the print
      * view to it.
      *
-     * @param owner
-     *            the owner window of the dialog
+     * @param owner the owner window of the dialog
      */
     public void show(Window owner) {
         InvalidationListener viewTypeListener = obs -> loadDropDownValues(getDate());
@@ -428,9 +409,11 @@ public class PrintView extends ViewTypeControl {
             dialog.centerOnScreen();
             dialog.setTitle(Messages.getString("PrintView.TITLE_LABEL"));
             dialog.initModality(Modality.APPLICATION_MODAL);
-            if (getPrintIcon() != null)
+
+            if (getPrintIcon() != null) {
                 dialog.getIcons().add(getPrintIcon());
-            
+            }
+
             dialog.setOnHidden(obs -> {
                 timeRange.cleanOldValues();
                 timeRange.viewTypeProperty().removeListener(viewTypeListener);
@@ -469,12 +452,9 @@ public class PrintView extends ViewTypeControl {
                 // Show an Error
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.initOwner(dialog);
-                alert.setTitle(Messages
-                        .getString("DateControl.TITLE_CALENDAR_PROBLEM"));
-                alert.setHeaderText(
-                        Messages.getString("PrintView.NO_PRINTERS"));
-                alert.setContentText(
-                        Messages.getString("PrintView.ERROR_NO_PRINTER"));
+                alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
+                alert.setHeaderText(Messages.getString("PrintView.NO_PRINTERS"));
+                alert.setContentText(Messages.getString("PrintView.ERROR_NO_PRINTER"));
                 alert.show();
                 return;
             }
@@ -485,27 +465,23 @@ public class PrintView extends ViewTypeControl {
             PageLayout layout = null;
 
             final Paper paper = pageInView.getPaper();
-            final PageOrientation pageOrientation = pageInView.getViewType()
-                    .getPageOrientation();
+            final PageOrientation pageOrientation = pageInView.getViewType().getPageOrientation();
             final PaperView.MarginType marginType = pageInView.getMarginType();
 
             LoggingDomain.PRINTING.fine("paper = " + paper);
             LoggingDomain.PRINTING.fine("pageOrientation = " + pageOrientation);
             LoggingDomain.PRINTING.fine("marginType = " + marginType);
-            LoggingDomain.PRINTING
-                    .fine("custom margins = left: " + pageInView.getLeftMargin()
+            LoggingDomain.PRINTING.fine("custom margins = left: " + pageInView.getLeftMargin()
                             + ", right: " + pageInView.getRightMargin()
                             + ", top: " + pageInView.getTopMargin()
                             + ", bottom: " + pageInView.getBottomMargin());
 
             switch (marginType) {
             case DEFAULT:
-                layout = printer.createPageLayout(paper, pageOrientation,
-                        Printer.MarginType.DEFAULT);
+                layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.DEFAULT);
                 break;
             case MINIMUM:
-                layout = printer.createPageLayout(paper, pageOrientation,
-                        Printer.MarginType.HARDWARE_MINIMUM);
+                layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.HARDWARE_MINIMUM);
                 break;
             case CUSTOM:
                 layout = printer.createPageLayout(paper, pageOrientation,
@@ -527,12 +503,9 @@ public class PrintView extends ViewTypeControl {
             double scaleY = printableHeight / pageHeight;
             double scale = Math.min(scaleX, scaleY);
 
-            LoggingDomain.PRINTING.fine("pageWidth / pageHeight = " + pageWidth
-                    + " / " + pageHeight);
-            LoggingDomain.PRINTING.fine("printableWidth / printableHeight = "
-                    + printableWidth + " / " + printableHeight);
-            LoggingDomain.PRINTING
-                    .fine("scaleX / scaleY = " + scaleX + " / " + scaleY);
+            LoggingDomain.PRINTING.fine("pageWidth / pageHeight = " + pageWidth + " / " + pageHeight);
+            LoggingDomain.PRINTING.fine("printableWidth / printableHeight = " + printableWidth + " / " + printableHeight);
+            LoggingDomain.PRINTING.fine("scaleX / scaleY = " + scaleX + " / " + scaleY);
             LoggingDomain.PRINTING.fine("scale = " + scale);
 
             pageToPrint.applyCss();
@@ -540,13 +513,10 @@ public class PrintView extends ViewTypeControl {
             pageToPrint.getTransforms().add(new Scale(scale, scale));
 
             // transformation = center
-            final double translateX = (printableWidth - (pageWidth * scale))
-                    / 2;
-            final double translateY = (printableHeight - (pageHeight * scale))
-                    / 2;
+            final double translateX = (printableWidth - (pageWidth * scale)) / 2;
+            final double translateY = (printableHeight - (pageHeight * scale)) / 2;
 
-            LoggingDomain.PRINTING.fine("translateX / translateY = "
-                    + translateX + " / " + translateY);
+            LoggingDomain.PRINTING.fine("translateX / translateY = " + translateX + " / " + translateY);
 
             pageToPrint.setTranslateX(translateX);
             pageToPrint.setTranslateY(translateY);
@@ -573,7 +543,7 @@ public class PrintView extends ViewTypeControl {
         }
     }
 
-    private static final Util.Converter<Boolean, DateControl.Layout> LAYOUT_BOOLEAN_CONVERTER = new Util.Converter<Boolean, DateControl.Layout>() {
+    private static final Util.Converter<Boolean, DateControl.Layout> LAYOUT_BOOLEAN_CONVERTER = new Util.Converter<>() {
 
         @Override
         public Boolean toLeft(DateControl.Layout right) {
@@ -582,9 +552,26 @@ public class PrintView extends ViewTypeControl {
 
         @Override
         public DateControl.Layout toRight(Boolean left) {
-            return Boolean.TRUE.equals(left) ? DateControl.Layout.SWIMLANE
-                    : DateControl.Layout.STANDARD;
+            return Boolean.TRUE.equals(left) ? DateControl.Layout.SWIMLANE : DateControl.Layout.STANDARD;
         }
     };
 
+    private final ObjectProperty<ZoneId> zoneId = new SimpleObjectProperty<>(this, "zoneId", ZoneId.systemDefault());
+
+    public ZoneId getZoneId() {
+        return zoneId.get();
+    }
+
+    /**
+     * The time zone to use for the printing operation.
+     *
+     * @return the time zone
+     */
+    public ObjectProperty<ZoneId> zoneIdProperty() {
+        return zoneId;
+    }
+
+    public void setZoneId(ZoneId zoneId) {
+        this.zoneId.set(zoneId);
+    }
 }
