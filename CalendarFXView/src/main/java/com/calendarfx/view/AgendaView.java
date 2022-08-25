@@ -49,8 +49,10 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -62,7 +64,6 @@ import static java.util.Objects.requireNonNull;
  * given number of days.
  *
  * <img src="doc-files/agenda-view.png" alt="Agenda View">
- *
  */
 public class AgendaView extends DateControl {
 
@@ -154,8 +155,7 @@ public class AgendaView extends DateControl {
     /**
      * Sets the value of {@link #lookBackPeriodInDaysProperty()}.
      *
-     * @param days
-     *            the new number of days to look back
+     * @param days the new number of days to look back
      */
     public final void setLookBackPeriodInDays(int days) {
         if (days < 0) {
@@ -188,8 +188,7 @@ public class AgendaView extends DateControl {
     /**
      * Sets the value of {@link #lookAheadPeriodInDaysProperty()}.
      *
-     * @param days
-     *            the number of days to look ahead
+     * @param days the number of days to look ahead
      */
     public final void setLookAheadPeriodInDays(int days) {
         if (days < 0) {
@@ -230,11 +229,11 @@ public class AgendaView extends DateControl {
     public final void setCellFactory(Callback<AgendaView, ? extends AgendaEntryCell> cellFactory) {
         cellFactoryProperty().set(cellFactory);
     }
-    
+
     /**
      * Gets the DateTimeFormatter property, which is use to provide the format on the TimeScale Labels. By default it
      * has a value of {@link FormatStyle#LONG}
-     * 
+     *
      * @return the date formatter.
      */
     public final ObjectProperty<DateTimeFormatter> dateTimeFormatterProperty() {
@@ -243,7 +242,7 @@ public class AgendaView extends DateControl {
 
     /**
      * Returns the value of {@link #dateTimeFormatterProperty()}
-     * 
+     *
      * @return a date time formatter
      */
     public final DateTimeFormatter getDateTimeFormatter() {
@@ -252,7 +251,7 @@ public class AgendaView extends DateControl {
 
     /**
      * Sets the value of {@link #dateTimeFormatterProperty()}
-     * 
+     *
      * @param formatter a date time formatter, not {@code null}
      */
     public final void setDateTimeFormatter(DateTimeFormatter formatter) {
@@ -336,7 +335,7 @@ public class AgendaView extends DateControl {
         /**
          * Constructs a new cell that will work with the given agenda view.
          *
-         * @param view the parent list view
+         * @param view              the parent list view
          * @param headerPaneVisible flag to control the visibility of the cell's header.
          */
         public AgendaEntryCell(AgendaView view, boolean headerPaneVisible) {
@@ -356,7 +355,7 @@ public class AgendaView extends DateControl {
 
         /**
          * Creates the node used for the body part of each cell.
-         *
+         * <p>
          * In this default implementation the body consists of a grid pane with
          * three columns. The middle column is used for showing the title of
          * calendar entries. This column will get whatever space is left after
@@ -512,8 +511,8 @@ public class AgendaView extends DateControl {
          * creates a node of type {@link Circle}. The color of the circle will match the color of
          * the calendar to which the entry belongs.
          * <pre>
-         *	  Circle circle = new Circle(4);
-         *	  circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon");
+         * 	  Circle circle = new Circle(4);
+         * 	  circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon");
          * </pre>
          *
          * @param entry the entry for which the icon will be displayed
@@ -544,49 +543,74 @@ public class AgendaView extends DateControl {
             String text;
 
             if (startDate.equals(endDate)) {
-                text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE"),
-                        timeFormatter.format(entry.getStartTime()), timeFormatter.format(entry.getEndTime()));
+
+                if (Objects.equals(entry.getZoneId(), agendaView.getZoneId())) {
+                    text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE"),
+                            timeFormatter.format(entry.getStartAsZonedDateTime()), timeFormatter.format(entry.getEndAsZonedDateTime()));
+                } else {
+                    text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE"),
+                            timeFormatter.format(entry.getStartAsZonedDateTime().withZoneSameInstant(agendaView.getZoneId())), timeFormatter.format(entry.getEndAsZonedDateTime().withZoneSameInstant(agendaView.getZoneId())));
+                    text = text + " (" + MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE"),
+                            timeFormatter.format(entry.getStartAsZonedDateTime()), timeFormatter.format(entry.getEndAsZonedDateTime())) + " " +
+                            entry.getZoneId().getDisplayName(TextStyle.SHORT, Locale.getDefault()) +
+                            ")";
+                }
             } else {
-                text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE_WITH_DATE"),
-                        shortDateFormatter.format(entry.getStartDate()), timeFormatter.format(entry.getStartTime()), shortDateFormatter.format(entry.getEndDate()),
-                        timeFormatter.format(entry.getEndTime()));
+
+                if (Objects.equals(entry.getZoneId(), agendaView.getZoneId())) {
+                    text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE_WITH_DATE"),
+                            shortDateFormatter.format(entry.getStartAsZonedDateTime()), timeFormatter.format(entry.getStartAsZonedDateTime()), shortDateFormatter.format(entry.getEndAsZonedDateTime()),
+                            timeFormatter.format(entry.getEndAsZonedDateTime()));
+                } else {
+                    text = MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE_WITH_DATE"),
+                            shortDateFormatter.format(entry.getStartAsZonedDateTime().withZoneSameInstant(agendaView.getZoneId())), timeFormatter.format(entry.getStartAsZonedDateTime().withZoneSameInstant(agendaView.getZoneId())), shortDateFormatter.format(entry.getEndAsZonedDateTime().withZoneSameInstant(agendaView.getZoneId())),
+                            timeFormatter.format(entry.getEndAsZonedDateTime().withZoneSameInstant(agendaView.getZoneId())));
+                    text = text + "\n" + MessageFormat.format(Messages.getString("AgendaEntryCell.ENTRY_TIME_RANGE_WITH_DATE"),
+                            shortDateFormatter.format(entry.getStartAsZonedDateTime()), timeFormatter.format(entry.getStartAsZonedDateTime()), shortDateFormatter.format(entry.getEndAsZonedDateTime()),
+                            timeFormatter.format(entry.getEndAsZonedDateTime())) + " " + entry.getZoneId().getDisplayName(TextStyle.SHORT, Locale.getDefault());
+
+                }
             }
 
             return text;
         }
-        
+
         /**
          * Sets the Week Formatter, the value by default is 'EEEE' Format.
+         *
          * @param weekdayFormatter sets the week date time format.
          */
-        public void setWeekdayFormatter(DateTimeFormatter weekdayFormatter){
+        public void setWeekdayFormatter(DateTimeFormatter weekdayFormatter) {
             this.weekdayFormatter = weekdayFormatter;
         }
-        
+
         /**
-         * Sets the Medium Date Formatter, the value by default is {@link FormatStyle#MEDIUM}. <br> 
+         * Sets the Medium Date Formatter, the value by default is {@link FormatStyle#MEDIUM}. <br>
          * Is used to set a format text on the Date Label.
+         *
          * @param mediumDateFormatter sets medium date time format.
          */
-        public void setMediumDateFormatter(DateTimeFormatter mediumDateFormatter){
+        public void setMediumDateFormatter(DateTimeFormatter mediumDateFormatter) {
             this.mediumDateFormatter = mediumDateFormatter;
         }
 
         /**
-         * Sets the Short Date Formatter, the value by default is {@link FormatStyle#SHORT}. <br> 
+         * Sets the Short Date Formatter, the value by default is {@link FormatStyle#SHORT}. <br>
          * Is be used to set a Date format text in {@link #getTimeText(Entry)}
+         *
          * @param shortDateFormatter sets the short date time format.
          */
-        public void setShortDateFormatter(DateTimeFormatter shortDateFormatter){
+        public void setShortDateFormatter(DateTimeFormatter shortDateFormatter) {
             this.shortDateFormatter = shortDateFormatter;
         }
 
         /**
-         * Sets the Time Formatter, the value by default is {@link FormatStyle#SHORT}. <br> 
+         * Sets the Time Formatter, the value by default is {@link FormatStyle#SHORT}. <br>
          * Is used to set a Time format text in {@link #getTimeText(Entry)}
+         *
          * @param timeFormatter sets the time format.
          */
-        public void setTimeFormatter(DateTimeFormatter timeFormatter){
+        public void setTimeFormatter(DateTimeFormatter timeFormatter) {
             this.timeFormatter = timeFormatter;
         }
     }
