@@ -86,13 +86,7 @@ public final class VisualBoundsCluster {
             entryRange.y2 = dayView.getHeight();
         }
 
-        boolean inter = entryRange.y1 < clusterRange.y2 && entryRange.y2 > clusterRange.y1;
-
-        if (inter && entryView.getEntry().getTitle().equals("Entry 1 of cal1")) {
-            System.out.println("stop");
-        }
-
-        return inter;
+        return entryRange.y1 < clusterRange.y2 && entryRange.y2 > clusterRange.y1;
     }
 
     public List<Placement> resolve(DayView dayView, double contentWidth) {

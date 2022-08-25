@@ -42,8 +42,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -318,10 +316,6 @@ public class DayViewEditController {
 
         Instant gridTime = grid(locationTime);
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-        System.out.println("location time: " + dateTimeFormatter.format(ZonedDateTime.ofInstant(locationTime, dayView.getZoneId())) +
-                "grid time: " + dateTimeFormatter.format(ZonedDateTime.ofInstant(gridTime, dayView.getZoneId())));
-
 //        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
 //            time = ZonedDateTime.of(entry.getStartDate(), time.toLocalTime(), draggedEntry.getZoneId());
 //        }
@@ -407,8 +401,6 @@ public class DayViewEditController {
 
         Instant locationTime = dayView.getInstantAt(evt);
 
-        System.out.println("location time: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(ZonedDateTime.ofInstant(locationTime, dayView.getZoneId())));
-
         LOGGER.fine("changing start/end time, time = " + locationTime + " offset duration = " + offsetDuration);
 
         if (locationTime != null && offsetDuration != null) {
@@ -422,8 +414,6 @@ public class DayViewEditController {
             LOGGER.fine("new start time (grid) = " + newStartTime);
             LOGGER.fine("new end time = " + newEndTime);
 
-            System.out.println("nst: " + ZonedDateTime.ofInstant(newStartTime, dayView.getZoneId()).toLocalTime());
-
             ZonedDateTime gridStartZonedTime = ZonedDateTime.ofInstant(newStartTime, draggedEntry.getZoneId());
             ZonedDateTime gridEndZonedTime = ZonedDateTime.ofInstant(newEndTime, draggedEntry.getZoneId());
 
@@ -432,8 +422,6 @@ public class DayViewEditController {
 
             LocalDate endDate = LocalDateTime.of(startDate, startTime).plus(entryDuration).toLocalDate();
             LocalTime endTime = gridEndZonedTime.toLocalTime();
-
-            System.out.println("new interval: sd = " + startDate + ", st = " + startTime + ", ed = " + endDate + ", et = " + endTime);
 
             draggedEntry.setInterval(startDate, startTime, endDate, endTime);
 
