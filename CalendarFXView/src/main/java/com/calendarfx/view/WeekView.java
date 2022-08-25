@@ -91,7 +91,7 @@ public class WeekView extends DayViewBase {
     public ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         final WeekDayView view = getWeekDayViewAt(x);
         if (view != null) {
-            return ZonedDateTime.ofInstant(ViewHelper.getInstantAt(view, y, false, true), getZoneId());
+            return ZonedDateTime.ofInstant(ViewHelper.getInstantAt(view, y), getZoneId());
         }
 
         return super.getZonedDateTimeAt(x, y, zoneId);

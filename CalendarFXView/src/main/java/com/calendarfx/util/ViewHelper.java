@@ -18,7 +18,6 @@ package com.calendarfx.util;
 
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
-import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -139,35 +138,11 @@ public final class ViewHelper {
         }
     }
 
-    public static Instant getInstantAt(DayViewBase view, double y, boolean trim, boolean prefHeight) {
-
-        /**
-         * When the early and late hours are not showing then we have to trim for sure.
-         */
-        if (view.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE)) {
-            trim = true;
-        }
+    public static Instant getInstantAt(DayViewBase view, double y) {
 
         ZonedDateTime zonedDateTime = view.getZonedDateTimeStart();
 
         double availableHeight = view.getHeight();
-        if (prefHeight) {
-            availableHeight = view.prefHeight(-1);
-        }
-
-//        if (y < 0) {
-//            if (trim) {
-//                return view.getZonedDateTimeStart().toInstant();
-//            }
-//            y = availableHeight + y;
-//            zonedDateTime = zonedDateTime.minusDays(1);
-//        } else if (y > availableHeight) {
-//            if (trim) {
-//                return view.getZonedDateTimeEnd().toInstant();
-//            }
-//            y = y - availableHeight;
-//            zonedDateTime = zonedDateTime.plusDays(1);
-//        }
 
         switch (view.getEarlyLateHoursStrategy()) {
             case SHOW:

@@ -261,7 +261,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
         } else {
 
-            return ZonedDateTime.ofInstant(ViewHelper.getInstantAt(this, y, false, true), getZoneId());
+            return ZonedDateTime.ofInstant(ViewHelper.getInstantAt(this, y), getZoneId());
 
         }
     }
