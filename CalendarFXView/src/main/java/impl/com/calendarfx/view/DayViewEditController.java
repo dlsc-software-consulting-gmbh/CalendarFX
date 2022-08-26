@@ -61,15 +61,10 @@ public class DayViewEditController {
     public DayViewEditController(DayViewBase dayView) {
         this.dayView = Objects.requireNonNull(dayView);
 
-        final EventHandler<MouseEvent> mouseReleasedHandler = this::mouseReleased;
-
-//        dayView.addEventFilter(MouseEvent.MOUSE_MOVED, evt -> {
-//            Instant instantAt = dayView.getInstantAt(evt.getX(), evt.getY());
-//            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instantAt, dayView.getZoneId());
-//        });
-
         dayView.addEventFilter(MouseEvent.MOUSE_PRESSED, this::mousePressed);
         dayView.addEventFilter(MouseEvent.MOUSE_DRAGGED, this::mouseDragged);
+
+        final EventHandler<MouseEvent> mouseReleasedHandler = this::mouseReleased;
         // mouse released is very important for us. register with the scene, so we get that in any case.
         if (dayView.getScene() != null) {
             dayView.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
