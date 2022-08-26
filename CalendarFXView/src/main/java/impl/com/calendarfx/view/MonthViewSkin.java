@@ -797,7 +797,6 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         }           
     }
 
-    
     public ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         Point2D location = getSkinnable().localToScreen(x, y);
         for (MonthDayView view : controlsMap.values()) {
