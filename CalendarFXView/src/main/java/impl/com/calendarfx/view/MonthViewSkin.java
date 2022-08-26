@@ -765,10 +765,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
                 double ph = child.prefHeight(-1);
                 if (y + ph < h - insets.getTop() - insets.getBottom()) {
                     child.resizeRelocate(
-                            snapPosition(insets.getLeft()),
-                            snapPosition(y),
-                            snapSize(w - insets.getRight() - insets.getLeft()),
-                            snapSize(ph));
+                            snapPositionX(insets.getLeft()),
+                            snapPositionY(y),
+                            snapSizeX(w - insets.getRight() - insets.getLeft()),
+                            snapSizeY(ph));
 
                     y += ph + 1; // +1 = gap
                     child.getProperties().put("hidden", false);
@@ -789,10 +789,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
                 double ph = moreLabel.prefHeight(-1);
 
                 moreLabel.resizeRelocate(
-                        snapPosition(insets.getLeft()),
-                        snapPosition(h - insets.getTop() - insets.getBottom() - ph),
-                        snapSize(w - insets.getRight() - insets.getLeft()),
-                        snapSize(ph));
+                        snapPositionX(insets.getLeft()),
+                        snapPositionY(h - insets.getTop() - insets.getBottom() - ph),
+                        snapSizeX(w - insets.getRight() - insets.getLeft()),
+                        snapSizeY(ph));
             }
         }           
     }

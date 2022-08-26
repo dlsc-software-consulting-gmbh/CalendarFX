@@ -84,7 +84,7 @@ public class AllDayEntryViewSkin extends SkinBase<AllDayEntryView> {
 
     @Override
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-        titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth), snapSize(contentHeight));
+        titleLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth), snapSizeY(contentHeight));
     }
 
     @Override
