@@ -103,7 +103,7 @@ final class GoogleCalendarCreateView extends BorderPane {
         getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
     }
 
-    final void show(Window owner) {
+    void show(Window owner) {
         if (dialog == null) {
             dialog = new Stage();
             dialog.initOwner(owner);

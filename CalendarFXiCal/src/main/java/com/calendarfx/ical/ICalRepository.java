@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by gdiaz on 7/01/2017.
@@ -241,7 +242,7 @@ public final class ICalRepository {
 
             WebCalendarData that = (WebCalendarData) o;
 
-            return url != null ? url.equals(that.url) : that.url == null;
+            return Objects.equals(url, that.url);
         }
 
         @Override

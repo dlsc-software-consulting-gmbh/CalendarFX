@@ -24,6 +24,7 @@ import javafx.collections.ObservableList;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Calendar class that encapsulates the logic of a Google Calendar Entry.
@@ -192,7 +193,7 @@ public class GoogleCalendar extends Calendar {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GoogleCalendar that = (GoogleCalendar) o;
-        return id != null ? id.equals(that.id) : that.id == null;
+        return Objects.equals(id, that.id);
     }
 
     @Override

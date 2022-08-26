@@ -30,6 +30,7 @@ import com.google.api.services.calendar.model.Event;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Service that provides convertion from one object to another based on the class.
@@ -106,8 +107,8 @@ public class BeanConverterService {
 
             Pair<?, ?> pair = (Pair<?, ?>) o;
 
-            if (source != null ? !source.equals(pair.source) : pair.source != null) return false;
-            return target != null ? target.equals(pair.target) : pair.target == null;
+            if (!Objects.equals(source, pair.source)) return false;
+            return Objects.equals(target, pair.target);
         }
 
         @Override
