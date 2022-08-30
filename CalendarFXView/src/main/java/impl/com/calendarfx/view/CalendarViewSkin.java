@@ -531,22 +531,4 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         });
     }
-
-//    @Override
-//    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-//        double dayHeight = dayPage.prefHeight(-1);
-//        double weekHeight = weekPage.prefHeight(-1);
-//        double monthHeight = monthPage.prefHeight(-1);
-//        double yearHeight = yearPage.prefHeight(-1);
-//        return Math.max(dayHeight, Math.max(weekHeight, Math.max(monthHeight, yearHeight)));
-//    }
-//
-//    @Override
-//    protected double computePrefWidth(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-//        double dayWidth = dayPage.prefWidth(-1);
-//        double weekWidth = weekPage.prefWidth(-1);
-//        double monthWidth = monthPage.prefWidth(-1);
-//        double yearWidth = yearPage.prefWidth(-1);
-//        return Math.max(dayWidth, Math.max(weekWidth, Math.max(monthWidth, yearWidth)));
-//    }
 }
