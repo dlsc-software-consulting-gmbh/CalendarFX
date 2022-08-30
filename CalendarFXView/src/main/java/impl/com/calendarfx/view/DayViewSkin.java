@@ -604,7 +604,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
             Instant dayViewStart = dayView.getZonedDateTime().with(LocalTime.MIN).toInstant();
             Instant dayViewEnd = dayView.getZonedDateTimeEnd().with(LocalTime.MAX).toInstant();
-
+            
             for (Placement placement : placements) {
                 EntryViewBase<?> entryView = placement.getEntryView();
 

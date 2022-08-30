@@ -17,6 +17,7 @@
 package com.calendarfx.util;
 
 import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.collections.ObservableList;
@@ -52,6 +53,12 @@ public final class ViewHelper {
     }
 
     public static double getTimeLocation(DayViewBase view, ZonedDateTime zonedTime, boolean prefHeight) {
+        if (view.isScrollingEnabled()) {
+            final Instant scrollInstant = view.getScrollTime().toInstant();
+            final double mpp = DayView.MILLIS_PER_HOUR / view.getHourHeight();
+            final long millis = zonedTime.toInstant().toEpochMilli() - scrollInstant.toEpochMilli();
+            return millis / mpp;
+        }
 
         double availableHeight = view.getHeight();
         if (prefHeight) {

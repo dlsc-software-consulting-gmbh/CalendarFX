@@ -56,7 +56,7 @@ public class ResourceCalendarView<T> extends DayViewBase {
     private final BooleanProperty showTimeScale = new SimpleBooleanProperty(this, "showTimeScale", true);
 
     /**
-     * Controls whether the time scale shold be shown on the left-hand side or not.
+     * Controls whether the timescale should be shown on the left-hand side or not.
      *
      * @return true if the scale should be shown
      */

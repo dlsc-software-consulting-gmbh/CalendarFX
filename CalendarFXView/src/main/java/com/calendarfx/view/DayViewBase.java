@@ -217,7 +217,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return entryWidthPercentage.get();
     }
 
-    private static final double MILLIS_PER_HOUR = 3_600_000d;
+    public static final double MILLIS_PER_HOUR = 3_600_000d;
 
     /**
      * Returns the time instant at the location of the given mouse event.
@@ -285,13 +285,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * @return the y coordinate
      */
     public final double getLocation(Instant instant) {
-        if (isScrollingEnabled()) {
-            final Instant scrollInstant = getScrollTime().toInstant();
-            final double mpp = MILLIS_PER_HOUR / getHourHeight();
-            final long millis = instant.toEpochMilli() - scrollInstant.toEpochMilli();
-            return millis / mpp;
-        }
-
         return ViewHelper.getTimeLocation(this, instant);
     }
 
