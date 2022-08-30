@@ -54,37 +54,6 @@ public abstract class PageBase extends DateControl {
         getStyleClass().add("calendar-page");
     }
 
-    private final BooleanProperty hidden = new SimpleBooleanProperty(this, "hidden", false);
-
-    /**
-     * A property used to indicate whether the page should be shown to the user or not. Not
-     * every application requires all available pages (day, week, month, year) to be accessible
-     * to the user.
-     *
-     * @return true if the page should not be shown to the user
-     */
-    public final BooleanProperty hiddenProperty() {
-        return hidden;
-    }
-
-    /**
-     * Sets the value of {@link #hiddenProperty()}.
-     *
-     * @param hidden true if the page should be hidden
-     */
-    public final void setHidden(boolean hidden) {
-        hiddenProperty().set(hidden);
-    }
-
-    /**
-     * Returns the value of {@link #hiddenProperty()}.
-     *
-     * @return true if the page will be hidden
-     */
-    public final boolean isHidden() {
-        return hiddenProperty().get();
-    }
-
     /**
      * Returns one or more controls that can be added to the toolbar by the
      * surrounding container, e.g. the {@link CalendarView}.
@@ -95,8 +64,7 @@ public abstract class PageBase extends DateControl {
         return null;
     }
 
-    private final ObjectProperty<DateTimeFormatter> dateTimeFormatter = new SimpleObjectProperty<>(
-            this, "datePattern", DateTimeFormatter.ofLocalizedDate(MEDIUM));
+    private final ObjectProperty<DateTimeFormatter> dateTimeFormatter = new SimpleObjectProperty<>(this, "datePattern", DateTimeFormatter.ofLocalizedDate(MEDIUM));
 
     /**
      * A formatter for the date shown in the upper right corner. Each page has
@@ -311,44 +279,6 @@ public abstract class PageBase extends DateControl {
             @Override
             public String getDescription() {
                 return "Date time formatter";
-            }
-
-            @Override
-            public String getCategory() {
-                return PAGE_BASE_CATEGORY;
-            }
-        });
-
-        items.add(new Item() {
-
-            @Override
-            public Optional<ObservableValue<?>> getObservableValue() {
-                return Optional.of(hiddenProperty());
-            }
-
-            @Override
-            public void setValue(Object value) {
-                setHidden((boolean) value);
-            }
-
-            @Override
-            public Object getValue() {
-                return isHidden();
-            }
-
-            @Override
-            public Class<?> getType() {
-                return Boolean.class;
-            }
-
-            @Override
-            public String getName() {
-                return "Hidden";
-            }
-
-            @Override
-            public String getDescription() {
-                return "Hides the page from the user.";
             }
 
             @Override

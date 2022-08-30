@@ -45,7 +45,6 @@ public class HelloCalendarView extends CalendarFXDateControlSample {
 
         calendarView = new CalendarView();
         calendarView.getCalendarSources().add(calendarSource);
-        calendarView.setTransitionsEnabled(false);
 
         return calendarView;
     }
