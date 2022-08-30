@@ -307,13 +307,7 @@ public class DayViewEditController {
     private void changeStartTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        Instant locationTime = dayView.getInstantAt(evt);
-
-        Instant gridTime = grid(locationTime);
-
-//        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
-//            time = ZonedDateTime.of(entry.getStartDate(), time.toLocalTime(), draggedEntry.getZoneId());
-//        }
+        Instant gridTime = fixTimeIfOutsideView(evt, grid(dayView.getInstantAt(evt)));
 
         LOGGER.finer("changing start time, time = " + gridTime);
 
@@ -347,19 +341,26 @@ public class DayViewEditController {
         }
     }
 
+    private Instant fixTimeIfOutsideView(MouseEvent evt, Instant gridTime) {
+        /*
+         * Fix the time calculation if the mouse cursor exits the day view area.
+         * Note: day view can also be a WeekView as it extends DayViewBase.
+         */
+        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(gridTime, entry.getZoneId());
+            gridTime = ZonedDateTime.of(entry.getStartDate(), zdt.toLocalTime(), zdt.getZone()).toInstant();
+        }
+        return gridTime;
+    }
+
     private void changeEndTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        Instant locationTime = dayView.getInstantAt(evt);
-        Instant gridTime = grid(locationTime);
-
-//        if (evt.getX() > dayView.getWidth() || evt.getX() < 0) {
-//            gridTime = LocalDateTime.of(entry.getEndDate(), gridTime.toLocalTime());
-//        }
+        Instant gridTime = fixTimeIfOutsideView(evt, grid(dayView.getInstantAt(evt)));
 
         LOGGER.finer("changing end time, time = " + gridTime);
 
-        if (isMinimumDuration(entry, entry.getStartAsZonedDateTime().toInstant(), locationTime)) {
+        if (isMinimumDuration(entry, entry.getStartAsZonedDateTime().toInstant(), gridTime)) {
 
             LOGGER.finer("dragged entry: " + draggedEntry.getInterval());
 
@@ -394,7 +395,7 @@ public class DayViewEditController {
     private void changeStartAndEndTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayView.getDraggedEntry();
 
-        Instant locationTime = dayView.getInstantAt(evt);
+        Instant locationTime = fixTimeIfOutsideView(evt, dayView.getInstantAt(evt));
 
         LOGGER.fine("changing start/end time, time = " + locationTime + " offset duration = " + offsetDuration);
 
