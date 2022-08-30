@@ -30,6 +30,7 @@ import com.calendarfx.view.page.MonthPage;
 import com.calendarfx.view.page.PageBase;
 import com.calendarfx.view.page.WeekPage;
 import com.calendarfx.view.page.YearPage;
+import com.calendarfx.view.popover.ZoneIdComparator;
 import com.calendarfx.view.print.PrintView;
 import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
@@ -42,6 +43,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -50,6 +52,7 @@ import javafx.geometry.VPos;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
@@ -71,6 +74,7 @@ import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,15 +127,11 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         }
 
         view.addEventHandler(REQUEST_DATE, evt -> view.showDate(evt.getDate()));
-        view.addEventHandler(REQUEST_DATE_TIME,
-                evt -> view.showDateTime(evt.getDateTime()));
-        view.addEventHandler(REQUEST_WEEK,
-                evt -> view.showWeek(evt.getYear(), evt.getWeekOfYear()));
-        view.addEventHandler(REQUEST_YEAR_MONTH,
-                evt -> view.showYearMonth(evt.getYearMonth()));
+        view.addEventHandler(REQUEST_DATE_TIME, evt -> view.showDateTime(evt.getDateTime()));
+        view.addEventHandler(REQUEST_WEEK, evt -> view.showWeek(evt.getYear(), evt.getWeekOfYear()));
+        view.addEventHandler(REQUEST_YEAR_MONTH, evt -> view.showYearMonth(evt.getYearMonth()));
         view.addEventHandler(REQUEST_YEAR, evt -> view.showYear(evt.getYear()));
-        view.addEventHandler(REQUEST_ENTRY,
-                evt -> view.getSelectedPage().editEntry(evt.getEntry()));
+        view.addEventHandler(REQUEST_ENTRY, evt -> view.getSelectedPage().editEntry(evt.getEntry()));
 
         this.dayPage = view.getDayPage();
         this.weekPage = view.getWeekPage();
@@ -154,18 +154,15 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         monthPage.hiddenProperty().addListener(updateSwitcherListener);
         yearPage.hiddenProperty().addListener(updateSwitcherListener);
 
-        this.leftMasterDetailPane = new MasterDetailPane(Side.LEFT);
         TrayPane trayPane = new TrayPane();
-        this.trayButton = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY"));
+        this.trayButton = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY"));
         this.trayButton.setId("show-tray-button");
         this.addCalendarButton = new Button();
         this.addCalendarButton.setId("add-calendar-button");
         this.addCalendarButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
         FontIcon addIcon = new FontIcon(FontAwesome.PLUS);
-        addIcon.getStyleClass().addAll("button-icon",
-                "add-calendar-button-icon");
+        addIcon.getStyleClass().addAll("button-icon", "add-calendar-button-icon");
         this.addCalendarButton.setGraphic(addIcon);
 
         this.addCalendarButton.setOnAction(evt -> view.createCalendarSource());
@@ -178,14 +175,15 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         printIcon.getStyleClass().addAll("button-icon", "print-button-icon");
         this.printButton.setGraphic(printIcon);
 
+        this.leftMasterDetailPane = new MasterDetailPane(Side.LEFT);
+
         if (view.isShowSourceTray()) {
             openTray();
         } else {
             closeTray();
         }
 
-        Bindings.bindBidirectional(trayButton.selectedProperty(),
-                view.showSourceTrayProperty());
+        Bindings.bindBidirectional(trayButton.selectedProperty(), view.showSourceTrayProperty());
 
         view.showSourceTrayProperty().addListener(it -> {
             if (view.isShowSourceTray()) {
@@ -195,12 +193,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             }
         });
 
-        Platform.runLater(() -> {
-            sourceView.getCalendarVisibilityMap().keySet()
-                    .forEach(calendar -> sourceView
-                            .getCalendarVisibilityProperty(calendar)
-                            .addListener(entriesVisibilityListener));
-        });
+        Platform.runLater(() -> sourceView.getCalendarVisibilityMap().keySet().forEach(calendar -> sourceView.getCalendarVisibilityProperty(calendar).addListener(entriesVisibilityListener)));
 
         view.selectedPageProperty().addListener(entriesVisibilityListener);
 
@@ -214,9 +207,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         GridPane toolBarGridPane = new GridPane();
         toolBarGridPane.setMinWidth(0);
-        toolBarGridPane.getColumnConstraints().addAll(leftColumn, centerColumn,
-                rightColumn);
-
+        toolBarGridPane.getColumnConstraints().addAll(leftColumn, centerColumn, rightColumn);
         toolBarGridPane.setId("toolbar");
 
         /*
@@ -229,39 +220,35 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         buildLeftToolBarBox();
 
         InvalidationListener buildLeftToolBarBoxListener = it -> buildLeftToolBarBox();
-        view.showSourceTrayButtonProperty()
-                .addListener(buildLeftToolBarBoxListener);
-        view.showAddCalendarButtonProperty()
-                .addListener(buildLeftToolBarBoxListener);
+        view.showSourceTrayButtonProperty().addListener(buildLeftToolBarBoxListener);
+        view.showAddCalendarButtonProperty().addListener(buildLeftToolBarBoxListener);
         view.showPrintButtonProperty().addListener(buildLeftToolBarBoxListener);
-        view.showPageToolBarControlsProperty()
-                .addListener(buildLeftToolBarBoxListener);
+        view.showPageToolBarControlsProperty().addListener(buildLeftToolBarBoxListener);
         view.selectedPageProperty().addListener(buildLeftToolBarBoxListener);
 
         toolBarGridPane.add(leftToolBarBox, 0, 0);
 
         // toolbar center
-        showDay = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_DAY"));
-        showWeek = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_WEEK"));
-        showMonth = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_MONTH"));
-        showYear = new ToggleButton(
-                Messages.getString("CalendarViewSkin.TOGGLE_SHOW_YEAR"));
+        showDay = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SHOW_DAY"));
+        showWeek = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SHOW_WEEK"));
+        showMonth = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SHOW_MONTH"));
+        showYear = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SHOW_YEAR"));
 
         showDay.setOnAction(evt -> {
             view.showDayPage();
             updateToggleButtons();
         });
+
         showWeek.setOnAction(evt -> {
             view.showWeekPage();
             updateToggleButtons();
         });
+
         showMonth.setOnAction(evt -> {
             view.showMonthPage();
             updateToggleButtons();
         });
+
         showYear.setOnAction(evt -> {
             view.showYearPage();
             updateToggleButtons();
@@ -280,39 +267,43 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         toolBarGridPane.add(centerToolBarBox, 1, 0);
 
         // tooltips
-        trayButton.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SOURCE_TRAY")));
-        addCalendarButton.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR")));
-        printButton.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_PRINT")));
-        showDay.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY")));
-        showWeek.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_WEEK")));
-        showMonth.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_MONTH")));
-        showYear.setTooltip(new Tooltip(
-                Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_YEAR")));
+        trayButton.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SOURCE_TRAY")));
+        addCalendarButton.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR")));
+        printButton.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_PRINT")));
+        showDay.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY")));
+        showWeek.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_WEEK")));
+        showMonth.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_MONTH")));
+        showYear.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_YEAR")));
 
         // toolbar right
         FontIcon searchIcon = new FontIcon(FontAwesome.SEARCH);
         searchIcon.setId("search-icon");
 
+        SortedList<ZoneId> sortedZones = new SortedList<>(view.getAvailableZoneIds());
+        sortedZones.setComparator(new ZoneIdComparator());
+
+        ChoiceBox<ZoneId> zoneIdBox = new ChoiceBox<>();
+        zoneIdBox.setItems(sortedZones);
+        zoneIdBox.valueProperty().bindBidirectional(view.zoneIdProperty());
+        zoneIdBox.setConverter(new ZoneIdStringConverter());
+        zoneIdBox.visibleProperty().bind(view.enableTimeZoneSupportProperty());
+        zoneIdBox.managedProperty().bind(view.enableTimeZoneSupportProperty());
+
         CustomTextField searchField = view.getSearchField();
         searchField.setPrefColumnCount(20);
         searchField.setLeft(searchIcon);
         searchField.setId("search-field");
-        searchField.setPromptText(
-                Messages.getString("CalendarViewSkin.PROMPT_SEARCH_FIELD"));
-        searchField.getStylesheets().add(CalendarFXControl.class
-                .getResource("calendar.css").toExternalForm());
+        searchField.setPromptText(Messages.getString("CalendarViewSkin.PROMPT_SEARCH_FIELD"));
+        searchField.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
         GridPane.setFillWidth(searchField, false);
         GridPane.setHalignment(searchField, HPos.RIGHT);
-        toolBarGridPane.add(searchField, 2, 0);
+
+        HBox rightToolbarContainer = new HBox(zoneIdBox, searchField);
+        rightToolbarContainer.setAlignment(Pos.CENTER_RIGHT);
+        rightToolbarContainer.getStyleClass().add("right-toolbar-container");
+        toolBarGridPane.add(rightToolbarContainer, 2, 0);
 
         BorderPane borderPane1 = new BorderPane();
-
         borderPane1.topProperty().bind(view.headerProperty());
         borderPane1.setCenter(stackPane = new StackPane());
         borderPane1.bottomProperty().bind(view.footerProperty());
@@ -322,29 +313,23 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         leftMasterDetailPane.setMasterNode(borderPane1);
         leftMasterDetailPane.setDetailNode(trayPane);
         leftMasterDetailPane.setId("tray-pane");
-        leftMasterDetailPane.animatedProperty()
-                .bindBidirectional(view.traysAnimatedProperty());
-        leftMasterDetailPane.getStylesheets().add(CalendarFXControl.class
-                .getResource("calendar.css").toExternalForm());
+        leftMasterDetailPane.animatedProperty().bindBidirectional(view.traysAnimatedProperty());
+        leftMasterDetailPane.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
 
         MasterDetailPane rightMasterDetailPane = new MasterDetailPane(RIGHT);
         searchResultView = view.getSearchResultView();
 
-        Bindings.bindContentBidirectional(searchResultView.getCalendarSources(),
-                view.getCalendarSources());
+        Bindings.bindContentBidirectional(searchResultView.getCalendarSources(), view.getCalendarSources());
 
         searchResultView.zoneIdProperty().bind(view.zoneIdProperty());
         searchResultView.searchTextProperty().bind(searchField.textProperty());
-        searchResultView.selectedEntryProperty()
-                .addListener(evt -> showSelectedSearchResult());
+        searchResultView.selectedEntryProperty().addListener(evt -> showSelectedSearchResult());
 
-        view.showSearchResultsTrayProperty().bind(Bindings
-                .not(Bindings.isEmpty(searchResultView.getSearchResults())));
+        view.showSearchResultsTrayProperty().bind(Bindings.not(Bindings.isEmpty(searchResultView.getSearchResults())));
 
         rightMasterDetailPane.setDetailNode(searchResultView);
         rightMasterDetailPane.setMasterNode(leftMasterDetailPane);
-        rightMasterDetailPane.showDetailNodeProperty()
-                .bind(view.showSearchResultsTrayProperty());
+        rightMasterDetailPane.showDetailNodeProperty().bind(view.showSearchResultsTrayProperty());
 
         BorderPane borderPane = new BorderPane();
 
@@ -364,22 +349,16 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
         if (Boolean.getBoolean("calendarfx.developer")) {
             DeveloperConsole developerConsole = view.getDeveloperConsole();
-            MasterDetailPane developerConsoleMasterDetailPane = new MasterDetailPane(
-                    Side.BOTTOM);
+            MasterDetailPane developerConsoleMasterDetailPane = new MasterDetailPane(Side.BOTTOM);
             developerConsoleMasterDetailPane.setDividerPosition(.6);
-            developerConsoleMasterDetailPane.animatedProperty()
-                    .bind(view.traysAnimatedProperty());
-            developerConsoleMasterDetailPane.getStyleClass()
-                    .add("developer-master-detail-pane");
+            developerConsoleMasterDetailPane.animatedProperty().bind(view.traysAnimatedProperty());
+            developerConsoleMasterDetailPane.getStyleClass().add("developer-master-detail-pane");
             developerConsoleMasterDetailPane.setDetailSide(Side.BOTTOM);
             developerConsoleMasterDetailPane.setMasterNode(borderPane);
             developerConsoleMasterDetailPane.setDetailNode(developerConsole);
             developerConsoleMasterDetailPane.setShowDetailNode(true);
-            developerConsoleMasterDetailPane.showDetailNodeProperty()
-                    .bind(view.showDeveloperConsoleProperty());
-            developerConsoleMasterDetailPane.getStylesheets()
-                    .add(CalendarFXControl.class.getResource("calendar.css")
-                            .toExternalForm());
+            developerConsoleMasterDetailPane.showDetailNodeProperty().bind(view.showDeveloperConsoleProperty());
+            developerConsoleMasterDetailPane.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
             getChildren().add(developerConsoleMasterDetailPane);
         } else {
             getChildren().add(borderPane);
@@ -423,8 +402,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
      * of view or check/uncheck any CalendarSource in Print dialog.
      */
     private void updatePrintVisibility() {
-        PrintablePage printablePage = printView.getPreviewPane()
-                .getPrintablePage();
+        PrintablePage printablePage = printView.getPreviewPane().getPrintablePage();
 
         if (printablePage.getViewType() == ViewType.DAY_VIEW) {
             printablePage.getDayView().refreshData();
@@ -465,10 +443,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             leftToolBarBox.getChildren().add(addCalendarButton);
         }
 
-        if (!leftToolBarBox.getChildren().isEmpty()
-                && getSkinnable().isShowPrintButton()) {
-            leftToolBarBox.getChildren()
-                    .add(new Separator(Orientation.VERTICAL));
+        if (!leftToolBarBox.getChildren().isEmpty() && getSkinnable().isShowPrintButton()) {
+            leftToolBarBox.getChildren().add(new Separator(Orientation.VERTICAL));
         }
 
         if (getSkinnable().isShowPrintButton()) {
@@ -479,12 +455,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             PageBase page = getSkinnable().getSelectedPage();
             Node toolBarControls = page.getToolBarControls();
 
-            if (toolBarControls != null && !((toolBarControls instanceof Pane)
-                    && ((Pane) toolBarControls).getChildrenUnmodifiable()
-                    .isEmpty())) {
+            if (toolBarControls != null && !((toolBarControls instanceof Pane) && ((Pane) toolBarControls).getChildrenUnmodifiable().isEmpty())) {
                 if (!leftToolBarBox.getChildren().isEmpty()) {
-                    leftToolBarBox.getChildren()
-                            .add(new Separator(Orientation.VERTICAL));
+                    leftToolBarBox.getChildren().add(new Separator(Orientation.VERTICAL));
                 }
                 leftToolBarBox.getChildren().add(toolBarControls);
             }
@@ -579,12 +552,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             zoomIn = pageList.indexOf(newPage) < pageList.indexOf(oldPage);
 
             KeyValue oldOpacity = new KeyValue(oldPage.opacityProperty(), 0);
-            KeyValue oldScaleX = new KeyValue(oldPage.scaleXProperty(),
-                    zoomIn ? large : small);
-            KeyValue oldScaleY = new KeyValue(oldPage.scaleYProperty(),
-                    zoomIn ? large : small);
-            KeyFrame frame1 = new KeyFrame(duration, oldOpacity, oldScaleX,
-                    oldScaleY);
+            KeyValue oldScaleX = new KeyValue(oldPage.scaleXProperty(), zoomIn ? large : small);
+            KeyValue oldScaleY = new KeyValue(oldPage.scaleYProperty(), zoomIn ? large : small);
+            KeyFrame frame1 = new KeyFrame(duration, oldOpacity, oldScaleX, oldScaleY);
             timeline.getKeyFrames().add(frame1);
 
             oldPage.setCache(true);
@@ -622,8 +592,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         KeyValue newScaleX = new KeyValue(newPage.scaleXProperty(), 1);
         KeyValue newScaleY = new KeyValue(newPage.scaleYProperty(), 1);
 
-        KeyFrame frame2 = new KeyFrame(duration, newOpacity, newScaleX,
-                newScaleY);
+        KeyFrame frame2 = new KeyFrame(duration, newOpacity, newScaleX, newScaleY);
         timeline.getKeyFrames().add(frame2);
 
         timeline.play();
@@ -655,8 +624,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             yearMonthView.getSelectedDates().add(getSkinnable().getDate());
             yearMonthView.getSelectedDates().addListener((Observable evt) -> {
                 if (!yearMonthView.getSelectedDates().isEmpty()) {
-                    yearMonthView.setDate(
-                            yearMonthView.getSelectedDates().iterator().next());
+                    yearMonthView.setDate(yearMonthView.getSelectedDates().iterator().next());
                 }
             });
 
@@ -665,12 +633,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
                 yearMonthView.getSelectedDates().add(getSkinnable().getDate());
             });
 
-            Bindings.bindBidirectional(yearMonthView.todayProperty(),
-                    getSkinnable().todayProperty());
-            Bindings.bindBidirectional(yearMonthView.dateProperty(),
-                    getSkinnable().dateProperty());
-            yearMonthView.weekFieldsProperty()
-                    .bind(getSkinnable().weekFieldsProperty());
+            Bindings.bindBidirectional(yearMonthView.todayProperty(), getSkinnable().todayProperty());
+            Bindings.bindBidirectional(yearMonthView.dateProperty(), getSkinnable().dateProperty());
+            yearMonthView.weekFieldsProperty().bind(getSkinnable().weekFieldsProperty());
 
             ScrollPane scrollPane = new ScrollPane(sourceView);
 
@@ -686,57 +651,47 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         if (printView == null) {
             printView = getSkinnable().getPrintView();
             printView.dateProperty().bind(getSkinnable().dateProperty());
+            printView.zoneIdProperty().bind(getSkinnable().zoneIdProperty());
         }
 
         printView.setToday(getSkinnable().getToday());
-        printView.getPreviewPane().getPrintablePage()
-                .setPageStartDate(getSkinnable().getDate());
+        printView.getPreviewPane().getPrintablePage().setPageStartDate(getSkinnable().getDate());
 
         printView.setWeekFields(getSkinnable().getWeekFields());
-        printView.getCalendarSources()
-                .setAll(getSkinnable().getCalendarSources());
+        printView.getCalendarSources().setAll(getSkinnable().getCalendarSources());
         printView.setLayout(getSkinnable().getSelectedPage().getLayout());
-        printView.setViewType(
-                getSkinnable().getSelectedPage().getPrintViewType());
+        printView.setViewType(getSkinnable().getSelectedPage().getPrintViewType());
         printView.loadDropDownValues(getSkinnable().getDate());
 
         printView.show(getSkinnable().getScene().getWindow());
 
         Platform.runLater(() -> {
 
-            SourceView printSource = printView.getSettingsView()
-                    .getSourceView();
+            SourceView printSource = printView.getSettingsView().getSourceView();
 
-            for (Calendar calendar : printSource.getCalendarVisibilityMap()
-                    .keySet()) {
-                printSource.getCalendarVisibilityProperty(calendar)
-                        .removeListener(printEntriesVisibilityListener);
-                printSource.getCalendarVisibilityProperty(calendar)
-                        .addListener(printEntriesVisibilityListener);
+            for (Calendar calendar : printSource.getCalendarVisibilityMap().keySet()) {
+                printSource.getCalendarVisibilityProperty(calendar).removeListener(printEntriesVisibilityListener);
+                printSource.getCalendarVisibilityProperty(calendar).addListener(printEntriesVisibilityListener);
             }
 
         });
     }
 
     @Override
-    protected double computePrefHeight(double width, double topInset,
-                                       double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         double dayHeight = dayPage.prefHeight(-1);
         double weekHeight = weekPage.prefHeight(-1);
         double monthHeight = monthPage.prefHeight(-1);
         double yearHeight = yearPage.prefHeight(-1);
-        return Math.max(dayHeight,
-                Math.max(weekHeight, Math.max(monthHeight, yearHeight)));
+        return Math.max(dayHeight, Math.max(weekHeight, Math.max(monthHeight, yearHeight)));
     }
 
     @Override
-    protected double computePrefWidth(double width, double topInset,
-                                      double rightInset, double bottomInset, double leftInset) {
+    protected double computePrefWidth(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         double dayWidth = dayPage.prefWidth(-1);
         double weekWidth = weekPage.prefWidth(-1);
         double monthWidth = monthPage.prefWidth(-1);
         double yearWidth = yearPage.prefWidth(-1);
-        return Math.max(dayWidth,
-                Math.max(weekWidth, Math.max(monthWidth, yearWidth)));
+        return Math.max(dayWidth, Math.max(weekWidth, Math.max(monthWidth, yearWidth)));
     }
 }

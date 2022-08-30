@@ -19,6 +19,7 @@ package com.calendarfx.google.view.popover;
 import com.calendarfx.google.model.GoogleEntry;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.DayView;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,7 +46,8 @@ public class HelloGoogleEntryPopOverContentPane extends Application {
 
         ObservableList<Calendar> allCalendars = FXCollections.observableArrayList(calendar);
 
-        GoogleEntryPopOverContentPane pane = new GoogleEntryPopOverContentPane(entry, allCalendars);
+        DayView dayView = new DayView();
+        GoogleEntryPopOverContentPane pane = new GoogleEntryPopOverContentPane(entry, allCalendars, dayView);
 
         primaryStage.setTitle("Google Calendar");
         Scene scene = new Scene(pane, 400, 600);

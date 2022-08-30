@@ -22,14 +22,15 @@ import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.EntryViewBase.AlignmentStrategy;
 import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
-import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.EntryViewBase.Position;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.TimeBoundsResolver;
@@ -198,7 +199,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         getSkinnable().setOnMouseDragged(evt -> {
             if (view.isScrollingEnabled()) {
-                view.setScrollTime(view.getZonedDateTimeAt(0, startY - evt.getScreenY()));
+                view.setScrollTime(view.getZonedDateTimeAt(0, startY - evt.getScreenY(), view.getZoneId()));
                 startY = evt.getScreenY();
             }
         });
@@ -444,14 +445,14 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         T dayView = getSkinnable();
 
-        LocalTime startTime = dayView.getStartTime();
-        LocalTime endTime = dayView.getEndTime();
-
-        boolean showEarlyHoursRegion = startTime.isAfter(LocalTime.MIN);
-        boolean showLateHoursRegion = endTime.isBefore(LocalTime.MAX);
+        boolean showEarlyHoursRegion = dayView.getStartTime().isAfter(LocalTime.MIN) && !dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE);
+        boolean showLateHoursRegion = dayView.getEndTime().isBefore(LocalTime.MAX) && !dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE);
 
         earlyHoursRegion.setVisible(showEarlyHoursRegion);
         lateHoursRegion.setVisible(showLateHoursRegion);
+
+        ZonedDateTime startTime = dayView.getZonedDateTimeStart();
+        ZonedDateTime endTime = dayView.getZonedDateTimeEnd();
 
         double earlyHoursY = dayView.getLocation(startTime);
         double lateHoursY = dayView.getLocation(endTime);
@@ -472,8 +473,9 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             }
 
             LocalTime time = LocalTime.of(hour, minute);
+            ZonedDateTime zonedDateTime = dayView.getZonedDateTime(time);
 
-            double yy = snapPositionY(contentY + dayView.getLocation(time));
+            double yy = snapPositionY(contentY + dayView.getLocation(zonedDateTime));
 
             line.setStartX(snapPositionX(contentX + 4));
             line.setStartY(yy);
@@ -511,10 +513,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         double y;
 
-        LocalTime time = dayView.getTime();
+        ZonedDateTime time = dayView.getZonedDateTime();
 
         if (dayView.isScrollingEnabled()) {
-            y = snapPositionY(dayView.getLocation(ZonedDateTime.of(getSkinnable().getDate(), time, getSkinnable().getZoneId()).toInstant()));
+            y = snapPositionY(dayView.getLocation(time));
         } else {
             y = snapPositionY(contentY + dayView.getLocation(time));
         }
@@ -600,29 +602,19 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         if (placements != null) {
             contentWidth = contentWidth * dayView.getEntryWidthPercentage() / 100d;
 
+            Instant dayViewStart = dayView.getZonedDateTime().with(LocalTime.MIN).toInstant();
+            Instant dayViewEnd = dayView.getZonedDateTimeEnd().with(LocalTime.MAX).toInstant();
+            
             for (Placement placement : placements) {
                 EntryViewBase<?> entryView = placement.getEntryView();
 
                 Entry<?> entry = entryView.getEntry();
 
-                double y1;
-                double y2;
-
-                if (dayView.isScrollingEnabled()) {
-
-                    y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
-                    y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
-
-                } else {
-
-                    y1 = dayView.getLocation(entry.getStartTime());
-                    y2 = dayView.getLocation(entry.getEndTime());
-                }
+                double y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
+                double y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
 
                 if (entryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.COMPUTE_PREF_SIZE)) {
-
                     y2 = y1 + entryView.prefHeight(contentWidth);
-
                 }
 
                 LocalDate viewDate = dayView.getDate();
@@ -633,16 +625,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                     boolean startsBefore = false;
                     boolean endsAfter = false;
 
-                    LocalDate startDate = entry.getStartDate();
-
-                    if (startDate.isBefore(dayView.getDate())) {
+                    if (entry.getStartAsZonedDateTime().toInstant().isBefore(dayViewStart)) {
                         y1 = contentY;
                         viewStartTime = dayView.getStartTime();
                         startsBefore = true;
                     }
 
-                    LocalDate endDate = entry.getEndDate();
-                    if (endDate.isAfter(dayView.getDate())) {
+                    if (entry.getEndAsZonedDateTime().toInstant().isAfter(dayViewEnd)) {
                         y2 = contentHeight;
                         viewEndTime = dayView.getEndTime();
                         endsAfter = true;
@@ -693,28 +682,15 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         for (DayEntryView entryView : entryViews) {
             Entry<?> entry = entryView.getEntry();
 
-            double y1;
-            double y2;
-
-            if (dayView.isScrollingEnabled()) {
-
-                y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
-                y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
-
-            } else {
-
-                y1 = dayView.getLocation(entry.getStartTime());
-                y2 = dayView.getLocation(entry.getEndTime());
-
-            }
+            double y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
+            double y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
 
             double entryWidth = computeEntryWidth(entryView, contentWidth);
             double entryLeftOffset = computeEntryLeftOffset(entryView, entryWidth, contentWidth);
 
             double minHeight = entryView.minHeight(entryWidth);
 
-            entryView.resizeRelocate(snapPositionX(contentX + entryLeftOffset), snapPositionY(y1),
-                    snapSizeX(entryWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
+            entryView.resizeRelocate(snapPositionX(contentX + entryLeftOffset), snapPositionY(y1), snapSizeX(entryWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
             entryView.toFront();
         }
     }
@@ -722,7 +698,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     /**
      * Compute entry width during layout phase.
      *
-     * @param entryView view entry
+     * @param entryView      view entry
      * @param availableWidth maximum available horizontal space for entry view
      */
     private double computeEntryWidth(EntryViewBase<?> entryView, double availableWidth) {
@@ -746,6 +722,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 return (availableWidth - entryWidth) * 0.5;
             case ALIGN_RIGHT:
                 return (availableWidth - entryWidth);
+        }
+    }
+
+    @Override
+    protected void zoneIdChanged() {
+        if (!getSkinnable().isSuspendUpdates()) {
+            loadData("zone ID changed");
         }
     }
 
@@ -986,7 +969,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     @Override
     public LocalDate getLoadEndDate() {
         if (getSkinnable().isScrollingEnabled()) {
-            return getSkinnable().getZonedDateTimeAt(0, getSkinnable().getHeight()).toLocalDate();
+            return getSkinnable().getZonedDateTimeAt(0, getSkinnable().getHeight(), getSkinnable().getZoneId()).toLocalDate();
         }
 
         return getSkinnable().getDate();

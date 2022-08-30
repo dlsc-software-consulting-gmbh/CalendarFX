@@ -46,7 +46,7 @@
 
 /*
  * --------------------------------------------------------------------------------------------------------------
- * A few ID-based styes.
+ * A few ID-based styles.
  */
 
 #toolbar {
@@ -105,6 +105,10 @@
     -fx-icon-size: 14.0px;
 }
 
+.right-toolbar-container {
+    -fx-spacing: 10px;
+}
+
 /*
  * --------------------------------------------------------------------------------------------------------------
  * Styles for the PageBase abstract superclass of the day, week, month, and year page.
@@ -124,14 +128,14 @@
     -fx-font-size: 2.2em;
 }
 
-.calendar-page > .container > .header > .navigation-button-bar {
+.calendar-page > .container > .header > .navigate-date-view {
 }
 
-.calendar-page > .container > .header > .navigation-button-bar > .container > .previous-date-button {
+.calendar-page > .container > .header > .navigate-date-view > .container > .previous-date-button {
     -fx-padding: 3 7 3 7;
 }
 
-.calendar-page > .container > .header > .navigation-button-bar > .container > .next-date-button {
+.calendar-page > .container > .header > .navigate-date-view > .container > .next-date-button {
     -fx-padding: 3 7 3 7;
 }
 
@@ -1995,4 +1999,12 @@
 .resource-calendar-view .marker-line {
     -fx-pref-height: 5px;
     -fx-background-color: orange;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the TimeField control.
+ */
+.time-field > .box {
+    -fx-spacing: 2px;
 }

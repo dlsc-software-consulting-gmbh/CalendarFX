@@ -28,9 +28,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
@@ -137,8 +135,8 @@ public class DayViewScrollPane extends Pane {
             return;
         }
 
-        final LocalTime startTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY()).toLocalTime();
-        final LocalTime endTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY() + getHeight()).toLocalTime();
+        final LocalTime startTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY(), dayView.getZoneId()).toLocalTime();
+        final LocalTime endTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY() + getHeight(), dayView.getZoneId()).toLocalTime();
 
         this.startTime.set(startTime);
         this.endTime.set(endTime);
@@ -196,10 +194,10 @@ public class DayViewScrollPane extends Pane {
 
         final double ph = dayView.prefHeight(-1);
         dayView.resizeRelocate(
-                snapPosition(insets.getLeft()),
-                snapPosition(insets.getTop()),
-                snapSize(getWidth() - insets.getLeft() - insets.getRight()),
-                snapSize(Math.max(ph, getHeight() - insets.getTop() - insets.getBottom())));
+                snapPositionX(insets.getLeft()),
+                snapPositionY(insets.getTop()),
+                snapSizeX(getWidth() - insets.getLeft() - insets.getRight()),
+                snapSizeY(Math.max(ph, getHeight() - insets.getTop() - insets.getBottom())));
 
         switch (dayView.getHoursLayoutStrategy()) {
             case FIXED_HOUR_COUNT:
@@ -218,21 +216,6 @@ public class DayViewScrollPane extends Pane {
 
     private double getMaxTranslateY(Insets insets) {
         return (getHeight() - insets.getTop() - insets.getBottom()) - dayView.getHeight();
-    }
-
-    private void startDrag(MouseEvent evt) {
-        EventTarget target = evt.getTarget();
-        if (!isOnEntry(target)) {
-            return;
-        }
-        Dragboard db = startDragAndDrop(TransferMode.MOVE);
-        ClipboardContent content = new ClipboardContent();
-
-        /*
-         * We have to add some content, otherwise drag over will not be called.
-         */
-        content.putString("dummy");
-        db.setContent(content);
     }
 
     private boolean isOnEntry(EventTarget target) {

@@ -46,6 +46,8 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
     public DateControlSkin(C control) {
         super(control);
 
+        control.zoneIdProperty().addListener(it -> zoneIdChanged());
+
         control.addEventHandler(MOUSE_PRESSED, evt -> control.clearSelection());
 
         control.getCalendars().addListener(this::calendarListChanged);
@@ -112,6 +114,9 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
                 }
             }
         }
+    }
+
+    protected void zoneIdChanged() {
     }
 
     private void calendarChanged(CalendarEvent evt) {

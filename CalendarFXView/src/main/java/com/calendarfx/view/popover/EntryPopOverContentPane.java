@@ -56,7 +56,7 @@ public class EntryPopOverContentPane extends PopOverContentPane {
         this.dateControl = dateControl;
         this.entry = Objects.requireNonNull(entry);
 
-        EntryDetailsView details = new EntryDetailsView(entry);
+        EntryDetailsView details = new EntryDetailsView(entry, dateControl);
 
         PopOverTitledPane detailsPane = new PopOverTitledPane(Messages.getString("EntryPopOverContentPane.DETAILS"), details);
 

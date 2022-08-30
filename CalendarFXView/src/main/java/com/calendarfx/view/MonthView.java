@@ -30,6 +30,7 @@ import javafx.util.Callback;
 import org.controlsfx.control.PropertySheet.Item;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -72,9 +73,9 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
     }
 
     @Override
-    public final ZonedDateTime getZonedDateTimeAt(double x, double y) {
+    public final ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         MonthViewSkin skin = (MonthViewSkin) getSkin();
-        return skin.getZonedDateTimeAt(x, y);
+        return skin.getZonedDateTimeAt(x, y, zoneId);
     }
 
     private final BooleanProperty showCurrentWeek = new SimpleBooleanProperty(

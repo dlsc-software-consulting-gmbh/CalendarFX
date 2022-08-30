@@ -16,12 +16,11 @@
 
 package impl.com.calendarfx.view.page;
 
-import com.calendarfx.view.ButtonBar;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.page.PageBase;
+import impl.com.calendarfx.view.NavigateDateView;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -39,20 +38,13 @@ public abstract class PageBaseSkin<C extends PageBase> extends SkinBase<C> {
 
         // Navigation
 
-        Button backButton = new Button("<");
-        Button forwardButton = new Button(">");
-        Button todayButton = new Button(Messages.getString("PageBaseSkin.TODAY"));
+        NavigateDateView navigateDateButton = new NavigateDateView();
+        navigateDateButton.getTodayButton().setText(Messages.getString("PageBaseSkin.TODAY"));
+        navigateDateButton.setOnBackward(() -> page.goBack());
+        navigateDateButton.setOnForward(() -> page.goForward());
+        navigateDateButton.setOnToday(() -> page.goToday());
 
-        backButton.getStyleClass().add("previous-date-button");
-        forwardButton.getStyleClass().add("next-date-button");
-
-        backButton.setOnAction(evt -> page.goBack());
-        forwardButton.setOnAction(evt -> page.goForward());
-        todayButton.setOnAction(evt -> page.goToday());
-
-        ButtonBar navigationButton = new ButtonBar(backButton, todayButton, forwardButton);
-        navigationButton.getStyleClass().add("navigation-button-bar");
-        navigationButton.visibleProperty().bind(page.showNavigationProperty());
+        navigateDateButton.visibleProperty().bind(page.showNavigationProperty());
 
         // Date label
         this.dateText = new Text("Date");
@@ -60,12 +52,12 @@ public abstract class PageBaseSkin<C extends PageBase> extends SkinBase<C> {
         this.dateText.visibleProperty().bind(page.showDateProperty());
         page.dateProperty().addListener(evt -> updateDateText());
 
-        BorderPane.setMargin(navigationButton, new Insets(10));
+        BorderPane.setMargin(navigateDateButton, new Insets(10));
         BorderPane.setMargin(dateText, new Insets(10));
 
         headerPane = new BorderPane();
         headerPane.getStyleClass().add("header");
-        headerPane.setLeft(navigationButton);
+        headerPane.setLeft(navigateDateButton);
         headerPane.setRight(dateText);
 
         Node content = createContent();
@@ -90,7 +82,7 @@ public abstract class PageBaseSkin<C extends PageBase> extends SkinBase<C> {
     }
 
     private void updateHeaderVisibility() {
-        if (getSkinnable().isShowDateHeader() || getSkinnable().isShowNavigation()) {
+        if (getSkinnable().isShowDate() || getSkinnable().isShowNavigation()) {
             borderPane.setTop(headerPane);
         } else {
             borderPane.setTop(null);

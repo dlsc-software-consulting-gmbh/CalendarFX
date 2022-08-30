@@ -18,6 +18,7 @@ package com.calendarfx.view.popover;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -28,15 +29,24 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 class EntriesPane extends VBox {
 
-    public EntriesPane() {
+    private final DateControl dateControl;
+
+    public EntriesPane(DateControl dateControl) {
+        this.dateControl = Objects.requireNonNull(dateControl, "date control can not be null");
+
         setMinSize(0, 0);
         entries.addListener((Observable evt) -> update());
         getStyleClass().add("entries-pane");
@@ -75,16 +85,24 @@ class EntriesPane extends VBox {
 
                 Circle colorDot = new Circle();
                 colorDot.setRadius(2.5);
-                colorDot.getStyleClass().add(
-                        calendar.getStyle() + "-icon-small");
+                colorDot.getStyleClass().add(calendar.getStyle() + "-icon-small");
                 titleLabel.setGraphic(colorDot);
 
                 Label timeLabel = new Label();
                 if (entry.isFullDay()) {
                     timeLabel.setText(Messages.getString("EntriesPane.FULL_DAY"));
                 } else {
-                    timeLabel.setText(DateTimeFormatter.ofLocalizedTime(
-                            FormatStyle.SHORT).format(entry.getStartTime()));
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+                    ZonedDateTime startTime = entry.getStartAsZonedDateTime();
+                    ZoneId entryZoneId = entry.getZoneId();
+                    ZoneId controlZoneId = dateControl.getZoneId();
+
+                    if (!Objects.equals(entryZoneId, controlZoneId)) {
+                        timeLabel.setText(formatter.format(startTime.withZoneSameInstant(controlZoneId)) + " (" + formatter.format(startTime) + " " + entryZoneId.getDisplayName(TextStyle.SHORT, Locale.getDefault())+ ")");
+                    } else {
+                        timeLabel.setText(formatter.format(startTime));
+                    }
                 }
 
                 borderPane.setRight(timeLabel);

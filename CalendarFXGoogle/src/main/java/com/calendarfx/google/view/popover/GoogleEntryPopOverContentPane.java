@@ -18,6 +18,7 @@ package com.calendarfx.google.view.popover;
 
 import com.calendarfx.google.model.GoogleEntry;
 import com.calendarfx.model.Calendar;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.popover.EntryHeaderView;
 import com.calendarfx.view.popover.EntryPropertiesView;
 import com.calendarfx.view.popover.PopOverContentPane;
@@ -34,12 +35,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class GoogleEntryPopOverContentPane extends PopOverContentPane {
 
-    public GoogleEntryPopOverContentPane(GoogleEntry entry, ObservableList<Calendar> allCalendars) {
+    public GoogleEntryPopOverContentPane(GoogleEntry entry, ObservableList<Calendar> allCalendars, DateControl dateControl) {
         requireNonNull(entry);
         getStylesheets().add(GoogleEntryPopOverContentPane.class.getResource("google-popover.css").toExternalForm());
 
         EntryHeaderView header = new EntryHeaderView(entry, allCalendars);
-        GoogleEntryDetailsView details = new GoogleEntryDetailsView(entry);
+        GoogleEntryDetailsView details = new GoogleEntryDetailsView(entry, dateControl);
         GoogleEntryAttendeesView attendees = new GoogleEntryAttendeesView(entry);
         GoogleEntryGMapsFXView mapView = new GoogleEntryGMapsFXView(entry);
 

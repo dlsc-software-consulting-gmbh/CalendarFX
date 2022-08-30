@@ -91,7 +91,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     }
 
     @Override
-    public final ZonedDateTime getZonedDateTimeAt(double x, double y) {
+    public final ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         int day = (int) (x / (getWidth() / getNumberOfDays()));
 
         LocalDate date = getDate();
@@ -103,7 +103,6 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
         date = date.plusDays(day);
 
         LocalTime time = LocalTime.NOON;
-        ZoneId zoneId = getZoneId();
         return ZonedDateTime.of(date, time, zoneId);
     }
 

@@ -19,6 +19,7 @@ package impl.com.calendarfx.view;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DayEntryView;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.DraggedEntry;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -33,13 +34,16 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 
-import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -106,9 +110,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
             // we have to remove some previously used flow panes from the entry view
             if (previouslyUsedPositions != null) {
                 previouslyUsedPositions.removeAll(currentlyUsedPositions);
-                final Iterator<Pos> iterator = previouslyUsedPositions.iterator();
-                while (iterator.hasNext()) {
-                    final Pos next = iterator.next();
+                for (Pos next : previouslyUsedPositions) {
                     final FlowPane removedPane = nodePanes.remove(next);
                     getChildren().remove(removedPane);
                 }
@@ -179,7 +181,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     }
 
     /**
-     * This methods updates the styles of the node according to the entry
+     * This method updates the styles of the node according to the entry
      * settings.
      */
     protected void updateStyles() {
@@ -217,7 +219,6 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     protected Label createStartTimeLabel() {
         Label label = new Label();
         label.setMinSize(0, 0);
-
         return label;
     }
 
@@ -227,8 +228,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
      * @param time the time
      * @return The formatted time.
      */
-    protected String formatTime(LocalTime time) {
-        return formatter.format(time);
+    protected String formatTime(ZonedDateTime time, ZoneId zoneId) {
+        return formatter.format(time.withZoneSameInstant(zoneId));
     }
 
     /**
@@ -261,7 +262,14 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     protected void updateLabels() {
         Entry<?> entry = getEntry();
 
-        startTimeLabel.setText(formatTime(entry.getStartTime()));
+        DayView dateControl = getSkinnable().getDateControl();
+        ZonedDateTime startTime = entry.getStartAsZonedDateTime();
+
+        if (!Objects.equals(dateControl.getZoneId(), entry.getZoneId())) {
+            startTimeLabel.setText(formatTime(startTime, dateControl.getZoneId()) + " (" + formatTime(startTime, entry.getZoneId()) + " " + entry.getZoneId().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")");
+        } else {
+            startTimeLabel.setText(formatTime(startTime, dateControl.getZoneId()));
+        }
         titleLabel.setText(formatTitle(entry.getTitle()));
     }
 
@@ -272,13 +280,13 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
         // it is guaranteed that we have enough height to display the title (see
         // "computeMinHeight")
-        titleLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY), snapSize(contentWidth), snapSize(titleHeight));
+        titleLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY), snapSizeX(contentWidth), snapSizeY(titleHeight));
 
         // start time label
         double timeLabelHeight = startTimeLabel.prefHeight(contentWidth);
         if (contentHeight - titleHeight > timeLabelHeight) {
             startTimeLabel.setVisible(true);
-            startTimeLabel.resizeRelocate(snapPosition(contentX), snapPosition(contentY + titleHeight), snapSize(contentWidth), snapSize(timeLabelHeight));
+            startTimeLabel.resizeRelocate(snapPositionX(contentX), snapPositionY(contentY + titleHeight), snapSizeX(contentWidth), snapSizeY(timeLabelHeight));
         } else {
             startTimeLabel.setVisible(false);
         }
@@ -331,8 +339,7 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
                                       double rightInset, double bottomInset, double leftInset) {
         if (titleLabel != null && getSkinnable().isMinHeightEqualToTitleHeight()) {
             // For this pref height calculation we do not consider the available
-            // width because
-            // we only want to show a single line of text anyways.
+            // width because we only want to show a single line of text.
             return titleLabel.prefHeight(-1) + topInset + bottomInset;
         }
 

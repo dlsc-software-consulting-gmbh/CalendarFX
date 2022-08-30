@@ -24,6 +24,7 @@ import javafx.scene.control.Skin;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,13 +34,6 @@ import static java.util.Objects.requireNonNull;
  * <img src="doc-files/time-scale-view.png" alt="Time Scale View">
  */
 public class TimeScaleView extends DayViewBase {
-
-    /**
-     * Interface for providing additional style properties.
-     */
-    public interface TimeScaleStyleProvider {
-        String getStyle(LocalDateTime time);
-    }
 
     /**
      * Constructs a new scale view.
@@ -122,19 +116,19 @@ public class TimeScaleView extends DayViewBase {
 
     // STYLE PROVIDERS
 
-    private static final TimeScaleStyleProvider DEFAULT_STYLE_PROVIDER = (time) -> null;
+    private static final Function<LocalDateTime, String> DEFAULT_STYLE_PROVIDER = (time) -> null;
 
-    private final ObjectProperty<TimeScaleStyleProvider> timeStyleProvider = new SimpleObjectProperty<>(this, "timeStyleProvider", DEFAULT_STYLE_PROVIDER);
+    private final ObjectProperty<Function<LocalDateTime, String>> timeStyleProvider = new SimpleObjectProperty<>(this, "timeStyleProvider", DEFAULT_STYLE_PROVIDER);
 
-    private final ObjectProperty<TimeScaleStyleProvider> dateStyleProvider = new SimpleObjectProperty<>(this, "dateStyleProvider", DEFAULT_STYLE_PROVIDER);
+    private final ObjectProperty<Function<LocalDateTime, String>> dateStyleProvider = new SimpleObjectProperty<>(this, "dateStyleProvider", DEFAULT_STYLE_PROVIDER);
 
     /**
-     * Gets the {@link TimeScaleStyleProvider} instance, which is used to provide
-     * additional style properties for time labels of TimeScale.
+     * Gets the function, which is used to provide additional style properties for the labels
+     * that will display the times of a day (01:00, 02:00, ...).
      *
      * @return the style provider
      */
-    public ObjectProperty<TimeScaleStyleProvider> timeStyleProviderProperty() {
+    public ObjectProperty<Function<LocalDateTime, String>> timeStyleProviderProperty() {
         return timeStyleProvider;
     }
 
@@ -143,7 +137,7 @@ public class TimeScaleView extends DayViewBase {
      *
      * @return the style provider
      */
-    public TimeScaleStyleProvider getTimeStyleProvider() {
+    public Function<LocalDateTime, String> getTimeStyleProvider() {
         return timeStyleProvider.get();
     }
 
@@ -152,26 +146,26 @@ public class TimeScaleView extends DayViewBase {
      *
      * @param styleProvider time labels style provider, not {@code null}
      */
-    public void setTimeStyleProvider(TimeScaleStyleProvider styleProvider) {
+    public void setTimeStyleProvider(Function<LocalDateTime, String> styleProvider) {
         this.timeStyleProvider.set(styleProvider);
     }
 
     /**
-     * Gets the {@link TimeScaleStyleProvider} instance, which is used to provide
-     * additional style properties for date labels of TimeScale.
+     * Gets the function, which is used to provide additional styling for the labels
+     * used to display dates.
      *
-     * @return the style provider
+     * @return the style function for date labels
      */
-    public ObjectProperty<TimeScaleStyleProvider> dateStyleProviderProperty() {
+    public ObjectProperty<Function<LocalDateTime, String>> dateStyleProviderProperty() {
         return dateStyleProvider;
     }
 
     /**
      * Returns the value of {@link #dateStyleProviderProperty()}.
      *
-     * @return the style provider
+     * @return the style function for date labels
      */
-    public TimeScaleStyleProvider getDateStyleProvider() {
+    public Function<LocalDateTime, String> getDateStyleProvider() {
         return dateStyleProvider.get();
     }
 
@@ -180,7 +174,7 @@ public class TimeScaleView extends DayViewBase {
      *
      * @param styleProvider date labels style provider, not {@code null}
      */
-    public void setDateStyleProvider(TimeScaleStyleProvider styleProvider) {
+    public void setDateStyleProvider(Function<LocalDateTime, String> styleProvider) {
         this.dateStyleProvider.set(styleProvider);
     }
 }

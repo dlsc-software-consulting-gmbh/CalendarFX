@@ -362,8 +362,7 @@ public class Calendar implements EventTarget {
         }
 
         if (MODEL.isLoggable(FINE)) {
-            MODEL.fine(getName() + ": found entries for " + result.size()
-                    + " different days");
+            MODEL.fine(getName() + ": found entries for " + result.size() + " different days");
         }
 
         result.values().forEach(Collections::sort);

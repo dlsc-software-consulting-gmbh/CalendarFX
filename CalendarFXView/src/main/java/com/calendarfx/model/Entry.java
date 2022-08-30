@@ -217,7 +217,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         return styleClass;
     }
 
-    private final ObjectProperty<Interval> interval = new SimpleObjectProperty<Interval>(this, "interval") {
+    private final ObjectProperty<Interval> interval = new SimpleObjectProperty<>(this, "interval") {
         @Override
         public void set(Interval newInterval) {
 
@@ -307,16 +307,15 @@ public class Entry<T> implements Comparable<Entry<?>> {
     // Set Interval: LocalDate support
 
     public final void setInterval(LocalDate date) {
-        setInterval(date, ZoneId.systemDefault());
+        setInterval(date, getZoneId());
     }
 
     public final void setInterval(LocalDate date, ZoneId zoneId) {
         setInterval(date, date, zoneId);
     }
 
-
     public final void setInterval(LocalDate startDate, LocalDate endDate) {
-        setInterval(startDate, endDate, ZoneId.systemDefault());
+        setInterval(startDate, endDate, getZoneId());
     }
 
     public final void setInterval(LocalDate startDate, LocalDate endDate, ZoneId zoneId) {
@@ -324,7 +323,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
     }
 
     public final void setInterval(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        setInterval(startDate, startTime, endDate, endTime, ZoneId.systemDefault());
+        setInterval(startDate, startTime, endDate, endTime, getZoneId());
     }
 
     public final void setInterval(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, ZoneId zoneId) {
@@ -334,7 +333,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
     // Set Interval: LocalTime support
 
     public final void setInterval(LocalTime startTime, LocalTime endTime) {
-        setInterval(startTime, endTime, ZoneId.systemDefault());
+        setInterval(startTime, endTime, getZoneId());
     }
 
     public final void setInterval(LocalTime startTime, LocalTime endTime, ZoneId zoneId) {
@@ -352,7 +351,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
     }
 
     public final void setInterval(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        setInterval(startDateTime, endDateTime, ZoneId.systemDefault());
+        setInterval(startDateTime, endDateTime, getZoneId());
     }
 
     public final void setInterval(LocalDateTime startDateTime, LocalDateTime endDateTime, ZoneId zoneId) {
@@ -540,6 +539,16 @@ public class Entry<T> implements Comparable<Entry<?>> {
 
             setInterval(interval.withEndTime(time));
         }
+    }
+
+    /**
+     * Changes the zone ID of the entry interval.
+     *
+     * @param zoneId the new zone
+     */
+    public final void changeZoneId(ZoneId zoneId) {
+        requireNonNull(zoneId);
+        setInterval(getInterval().withZoneId(zoneId));
     }
 
     private ReadOnlyObjectWrapper<Entry<T>> recurrenceSource;

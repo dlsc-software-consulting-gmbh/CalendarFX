@@ -16,19 +16,11 @@
 
 package impl.com.calendarfx.view.print;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.SourceGridView;
 import com.calendarfx.view.YearMonthView;
 import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -44,6 +36,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PrintablePageSkin extends SkinBase<PrintablePage> {
 
@@ -157,7 +156,7 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
         private final ReadOnlyStringWrapper text = new ReadOnlyStringWrapper(
                 this, "text");
 
-        public final ReadOnlyStringProperty textProperty() {
+        public ReadOnlyStringProperty textProperty() {
             return text.getReadOnlyProperty();
         }
 
@@ -179,13 +178,12 @@ public class PrintablePageSkin extends SkinBase<PrintablePage> {
                 break;
 
             case WEEK_VIEW:
-                StringBuilder sb = new StringBuilder();
-                sb.append(formatter.format(page.getPageStartDate()));
-                sb.append(" ")
-                        .append(Messages.getString("PrintViewType.TO_LABEL"))
-                        .append(" ");
-                sb.append(formatter.format(page.getPageEndDate()));
-                setText(sb.toString());
+                String sb = formatter.format(page.getPageStartDate()) +
+                        " " +
+                        Messages.getString("PrintViewType.TO_LABEL") +
+                        " " +
+                        formatter.format(page.getPageEndDate());
+                setText(sb);
                 break;
             default:
                 setText("");

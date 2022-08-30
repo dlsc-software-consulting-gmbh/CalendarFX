@@ -35,6 +35,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseEvent;
 import org.controlsfx.control.PropertySheet.Item;
 
 import java.time.Instant;
@@ -49,7 +50,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * The common superclass for all date controls that are used to display the 24
- * hours of a day: day view, week day view, time scale, week time scale, and
+ * hours of a day: day view, week day view, timescale, week timescale, and
  * week view. Instances of this type can be configured to display hours at a
  * fixed height or alternatively a fixed number of hours for a given viewport
  * height (see {@link HoursLayoutStrategy}). This control also supports an early /
@@ -95,6 +96,56 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         earliestTimeUsedProperty().addListener(trimListener);
         latestTimeUsedProperty().addListener(trimListener);
         trimTimeBoundsProperty().addListener(trimListener);
+    }
+
+    /**
+     * Returns the zoned start time of the day view for the view's current date,
+     * its start time, and its time zone.
+     *
+     * @return the zoned start time of the view
+     * @see #getDate()
+     * @see #getStartTime()
+     * @see #getZoneId()
+     */
+    public final ZonedDateTime getZonedDateTimeStart() {
+        return ZonedDateTime.of(getDate(), getStartTime(), getZoneId());
+    }
+
+    /**
+     * Returns the zoned minimum time of the day view for the view's current date,
+     * for {@link LocalTime#MIN}, and its time zone.
+     *
+     * @return the zoned minimum time of the view
+     * @see #getDate()
+     * @see #getZoneId()
+     */
+    public final ZonedDateTime getZonedDateTimeMin() {
+        return ZonedDateTime.of(getDate(), LocalTime.MIN, getZoneId());
+    }
+
+    /**
+     * Returns the zoned end time of the day view for the view's current date,
+     * its end time, and its time zone.
+     *
+     * @return the zoned end time of the view
+     * @see #getDate()
+     * @see #getEndTime() ()
+     * @see #getZoneId()
+     */
+    public final ZonedDateTime getZonedDateTimeEnd() {
+        return ZonedDateTime.of(getDate(), getEndTime(), getZoneId());
+    }
+
+    /**
+     * Returns the zoned maximum time of the day view for the view's current date,
+     * for {@link LocalTime#MAX}, and its time zone.
+     *
+     * @return the zoned maximum time of the view
+     * @see #getDate()
+     * @see #getZoneId()
+     */
+    public final ZonedDateTime getZonedDateTimeMax() {
+        return ZonedDateTime.of(getDate(), LocalTime.MAX, getZoneId());
     }
 
     private final ObjectProperty<ZonedDateTime> scrollTime = new SimpleObjectProperty<>(this, "scrollTime", ZonedDateTime.of(LocalDate.now(), LocalTime.MIN, ZoneId.systemDefault()));
@@ -166,10 +217,42 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return entryWidthPercentage.get();
     }
 
-    private static final double MILLIS_PER_HOUR = 3_600_000d;
+    public static final double MILLIS_PER_HOUR = 3_600_000d;
+
+    /**
+     * Returns the time instant at the location of the given mouse event.
+     *
+     * @param evt the mouse event
+     * @return the time at the mouse event location
+     */
+    public Instant getInstantAt(MouseEvent evt) {
+        return getInstantAt(evt.getX(), evt.getY());
+    }
+
+    /**
+     * Returns the time instant at the given location.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the time at the given location
+     */
+    public Instant getInstantAt(double x, double y) {
+        return getZonedDateTimeAt(x, y).toInstant();
+    }
+
+    /**
+     * Returns the zoned date time at the given location.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the time at the given location
+     */
+    public ZonedDateTime getZonedDateTimeAt(double x, double y) {
+        return getZonedDateTimeAt(x, y, getZoneId());
+    }
 
     @Override
-    public ZonedDateTime getZonedDateTimeAt(double x, double y) {
+    public ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         if (isScrollingEnabled()) {
 
             final double mpp = MILLIS_PER_HOUR / getHourHeight();
@@ -178,20 +261,20 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
         } else {
 
-            return ZonedDateTime.of(ViewHelper.getLocationTime(this, y, false, true), getZoneId());
+            return ZonedDateTime.ofInstant(ViewHelper.getInstantAt(this, y), getZoneId());
 
         }
     }
 
     /**
-     * Returns the y coordinate for the given time.
+     * Returns the zoned date time version of the given time for the view and
+     * its current date and time zone.
      *
-     * @param time the time for which to return the coordinate
-     * @return the y coordinate
-     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is not set to true
+     * @param time the local time to convert to a zoned date time
+     * @return the zoned date time version of the given time
      */
-    public final double getLocation(ZonedDateTime time) {
-        return getLocation(time.toInstant());
+    public final ZonedDateTime getZonedDateTime(LocalTime time) {
+        return ZonedDateTime.of(getDate(), time, getZoneId());
     }
 
     /**
@@ -200,30 +283,20 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      *
      * @param instant the time for which to return the coordinate
      * @return the y coordinate
-     * @throws UnsupportedOperationException if {@link #scrollingEnabled} is not set to true
      */
     public final double getLocation(Instant instant) {
-        if (isScrollingEnabled()) {
-            final Instant scrollInstant = getScrollTime().toInstant();
-            final double mpp = MILLIS_PER_HOUR / getHourHeight();
-            final long millis = instant.toEpochMilli() - scrollInstant.toEpochMilli();
-            return millis / mpp;
-        }
-
-        throw new UnsupportedOperationException("this method can only be called if scrolling is enabled");
+        return ViewHelper.getTimeLocation(this, instant);
     }
 
     /**
-     * Returns the y coordinate for the given time.
+     * Returns the y coordinate for the given time. This method delegates
+     * to {@link ViewHelper#getTimeLocation(DayViewBase, ZonedDateTime)}.
      *
      * @param time the time for which to return the coordinate
      * @return the y coordinate
      * @throws UnsupportedOperationException if {@link #scrollingEnabled} is set to true
      */
-    public double getLocation(LocalTime time) {
-        if (isScrollingEnabled()) {
-            throw new UnsupportedOperationException("this method can only be called if scrolling is disabled");
-        }
+    public final double getLocation(ZonedDateTime time) {
         return ViewHelper.getTimeLocation(this, time);
     }
 
@@ -688,7 +761,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * time used properties based on the currently showing entries.
      *
      * @return true if the time bounds will be automatically trimmed
-     *
      * @see #earliestTimeUsedProperty()
      * @see #latestTimeUsedProperty()
      */
@@ -773,6 +845,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
         Bindings.bindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
         Bindings.bindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.bindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeMarkerProperty());
         Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.bindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
@@ -788,6 +861,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
         Bindings.unbindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
         Bindings.unbindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.unbindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeMarkerProperty());
         Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());

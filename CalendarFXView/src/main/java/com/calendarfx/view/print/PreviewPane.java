@@ -52,8 +52,7 @@ public class PreviewPane extends CalendarFXControl {
         zoomPane = new ZoomPane(printablePage);
         getStyleClass().add(DEFAULT_STYLE);
 
-        final InvalidationListener layoutListener = obs -> zoomPane
-                .requestLayout();
+        final InvalidationListener layoutListener = obs -> zoomPane.requestLayout();
         printablePage.viewTypeProperty().addListener(layoutListener);
         printablePage.paperProperty().addListener(layoutListener);
 
@@ -74,8 +73,7 @@ public class PreviewPane extends CalendarFXControl {
 
     // print start date
 
-    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<>(
-            this, "printStartDate");
+    private final ObjectProperty<LocalDate> printStartDate = new SimpleObjectProperty<>(this, "printStartDate");
 
     public final ObjectProperty<LocalDate> printStartDateProperty() {
         return printStartDate;

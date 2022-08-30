@@ -45,10 +45,10 @@ class CreateDeleteHandler {
         if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
             LoggingDomain.VIEW.fine("create entry mouse event received inside control: " + dateControl.getClass().getSimpleName());
 
-            ZonedDateTime time = ZonedDateTime.now();
+            ZonedDateTime time = ZonedDateTime.now().withZoneSameInstant(dateControl.getZoneId());
             if (dateControl instanceof ZonedDateTimeProvider) {
                 ZonedDateTimeProvider provider = (ZonedDateTimeProvider) dateControl;
-                time = provider.getZonedDateTimeAt(evt.getX(), evt.getY());
+                time = provider.getZonedDateTimeAt(evt.getX(), evt.getY(), dateControl.getZoneId());
             }
 
             if (dateControl.getCalendars().isEmpty()) {

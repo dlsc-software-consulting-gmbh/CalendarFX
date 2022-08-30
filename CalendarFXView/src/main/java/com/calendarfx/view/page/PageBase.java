@@ -157,12 +157,11 @@ public abstract class PageBase extends DateControl {
      *
      * @return true if the date will be shown
      */
-    public final boolean isShowDateHeader() {
+    public final boolean isShowDate() {
         return showDateProperty().get();
     }
 
-    private final BooleanProperty showNavigation = new SimpleBooleanProperty(
-            this, "showNavigation", true);
+    private final BooleanProperty showNavigation = new SimpleBooleanProperty(this, "showNavigation", true);
 
     /**
      * Determines if the navigation controls for going back and forward in time
@@ -258,7 +257,7 @@ public abstract class PageBase extends DateControl {
 
             @Override
             public Object getValue() {
-                return isShowDateHeader();
+                return isShowDate();
             }
 
             @Override

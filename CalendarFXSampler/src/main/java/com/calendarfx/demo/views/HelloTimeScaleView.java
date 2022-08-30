@@ -64,8 +64,7 @@ public class HelloTimeScaleView extends CalendarFXSample {
         box.setFillHeight(false);
 
         StackPane stackPane = new StackPane();
-        stackPane.setStyle(
-                "-fx-background-color: white; -fx-border-color: gray; -fx-border-width: .25px; -fx-padding: 0 20 0 20;");
+        stackPane.setStyle("-fx-background-color: white; -fx-border-color: gray; -fx-border-width: .25px; -fx-padding: 0 20 0 20;");
         box.getChildren().add(stackPane);
 
         stackPane.getChildren().add(node);

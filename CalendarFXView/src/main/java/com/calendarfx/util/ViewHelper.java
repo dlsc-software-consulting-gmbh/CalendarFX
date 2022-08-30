@@ -17,8 +17,8 @@
 package com.calendarfx.util;
 
 import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
-import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -28,152 +28,161 @@ import javafx.scene.effect.Light.Point;
 import javafx.stage.Screen;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 @SuppressWarnings("javadoc")
 public final class ViewHelper {
 
     public static double getTimeLocation(DayViewBase view, LocalTime time) {
-        return getTimeLocation(view, time, false);
+        return getTimeLocation(view, ZonedDateTime.of(view.getDate(), time, view.getZoneId()));
     }
 
     public static double getTimeLocation(DayViewBase view, LocalTime time, boolean prefHeight) {
-        LocalTime startTime = view.getStartTime();
-        LocalTime endTime = view.getEndTime();
+        return getTimeLocation(view, ZonedDateTime.of(view.getDate(), time, view.getZoneId()), prefHeight);
+    }
+
+    public static double getTimeLocation(DayViewBase view, ZonedDateTime time) {
+        return getTimeLocation(view, time, false);
+    }
+
+    public static double getTimeLocation(DayViewBase view, Instant instant) {
+        return getTimeLocation(view, ZonedDateTime.ofInstant(instant, view.getZoneId()), false);
+    }
+
+    public static double getTimeLocation(DayViewBase view, ZonedDateTime zonedTime, boolean prefHeight) {
+        if (view.isScrollingEnabled()) {
+            final Instant scrollInstant = view.getScrollTime().toInstant();
+            final double mpp = DayView.MILLIS_PER_HOUR / view.getHourHeight();
+            final long millis = zonedTime.toInstant().toEpochMilli() - scrollInstant.toEpochMilli();
+            return millis / mpp;
+        }
+
         double availableHeight = view.getHeight();
         if (prefHeight) {
             availableHeight = view.prefHeight(-1);
         }
-        EarlyLateHoursStrategy strategy = view.getEarlyLateHoursStrategy();
 
-        switch (strategy) {
+        long epochMilli = zonedTime.toInstant().toEpochMilli();
+
+        switch (view.getEarlyLateHoursStrategy()) {
             case SHOW:
-                long startNano = LocalTime.MIN.toNanoOfDay();
-                long endNano = LocalTime.MAX.toNanoOfDay();
+                ZonedDateTime startTime = view.getZonedDateTimeMin();
+                ZonedDateTime endTime = view.getZonedDateTimeMax();
 
-                double npp = (endNano - startNano) / availableHeight;
+                long startMillis = startTime.toInstant().toEpochMilli();
+                long endMillis = endTime.toInstant().toEpochMilli();
 
-                return ((int) ((time.toNanoOfDay() - startNano) / npp)) + .5;
+                double mpp = (endMillis - startMillis) / availableHeight;
+
+                return ((int) ((epochMilli - startMillis) / mpp)) + .5;
             case HIDE:
-                if (time.isBefore(startTime)) {
+                startTime = view.getZonedDateTimeStart();
+                endTime = view.getZonedDateTimeEnd();
+
+                if (zonedTime.isBefore(startTime)) {
                     return -1;
                 }
 
-                if (time.isAfter(endTime)) {
+                if (zonedTime.isAfter(endTime)) {
                     return availableHeight;
                 }
 
-                startNano = startTime.toNanoOfDay();
-                endNano = endTime.toNanoOfDay();
+                startMillis = startTime.toInstant().toEpochMilli();
+                endMillis = endTime.toInstant().toEpochMilli();
 
-                npp = (endNano - startNano) / availableHeight;
+                mpp = (endMillis - startMillis) / availableHeight;
 
-                return ((int) ((time.toNanoOfDay() - startNano) / npp)) + .5;
+                return ((int) ((epochMilli - startMillis) / mpp)) + .5;
             case SHOW_COMPRESSED:
-                long earlyHours = ChronoUnit.HOURS
-                        .between(LocalTime.MIN, startTime);
-                long lateHours = ChronoUnit.HOURS.between(endTime, LocalTime.MAX) + 1;
+                ZonedDateTime minTime = view.getZonedDateTimeMin();
+                ZonedDateTime maxTime = view.getZonedDateTimeMax();
+
+                startTime = view.getZonedDateTimeStart();
+                endTime = view.getZonedDateTimeEnd();
+
+                long earlyHours = ChronoUnit.HOURS.between(minTime,startTime);
+                long lateHours = ChronoUnit.HOURS.between(endTime, maxTime) + 1;
+
                 double hourHeightCompressed = view.getHourHeightCompressed();
                 double earlyHeight = hourHeightCompressed * earlyHours;
                 double lateHeight = hourHeightCompressed * lateHours;
 
-                if (time.isBefore(startTime)) {
+                if (zonedTime.isBefore(startTime)) {
                     /*
                      * Early compressed hours.
                      */
-                    startNano = LocalTime.MIN.toNanoOfDay();
-                    endNano = startTime.toNanoOfDay();
+                    startMillis = minTime.toInstant().toEpochMilli();
+                    endMillis = startTime.toInstant().toEpochMilli();
 
-                    npp = (endNano - startNano) / earlyHeight;
+                    mpp = (endMillis - startMillis) / earlyHeight;
 
-                    return ((int) ((time.toNanoOfDay() - startNano) / npp)) + .5;
-                } else if (time.isAfter(endTime)) {
+                    return ((int) ((epochMilli - startMillis) / mpp)) + .5;
+                } else if (zonedTime.isAfter(endTime)) {
                     /*
                      * Late compressed hours.
                      */
-                    startNano = endTime.toNanoOfDay();
-                    endNano = LocalTime.MAX.toNanoOfDay();
+                    startMillis = endTime.toInstant().toEpochMilli();
+                    endMillis = maxTime.toInstant().toEpochMilli();
 
-                    npp = (endNano - startNano) / lateHeight;
+                    mpp = (endMillis - startMillis) / lateHeight;
 
-                    return ((int) ((time.toNanoOfDay() - startNano) / npp))
-                            + (availableHeight - lateHeight) + .5;
+                    return ((int) ((epochMilli - startMillis) / mpp)) + (availableHeight - lateHeight) + .5;
                 } else {
                     /*
                      * Regular hours.
                      */
-                    startNano = startTime.toNanoOfDay();
-                    endNano = endTime.toNanoOfDay();
-                    npp = (endNano - startNano)
-                            / (availableHeight - earlyHeight - lateHeight);
+                    startMillis = startTime.toInstant().toEpochMilli();
+                    endMillis = endTime.toInstant().toEpochMilli();
+                    mpp = (endMillis - startMillis) / (availableHeight - earlyHeight - lateHeight);
 
-                    return earlyHeight
-                            + ((int) ((time.toNanoOfDay() - startNano) / npp)) + .5;
+                    return earlyHeight + ((int) ((epochMilli - startMillis) / mpp)) + .5;
                 }
             default:
                 return 0;
         }
     }
 
-    public static LocalDateTime getLocationTime(DayViewBase view, double y, boolean trim, boolean prefHeight) {
+    public static Instant getInstantAt(DayViewBase view, double y) {
 
-        /**
-         * When the early and late hours are not showing then we have to trim for sure.
-         */
-        if (view.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE)) {
-            trim = true;
-        }
-
-        LocalDate localDate = view.getDate();
+        ZonedDateTime zonedDateTime = view.getZonedDateTimeStart();
 
         double availableHeight = view.getHeight();
-        if (prefHeight) {
-            availableHeight = view.prefHeight(-1);
-        }
-
-        if (y < 0) {
-            if (trim) {
-                return LocalDateTime.of(view.getDate(), view.getStartTime());
-            }
-            y = availableHeight + y;
-            localDate = localDate.minusDays(1);
-        } else if (y > availableHeight) {
-            if (trim) {
-                return LocalDateTime.of(view.getDate(), view.getEndTime());
-            }
-            y = y - availableHeight;
-            localDate = localDate.plusDays(1);
-        }
-
-        LocalTime startTime = view.getStartTime();
-        LocalTime endTime = view.getEndTime();
 
         switch (view.getEarlyLateHoursStrategy()) {
             case SHOW:
-                long startNano = LocalTime.MIN.toNanoOfDay();
-                long endNano = LocalTime.MAX.toNanoOfDay();
+                long startMillis = view.getZonedDateTimeMin().toInstant().toEpochMilli();
+                long endMillis = view.getZonedDateTimeMax().toInstant().toEpochMilli();
 
-                double npp = (endNano - startNano) / availableHeight;
+                double mpp = (endMillis - startMillis) / availableHeight;
 
-                long nanos = Math.min(LocalTime.MAX.toNanoOfDay(), (long) (npp * y));
+                long millis = (long) (mpp * y) + startMillis;
 
-                return LocalDateTime.of(localDate, LocalTime.ofNanoOfDay(nanos));
+                return Instant.ofEpochMilli(millis);
             case HIDE:
-                startNano = startTime.toNanoOfDay();
-                endNano = endTime.toNanoOfDay();
+                ZonedDateTime startTime = view.getZonedDateTimeStart();
+                ZonedDateTime endTime = view.getZonedDateTimeEnd();
 
-                npp = (endNano - startNano) / availableHeight;
+                startMillis = startTime.toInstant().toEpochMilli();
+                endMillis = endTime.toInstant().toEpochMilli();
 
-                nanos = Math.min(endTime.toNanoOfDay(), (long) (npp * y) + startNano);
+                mpp = (endMillis - startMillis) / availableHeight;
 
-                return LocalDateTime.of(localDate, LocalTime.ofNanoOfDay(nanos));
+                millis = (long) (mpp * y) + startMillis;
+
+                return Instant.ofEpochMilli(millis);
             case SHOW_COMPRESSED:
-                long earlyHours = ChronoUnit.HOURS
-                        .between(LocalTime.MIN, startTime);
-                long lateHours = ChronoUnit.HOURS.between(endTime, LocalTime.MAX) + 1;
+                startTime = view.getZonedDateTimeStart();
+                endTime = view.getZonedDateTimeEnd();
+
+                ZonedDateTime minTime = view.getZonedDateTimeMin();
+                ZonedDateTime maxTime = view.getZonedDateTimeMax();
+
+                long earlyHours = ChronoUnit.HOURS.between(minTime,startTime);
+                long lateHours = ChronoUnit.HOURS.between(endTime, maxTime) + 1;
+
                 double hourHeightCompressed = view.getHourHeightCompressed();
                 double earlyHeight = hourHeightCompressed * earlyHours;
                 double lateHeight = hourHeightCompressed * lateHours;
@@ -182,42 +191,41 @@ public final class ViewHelper {
                     /*
                      * Early compressed hours.
                      */
-                    startNano = LocalTime.MIN.toNanoOfDay();
-                    endNano = startTime.toNanoOfDay();
+                    startMillis = minTime.toInstant().toEpochMilli();
+                    endMillis = startTime.toInstant().toEpochMilli();
 
-                    npp = (endNano - startNano) / earlyHeight;
+                    mpp = (endMillis - startMillis) / earlyHeight;
 
-                    nanos = Math.min(LocalTime.MAX.toNanoOfDay(), (long) (npp * y));
+                    millis = (long) (mpp * y) + startMillis;
 
-                    return LocalDateTime.of(localDate, LocalTime.ofNanoOfDay(nanos));
+                    return Instant.ofEpochMilli(millis);
                 } else if (y > availableHeight - lateHeight) {
                     /*
                      * Late compressed hours.
                      */
-                    startNano = endTime.toNanoOfDay();
-                    endNano = LocalTime.MAX.toNanoOfDay();
+                    startMillis = endTime.toInstant().toEpochMilli();
+                    endMillis = maxTime.toInstant().toEpochMilli();
 
-                    npp = (endNano - startNano) / lateHeight;
+                    mpp = (endMillis - startMillis) / lateHeight;
 
-                    nanos = Math.min(LocalTime.MAX.toNanoOfDay(), (long) (npp * (y - (availableHeight - lateHeight))) + startNano);
+                    millis = (long) (mpp * (y - (availableHeight - lateHeight))) + startMillis;
 
-                    return LocalDateTime.of(localDate, LocalTime.ofNanoOfDay(nanos));
+                    return Instant.ofEpochMilli(millis);
                 } else {
                     /*
                      * Regular hours.
                      */
-                    startNano = startTime.toNanoOfDay();
-                    endNano = endTime.toNanoOfDay();
+                    startMillis = startTime.toInstant().toEpochMilli();
+                    endMillis = endTime.toInstant().toEpochMilli();
 
-                    npp = (endNano - startNano)
-                            / (availableHeight - earlyHeight - lateHeight);
+                    mpp = (endMillis - startMillis) / (availableHeight - earlyHeight - lateHeight);
 
-                    nanos = Math.min(LocalTime.MAX.toNanoOfDay(), (long) (npp * (y - earlyHeight)) + startNano);
+                    millis = (long) (mpp * (y - earlyHeight)) + startMillis;
 
-                    return LocalDateTime.of(localDate, LocalTime.ofNanoOfDay(nanos));
+                    return Instant.ofEpochMilli(millis);
                 }
             default:
-                return LocalDateTime.of(localDate, LocalTime.MIN);
+                return zonedDateTime.toInstant();
         }
     }
 

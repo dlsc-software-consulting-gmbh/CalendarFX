@@ -32,8 +32,9 @@ import java.time.LocalTime;
 public class CalendarApp extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         CalendarView calendarView = new CalendarView();
+        calendarView.setEnableTimeZoneSupport(true);
 
         Calendar katja = new Calendar("Katja");
         Calendar dirk = new Calendar("Dirk");
@@ -42,8 +43,6 @@ public class CalendarApp extends Application {
         Calendar armin = new Calendar("Armin");
         Calendar birthdays = new Calendar("Birthdays");
         Calendar holidays = new Calendar("Holidays");
-
-        dirk.addEventHandler(evt -> System.out.println(evt));
 
         katja.setShortName("K");
         dirk.setShortName("D");

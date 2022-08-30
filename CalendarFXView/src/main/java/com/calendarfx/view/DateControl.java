@@ -30,10 +30,12 @@ import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -245,7 +247,7 @@ public abstract class DateControl extends CalendarFXControl {
             }
 
             Entry<Object> entry = new Entry<>(MessageFormat.format(Messages.getString("DateControl.DEFAULT_ENTRY_TITLE"), entryCounter++));
-            Interval interval = new Interval(time.toLocalDateTime(), time.toLocalDateTime().plusHours(1));
+            Interval interval = new Interval(time.toLocalDateTime(), time.toLocalDateTime().plusHours(1), time.getZone());
             entry.setInterval(interval);
 
             if (control instanceof AllDayView) {
@@ -390,7 +392,7 @@ public abstract class DateControl extends CalendarFXControl {
                     ZonedDateTime time = ZonedDateTime.now();
                     if (DateControl.this instanceof ZonedDateTimeProvider) {
                         ZonedDateTimeProvider provider = (ZonedDateTimeProvider) DateControl.this;
-                        time = provider.getZonedDateTimeAt(evt.getX(), evt.getY());
+                        time = provider.getZonedDateTimeAt(evt.getX(), evt.getY(), getZoneId());
                     }
                     ContextMenuParameter param = new ContextMenuParameter(evt, DateControl.this, calendar, time);
                     ContextMenu menu = callback.call(param);
@@ -401,6 +403,13 @@ public abstract class DateControl extends CalendarFXControl {
                 }
             }
         });
+
+        getAvailableZoneIds().add(ZoneId.of("Europe/Zurich"));
+        getAvailableZoneIds().add(ZoneId.of("Europe/Helsinki"));
+        getAvailableZoneIds().add(ZoneId.of("Europe/London"));
+        getAvailableZoneIds().add(ZoneId.of("US/Eastern"));
+        getAvailableZoneIds().add(ZoneId.of("US/Central"));
+        getAvailableZoneIds().add(ZoneId.of("US/Pacific"));
     }
 
     private final ObservableMap<Calendar, BooleanProperty> calendarVisibilityMap = FXCollections.observableHashMap();
@@ -719,7 +728,6 @@ public abstract class DateControl extends CalendarFXControl {
         PopOver datePopOver = new DatePopOver(this, date);
         datePopOver.show(owner);
     }
-
 
     private abstract static class ContextMenuParameterBase {
 
@@ -1790,8 +1798,7 @@ public abstract class DateControl extends CalendarFXControl {
         return todayProperty().get();
     }
 
-    private final BooleanProperty showToday = new SimpleBooleanProperty(
-            this, "showToday", true);
+    private final BooleanProperty showToday = new SimpleBooleanProperty(this, "showToday", true);
 
     /**
      * A flag used to indicate that the view will mark the area that represents
@@ -1853,6 +1860,30 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final LocalDate getDate() {
         return dateProperty().get();
+    }
+
+
+    private final BooleanProperty enableTimeZoneSupport = new SimpleBooleanProperty(this, "enableTimeZoneSupport", false);
+
+    public final boolean isEnableTimeZoneSupport() {
+        return enableTimeZoneSupport.get();
+    }
+
+    /**
+     * Enables or disables user options to work with different time zones.
+     *
+     * @see DateControl#zoneIdProperty()
+     * @see Entry#zoneIdProperty()
+     * @see Interval#getZoneId()
+     *
+     * @return true if time zone support is enabled
+     */
+    public final BooleanProperty enableTimeZoneSupportProperty() {
+        return enableTimeZoneSupport;
+    }
+
+    public final void setEnableTimeZoneSupport(boolean enableTimeZoneSupport) {
+        this.enableTimeZoneSupport.set(enableTimeZoneSupport);
     }
 
     private final ObjectProperty<ZoneId> zoneId = new SimpleObjectProperty<>(this, "zoneId", ZoneId.systemDefault());
@@ -1918,6 +1949,16 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final LocalTime getTime() {
         return timeProperty().get();
+    }
+
+    /**
+     * Returns the zoned date time version of the current time.
+     *
+     * @see #getTime()
+     * @return the zoned date time version of the current time property
+     */
+    public final ZonedDateTime getZonedDateTime() {
+        return ZonedDateTime.of(getDate(), getTime(), getZoneId());
     }
 
     private final ObjectProperty<LocalTime> startTime = new SimpleObjectProperty<>(this, "startTime", LocalTime.of(6, 0));
@@ -2412,7 +2453,7 @@ public abstract class DateControl extends CalendarFXControl {
         // bind maps
         Bindings.bindContentBidirectional(otherControl.getCalendarVisibilityMap(), getCalendarVisibilityMap());
 
-        // bind lists
+        // bind lists and sets
         Bindings.bindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
         Bindings.bindContentBidirectional(otherControl.getSelections(), getSelections());
         Bindings.bindContentBidirectional(otherControl.getWeekendDays(), getWeekendDays());
@@ -2434,6 +2475,8 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.bindBidirectional(otherControl.timeProperty(), timeProperty());
         Bindings.bindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
+        Bindings.bindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
+        Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
 
         if (bindDate) {
             Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
@@ -2577,6 +2620,27 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final Callback<Integer, Usage> getUsagePolicy() {
         return usagePolicy.get();
+    }
+
+    private final ListProperty<ZoneId> availableZoneIds = new SimpleListProperty<>(this, "availableZoneIds", FXCollections.observableArrayList());
+
+    public final ObservableList<ZoneId> getAvailableZoneIds() {
+        return availableZoneIds.get();
+    }
+
+    /**
+     * A list of time zones / time zone IDs that will be available to the user
+     * in the date controls. This list is pre-populated with a small subset of
+     * all available Zone IDs.
+     *
+     * @return the list of available time zone IDs
+     */
+    public final ListProperty<ZoneId> availableZoneIdsProperty() {
+        return availableZoneIds;
+    }
+
+    public final void setAvailableZoneIds(ObservableList<ZoneId> availableZoneIds) {
+        this.availableZoneIds.set(availableZoneIds);
     }
 
     private static final String DATE_CONTROL_CATEGORY = "Date Control";

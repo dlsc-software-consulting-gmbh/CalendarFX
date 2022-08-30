@@ -45,16 +45,8 @@ public final class VisualBoundsResolver {
 
         Range range = new Range();
 
-        if (dayView.isScrollingEnabled()) {
-
-            range.y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
-            range.y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
-
-        } else {
-
-            range.y1 = dayView.getLocation(entry.getStartTime());
-            range.y2 = dayView.getLocation(entry.getEndTime());
-        }
+        range.y1 = dayView.getLocation(entry.getStartAsZonedDateTime());
+        range.y2 = dayView.getLocation(entry.getEndAsZonedDateTime());
 
         if (entryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.COMPUTE_PREF_SIZE)) {
             range.y2 = range.y1 + entryView.prefHeight(contentWidth);

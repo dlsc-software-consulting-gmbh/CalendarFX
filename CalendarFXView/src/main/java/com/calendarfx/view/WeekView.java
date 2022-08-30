@@ -35,6 +35,7 @@ import javafx.util.Callback;
 import org.controlsfx.control.PropertySheet;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,13 +88,13 @@ public class WeekView extends DayViewBase {
     }
 
     @Override
-    public ZonedDateTime getZonedDateTimeAt(double x, double y) {
+    public ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         final WeekDayView view = getWeekDayViewAt(x);
         if (view != null) {
-            return ZonedDateTime.of(ViewHelper.getLocationTime(view, y, false, true), getZoneId());
+            return ZonedDateTime.ofInstant(ViewHelper.getInstantAt(view, y), getZoneId());
         }
 
-        return super.getZonedDateTimeAt(x, y);
+        return super.getZonedDateTimeAt(x, y, zoneId);
     }
 
     private WeekDayView getWeekDayViewAt(double x) {

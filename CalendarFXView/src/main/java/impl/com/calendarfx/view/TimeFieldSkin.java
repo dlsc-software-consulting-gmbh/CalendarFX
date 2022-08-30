@@ -72,6 +72,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
         separator.setMaxHeight(Double.MAX_VALUE);
 
         HBox box = new HBox();
+        box.getStyleClass().add("box");
         box.setFillHeight(true);
         box.getChildren().addAll(hourField, separator, minuteField);
 
