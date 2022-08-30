@@ -279,7 +279,7 @@ public class GoogleCalendarAppViewSkin extends SkinBase<GoogleCalendarAppView> {
             entry.fullDayProperty().addListener(weakListener);
             popOver.setOnHidden(evt -> entry.fullDayProperty().removeListener(weakListener));
 
-            return new GoogleEntryPopOverContentPane(entry, param.getDateControl().getCalendars());
+            return new GoogleEntryPopOverContentPane(entry, param.getDateControl().getCalendars(), param.getDateControl());
         }
 
         public PopOver getPopOver() {

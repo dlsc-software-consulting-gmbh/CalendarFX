@@ -20,6 +20,7 @@ import com.calendarfx.google.model.GoogleCalendar;
 import com.calendarfx.google.model.GoogleEntry;
 import com.calendarfx.google.model.GoogleEntryReminder;
 import com.calendarfx.google.model.GoogleEntryReminder.RemindMethod;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.popover.EntryDetailsView;
 import com.google.common.collect.Lists;
 import javafx.beans.Observable;
@@ -53,8 +54,8 @@ public class GoogleEntryDetailsView extends EntryDetailsView {
 
     private final GoogleEntry entry;
 
-    public GoogleEntryDetailsView(GoogleEntry entry) {
-        super(requireNonNull(entry));
+    public GoogleEntryDetailsView(GoogleEntry entry, DateControl dateControl) {
+        super(requireNonNull(entry), dateControl);
 
         this.entry = entry;
 
