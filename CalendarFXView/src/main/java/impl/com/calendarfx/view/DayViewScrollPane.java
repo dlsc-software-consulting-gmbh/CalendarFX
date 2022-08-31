@@ -16,6 +16,7 @@
 
 package impl.com.calendarfx.view;
 
+import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayViewBase;
@@ -49,7 +50,7 @@ public class DayViewScrollPane extends Pane {
     private LocalTime cachedStartTime;
 
     /**
-     * Constructs a new scrollpane for the given content node.
+     * Constructs a new scrollpane for the given day view.
      *
      * @param dayView the content node
      * @param scrollBar the scrollbar used for vertical scrolling
@@ -63,37 +64,35 @@ public class DayViewScrollPane extends Pane {
 
         scrollBar.setOrientation(Orientation.VERTICAL);
         scrollBar.maxProperty().bind(dayView.heightProperty().subtract(heightProperty()));
-        scrollBar.visibleAmountProperty()
-                .bind(Bindings.multiply(scrollBar.maxProperty(),
-                        Bindings.divide(heightProperty(), dayView.heightProperty())));
+        scrollBar.visibleAmountProperty().bind(Bindings.multiply(scrollBar.maxProperty(), Bindings.divide(heightProperty(), dayView.heightProperty())));
         scrollBar.valueProperty().addListener(it -> dayView.setTranslateY(scrollBar.getValue() * -1));
 
         // user clicks on scrollbar arrows -> scroll one hour
         scrollBar.unitIncrementProperty().bind(dayView.hourHeightProperty());
 
-        // user clicks in backround of scrollbar = block scroll -> scroll half a page
+        // user clicks in background of scrollbar = block scroll -> scroll half a page
         scrollBar.blockIncrementProperty().bind(heightProperty().divide(2));
 
         dayView.translateYProperty().addListener(it -> {
-            updateVisibleTimeRange();
+            updateVisibleTimeRange("translate-y changed");
             cachedStartTime = getStartTime();
             scrollBar.setValue(-dayView.getTranslateY());
         });
 
         getChildren().add(dayView);
 
-        heightProperty().addListener(it -> updateVisibleTimeRange());
+        heightProperty().addListener(it -> updateVisibleTimeRange("height of scrollpane changed"));
 
-        dayView.sceneProperty().addListener(it -> updateVisibleTimeRange());
-        dayView.heightProperty().addListener(it -> updateVisibleTimeRange());
-        dayView.visibleHoursProperty().addListener(it -> updateVisibleTimeRange());
+        dayView.sceneProperty().addListener(it -> updateVisibleTimeRange("scene changed"));
+        dayView.heightProperty().addListener(it -> updateVisibleTimeRange("height of day view changed"));
+        dayView.visibleHoursProperty().addListener(it -> updateVisibleTimeRange("visible hours changed"));
 
         dayView.earlyLateHoursStrategyProperty().addListener(it -> requestLayout());
         dayView.hourHeightCompressedProperty().addListener(it -> requestLayout());
         dayView.hoursLayoutStrategyProperty().addListener(it -> requestLayout());
         dayView.hourHeightProperty().addListener(it -> requestLayout());
 
-        updateVisibleTimeRange();
+        updateVisibleTimeRange("initial call");
 
         addEventFilter(ScrollEvent.SCROLL, evt -> {
             scrollY(evt.getDeltaY());
@@ -130,13 +129,15 @@ public class DayViewScrollPane extends Pane {
         dayView.setTranslateY(Math.min(0, Math.max(-y + getHeight() / 3, getMaxTranslateY(insets))));
     }
 
-    private void updateVisibleTimeRange() {
+    private void updateVisibleTimeRange(String reason) {
+        LoggingDomain.VIEW.fine("reason for updating visible time range: " + reason);
+
         if (dayView.getScene() == null || dayView.getHeight() == 0) {
             return;
         }
 
-        final LocalTime startTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY(), dayView.getZoneId()).toLocalTime();
-        final LocalTime endTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY() + getHeight(), dayView.getZoneId()).toLocalTime();
+        final LocalTime startTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY()).toLocalTime();
+        final LocalTime endTime = dayView.getZonedDateTimeAt(0, -dayView.getTranslateY() + getHeight()).toLocalTime();
 
         this.startTime.set(startTime);
         this.endTime.set(endTime);
@@ -190,7 +191,6 @@ public class DayViewScrollPane extends Pane {
         }
 
         Insets insets = getInsets();
-
 
         final double ph = dayView.prefHeight(-1);
         dayView.resizeRelocate(
