@@ -71,10 +71,6 @@ public class AgendaView extends DateControl {
     private static final String AGENDA_CATEGORY = "Agenda View";
 
     private final ListView<AgendaEntry> listView = new ListView<>();
-    private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(
-            this,
-            "formatter",
-            DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
 
     /**
      * Constructs a new agenda view.
@@ -229,6 +225,8 @@ public class AgendaView extends DateControl {
     public final void setCellFactory(Callback<AgendaView, ? extends AgendaEntryCell> cellFactory) {
         cellFactoryProperty().set(cellFactory);
     }
+
+    private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(this, "formatter", DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
 
     /**
      * Gets the DateTimeFormatter property, which is use to provide the format on the TimeScale Labels. By default it
