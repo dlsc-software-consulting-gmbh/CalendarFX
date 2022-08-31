@@ -92,23 +92,34 @@ public class DayPage extends PageBase {
         return toolBarControls;
     }
 
-    private Node createToolBarControls() {
-        ToggleButton agendaOnlyButton = new ToggleButton();
-        ToggleButton dayOnlyButton = new ToggleButton();
-        ToggleButton standardButton = new ToggleButton();
-
+    /**
+     * Creates the node used for the page-specific part of the calendar
+     * view.
+     *
+     * @return the toolbar controls specific for this page
+     */
+    protected Node createToolBarControls() {
         FontIcon listIcon = new FontIcon(FontAwesome.LIST);
         listIcon.getStyleClass().addAll("button-icon");
+
+        ToggleButton agendaOnlyButton = new ToggleButton();
+        agendaOnlyButton.setMaxHeight(Double.MAX_VALUE);
         agendaOnlyButton.setGraphic(listIcon);
         agendaOnlyButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
         FontIcon calendarIcon = new FontIcon(FontAwesome.CALENDAR);
         calendarIcon.getStyleClass().addAll("button-icon");
+
+        ToggleButton dayOnlyButton = new ToggleButton();
+        dayOnlyButton.setMaxHeight(Double.MAX_VALUE);
         dayOnlyButton.setGraphic(calendarIcon);
         dayOnlyButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
         FontIcon standardIcon = new FontIcon(FontAwesome.COLUMNS);
         standardIcon.getStyleClass().addAll("button-icon");
+
+        ToggleButton standardButton = new ToggleButton();
+        standardButton.setMaxHeight(Double.MAX_VALUE);
         standardButton.setGraphic(standardIcon);
         standardButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
@@ -119,6 +130,7 @@ public class DayPage extends PageBase {
         SegmentedButton segmentedButton = new SegmentedButton(agendaOnlyButton, standardButton, dayOnlyButton);
         segmentedButton.getStyleClass().add("layout-button");
         segmentedButton.visibleProperty().bind(showDayPageLayoutControlsProperty());
+        segmentedButton.setMaxHeight(Double.MAX_VALUE);
 
         updateDayPageLayoutButtons(agendaOnlyButton, dayOnlyButton, standardButton);
         dayPageLayout.addListener((observable, oldValue, newValue) -> updateDayPageLayoutButtons(agendaOnlyButton, dayOnlyButton, standardButton));
@@ -127,11 +139,13 @@ public class DayPage extends PageBase {
         dayOnlyButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_MAXIMIZE_DAY_VIEW")));
         standardButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_STANDARD_LAYOUT")));
 
-        ToggleButton layoutButton = new ToggleButton();
-        layoutButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_LAYOUT")));
-        layoutButton.setId("layout-button");
         FontIcon layoutIcon = new FontIcon(FontAwesome.TABLE);
         layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon");
+
+        ToggleButton layoutButton = new ToggleButton();
+        layoutButton.setMaxHeight(Double.MAX_VALUE);
+        layoutButton.setTooltip(new Tooltip(Messages.getString("DayPage.TOOLTIP_LAYOUT")));
+        layoutButton.setId("layout-button");
         layoutButton.setGraphic(layoutIcon);
         layoutButton.setSelected(getLayout().equals(Layout.SWIMLANE));
         layoutButton.setOnAction(evt -> {

@@ -78,6 +78,7 @@ public class YearPage extends PageBase {
         displayModeProperty().addListener(it -> updateDisplayModeIcon());
 
         displayModeButton = new ToggleButton();
+        displayModeButton.setMaxHeight(Double.MAX_VALUE);
         displayModeButton.setId("display-mode-button");
         displayModeButton.setTooltip(new Tooltip(Messages.getString("YearPage.TOOLTIP_DISPLAY_MODE")));
         displayModeButton.setSelected(getDisplayMode().equals(DisplayMode.COLUMNS));

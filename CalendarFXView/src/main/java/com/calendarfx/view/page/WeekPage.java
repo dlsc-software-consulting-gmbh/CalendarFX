@@ -62,11 +62,13 @@ public class WeekPage extends PageBase {
 
         this.detailedWeekView = new DetailedWeekView();
 
-        ToggleButton layoutButton = new ToggleButton();
-        layoutButton.setTooltip(new Tooltip(Messages.getString("WeekPage.TOOLTIP_LAYOUT")));
-        layoutButton.setId("layout-button");
         FontIcon layoutIcon = new FontIcon(FontAwesome.TABLE);
         layoutIcon.getStyleClass().addAll("button-icon", "layout-button-icon");
+
+        ToggleButton layoutButton = new ToggleButton();
+        layoutButton.setMaxHeight(Double.MAX_VALUE);
+        layoutButton.setTooltip(new Tooltip(Messages.getString("WeekPage.TOOLTIP_LAYOUT")));
+        layoutButton.setId("layout-button");
         layoutButton.setGraphic(layoutIcon);
         layoutButton.setSelected(getLayout().equals(Layout.SWIMLANE));
         layoutButton.setOnAction(evt -> {

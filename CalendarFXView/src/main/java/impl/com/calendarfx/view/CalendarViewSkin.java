@@ -125,22 +125,26 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         TrayPane trayPane = new TrayPane();
         this.trayButton = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY"));
         this.trayButton.setId("show-tray-button");
-        this.addCalendarButton = new Button();
-        this.addCalendarButton.setId("add-calendar-button");
-        this.addCalendarButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        this.trayButton.setMaxHeight(Double.MAX_VALUE);
 
         FontIcon addIcon = new FontIcon(FontAwesome.PLUS);
         addIcon.getStyleClass().addAll("button-icon", "add-calendar-button-icon");
-        this.addCalendarButton.setGraphic(addIcon);
 
+        this.addCalendarButton = new Button();
+        this.addCalendarButton.setId("add-calendar-button");
+        this.addCalendarButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        this.addCalendarButton.setMaxHeight(Double.MAX_VALUE);
+        this.addCalendarButton.setGraphic(addIcon);
         this.addCalendarButton.setOnAction(evt -> view.createCalendarSource());
+
+        FontIcon printIcon = new FontIcon(FontAwesome.PRINT);
+        printIcon.getStyleClass().addAll("button-icon", "print-button-icon");
+
         this.printButton = new Button();
         this.printButton.setId("print-button");
         this.printButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.printButton.setOnAction(evt -> print());
-
-        FontIcon printIcon = new FontIcon(FontAwesome.PRINT);
-        printIcon.getStyleClass().addAll("button-icon", "print-button-icon");
+        this.printButton.setMaxHeight(Double.MAX_VALUE);
         this.printButton.setGraphic(printIcon);
 
         this.leftMasterDetailPane = new MasterDetailPane(Side.LEFT);
@@ -183,6 +187,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
          * control 's properties change.
          */
         leftToolBarBox = new HBox();
+        leftToolBarBox.getStyleClass().add("left-toolbar-container");
         leftToolBarBox.setSpacing(5);
 
         buildLeftToolBarBox();

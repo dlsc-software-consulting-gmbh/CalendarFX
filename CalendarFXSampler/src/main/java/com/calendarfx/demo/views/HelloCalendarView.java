@@ -22,6 +22,7 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.CalendarView.Page;
 import com.calendarfx.view.DateControl;
 
 import java.time.LocalDate;
@@ -43,7 +44,7 @@ public class HelloCalendarView extends CalendarFXDateControlSample {
         CalendarSource calendarSource = new CalendarSource("My Calendars");
         calendarSource.getCalendars().add(new HelloCalendar());
 
-        calendarView = new CalendarView();
+        calendarView = new CalendarView(Page.values());
         calendarView.getCalendarSources().add(calendarSource);
 
         return calendarView;
