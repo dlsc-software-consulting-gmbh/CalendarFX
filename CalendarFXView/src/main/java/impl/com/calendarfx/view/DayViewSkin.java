@@ -180,15 +180,16 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         loadData("initial data loading");
 
-        view.heightProperty().addListener(it -> {
+        InvalidationListener loadDataListener = it -> {
             if (view.isScrollingEnabled()) {
                 // run later, or we cause flickering
                 Platform.runLater(() -> {
                     loadData("height changed");
                 });
             }
-        });
-        view.hourHeightProperty().addListener(it -> loadData("hour height changed"));
+        };
+        view.heightProperty().addListener(loadDataListener);
+        view.hourHeightProperty().addListener(loadDataListener);
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(view.widthProperty());
