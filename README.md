@@ -4,7 +4,6 @@ A Java framework for creating sophisticated calendar views based on JavaFX. A de
 [![Apache-2 license](https://img.shields.io/badge/license-Apache--2-%230778B9.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Build Status](https://travis-ci.com/dlsc-software-consulting-gmbh/CalendarFX.svg?branch=master-11)](https://travis-ci.com/dlsc-software-consulting-gmbh/CalendarFX)
 [![Maven Central](https://img.shields.io/maven-central/v/com.calendarfx/view)](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) 
-[![Download](https://api.bintray.com/packages/dlsc-oss/repository/CalendarFX/images/download.svg)](https://bintray.com/dlsc-oss/repository/CalendarFX)
 [![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/dlsc-software-consulting-gmbh/CalendarFX)](https://lgtm.com/projects/g/dlsc-software-consulting-gmbh/CalendarFX/alerts)
 [![LGTM Grade](https://img.shields.io/lgtm/grade/java/github/dlsc-software-consulting-gmbh/CalendarFX)](https://lgtm.com/projects/g/dlsc-software-consulting-gmbh/CalendrFX/context:java)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=bugs)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_afterburner.fx)
@@ -22,7 +21,7 @@ For a quick online demo please checkout [JPro](https://jpro.one) and their [Cale
 ![Screenshot](screenshot.png "Screenshot")
 
 # Repository Coordinates
-CalendarFX can be found on [Bintray](https://bintray.com/dlsc-oss/repository/CalendarFX) and [The Central Repository](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) as `com.calendarfx:view`.
+CalendarFX can be found on [The Central Repository](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) as `com.calendarfx:view`.
 
 # Modules
 
