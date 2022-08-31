@@ -143,6 +143,8 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
                 entryRecurrenceRuleChanged(evt);
             } else if (eventType.equals(CalendarEvent.ENTRY_CALENDAR_CHANGED)) {
                 entryCalendarChanged(evt);
+            } else if (eventType.equals(CalendarEvent.ENTRY_TITLE_CHANGED)) {
+                entryTitleChanged(evt);
             } else if (eventType.equals(CALENDAR_CHANGED)) {
                 calendarChanged(evt.getCalendar());
             }
@@ -159,6 +161,9 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
     }
 
     protected void entryCalendarChanged(CalendarEvent evt) {
+    }
+
+    protected void entryTitleChanged(CalendarEvent evt) {
     }
 
     protected void calendarChanged(Calendar calendar) {

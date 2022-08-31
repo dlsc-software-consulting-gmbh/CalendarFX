@@ -115,13 +115,17 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
     @Override
     protected void entryRecurrenceRuleChanged(CalendarEvent evt) {
-        updateList(evt,
-                "entry recurrence rule changed, entry = " + evt.getEntry());
+        updateList(evt, "entry recurrence rule changed, entry = " + evt.getEntry());
     }
 
     @Override
     protected void entryFullDayChanged(CalendarEvent evt) {
         updateList(evt, "entry full day changed changed, entry = " + evt.getEntry());
+    }
+
+    @Override
+    protected void entryTitleChanged(CalendarEvent evt) {
+        updateList(evt, "entry title changed changed, entry = " + evt.getEntry());
     }
 
     @Override
