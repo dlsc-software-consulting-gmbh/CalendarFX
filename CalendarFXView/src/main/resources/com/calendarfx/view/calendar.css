@@ -336,7 +336,12 @@
  * Styles needed by the year view.
  */
 
-.year-view .container {
+.year-view .scroll-pane {
+    -fx-padding: 0px;
+    -fx-background-insets: 0px;
+}
+
+.year-view .scroll-pane .container {
     -fx-background-color: white;
 }
 
@@ -355,11 +360,11 @@
 }
 
 .year-month-view > .container > .header > .month-header > .month-label {
-    -fx-font-size: 18.0px;
+    -fx-font-size: 18px;
 }
 
 .year-month-view > .container > .header > .year-header > .year-label {
-    -fx-font-size: 18.0px;
+    -fx-font-size: 18px;
 }
 
 .year-month-view > .container {
@@ -409,7 +414,7 @@
 .year-month-view > .container > .week-label,
 .year-month-view > .container > .day-of-week-label {
     -fx-text-fill: gray;
-    -fx-font-size: 10.0px;
+    -fx-font-size: 10px;
 }
 
 .year-month-view > .container > .week-label {
@@ -428,7 +433,11 @@
 }
 
 .year-month-view > .container > .month-day {
-    -fx-padding: .2em .3em .2em .3em;
+    -size: 2em;
+    -fx-pref-width: -size;
+    -fx-pref-height: -size;
+    -fx-min-width: -size;
+    -fx-min-height: -size;
 }
 
 .year-month-view > .container > .day-of-month-label {
@@ -472,12 +481,15 @@
     -fx-background-color: lightgray;
     -fx-text-fill: black;
     -fx-font-weight: bold;
+    -fx-background-radius: 10em;
 }
 
 .year-month-view > .container > .today {
     -fx-background-color: -today-fill-color;
-    -fx-text-fill: white;
+    -fx-text-fill: white !important;
     -fx-font-weight: bold;
+    -fx-background-radius: 10em;
+    -fx-opacity: 1 !important;
 }
 
 /* 
@@ -1428,7 +1440,7 @@
 .popover-header > .title {
     -fx-padding: 0.0;
     -fx-text-fill: green;
-    -fx-font-size: 16.0px;
+    -fx-font-size: 16px;
     -fx-background-color: null;
     -fx-border-color: null;
 }

@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 import static javafx.geometry.Pos.CENTER;
 
 /**
- * Displays a given month in a given year. The view can be configured in many
+ * Displays a given month of a given year. The view can be configured in many
  * ways:
  * <ul>
  * <li>Show / hide the name of the month</li>
@@ -67,7 +67,6 @@ public class YearMonthView extends MonthViewBase {
      */
     public YearMonthView() {
         getStyleClass().add("year-month-view");
-
         setCellFactory(view -> new DateCell());
     }
 
@@ -140,8 +139,7 @@ public class YearMonthView extends MonthViewBase {
         return cellFactoryProperty().get();
     }
 
-    private final BooleanProperty showMonth = new SimpleBooleanProperty(this,
-            "showMonth", true);
+    private final BooleanProperty showMonth = new SimpleBooleanProperty(this, "showMonth", true);
 
     /**
      * Show or hide the name of the month.
@@ -171,8 +169,7 @@ public class YearMonthView extends MonthViewBase {
         return showMonthProperty().get();
     }
 
-    private final BooleanProperty showYear = new SimpleBooleanProperty(this,
-            "showYear", true);
+    private final BooleanProperty showYear = new SimpleBooleanProperty(this, "showYear", true);
 
     /**
      * Show or hide the year.
@@ -202,8 +199,7 @@ public class YearMonthView extends MonthViewBase {
         return showYearProperty().get();
     }
 
-    private final BooleanProperty showTodayButton = new SimpleBooleanProperty(
-            this, "showTodayButton", true);
+    private final BooleanProperty showTodayButton = new SimpleBooleanProperty(this, "showTodayButton", true);
 
     /**
      * Show or hide a button to quickly go to today's date.
@@ -233,8 +229,7 @@ public class YearMonthView extends MonthViewBase {
         return showTodayButtonProperty().get();
     }
 
-    private final BooleanProperty showMonthArrows = new SimpleBooleanProperty(
-            this, "showMonthArrows", true);
+    private final BooleanProperty showMonthArrows = new SimpleBooleanProperty(this, "showMonthArrows", true);
 
     /**
      * Shows or hides the arrows to change the month.
@@ -264,8 +259,7 @@ public class YearMonthView extends MonthViewBase {
         return showMonthArrowsProperty().get();
     }
 
-    private final BooleanProperty showYearArrows = new SimpleBooleanProperty(
-            this, "showYearArrows", true);
+    private final BooleanProperty showYearArrows = new SimpleBooleanProperty(this, "showYearArrows", true);
 
     /**
      * Shows or hides the arrows to change the year.
@@ -295,8 +289,7 @@ public class YearMonthView extends MonthViewBase {
         return showYearArrowsProperty().get();
     }
 
-    private final BooleanProperty showUsageColors = new SimpleBooleanProperty(
-            this, "showUsageColors", false);
+    private final BooleanProperty showUsageColors = new SimpleBooleanProperty(this, "showUsageColors", false);
 
     /**
      * Show or hide usage colors that are based on the number of entries on a

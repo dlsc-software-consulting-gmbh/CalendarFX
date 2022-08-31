@@ -477,7 +477,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
 
             // year month view
             yearMonthView = getSkinnable().getYearMonthView();
-            yearMonthView.setShowToday(false);
+            yearMonthView.setShowToday(true);
             yearMonthView.setShowTodayButton(false);
             yearMonthView.setId("date-picker");
             yearMonthView.setSelectionMode(SINGLE);

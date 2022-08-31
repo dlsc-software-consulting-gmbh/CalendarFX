@@ -115,8 +115,7 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
 
         final InvalidationListener updateViewListener = evt -> updateView();
         view.yearMonthProperty().addListener(evt -> {
-            if (displayedYearMonth == null
-                    || !displayedYearMonth.equals(view.getYearMonth())) {
+            if (displayedYearMonth == null || !displayedYearMonth.equals(view.getYearMonth())) {
                 updateView();
             }
         });
@@ -437,16 +436,14 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
             }
         }
 
-        // update the days (1 .. 31) plus padding days
+        // update the days (1 to 31) plus padding days
 
         final DayOfWeek firstDayOfWeek = getSkinnable().getFirstDayOfWeek();
-        LocalDate date = Util.adjustToFirstDayOfWeek(getLoadStartDate(),
-                firstDayOfWeek);
+        LocalDate date = Util.adjustToFirstDayOfWeek(getLoadStartDate(), firstDayOfWeek);
 
         if (getSkinnable().isShowWeekNumbers()) {
             for (int i = 0; i < 6; i++) {
-                int weekOfYear = date
-                        .get(getSkinnable().getWeekFields().weekOfYear());
+                int weekOfYear = date.get(getSkinnable().getWeekFields().weekOfYear());
                 weekNumberLabels[i].setText(Integer.toString(weekOfYear));
                 date = date.plusWeeks(1);
             }
@@ -460,19 +457,15 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
 
                 YearMonthView.DateCell cell = cellsMap.get(getKey(row, col));
                 cell.setDate(localDate);
-                cell.getStyleClass().removeAll(TODAY, DAY_OF_MONTH_LABEL,
-                        DAY_NOT_OF_MONTH_LABEL, WEEKEND_DAY,
-                        SELECTED_MONTH_DATE);
+                cell.getStyleClass().removeAll(TODAY, DAY_OF_MONTH_LABEL, DAY_NOT_OF_MONTH_LABEL, WEEKEND_DAY, SELECTED_MONTH_DATE);
 
                 if (getSkinnable().getSelectedDates().contains(date)) {
                     cell.getStyleClass().add(SELECTED_MONTH_DATE); // $NON-NLS-1$
                 }
 
-                if (YearMonth.from(date)
-                        .equals(YearMonth.from(getSkinnable().getDate()))) {
-                    if (getSkinnable().isShowToday()
-                            && date.equals(getSkinnable().getToday())) {
-                        cell.getStyleClass().add(TODAY);
+                if (YearMonth.from(date).equals(YearMonth.from(getSkinnable().getDate()))) {
+                    if (getSkinnable().isShowToday() && date.equals(getSkinnable().getToday())) {
+                        cell.getStyleClass().addAll(DAY_OF_MONTH_LABEL, TODAY);
                     } else {
                         cell.getStyleClass().add(DAY_OF_MONTH_LABEL); // $NON-NLS-1$
                     }

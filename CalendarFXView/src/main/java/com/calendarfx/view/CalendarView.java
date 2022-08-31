@@ -92,7 +92,7 @@ public class CalendarView extends DateControl {
     private PrintView printView;
 
     public CalendarView() {
-        this(DAY, WEEK, MONTH);
+        this(Page.values());
     }
 
     /**
