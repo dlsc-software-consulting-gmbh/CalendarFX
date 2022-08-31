@@ -29,7 +29,8 @@
     -style7-color: rgba(174.0, 102.0, 62.0, 0.9);
 
     -weekend-fill-color: rgb(245.0, 245.0, 245.0);
-    -today-fill-color: firebrick;
+    -today-fill-color: rgb(232, 77, 62);
+    -today-stroke-color: rgb(232, 77, 62);
 
     -usage-very-low-color: lightgreen;
     -usage-low-color: green;
@@ -124,6 +125,9 @@
     -fx-padding: 10px;
 }
 
+.calendar-page > .container > .header {
+}
+
 .calendar-page > .container > .header > .date-text {
     -fx-font-size: 2.2em;
 }
@@ -145,15 +149,15 @@
  */
 
 .day-page > .container > .content > .left-side > .header {
-    -fx-background-color: gray;
-    -fx-background-radius: 6px;
+    -fx-background-color: rgba(0, 0, 0, .1);
+    -fx-background-radius: 4px;
     -fx-padding: 0 1em 0 1em;
 }
 
 .day-page > .container > .content > .left-side > .header > .today-label {
-    -fx-font-family: Arial;
-    -fx-font-size: 12.0em;
-    -fx-text-fill: white;
+    -fx-font-size: 8.0em;
+    -fx-text-fill: -fx-text-background-color;
+    -fx-opacity: 0.9;
 }
 
 .day-page > .container > .content > .left-side > .agenda-view {
@@ -172,22 +176,23 @@
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .week-label,
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-of-week-label {
-    -fx-text-fill: white;
-    -fx-font-size: 10.0px;
+    -fx-text-fill: -fx-text-background-color;
+    -fx-font-size: 10px;
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .week-label {
-    -fx-padding: 0.0 2.0 0.0 0.0;
+    -fx-padding: 0.0 8.0 0.0 0.0;
     -fx-min-width: 2.0em;
     -fx-min-height: 2.0em;
+    -fx-text-fill: rgba(0, 0, 0, .5);
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .current-date-label {
-    -fx-text-fill: firebrick;
+    -fx-text-fill: -today-stroke-color;
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .current-date-border {
-    -fx-border-color: transparent transparent firebrick transparent;
+    -fx-border-color: transparent transparent -today-stroke-color transparent;
     -fx-border-width: 2.0;
 }
 
@@ -196,18 +201,19 @@
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-of-month-label {
-    -fx-text-fill: white;
+    -fx-text-fill: -fx-text-background-color;
     -fx-font-size: .9em;
+    -fx-opacity: 0.8;
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-not-of-month-label {
-    -fx-text-fill: lightgray;
+    -fx-text-fill: -fx-text-background-color;
+    -fx-opacity: .5;
     -fx-text-stroke: black;
-    -fx-font-size: .8em;
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .weekend-day {
-    -fx-background-color: rgba(0, 0, 0, .2);
+    -fx-background-color: transparent;
 }
 
 /*
@@ -413,11 +419,11 @@
 }
 
 .year-month-view > .container > .current-date-label {
-    -fx-text-fill: firebrick;
+    -fx-text-fill: -today-stroke-color;
 }
 
 .year-month-view > .container > .current-date-border {
-    -fx-border-color: transparent transparent firebrick transparent;
+    -fx-border-color: transparent transparent -today-stroke-color transparent;
     -fx-border-width: 2.0;
 }
 
@@ -504,7 +510,7 @@
 .month-view > .container > .today {
     -fx-background-color: lavenderblush;
     -fx-text-fill: red;
-    -fx-border-color: firebrick transparent transparent transparent;
+    -fx-border-color: -today-stroke-color transparent transparent transparent;
 }
 
 .month-view > .container > .day > .entries-pane {
@@ -573,7 +579,7 @@
 }
 
 .month-view > .container > .day > .header > .today-label {
-    -fx-text-fill: firebrick;
+    -fx-text-fill: -today-stroke-color;
     -fx-background-insets: 0.0 4.0px 0.0 4.0px;
     -fx-alignment: center-right;
 }
@@ -614,7 +620,7 @@
 }
 
 .day-view > .current-time-line {
-    -fx-stroke: firebrick;
+    -fx-stroke: -today-stroke-color;
 }
 
 .day-view > .early-hour-line,
@@ -628,8 +634,8 @@
 }
 
 .day-view > .current-time-circle {
-    -fx-stroke: firebrick;
-    -fx-fill: firebrick;
+    -fx-stroke: -today-fill-color;
+    -fx-fill: -today-stroke-color;
 }
 
 /*
@@ -672,7 +678,7 @@
 
 .time-scale > .current-time-label {
     -fx-font-size: 0.8em;
-    -fx-text-fill: firebrick;
+    -fx-text-fill: -today-stroke-color;
 }
 
 .time-scale > .early-hour-label,
@@ -695,7 +701,7 @@
 }
 
 .weekday-header-view > .container > .today {
-    -fx-text-fill: firebrick;
+    -fx-text-fill: -today-fill-color;
 }
 
 /* 
@@ -716,7 +722,7 @@
 }
 
 .all-day-view > .container > .today {
-    -fx-border-color: transparent transparent firebrick transparent;
+    -fx-border-color: transparent transparent -today-fill-color transparent;
     -fx-background-color: lavenderblush;
 }
 
@@ -764,7 +770,7 @@
 }
 
 .agenda-view-list-cell > .container > .header.today {
-    -fx-border-color: transparent transparent firebrick transparent;
+    -fx-border-color: transparent transparent -today-fill-color transparent;
 }
 
 .agenda-view-list-cell > .container > .header > .date-label,
@@ -777,7 +783,7 @@
 
 .agenda-view-list-cell > .container > .header > .today,
 .agenda-view-list-cell > .container > .header > .today {
-    -fx-text-fill: firebrick;
+    -fx-text-fill: -today-fill-color;
 }
 
 .agenda-view-list-cell > .container > .body {
@@ -1570,7 +1576,7 @@
     -fx-alignment: center;
     -fx-text-alignment: center;
     -fx-font-size: 1.1em;
-    -fx-border-color: firebrick;
+    -fx-border-color: -today-fill-color;
     -fx-border-width: 0.0 0.0 2.0 0.0;
 }
 
