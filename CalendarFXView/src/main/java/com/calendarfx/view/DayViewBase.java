@@ -941,7 +941,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public String getDescription() {
-                return "Early / Late Hours Layout Strategy";
+                return "Show current time marker.";
             }
 
             @Override
