@@ -20,6 +20,7 @@ import com.calendarfx.view.Messages;
 import com.calendarfx.view.page.PageBase;
 import impl.com.calendarfx.view.NavigateDateView;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.BorderPane;
@@ -54,6 +55,8 @@ public abstract class PageBaseSkin<C extends PageBase> extends SkinBase<C> {
 
         BorderPane.setMargin(navigateDateButton, new Insets(10));
         BorderPane.setMargin(dateText, new Insets(10));
+        BorderPane.setAlignment(navigateDateButton, Pos.CENTER_LEFT);
+        BorderPane.setAlignment(dateText, Pos.CENTER_RIGHT);
 
         headerPane = new BorderPane();
         headerPane.getStyleClass().add("header");
