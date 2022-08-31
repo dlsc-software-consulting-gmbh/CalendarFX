@@ -36,6 +36,10 @@
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
         </dependency>
+        <dependency>
+            <groupId>fr.brouillard.oss</groupId>
+            <artifactId>cssfx</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
