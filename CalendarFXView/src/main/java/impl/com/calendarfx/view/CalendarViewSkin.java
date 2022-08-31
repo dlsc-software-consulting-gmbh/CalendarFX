@@ -181,6 +181,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         toolBarGridPane.setMinWidth(0);
         toolBarGridPane.getColumnConstraints().addAll(leftColumn, centerColumn, rightColumn);
         toolBarGridPane.setId("toolbar");
+        toolBarGridPane.getStyleClass().add("tool-bar");
 
         /*
          * Toolbar box on the left - hand side.Gets rebuild when some of the
