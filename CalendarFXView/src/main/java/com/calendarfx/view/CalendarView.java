@@ -419,8 +419,8 @@ public class CalendarView extends DateControl {
     /**
      * Returns the view for the currently selected {@link Page}.
      *
-     * @see #selectedPageProperty()
      * @return the selected page view
+     * @see #selectedPageProperty()
      */
     public final PageBase getSelectedPageView() {
         return getPageView(getSelectedPage());
@@ -744,28 +744,44 @@ public class CalendarView extends DateControl {
      * Switches the view to the {@link DayPage}.
      */
     public final void showDayPage() {
-        selectedPage.set(DAY);
+        if (getAvailablePages().contains(DAY)) {
+            selectedPage.set(DAY);
+        } else {
+            throw new UnsupportedOperationException("calendar does not support day view");
+        }
     }
 
     /**
      * Switches the view to the {@link WeekPage}.
      */
     public final void showWeekPage() {
-        selectedPage.set(WEEK);
+        if (getAvailablePages().contains(WEEK)) {
+            selectedPage.set(WEEK);
+        } else {
+            throw new UnsupportedOperationException("calendar does not support week view");
+        }
     }
 
     /**
      * Switches the view to the {@link MonthPage}.
      */
     public final void showMonthPage() {
-        selectedPage.set(MONTH);
+        if (getAvailablePages().contains(MONTH)) {
+            selectedPage.set(MONTH);
+        } else {
+            throw new UnsupportedOperationException("calendar does not support month view");
+        }
     }
 
     /**
      * Switches the view to the {@link YearPage}.
      */
     public final void showYearPage() {
-        selectedPage.set(YEAR);
+        if (getAvailablePages().contains(YEAR)) {
+            selectedPage.set(YEAR);
+        } else {
+            throw new UnsupportedOperationException("calendar does not support year view");
+        }
     }
 
     /**
