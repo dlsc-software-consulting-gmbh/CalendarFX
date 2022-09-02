@@ -20,14 +20,14 @@ import com.calendarfx.google.model.GoogleEntry;
 import com.calendarfx.google.service.GoogleConnector;
 import com.calendarfx.view.popover.EntryPopOverPane;
 import com.google.code.geocoder.model.GeocoderGeometry;
-import com.lynden.gmapsfx.GoogleMapView;
-import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.lynden.gmapsfx.javascript.object.GoogleMap;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.MapOptions;
-import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.dlsc.gmapsfx.GoogleMapView;
+import com.dlsc.gmapsfx.MapComponentInitializedListener;
+import com.dlsc.gmapsfx.javascript.object.GoogleMap;
+import com.dlsc.gmapsfx.javascript.object.LatLong;
+import com.dlsc.gmapsfx.javascript.object.MapOptions;
+import com.dlsc.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.dlsc.gmapsfx.javascript.object.Marker;
+import com.dlsc.gmapsfx.javascript.object.MarkerOptions;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -49,7 +49,7 @@ public class GoogleEntryGMapsFXView extends EntryPopOverPane implements MapCompo
         this.entry = entry;
         this.entry.locationProperty().addListener(obs -> updateLocation());
 
-        this.mapView.addMapInializedListener(this);
+        this.mapView.addMapInitializedListener(this);
         this.mapView.getStyleClass().add("map");
         this.mapView.setMouseTransparent(true);
 

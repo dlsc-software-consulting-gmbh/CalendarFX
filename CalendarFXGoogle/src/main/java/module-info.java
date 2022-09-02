@@ -12,7 +12,7 @@ module com.calendarfx.google {
     requires javafx.controls;
     requires javafx.web;
     requires geocoder.java;
-    requires GMapsFX;
+    requires com.dlsc.gmapsfx;
     requires com.google.common;
     requires com.google.api.client;
     requires com.google.api.client.auth;
