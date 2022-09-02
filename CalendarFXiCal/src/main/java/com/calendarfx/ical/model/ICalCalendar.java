@@ -19,12 +19,14 @@ package com.calendarfx.ical.model;
 import com.calendarfx.model.Interval;
 import com.calendarfx.model.LoadEvent;
 import net.fortuna.ical4j.filter.Filter;
-import net.fortuna.ical4j.filter.PeriodRule;
+import net.fortuna.ical4j.filter.predicate.PeriodRule;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Uid;
 
@@ -37,6 +39,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -85,16 +88,28 @@ public class ICalCalendar extends com.calendarfx.model.Calendar {
 
             for (VEvent evt : events) {
 
-                if (loadedEventIds.contains(evt.getUid())) {
+                Optional<Uid> uid = evt.getProperty(Property.UID);
+                if (!uid.isPresent()) {
                     continue;
                 }
 
-                loadedEventIds.add(evt.getUid());
+                if (loadedEventIds.contains(uid.get())) {
+                    continue;
+                }
+
+                loadedEventIds.add(new Uid(evt.getUid().toString()));
 
                 ICalCalendarEntry entry = new ICalCalendarEntry(evt);
 
-                ZonedDateTime entryStart = ZonedDateTime.ofInstant(Instant.from(evt.getStartDate().getDate()), ZoneId.systemDefault());
-                ZonedDateTime entryEnd = ZonedDateTime.ofInstant(Instant.from(evt.getEndDate().getDate()), ZoneId.systemDefault());
+                Optional<DtStart> dtStart = evt.getProperty(Property.DTSTART);
+                Optional<DtEnd> dtEnd = evt.getProperty(Property.DTEND);
+
+                if (!(dtStart.isPresent() && dtEnd.isPresent())) {
+                    continue;
+                }
+
+                ZonedDateTime entryStart = ZonedDateTime.ofInstant(Instant.from(dtStart.get().getDate()), ZoneId.systemDefault());
+                ZonedDateTime entryEnd = ZonedDateTime.ofInstant(Instant.from(dtEnd.get().getDate()), ZoneId.systemDefault());
 
                 if (entryEnd.toLocalDate().isAfter(entryStart.toLocalDate())) {
                     entryEnd = entryEnd.minusDays(1);
@@ -103,9 +118,9 @@ public class ICalCalendar extends com.calendarfx.model.Calendar {
 
                 entry.setInterval(new Interval(entryStart, entryEnd));
 
-                final Property prop = evt.getProperty("RRULE");
-                if (prop instanceof RRule) {
-                    RRule rrule = (RRule) prop;
+                final Optional<RRule> prop = evt.getProperty(Property.RRULE);
+                if (prop.isPresent()) {
+                    RRule rrule = prop.get();
                     entry.setRecurrenceRule("RRULE:" + rrule.getValue());
                 }
 

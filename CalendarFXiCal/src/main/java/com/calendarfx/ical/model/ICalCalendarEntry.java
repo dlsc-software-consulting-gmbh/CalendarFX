@@ -17,11 +17,18 @@
 package com.calendarfx.ical.model;
 
 import com.calendarfx.model.Entry;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Summary;
+
+import java.util.Optional;
 
 public class ICalCalendarEntry extends Entry<VEvent> {
 
     public ICalCalendarEntry(VEvent event) {
-        super(event.getSummary().getValue());
+        Optional<Summary> summary = event.getProperty(Property.SUMMARY);
+        if (summary.isPresent()) {
+            setTitle(summary.get().getValue());
+        }
     }
 }
