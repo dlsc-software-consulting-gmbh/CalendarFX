@@ -27,12 +27,12 @@
         </project.github.repository>
         <local.repository.path>/tmp/repository</local.repository.path>
         <java.version>11</java.version>
-        <javafx.version>17.0.1</javafx.version>
-        <ikonli.version>12.2.0</ikonli.version>
+        <javafx.version>18.0.1</javafx.version>
+        <ikonli.version>12.3.1</ikonli.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
         <controlsfx.version>11.1.1</controlsfx.version>
-        <ical4j.version>4.0.0-alpha2</ical4j.version>
+        <ical4j.version>4.0.0-beta2</ical4j.version>
         <sonar.projectKey>dlsc-software-consulting-gmbh_CalendarFX2
         </sonar.projectKey>
         <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
@@ -81,16 +81,6 @@
             </modules>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray-dlsc-oss-repository</id>
-            <name>dlsc-oss-repository</name>
-            <url>
-                https://api.bintray.com/maven/dlsc-oss/repository/CalendarFX/;publish=1
-            </url>
-        </repository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -204,9 +194,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.lynden</groupId>
+                <groupId>com.dlsc</groupId>
                 <artifactId>GMapsFX</artifactId>
-                <version>2.12.0</version>
+                <version>11.0.6</version>
             </dependency>
 
             <!-- Required for GMapsFX -->
@@ -261,7 +251,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.11</version>
+                <version>1.15</version>
             </dependency>
 
             <dependency>
@@ -284,7 +274,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <release>11</release>
                     <source>11</source>

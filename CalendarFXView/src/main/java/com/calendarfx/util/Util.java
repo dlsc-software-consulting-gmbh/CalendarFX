@@ -28,8 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollBar;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.WeekDayList;
-import net.fortuna.ical4j.model.Recur.Frequency;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 
 import java.lang.ref.WeakReference;
 import java.text.MessageFormat;
@@ -38,6 +37,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
+import java.util.List;
 import java.util.Objects;
 
 import static java.time.temporal.ChronoField.DAY_OF_WEEK;
@@ -76,8 +76,8 @@ public class Util {
             Recur<LocalDate> rule = new Recur<>(rrule.replaceFirst("^RRULE:", ""));
             StringBuilder sb = new StringBuilder();
 
-            String granularity = "";
-            String granularities = "";
+            String granularity;
+            String granularities;
 
             switch (rule.getFrequency()) {
                 case DAILY:
@@ -108,12 +108,14 @@ public class Util {
                     granularity = Messages.getString("Util.SECOND");
                     granularities = Messages.getString("Util.SECONDS");
                     break;
+                default:
+                    granularity = "";
+                    granularities = "";
             }
 
             int interval = rule.getInterval();
             if (interval > 1) {
-                sb.append(MessageFormat.format(Messages.getString("Util.EVERY_PLURAL"),
-                        rule.getInterval(), granularities));
+                sb.append(MessageFormat.format(Messages.getString("Util.EVERY_PLURAL"), rule.getInterval(), granularities));
             } else {
                 sb.append(MessageFormat.format(Messages.getString("Util.EVERY_SINGULAR"), granularity));
             }
@@ -123,7 +125,7 @@ public class Util {
              */
 
             if (rule.getFrequency().equals(Frequency.WEEKLY)) {
-                WeekDayList byDay = rule.getDayList();
+                List<WeekDay> byDay = rule.getDayList();
                 if (!byDay.isEmpty()) {
                     sb.append(Messages.getString("Util.ON_WEEKDAY"));
                     for (int i = 0; i < byDay.size(); i++) {
@@ -150,16 +152,12 @@ public class Util {
                      * We only support one day.
                      */
                     WeekDay num = rule.getDayList().get(0);
-
-                    sb.append(MessageFormat.format(Messages.getString("Util.ON_MONTH_WEEKDAY"),
-                            makeHuman(num.getOffset()), makeHuman(num.getDay())));
-
+                    sb.append(MessageFormat.format(Messages.getString("Util.ON_MONTH_WEEKDAY"), makeHuman(num.getOffset()), makeHuman(num.getDay())));
                 }
             }
 
             if (rule.getFrequency().equals(Frequency.YEARLY)) {
-                sb.append(MessageFormat.format(Messages.getString("Util.ON_DATE"), DateTimeFormatter
-                        .ofPattern(Messages.getString("Util.MONTH_AND_DAY_FORMAT")).format(startDate)));
+                sb.append(MessageFormat.format(Messages.getString("Util.ON_DATE"), DateTimeFormatter.ofPattern(Messages.getString("Util.MONTH_AND_DAY_FORMAT")).format(startDate)));
             }
 
             int count = rule.getCount();
@@ -172,11 +170,7 @@ public class Util {
             } else {
                 LocalDate until = rule.getUntil();
                 if (until != null) {
-                    sb.append(
-                            MessageFormat.format(Messages.getString("Util.UNTIL_DATE"),
-                                    DateTimeFormatter
-                                            .ofLocalizedDate(FormatStyle.LONG)
-                                            .format(until)));
+                    sb.append(MessageFormat.format(Messages.getString("Util.UNTIL_DATE"), DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(until)));
                 }
             }
 

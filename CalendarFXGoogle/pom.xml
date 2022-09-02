@@ -44,7 +44,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.lynden</groupId>
+            <groupId>com.dlsc</groupId>
             <artifactId>GMapsFX</artifactId>
         </dependency>
 

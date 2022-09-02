@@ -36,11 +36,10 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.WeekDayList;
 import net.fortuna.ical4j.model.WeekDay.Day;
+import net.fortuna.ical4j.model.WeekDayList;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -53,6 +52,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
+import static net.fortuna.ical4j.transform.recurrence.Frequency.DAILY;
+import static net.fortuna.ical4j.transform.recurrence.Frequency.MONTHLY;
+import static net.fortuna.ical4j.transform.recurrence.Frequency.WEEKLY;
+import static net.fortuna.ical4j.transform.recurrence.Frequency.YEARLY;
 
 @SuppressWarnings("javadoc")
 public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
@@ -357,7 +360,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             repeatCountSpinnerValueFactory.setValue(rrule.getInterval());
             endsAfterCounterSpinnerValueFactory.setValue(rrule.getCount());
 
-            WeekDayList days = rrule.getDayList();
+            List<WeekDay> days = rrule.getDayList();
 
             weekDayMondayButton.setSelected(isSelected(Day.MO, days));
             weekDayTuesdayButton.setSelected(isSelected(Day.TU, days));
@@ -373,12 +376,10 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             e.printStackTrace();
         }
 
-        startOnDateLabel
-                .setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
-                        .format(getSkinnable().getStartDate()));
+        startOnDateLabel.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(getSkinnable().getStartDate()));
     }
 
-    private boolean isSelected(WeekDay.Day day, WeekDayList days) {
+    private boolean isSelected(WeekDay.Day day, List<WeekDay> days) {
         for (WeekDay num : days) {
             if (num.getDay().equals(day)) {
                 return true;
@@ -392,16 +393,16 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
         Recur.Builder<LocalDate> rBuilder = new Recur.Builder<>();
         switch (frequencyBox.getValue()) {
             case DAILY:
-                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.DAILY);
+                rBuilder.frequency(DAILY);
                 break;
             case MONTHLY:
-                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.MONTHLY);
+                rBuilder.frequency(MONTHLY);
                 break;
             case WEEKLY:
-                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.WEEKLY);
+                rBuilder.frequency(WEEKLY);
                 break;
             case YEARLY:
-                rBuilder.frequency(net.fortuna.ical4j.model.Recur.Frequency.YEARLY);
+                rBuilder.frequency(YEARLY);
                 break;
             default:
                 break;
@@ -423,21 +424,19 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             rBuilder.count(endsAfterCounterSpinner.getValue());
         }
 
+        RecurrenceView recurrenceView = getSkinnable();
+
         if (frequencyBox.getValue() == Frequency.MONTHLY) {
             if (repeatByDayOfTheMonth.isSelected()) {
-                int value = getSkinnable().getStartDate().getDayOfMonth();
-                rBuilder.monthList(new NumberList(value, value, false));
+                rBuilder.monthDayList(List.of(recurrenceView.getStartDate().getDayOfMonth()));
             } else {
-                LocalDate localDate = getSkinnable().getStartDate();
+                LocalDate localDate = recurrenceView.getStartDate();
 
-                // TODO: use zone id of context (entry, calendar)
-                ZonedDateTime zonedDateTime = ZonedDateTime.of(localDate,
-                        LocalTime.now(), ZoneId.systemDefault());
+                ZonedDateTime zonedDateTime = ZonedDateTime.of(localDate, LocalTime.now(), ZoneId.systemDefault());
                 int hits = 1;
                 ZonedDateTime current = zonedDateTime.withDayOfMonth(1);
                 do {
-                    if (current.getDayOfWeek()
-                            .equals(zonedDateTime.getDayOfWeek())) {
+                    if (current.getDayOfWeek().equals(zonedDateTime.getDayOfWeek())) {
                         hits++;
                     }
                     current = current.plusDays(1);
@@ -500,7 +499,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
         }
 
         Recur<LocalDate> rule = rBuilder.build();
-        getSkinnable().setRecurrenceRule(rule.toString());
+        recurrenceView.setRecurrenceRule(rule.toString());
 
         if (LoggingDomain.RECURRENCE.isLoggable(Level.FINE)) {
             LoggingDomain.RECURRENCE.fine(
