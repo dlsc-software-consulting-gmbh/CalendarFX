@@ -28,14 +28,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
-import net.fortuna.ical4j.data.ParserException;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 /**
  * Calendar Source Factory that shows up a dialog to enter a web based URL of an iCal.
- *
+ * <p>
  * Created by gdiaz on 5/01/2017.
  */
 public final class ICalWebSourceFactory implements Callback<DateControl.CreateCalendarSourceParameter, CalendarSource> {
@@ -87,25 +83,8 @@ public final class ICalWebSourceFactory implements Callback<DateControl.CreateCa
             return;
         }
 
-        try {
-            ICalRepository.createWebCalendar(url, name, style, ICalRepository.getCommunityCalendarSource());
-            pane.clear();
-            dialog.hide();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("The URL is not valid!");
-            alert.show();
-        } catch (ParserException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unable to parse the calendar data!");
-            alert.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Unexpected error getting the calendar!");
-            alert.show();
-        }
+        ICalRepository.createWebCalendar(url, name, style, ICalRepository.getCommunityCalendarSource());
+        pane.clear();
+        dialog.hide();
     }
-
 }

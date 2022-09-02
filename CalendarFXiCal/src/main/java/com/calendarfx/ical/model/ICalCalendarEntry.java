@@ -19,6 +19,7 @@ package com.calendarfx.ical.model;
 import com.calendarfx.model.Entry;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.Summary;
 
 import java.util.Optional;
@@ -29,6 +30,10 @@ public class ICalCalendarEntry extends Entry<VEvent> {
         Optional<Summary> summary = event.getProperty(Property.SUMMARY);
         if (summary.isPresent()) {
             setTitle(summary.get().getValue());
+        }
+        Optional<Location> optionalLocation = event.getProperty(Property.LOCATION);
+        if (optionalLocation.isPresent()) {
+            setLocation(optionalLocation.get().getValue());
         }
     }
 }

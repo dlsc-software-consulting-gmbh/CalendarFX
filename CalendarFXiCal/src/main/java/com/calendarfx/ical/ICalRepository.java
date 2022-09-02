@@ -67,36 +67,37 @@ public final class ICalRepository {
 
     public static void loadSources() throws IOException, ParserException {
 
-        loadWebSource();
+//        loadWebSource();
 
-        if (familyCalendars.getCalendars().isEmpty()) {
+        if (true) { //familyCalendars.getCalendars().isEmpty()) {
             totalWorkProperty.set(10);
-            createWebCalendar("https://www.nasa.gov/templateimages/redesign/calendar/iCal/nasa_calendar.ics", "NASA", Calendar.Style.STYLE1, communityCalendars);
-            workDoneProperty.set(1);
-            createWebCalendar("https://cantonbecker.com/astronomy-calendar/astrocal.ics", "Moon / Astro", Calendar.Style.STYLE2, communityCalendars);
-            workDoneProperty.set(2);
-            createWebCalendar("http://ical.mac.com/ical/US32Holidays.ics", "US Holidays", Calendar.Style.STYLE3, communityCalendars);
-            workDoneProperty.set(3);
-            createWebCalendar("https://www.google.com/calendar/ical/6g08e17mnjao5k7ddftfvq5gs8%40group.calendar.google.com/public/basic.ics", "FC Liverpool", Calendar.Style.STYLE5, communityCalendars);
-            workDoneProperty.set(4);
-            createWebCalendar("https://www.google.com/calendar/ical/ohg8jr90apq8k0vili2fbs17to%40group.calendar.google.com/public/basic.ics", "Real Madrid", Calendar.Style.STYLE4, communityCalendars);
-            workDoneProperty.set(5);
-            createWebCalendar("https://calendar.google.com/calendar/ical/flexcalendarfxdemo%40gmail.com/private-43f02ea9664382e80e6fbe0a541511ee/basic.ics", "Standard", Calendar.Style.STYLE1, familyCalendars);
-            workDoneProperty.set(6);
-            createWebCalendar("https://calendar.google.com/calendar/ical/75bjnbr2qr5qgetav71tug2sec%40group.calendar.google.com/private-c6c6a59d97aa2806fe28cfbdb2e2957b/basic.ics", "Home", Calendar.Style.STYLE2, familyCalendars);
-            workDoneProperty.set(7);
-            createWebCalendar("https://calendar.google.com/calendar/ical/5rj1uvaobtosjqoqqkpdlj01gg%40group.calendar.google.com/private-4dc56992aed93526cbab07da6cd4b69b/basic.ics", "School", Calendar.Style.STYLE3, familyCalendars);
-            workDoneProperty.set(8);
-            createWebCalendar("https://calendar.google.com/calendar/ical/0itqq6d7pukf1tapbll3lbad5c%40group.calendar.google.com/private-7fb78a4b949cede8228d791faba9061e/basic.ics", "Sports", Calendar.Style.STYLE4, familyCalendars);
-            workDoneProperty.set(9);
-            createWebCalendar("https://calendar.google.com/calendar/ical/u6em5saa8omkamh68bl7fikclo%40group.calendar.google.com/private-bce22b1e9b43b632c7edfad45d677b59/basic.ics", "Work", Calendar.Style.STYLE5, familyCalendars);
-            workDoneProperty.set(10);
+//            createWebCalendar("https://calendar.google.com/calendar/ical/nextspaceflight.com_l328q9n2alm03mdukb05504c44%40group.calendar.google.com/public/basic.ics", "Space Launches", Calendar.Style.STYLE1, communityCalendars);
+            createWebCalendar("https://i.cal.to/ical/2/fcbayern/bundesliga-spielplan/1406373c.bca6824f-04acfda3.ics", "Bayern München", Calendar.Style.STYLE2, communityCalendars);
+
+//            createWebCalendar("https://cantonbecker.com/astronomy-calendar/astrocal.ics", "Moon / Astro", Calendar.Style.STYLE2, communityCalendars);
+//            workDoneProperty.set(2);
+//            createWebCalendar("http://ical.mac.com/ical/US32Holidays.ics", "US Holidays", Calendar.Style.STYLE3, communityCalendars);
+//            workDoneProperty.set(3);
+//            createWebCalendar("https://www.google.com/calendar/ical/6g08e17mnjao5k7ddftfvq5gs8%40group.calendar.google.com/public/basic.ics", "FC Liverpool", Calendar.Style.STYLE5, communityCalendars);
+//            workDoneProperty.set(4);
+//            createWebCalendar("https://www.google.com/calendar/ical/ohg8jr90apq8k0vili2fbs17to%40group.calendar.google.com/public/basic.ics", "Real Madrid", Calendar.Style.STYLE4, communityCalendars);
+//            workDoneProperty.set(5);
+//            createWebCalendar("https://calendar.google.com/calendar/ical/flexcalendarfxdemo%40gmail.com/private-43f02ea9664382e80e6fbe0a541511ee/basic.ics", "Standard", Calendar.Style.STYLE1, familyCalendars);
+//            workDoneProperty.set(6);
+//            createWebCalendar("https://calendar.google.com/calendar/ical/75bjnbr2qr5qgetav71tug2sec%40group.calendar.google.com/private-c6c6a59d97aa2806fe28cfbdb2e2957b/basic.ics", "Home", Calendar.Style.STYLE2, familyCalendars);
+//            workDoneProperty.set(7);
+//            createWebCalendar("https://calendar.google.com/calendar/ical/5rj1uvaobtosjqoqqkpdlj01gg%40group.calendar.google.com/private-4dc56992aed93526cbab07da6cd4b69b/basic.ics", "School", Calendar.Style.STYLE3, familyCalendars);
+//            workDoneProperty.set(8);
+//            createWebCalendar("https://calendar.google.com/calendar/ical/0itqq6d7pukf1tapbll3lbad5c%40group.calendar.google.com/private-7fb78a4b949cede8228d791faba9061e/basic.ics", "Sports", Calendar.Style.STYLE4, familyCalendars);
+//            workDoneProperty.set(9);
+//            createWebCalendar("https://calendar.google.com/calendar/ical/u6em5saa8omkamh68bl7fikclo%40group.calendar.google.com/private-bce22b1e9b43b632c7edfad45d677b59/basic.ics", "Work", Calendar.Style.STYLE5, familyCalendars);
+//            workDoneProperty.set(10);
+
         }
     }
 
     public static void loadWebSource() {
-        try (FileInputStream fin = new FileInputStream(new File(System.getProperty("user.home") + SETTINGS_DIR, SETTINGS_FILE));
-             ObjectInputStream ois = new ObjectInputStream(fin)) {
+        try (FileInputStream fin = new FileInputStream(new File(System.getProperty("user.home") + SETTINGS_DIR, SETTINGS_FILE)); ObjectInputStream ois = new ObjectInputStream(fin)) {
 
             List<WebCalendarData> webCalendars = (List<WebCalendarData>) ois.readObject();
 
@@ -133,46 +134,48 @@ public final class ICalRepository {
         return null;
     }
 
-    public static ICalCalendar createWebCalendar(String url, String name, Calendar.Style style, CalendarSource source) throws IOException, ParserException {
+    public static void createWebCalendar(String url, String name, Calendar.Style style, CalendarSource source) {
         if (url == null || url.isEmpty() || name == null || name.isEmpty() || style == null) {
-            return null;
+            return;
         }
 
-        WebCalendarData data = new WebCalendarData(url, name, style, source == familyCalendars);
+        try {
+            WebCalendarData data = new WebCalendarData(url, name, style, source == familyCalendars);
 
-        ICalCalendar cal = putWebCalendar(data, source);
+            putWebCalendar(data, source);
 
-        List<WebCalendarData> webCalendarDatas = new ArrayList<>();
-        webCalendarDatas.addAll(webCalendars.keySet());
-        if (!webCalendarDatas.isEmpty()) {
-            final File directory = new File(System.getProperty("user.home") + SETTINGS_DIR);
-            boolean directoryExists = true;
-            if (!directory.exists()) {
-                directoryExists = directory.mkdirs();
-            }
+            List<WebCalendarData> webCalendarDatas = new ArrayList<>();
+            webCalendarDatas.addAll(webCalendars.keySet());
 
-            if (directoryExists) {
-                final File file = new File(directory, SETTINGS_FILE);
-
-                boolean fileExists = true;
-                if (!file.exists()) {
-                    fileExists = file.createNewFile();
+            if (!webCalendarDatas.isEmpty()) {
+                final File directory = new File(System.getProperty("user.home") + SETTINGS_DIR);
+                boolean directoryExists = true;
+                if (!directory.exists()) {
+                    directoryExists = directory.mkdirs();
                 }
 
-                if (fileExists) {
-                    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-                        oos.writeObject(webCalendarDatas);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if (directoryExists) {
+                    final File file = new File(directory, SETTINGS_FILE);
+
+                    boolean fileExists = true;
+                    if (!file.exists()) {
+                        fileExists = file.createNewFile();
+                    }
+
+                    if (fileExists) {
+                        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+                            oos.writeObject(webCalendarDatas);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-        }
 
-        return cal;
+        } catch (Throwable t) {}
     }
 
-    private static ICalCalendar putWebCalendar(WebCalendarData data, CalendarSource source) throws IOException, ParserException {
+    private static void putWebCalendar(WebCalendarData data, CalendarSource source) throws IOException, ParserException {
         ICalCalendar cal = getWebCalendar(data.getUrl());
         if (cal == null) {
 
@@ -196,13 +199,11 @@ public final class ICalRepository {
             webCalendars.put(data, cal);
 
             final ICalCalendar fcal = cal;
-            Platform.runLater(() -> {
-                        source.getCalendars().add(fcal);
-                    }
-            );
-        }
 
-        return cal;
+            Platform.runLater(() -> {
+                source.getCalendars().add(fcal);
+            });
+        }
     }
 
     private static class WebCalendarData implements Serializable {

@@ -36,6 +36,7 @@ import java.time.LocalTime;
 import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Collection;
 import java.util.HashSet;
@@ -84,49 +85,68 @@ public class ICalCalendar extends com.calendarfx.model.Calendar {
 
             Period<Instant> period = new Period<>(st.toInstant(), et.toInstant());
             Filter<VEvent> filter = new Filter<>(new PeriodRule<>(period));
-            Collection<VEvent> events = filter.filter(calendar.getComponents(Component.VEVENT));
+            Collection<VEvent> events = calendar.getComponents(Component.VEVENT);
 
             for (VEvent evt : events) {
 
-                Optional<Uid> uid = evt.getProperty(Property.UID);
-                if (!uid.isPresent()) {
-                    continue;
+                try {
+                    Optional<Uid> uid = evt.getProperty(Property.UID);
+                    if (!uid.isPresent()) {
+                        continue;
+                    }
+
+                    if (loadedEventIds.contains(uid.get())) {
+                        continue;
+                    }
+
+                    loadedEventIds.add(uid.get());
+
+                    ICalCalendarEntry entry = new ICalCalendarEntry(evt);
+
+                    Optional<DtStart> dtStartOptional = evt.getProperty(Property.DTSTART);
+                    Optional<DtEnd> dtEndOptional = evt.getProperty(Property.DTEND);
+
+                    if (!(dtStartOptional.isPresent() && dtEndOptional.isPresent())) {
+                        continue;
+                    }
+
+                    Temporal start = dtStartOptional.get().getDate();
+                    Temporal end = dtEndOptional.get().getDate();
+
+                    ZonedDateTime entryStart = null;
+                    ZonedDateTime entryEnd = null;
+
+                    if (start instanceof Instant) {
+                        entryStart = ZonedDateTime.ofInstant((Instant) start, ZoneId.systemDefault());
+                        entryEnd = ZonedDateTime.ofInstant((Instant) end, ZoneId.systemDefault());
+                    } else if (start instanceof LocalDate) {
+                        entryStart = ZonedDateTime.of((LocalDate) start, LocalTime.MIN, ZoneId.systemDefault());
+                        entryEnd = ZonedDateTime.of((LocalDate) end, LocalTime.MAX, ZoneId.systemDefault());
+                        entry.setFullDay(true);
+                    } else if (start instanceof ZonedDateTime) {
+                        entryStart = (ZonedDateTime) start;
+                        entryEnd = (ZonedDateTime) end;
+                        entryStart = entryStart.withZoneSameInstant(ZoneId.systemDefault());
+                        entryEnd = entryEnd.withZoneSameInstant(ZoneId.systemDefault());
+                    }
+
+                    if (entryStart == null || entryEnd == null) {
+                        continue;
+                    }
+
+                    entry.setInterval(new Interval(entryStart, entryEnd));
+
+                    final Optional<RRule> prop = evt.getProperty(Property.RRULE);
+                    if (prop.isPresent()) {
+                        RRule rrule = prop.get();
+                        entry.setRecurrenceRule("RRULE:" + rrule.getValue());
+                    }
+
+                    addEntry(entry);
+                } catch (Throwable t) {
                 }
-
-                if (loadedEventIds.contains(uid.get())) {
-                    continue;
-                }
-
-                loadedEventIds.add(new Uid(evt.getUid().toString()));
-
-                ICalCalendarEntry entry = new ICalCalendarEntry(evt);
-
-                Optional<DtStart> dtStart = evt.getProperty(Property.DTSTART);
-                Optional<DtEnd> dtEnd = evt.getProperty(Property.DTEND);
-
-                if (!(dtStart.isPresent() && dtEnd.isPresent())) {
-                    continue;
-                }
-
-                ZonedDateTime entryStart = ZonedDateTime.ofInstant(Instant.from(dtStart.get().getDate()), ZoneId.systemDefault());
-                ZonedDateTime entryEnd = ZonedDateTime.ofInstant(Instant.from(dtEnd.get().getDate()), ZoneId.systemDefault());
-
-                if (entryEnd.toLocalDate().isAfter(entryStart.toLocalDate())) {
-                    entryEnd = entryEnd.minusDays(1);
-                    entry.setFullDay(true);
-                }
-
-                entry.setInterval(new Interval(entryStart, entryEnd));
-
-                final Optional<RRule> prop = evt.getProperty(Property.RRULE);
-                if (prop.isPresent()) {
-                    RRule rrule = prop.get();
-                    entry.setRecurrenceRule("RRULE:" + rrule.getValue());
-                }
-
-                addEntry(entry);
             }
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             ex.printStackTrace();
         } finally {
             stopBatchUpdates();
