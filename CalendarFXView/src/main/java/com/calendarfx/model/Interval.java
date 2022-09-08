@@ -17,6 +17,7 @@
 package com.calendarfx.model;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -128,6 +129,17 @@ public final class Interval {
      */
     public Interval(LocalDateTime startDateTime, LocalDateTime endDateTime, ZoneId zoneId) {
         this(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime(), zoneId);
+    }
+
+    /**
+     * Constructs a new time interval with the given start and end times and time zone.
+     *
+     * @param startTime the start time
+     * @param endTime   the end time
+     * @param zoneId    the time zone
+     */
+    public Interval(Instant startTime, Instant endTime, ZoneId zoneId) {
+        this(ZonedDateTime.ofInstant(startTime, zoneId), ZonedDateTime.ofInstant(endTime, zoneId));
     }
 
     /**

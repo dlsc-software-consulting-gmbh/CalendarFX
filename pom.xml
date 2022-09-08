@@ -27,7 +27,7 @@
         </project.github.repository>
         <local.repository.path>/tmp/repository</local.repository.path>
         <java.version>11</java.version>
-        <javafx.version>18.0.1</javafx.version>
+        <javafx.version>18</javafx.version>
         <ikonli.version>12.3.1</ikonli.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
@@ -75,6 +75,7 @@
                 <module>CalendarFXSampler</module>
                 <module>CalendarFXGoogle</module>
                 <module>CalendarFXApp</module>
+                <module>CalendarFXSchedulerApp</module>
                 <module>CalendarFXResourceApp</module>
                 <module>CalendarFXiCal</module>
                 <module>CalendarFXWeather</module>
@@ -84,6 +85,18 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
+                <version>1.4.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-common</artifactId>
+                <version>1.4.10</version>
+            </dependency>
 
             <dependency>
                 <groupId>fr.brouillard.oss</groupId>
@@ -249,9 +262,27 @@
             </dependency>
 
             <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.9</version>
+            </dependency>
+
+            <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>1.15</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.opencensus</groupId>
+                <artifactId>opencensus-api</artifactId>
+                <version>0.30.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.maps</groupId>
+                <artifactId>google-maps-services</artifactId>
+                <version>2.0.0</version>
             </dependency>
 
             <dependency>

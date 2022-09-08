@@ -21,6 +21,7 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
+import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.DayEntryView;
@@ -39,9 +40,14 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
+import javafx.event.EventHandler;
+import javafx.event.WeakEventHandler;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Control;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -81,6 +87,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     private final Line currentTimeLine;
 
+    private DayViewEditController controller;
+
     private DayEntryView draggedEntryView;
 
     private final Region earlyHoursRegion;
@@ -90,6 +98,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     private LocalDate displayedDate;
 
     private double startY;
+
+    private final AvailabilityCanvas availabilityCanvas = new AvailabilityCanvas();
 
     public DayViewSkin(T view) {
         super(view);
@@ -106,6 +116,14 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         lateHoursRegion.setManaged(false);
         getChildren().add(lateHoursRegion);
 
+        availabilityCanvas.widthProperty().bind(view.widthProperty());
+        availabilityCanvas.heightProperty().bind(view.heightProperty());
+
+        InvalidationListener drawAvailabilityCanvasListener = it -> availabilityCanvas.draw();
+        view.editAvailabilityProperty().addListener(drawAvailabilityCanvasListener);
+
+        getChildren().add(availabilityCanvas);
+
         if (!view.isScrollingEnabled()) {
             // Static lines use different styling for early / late hours, we do not want that
             // when scrolling is enabled. In that case all lines need to look the same.
@@ -117,7 +135,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         currentTimeCircle.setManaged(false);
         currentTimeCircle.setMouseTransparent(true);
         currentTimeCircle.setOpacity(0);
-        currentTimeCircle.visibleProperty().bind(view.enableCurrentTimeCircleProperty());
+        currentTimeCircle.visibleProperty().bind(view.enableCurrentTimeCircleProperty().and(view.editAvailabilityProperty().not()));
         getChildren().add(currentTimeCircle);
 
         currentTimeLine = new Line();
@@ -125,15 +143,26 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         currentTimeLine.setManaged(false);
         currentTimeLine.setMouseTransparent(true);
         currentTimeLine.setOpacity(0);
-        currentTimeLine.visibleProperty().bind(view.enableCurrentTimeMarkerProperty());
+        currentTimeLine.visibleProperty().bind(view.enableCurrentTimeMarkerProperty().and(view.editAvailabilityProperty().not()));
         getChildren().add(currentTimeLine);
+
+        view.lassoStartProperty().addListener(drawAvailabilityCanvasListener);
+        view.lassoEndProperty().addListener(drawAvailabilityCanvasListener);
+        view.editAvailabilityProperty().addListener(drawAvailabilityCanvasListener);
+
+        view.availabilityCalendarProperty().addListener((obs, oldCalendar, newCalendar) -> listenToAvailabilityCalendar(oldCalendar, newCalendar));
+        listenToAvailabilityCalendar(null, view.getAvailabilityCalendar());
 
         if (!(this instanceof WeekDayViewSkin)) {
             /*
              * Dragging inside week day views will be handled by a drag controller
              * installed on the week view, not on the individual days.
              */
-            new DayViewEditController(view);
+            controller = new DayViewEditController(view);
+            controller.onLassoFinishedProperty().bind(view.onLassoFinishedProperty());
+
+            view.lassoStartProperty().bind(controller.lassoStartProperty());
+            view.lassoEndProperty().bind(controller.lassoEndProperty());
         }
 
         setupCurrentTimeMarkerSupport();
@@ -204,6 +233,20 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 startY = evt.getScreenY();
             }
         });
+    }
+
+    private final EventHandler<CalendarEvent> availabilityHandler = evt -> availabilityCanvas.draw();
+
+    private final WeakEventHandler<CalendarEvent> weakAvailabilityHandler = new WeakEventHandler<>(availabilityHandler);
+
+    private void listenToAvailabilityCalendar(Calendar oldCalendar, Calendar newCalendar) {
+        if (oldCalendar != null) {
+            oldCalendar.removeEventHandler(weakAvailabilityHandler);
+        }
+
+        if (newCalendar != null) {
+            newCalendar.addEventHandler(weakAvailabilityHandler);
+        }
     }
 
     private void createStaticLines() {
@@ -371,11 +414,17 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
         super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
 
+        availabilityCanvas.draw();
+
         if (getSkinnable().isScrollingEnabled()) {
             layoutChildrenInfiniteScrolling(contentX, contentY, contentWidth, contentHeight);
         } else {
             layoutChildrenStatic(contentX, contentY, contentWidth, contentHeight);
         }
+    }
+
+    private void drawBackgroundEntries() {
+
     }
 
     protected void layoutChildrenInfiniteScrolling(double contentX, double contentY, double contentWidth, double contentHeight) {
@@ -605,7 +654,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
             Instant dayViewStart = dayView.getZonedDateTime().with(LocalTime.MIN).toInstant();
             Instant dayViewEnd = dayView.getZonedDateTimeEnd().with(LocalTime.MAX).toInstant();
-            
+
             for (Placement placement : placements) {
                 EntryViewBase<?> entryView = placement.getEntryView();
 
@@ -910,7 +959,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         do {
             List<Entry<?>> entryList = dataMap.get(date);
 
-
             if (entryList != null) {
                 entryList.removeIf(Entry::isFullDay);
 
@@ -994,5 +1042,57 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     @Override
     public boolean isCalendarVisible(Calendar calendar) {
         return getSkinnable().isCalendarVisible(calendar);
+    }
+
+    private class AvailabilityCanvas extends Canvas {
+
+        public AvailabilityCanvas() {
+            heightProperty().addListener(it -> draw());
+            widthProperty().addListener(it -> draw());
+        }
+
+        public boolean isResizable() {
+            return true;
+        }
+
+        public void draw() {
+            GraphicsContext gc = availabilityCanvas.getGraphicsContext2D();
+            gc.clearRect(0, 0, getWidth(), getHeight());
+
+            T dayView = getSkinnable();
+            Calendar availabilityCalendar = dayView.getAvailabilityCalendar();
+
+            if (availabilityCalendar != null) {
+                gc.setFill(dayView.getAvailabilityFill());
+                LocalDate date = dayView.getDate();
+                Map<LocalDate, List<Entry<?>>> entries = availabilityCalendar.findEntries(date, date, dayView.getZoneId());
+                List<Entry<?>> entriesOnDate = entries.get(date);
+                if (entriesOnDate != null) {
+                    entriesOnDate.forEach(entry -> {
+                        ZonedDateTime startAsZonedDateTime = entry.getStartAsZonedDateTime();
+                        ZonedDateTime endAsZonedDateTime = entry.getEndAsZonedDateTime();
+                        double y1 = ViewHelper.getTimeLocation(dayView, startAsZonedDateTime);
+                        double y2 = ViewHelper.getTimeLocation(dayView, endAsZonedDateTime);
+                        gc.fillRect(0, y1, getWidth(), y2 - y1);
+                    });
+                }
+
+                if (dayView.isEditAvailability()) {
+                    Instant start = dayView.getLassoStart();
+                    Instant end = dayView.getLassoEnd();
+
+                    if (start != null && end != null) {
+                        double y1 = ViewHelper.getTimeLocation(dayView, start);
+                        double y2 = ViewHelper.getTimeLocation(dayView, end);
+
+                        double minY = Math.min(y1, y2);
+                        double maxY = Math.max(y1, y2);
+
+                        gc.setFill(Color.rgb(0, 0, 0, .3));
+                        gc.fillRect(0, minY, getWidth(), maxY - minY);
+                    }
+                }
+            }
+        }
     }
 }

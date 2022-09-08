@@ -19,7 +19,6 @@ package impl.com.calendarfx.view;
 import com.calendarfx.view.WeekDayView;
 import com.calendarfx.view.WeekView;
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -37,6 +36,8 @@ public class WeekViewSkin extends SkinBase<WeekView> {
 
     private final GridPane dayGridPane = new GridPane();
 
+    private final DayViewEditController controller;
+
     public WeekViewSkin(WeekView view) {
         super(view);
 
@@ -52,7 +53,11 @@ public class WeekViewSkin extends SkinBase<WeekView> {
         clip.heightProperty().bind(view.heightProperty());
         view.setClip(clip);
 
-        new DayViewEditController(view);
+        controller = new DayViewEditController(view);
+        controller.onLassoFinishedProperty().bind(view.onLassoFinishedProperty());
+
+        view.lassoStartProperty().bind(controller.lassoStartProperty());
+        view.lassoEndProperty().bind(controller.lassoEndProperty());
 
         getChildren().add(dayGridPane);
     }
@@ -87,7 +92,6 @@ public class WeekViewSkin extends SkinBase<WeekView> {
             WeekView.WeekDayParameter param = new WeekView.WeekDayParameter(weekView);
             WeekDayView weekDayView = weekDayViewFactory.call(param);
             weekDayView.getProperties().put("week.view", weekView);
-
             weekDayView.earliestTimeUsedProperty().addListener(it -> updateUsedTimes());
             weekDayView.latestTimeUsedProperty().addListener(it -> updateUsedTimes());
 
@@ -109,9 +113,6 @@ public class WeekViewSkin extends SkinBase<WeekView> {
             updateDate(weekDayView, dayCount);
 
             getSkinnable().bind(weekDayView, false);
-
-            Bindings.bindBidirectional(weekDayView.startTimeProperty(), weekView.startTimeProperty());
-            Bindings.bindBidirectional(weekDayView.endTimeProperty(), weekView.endTimeProperty());
 
             dayGridPane.add(weekDayView, i, 0);
 

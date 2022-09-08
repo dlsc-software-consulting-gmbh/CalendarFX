@@ -45,20 +45,17 @@ public class VirtualGrid {
             ChronoUnit.SECONDS, 1) {
 
         @Override
-        public Instant adjustTime(Instant instant, ZoneId zoneId,
-                                  boolean roundUp, DayOfWeek firstDayOfWeek) {
+        public Instant adjustTime(Instant instant, ZoneId zoneId, boolean roundUp, DayOfWeek firstDayOfWeek) {
             return instant;
         }
 
         @Override
-        public LocalDateTime adjustTime(LocalDateTime time, boolean roundUp,
-                                        DayOfWeek firstDayOfWeek) {
+        public LocalDateTime adjustTime(LocalDateTime time, boolean roundUp, DayOfWeek firstDayOfWeek) {
             return time;
         }
 
         @Override
-        public ZonedDateTime adjustTime(ZonedDateTime time, boolean roundUp,
-                                        DayOfWeek firstDayOfWeek) {
+        public ZonedDateTime adjustTime(ZonedDateTime time, boolean roundUp, DayOfWeek firstDayOfWeek) {
             return time;
         }
     };
@@ -80,15 +77,13 @@ public class VirtualGrid {
      * @param amount
      *            the amount of the unit (5, 10, 15 minutes)
      */
-    public VirtualGrid(String name, String shortName, ChronoUnit unit,
-                       int amount) {
+    public VirtualGrid(String name, String shortName, ChronoUnit unit, int amount) {
         this.name = requireNonNull(name);
         this.shortName = requireNonNull(shortName);
         this.unit = requireNonNull(unit);
 
         if (amount <= 0) {
-            throw new IllegalArgumentException(
-                    "grid amount must be larger than 0 but was " + amount);
+            throw new IllegalArgumentException("grid amount must be larger than 0 but was " + amount);
         }
 
         this.amount = amount;
@@ -141,8 +136,7 @@ public class VirtualGrid {
      *            the first day of the week (needed for rounding weeks)
      * @return the adjusted time
      */
-    public ZonedDateTime adjustTime(ZonedDateTime time, boolean roundUp,
-                                    DayOfWeek firstDayOfWeek) {
+    public ZonedDateTime adjustTime(ZonedDateTime time, boolean roundUp, DayOfWeek firstDayOfWeek) {
         Instant instant = time.toInstant();
         ZoneId zoneId = time.getZone();
         instant = adjustTime(instant, zoneId, roundUp, firstDayOfWeek);
@@ -162,9 +156,7 @@ public class VirtualGrid {
      *            the first day of the week (needed for rounding weeks)
      * @return the adjusted instant
      */
-    public Instant adjustTime(Instant instant, ZoneId zoneId, boolean roundUp,
-                              DayOfWeek firstDayOfWeek) {
-
+    public Instant adjustTime(Instant instant, ZoneId zoneId, boolean roundUp, DayOfWeek firstDayOfWeek) {
         requireNonNull(instant);
         requireNonNull(zoneId);
         requireNonNull(firstDayOfWeek);
@@ -174,8 +166,7 @@ public class VirtualGrid {
             zonedDateTime = zonedDateTime.plus(getAmount(), getUnit());
         }
 
-        zonedDateTime = Util.truncate(zonedDateTime, getUnit(), getAmount(),
-                firstDayOfWeek);
+        zonedDateTime = Util.truncate(zonedDateTime, getUnit(), getAmount(), firstDayOfWeek);
 
         return Instant.from(zonedDateTime);
     }
@@ -191,8 +182,7 @@ public class VirtualGrid {
      *            the first day of the week (needed for rounding weeks)
      * @return the adjusted time
      */
-    public LocalDateTime adjustTime(LocalDateTime time, boolean roundUp,
-                                    DayOfWeek firstDayOfWeek) {
+    public LocalDateTime adjustTime(LocalDateTime time, boolean roundUp, DayOfWeek firstDayOfWeek) {
         requireNonNull(time);
 
         if (roundUp) {
@@ -202,9 +192,9 @@ public class VirtualGrid {
         return Util.truncate(time, getUnit(), getAmount(), firstDayOfWeek);
     }
 
+
     @Override
     public String toString() {
-        return "VirtualGrid [name=" + name + ", shortName=" + shortName
-                + ", unit=" + unit + ", amount=" + amount + "]";
+        return "VirtualGrid [name=" + name + ", shortName=" + shortName + ", unit=" + unit + ", amount=" + amount + "]";
     }
 }

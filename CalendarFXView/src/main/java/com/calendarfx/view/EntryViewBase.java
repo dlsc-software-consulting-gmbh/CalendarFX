@@ -260,14 +260,19 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     private void bindVisibility() {
         Entry<?> entry = getEntry();
-        if (entry != null && getDateControl() != null) {
+        T dateControl = getDateControl();
+        if (entry != null && dateControl != null) {
             Calendar calendar = entry.getCalendar();
 
             if (calendar != null) {
-                BooleanBinding binding = Bindings.and(getDateControl().getCalendarVisibilityProperty(calendar), Bindings.not(hiddenProperty()));
+                BooleanBinding binding = Bindings.and(dateControl.getCalendarVisibilityProperty(calendar), Bindings.not(hiddenProperty()));
                 if (getLayer() != null) {
-                    binding = binding.and(Bindings.createBooleanBinding(this::isAssignedLayerVisible, getDateControl().visibleLayersProperty()));
+                    binding = binding.and(Bindings.createBooleanBinding(this::isAssignedLayerVisible, dateControl.visibleLayersProperty()));
                 }
+                if (dateControl instanceof DayViewBase) {
+                    binding = binding.and(dateControl.editAvailabilityProperty().not());
+                }
+
                 visibleProperty().bind(binding);
             }
         }

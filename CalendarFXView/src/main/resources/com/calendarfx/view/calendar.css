@@ -216,6 +216,10 @@
     -fx-background-color: transparent;
 }
 
+.toolbar-controls-box {
+    -fx-spacing: 5px;
+}
+
 /*
  * --------------------------------------------------------------------------------------------------------------
  * Styles needed by the DatePopOver control.

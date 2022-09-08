@@ -43,6 +43,15 @@ class CreateDeleteHandler {
 
     private void createEntry(MouseEvent evt) {
         if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
+
+            if (dateControl instanceof DayViewBase) {
+                DayViewBase dayViewBase = (DayViewBase) dateControl;
+                if (dayViewBase.isEditAvailability()) {
+                    LoggingDomain.VIEW.fine("no new entry created because day view is currently editing availability");
+                    return;
+                }
+            }
+
             LoggingDomain.VIEW.fine("create entry mouse event received inside control: " + dateControl.getClass().getSimpleName());
 
             ZonedDateTime time = ZonedDateTime.now().withZoneSameInstant(dateControl.getZoneId());

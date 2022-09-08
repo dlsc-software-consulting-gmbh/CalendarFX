@@ -19,6 +19,7 @@ package impl.com.calendarfx.view;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
+import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DateControl.EditOperation;
 import com.calendarfx.view.DayEntryView;
@@ -29,6 +30,8 @@ import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
 import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.WeekView;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -43,6 +46,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 
 public class DayViewEditController {
@@ -158,6 +162,10 @@ public class DayViewEditController {
 
 
     private void mousePressed(MouseEvent evt) {
+        VirtualGrid availabilityGrid = dayView.getAvailabilityGrid();
+        setLassoStart(grid(dayView.getInstantAt(evt), availabilityGrid));
+        setLassoEnd(grid(ViewHelper.getInstantAt(dayView, evt.getY()), availabilityGrid).plus(availabilityGrid.getAmount(), availabilityGrid.getUnit()));
+
         dragMode = null;
         handle = null;
 
@@ -235,6 +243,11 @@ public class DayViewEditController {
 
 
     private void mouseReleased(MouseEvent evt) {
+        getOnLassoFinished().accept(getLassoStart(), getLassoEnd());
+
+        setLassoStart(null);
+        setLassoEnd(null);
+
         if (!evt.getButton().equals(MouseButton.PRIMARY) || dayEntryView == null || dragMode == null || !dragging) {
             return;
         }
@@ -262,6 +275,8 @@ public class DayViewEditController {
     }
 
     private void mouseDragged(MouseEvent evt) {
+        setLassoEnd(grid(dayView.getInstantAt(evt), dayView.getAvailabilityGrid()));
+
         if (!evt.getButton().equals(MouseButton.PRIMARY) || dayEntryView == null || dragMode == null || !dragging) {
             return;
         }
@@ -445,8 +460,11 @@ public class DayViewEditController {
     }
 
     private Instant grid(Instant time) {
+        return grid(time, dayView.getVirtualGrid());
+    }
+
+    private Instant grid(Instant time, VirtualGrid grid) {
         DayOfWeek firstDayOfWeek = dayView.getFirstDayOfWeek();
-        VirtualGrid grid = dayView.getVirtualGrid();
         Instant lowerTime = grid.adjustTime(time, dayView.getZoneId(), false, firstDayOfWeek);
         Instant upperTime = grid.adjustTime(time, dayView.getZoneId(), true, firstDayOfWeek);
         if (Duration.between(time, upperTime).abs().minus(Duration.between(time, lowerTime).abs()).isNegative()) {
@@ -454,5 +472,47 @@ public class DayViewEditController {
         }
 
         return lowerTime;
+    }
+
+    private final ObjectProperty<Instant> lassoStart = new SimpleObjectProperty<>(this, "lassoStart");
+
+    public final Instant getLassoStart() {
+        return lassoStart.get();
+    }
+
+    public final ObjectProperty<Instant> lassoStartProperty() {
+        return lassoStart;
+    }
+
+    public final void setLassoStart(Instant lassoStart) {
+        this.lassoStart.set(lassoStart);
+    }
+
+    private final ObjectProperty<Instant> lassoEnd = new SimpleObjectProperty<>(this, "lassoEnd");
+
+    public final Instant getLassoEnd() {
+        return lassoEnd.get();
+    }
+
+    public final ObjectProperty<Instant> lassoEndProperty() {
+        return lassoEnd;
+    }
+
+    public final void setLassoEnd(Instant lassoEnd) {
+        this.lassoEnd.set(lassoEnd);
+    }
+
+    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) -> System.out.println("lasso start: " + getLassoStart() + ", lasso end: " + getLassoEnd()));
+
+    public final BiConsumer<Instant, Instant> getOnLassoFinished() {
+        return onLassoFinished.get();
+    }
+
+    public final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinishedProperty() {
+        return onLassoFinished;
+    }
+
+    public final void setOnLassoFinished(BiConsumer<Instant, Instant> onLassoFinished) {
+        this.onLassoFinished.set(onLassoFinished);
     }
 }

@@ -16,6 +16,8 @@
 
 package com.calendarfx.view;
 
+import com.calendarfx.model.Entry;
+import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.ViewHelper;
 import javafx.beans.InvalidationListener;
@@ -45,6 +47,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -96,6 +99,23 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         earliestTimeUsedProperty().addListener(trimListener);
         latestTimeUsedProperty().addListener(trimListener);
         trimTimeBoundsProperty().addListener(trimListener);
+
+        setOnLassoFinished((start, end) -> {
+            if (start == null || end == null) {
+                return;
+            }
+
+            if (isEditAvailability()) {
+                if (start.isAfter(end)) {
+                    Instant tmp = start;
+                    start = end;
+                    end = tmp;
+                }
+
+                Entry<?> entry = new Entry<>("Availability Entry", new Interval(start, end, getZoneId()));
+                getAvailabilityCalendar().addEntry(entry);
+            }
+        });
     }
 
     /**
@@ -829,6 +849,48 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         setVisibleHours(Math.min(24, (int) getStartTime().until(getEndTime(), ChronoUnit.HOURS)));
     }
 
+    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) -> System.out.println("lasso start: " + getLassoStart() + ", lasso end: " + getLassoEnd()));
+
+    public final BiConsumer<Instant, Instant> getOnLassoFinished() {
+        return onLassoFinished.get();
+    }
+
+    public final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinishedProperty() {
+        return onLassoFinished;
+    }
+
+    public final void setOnLassoFinished(BiConsumer<Instant, Instant> onLassoFinished) {
+        this.onLassoFinished.set(onLassoFinished);
+    }
+
+    private final ObjectProperty<Instant> lassoStart = new SimpleObjectProperty<>(this, "lassoStart");
+
+    public final Instant getLassoStart() {
+        return lassoStart.get();
+    }
+
+    public final ObjectProperty<Instant> lassoStartProperty() {
+        return lassoStart;
+    }
+
+    public final void setLassoStart(Instant lassoStart) {
+        this.lassoStart.set(lassoStart);
+    }
+
+    private final ObjectProperty<Instant> lassoEnd = new SimpleObjectProperty<>(this, "lassoEnd");
+
+    public final Instant getLassoEnd() {
+        return lassoEnd.get();
+    }
+
+    public final ObjectProperty<Instant> lassoEndProperty() {
+        return lassoEnd;
+    }
+
+    public final void setLassoEnd(Instant lassoEnd) {
+        this.lassoEnd.set(lassoEnd);
+    }
+
     /**
      * Invokes {@link DateControl#bind(DateControl, boolean)} and adds some more
      * bindings between this control and the given control.
@@ -845,11 +907,16 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
         Bindings.bindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
         Bindings.bindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
-        Bindings.bindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.bindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeCircleProperty());
         Bindings.bindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.bindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
         Bindings.bindBidirectional(otherControl.overlapResolutionStrategyProperty(), overlapResolutionStrategyProperty());
+        Bindings.bindBidirectional(otherControl.lassoStartProperty(),  lassoStartProperty());
+        Bindings.bindBidirectional(otherControl.lassoEndProperty(),  lassoEndProperty());
+        Bindings.bindBidirectional(otherControl.onLassoFinishedProperty(),  onLassoFinishedProperty());
+        Bindings.bindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
+        Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -861,11 +928,16 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.hourHeightCompressedProperty(), hourHeightCompressedProperty());
         Bindings.unbindBidirectional(otherControl.visibleHoursProperty(), visibleHoursProperty());
         Bindings.unbindBidirectional(otherControl.enableCurrentTimeMarkerProperty(), enableCurrentTimeMarkerProperty());
-        Bindings.unbindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeMarkerProperty());
+        Bindings.unbindBidirectional(otherControl.enableCurrentTimeCircleProperty(), enableCurrentTimeCircleProperty());
         Bindings.unbindBidirectional(otherControl.trimTimeBoundsProperty(), trimTimeBoundsProperty());
         Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
         Bindings.unbindBidirectional(otherControl.overlapResolutionStrategyProperty(), overlapResolutionStrategyProperty());
+        Bindings.unbindBidirectional(otherControl.lassoStartProperty(),  lassoStartProperty());
+        Bindings.unbindBidirectional(otherControl.lassoEndProperty(),  lassoEndProperty());
+        Bindings.unbindBidirectional(otherControl.onLassoFinishedProperty(),  onLassoFinishedProperty());
+        Bindings.unbindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
+        Bindings.unbindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";

@@ -58,6 +58,8 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
@@ -2431,6 +2433,86 @@ public abstract class DateControl extends CalendarFXControl {
         return enableHyperlinks.get();
     }
 
+    private final BooleanProperty editAvailability = new SimpleBooleanProperty(this, "editAvailability");
+
+    public boolean isEditAvailability() {
+        return editAvailability.get();
+    }
+
+    /**
+     * A flag used to signal whether the user is allowed to modify the availability calendar. If he is
+     * allowed then the user can click on "time slots" based on the {@link #availabilityGridProperty()}.
+     *
+     * @return true if the user can edit availability
+     */
+    public BooleanProperty editAvailabilityProperty() {
+        return editAvailability;
+    }
+
+    public void setEditAvailability(boolean editAvailability) {
+        this.editAvailability.set(editAvailability);
+    }
+
+    private final ObjectProperty<Calendar> availabilityCalendar = new SimpleObjectProperty<>(this, "availabilityCalendar", new Calendar());
+
+    public final Calendar getAvailabilityCalendar() {
+        return availabilityCalendar.get();
+    }
+
+    /**
+     * A background calendar can be used to display "availability" of
+     * a person or a resource.
+     *
+     * @return the background calendar used for this view
+     */
+    public final ObjectProperty<Calendar> availabilityCalendarProperty() {
+        return availabilityCalendar;
+    }
+
+    public final void setAvailabilityCalendar(Calendar availabilityGrid) {
+        this.availabilityCalendar.set(availabilityGrid);
+    }
+
+    private final ObjectProperty<VirtualGrid> availabilityGrid = new SimpleObjectProperty<>(this, "availabilityGrid", new VirtualGrid("30 Minutes", "30 Minutes", ChronoUnit.MINUTES, 30));
+
+    public final VirtualGrid getAvailabilityGrid() {
+        return availabilityGrid.get();
+    }
+
+    /**
+     * Defines a virtual grid to be used for working with the availability calendar.
+     *
+     * @see #availabilityCalendarProperty()
+     * @return the availability calendar grid size
+     */
+    public final ObjectProperty<VirtualGrid> availabilityGridProperty() {
+        return availabilityGrid;
+    }
+
+    public final void setAvailabilityGrid(VirtualGrid availabilityGrid) {
+        this.availabilityGrid.set(availabilityGrid);
+    }
+
+    private final ObjectProperty<Paint> availabilityFill = new SimpleObjectProperty<>(this, "availabilityFill", Color.GRAY);
+
+    public final Paint getAvailabilityFill() {
+        return availabilityFill.get();
+    }
+
+    /**
+     * The color used for drawing the availability background information behind the calendar
+     * entries.
+     *
+     * @return the color used for filling "unavailable" time slots
+     */
+    public final ObjectProperty<Paint> availabilityFillProperty() {
+        return availabilityFill;
+    }
+
+    public final void setAvailabilityFill(Paint availabilityFill) {
+        this.availabilityFill.set(availabilityFill);
+    }
+
     /**
      * Binds several properties of the given date control to the same properties
      * of this control. This kind of binding is needed to create UIs with nested
@@ -2467,9 +2549,11 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.requestedTimeProperty(), requestedTimeProperty());
 
         Bindings.bindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
-        Bindings.bindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
         Bindings.bindBidirectional(otherControl.weekFieldsProperty(), weekFieldsProperty());
         Bindings.bindBidirectional(otherControl.layoutProperty(), layoutProperty());
+
+        Bindings.bindBidirectional(otherControl.todayProperty(), todayProperty());
+        Bindings.bindBidirectional(otherControl.zoneIdProperty(), zoneIdProperty());
 
         Bindings.bindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
         Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
@@ -2482,10 +2566,12 @@ public abstract class DateControl extends CalendarFXControl {
             Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
         }
 
-        Bindings.bindBidirectional(otherControl.todayProperty(), todayProperty());
-        Bindings.bindBidirectional(otherControl.zoneIdProperty(), zoneIdProperty());
+        Bindings.bindBidirectional(otherControl.editAvailabilityProperty(),  editAvailabilityProperty());
+        Bindings.bindBidirectional(otherControl.availabilityCalendarProperty(),  availabilityCalendarProperty());
+        Bindings.bindBidirectional(otherControl.availabilityGridProperty(),  availabilityGridProperty());
+        Bindings.bindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
 
-        // edit callbacks
+        // bind callbacks
         Bindings.bindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
         Bindings.bindBidirectional(otherControl.dateDetailsCallbackProperty(), dateDetailsCallbackProperty());
         Bindings.bindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
@@ -2512,6 +2598,7 @@ public abstract class DateControl extends CalendarFXControl {
         // unbind lists
         Bindings.unbindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
         Bindings.unbindContentBidirectional(otherControl.getSelections(), getSelections());
+        Bindings.unbindContentBidirectional(otherControl.getWeekendDays(), getWeekendDays());
 
         // unbind properties
         Bindings.unbindBidirectional(otherControl.suspendUpdatesProperty(), suspendUpdatesProperty());
@@ -2522,19 +2609,24 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.requestedTimeProperty(), requestedTimeProperty());
 
         Bindings.unbindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
-        Bindings.unbindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
         Bindings.unbindBidirectional(otherControl.weekFieldsProperty(), weekFieldsProperty());
+        Bindings.unbindBidirectional(otherControl.layoutProperty(), layoutProperty());
         Bindings.unbindBidirectional(otherControl.dateProperty(), dateProperty());
 
         Bindings.unbindBidirectional(otherControl.todayProperty(), todayProperty());
         Bindings.unbindBidirectional(otherControl.zoneIdProperty(), zoneIdProperty());
 
-        Bindings.unbindBidirectional(otherControl.layoutProperty(), layoutProperty());
-
         Bindings.unbindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
         Bindings.unbindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.unbindBidirectional(otherControl.timeProperty(), timeProperty());
         Bindings.unbindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
+        Bindings.unbindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
+        Bindings.unbindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
+
+        Bindings.unbindBidirectional(otherControl.editAvailabilityProperty(),  editAvailabilityProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityCalendarProperty(),  availabilityCalendarProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityGridProperty(),  availabilityGridProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
 
         // unbind callbacks
         Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
@@ -2542,6 +2634,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
+        Bindings.unbindBidirectional(otherControl.entryDetailsPopOverContentCallbackProperty(), entryDetailsPopOverContentCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryEditPolicyProperty(), entryEditPolicyProperty());
     }
 

@@ -133,7 +133,7 @@ public class Calendar implements EventTarget {
          * ordinal value modulo the number of elements in this enum.
          *
          * @param ordinal the ordinal value for which to return a style
-         * @return a style, guaranteed to be non null
+         * @return a style, guaranteed to be non-null
          */
         public static Style getStyle(int ordinal) {
             return Style.values()[ordinal % Style.values().length];

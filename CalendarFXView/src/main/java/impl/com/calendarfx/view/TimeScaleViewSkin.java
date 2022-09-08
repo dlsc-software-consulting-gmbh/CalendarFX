@@ -287,9 +287,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
     }
 
     @Override
-    protected double computeMinWidth(double height, double topInset,
-                                     double rightInset, double bottomInset, double leftInset) {
+    protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
         return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
     }
-
 }
