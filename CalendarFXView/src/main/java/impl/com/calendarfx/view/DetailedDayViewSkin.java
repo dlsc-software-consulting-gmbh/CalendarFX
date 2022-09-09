@@ -69,7 +69,7 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         dayViewScrollPane = new DayViewScrollPane(dayView, scrollBar);
         dayViewScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-scroll-pane");
 
-        // the time scale
+        // the timescale
         TimeScaleView timeScale = view.getTimeScaleView();
         Bindings.bindBidirectional(timeScale.translateYProperty(), dayView.translateYProperty());
 
@@ -91,6 +91,7 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         // time scale scroll pane
         timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
         timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
+        timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
 
         // separator
         separator = new Separator(Orientation.VERTICAL);
