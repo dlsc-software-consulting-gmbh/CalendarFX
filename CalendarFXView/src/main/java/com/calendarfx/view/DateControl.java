@@ -696,13 +696,17 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
+    private PopOver entryPopOver;
+
     private void showEntryDetails(Entry<?> entry, Node owner, double screenY) {
         Callback<EntryDetailsPopOverContentParameter, Node> contentCallback = getEntryDetailsPopOverContentCallback();
         if (contentCallback == null) {
             throw new IllegalStateException("No content callback found for entry popover");
         }
 
-        PopOver entryPopOver = new PopOver();
+        if (entryPopOver == null || entryPopOver.isDetached()) {
+            entryPopOver = new PopOver();
+        }
 
         EntryDetailsPopOverContentParameter param = new EntryDetailsPopOverContentParameter(entryPopOver, this, owner, entry);
         Node content = contentCallback.call(param);
