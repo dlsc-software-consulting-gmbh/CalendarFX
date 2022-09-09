@@ -1874,11 +1874,10 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * Enables or disables user options to work with different time zones.
      *
+     * @return true if time zone support is enabled
      * @see DateControl#zoneIdProperty()
      * @see Entry#zoneIdProperty()
      * @see Interval#getZoneId()
-     *
-     * @return true if time zone support is enabled
      */
     public final BooleanProperty enableTimeZoneSupportProperty() {
         return enableTimeZoneSupport;
@@ -1956,8 +1955,8 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * Returns the zoned date time version of the current time.
      *
-     * @see #getTime()
      * @return the zoned date time version of the current time property
+     * @see #getTime()
      */
     public final ZonedDateTime getZonedDateTime() {
         return ZonedDateTime.of(getDate(), getTime(), getZoneId());
@@ -2482,8 +2481,8 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * Defines a virtual grid to be used for working with the availability calendar.
      *
-     * @see #availabilityCalendarProperty()
      * @return the availability calendar grid size
+     * @see #availabilityCalendarProperty()
      */
     public final ObjectProperty<VirtualGrid> availabilityGridProperty() {
         return availabilityGrid;
@@ -2493,7 +2492,7 @@ public abstract class DateControl extends CalendarFXControl {
         this.availabilityGrid.set(availabilityGrid);
     }
 
-    private final ObjectProperty<Paint> availabilityFill = new SimpleObjectProperty<>(this, "availabilityFill", Color.GRAY);
+    private final ObjectProperty<Paint> availabilityFill = new SimpleObjectProperty<>(this, "availabilityFill", Color.rgb(0, 0, 0, .2));
 
     public final Paint getAvailabilityFill() {
         return availabilityFill.get();
@@ -2566,9 +2565,9 @@ public abstract class DateControl extends CalendarFXControl {
             Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
         }
 
-        Bindings.bindBidirectional(otherControl.editAvailabilityProperty(),  editAvailabilityProperty());
-        Bindings.bindBidirectional(otherControl.availabilityCalendarProperty(),  availabilityCalendarProperty());
-        Bindings.bindBidirectional(otherControl.availabilityGridProperty(),  availabilityGridProperty());
+        Bindings.bindBidirectional(otherControl.editAvailabilityProperty(), editAvailabilityProperty());
+        Bindings.bindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
+        Bindings.bindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
         Bindings.bindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
 
         // bind callbacks
@@ -2623,9 +2622,9 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
         Bindings.unbindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
 
-        Bindings.unbindBidirectional(otherControl.editAvailabilityProperty(),  editAvailabilityProperty());
-        Bindings.unbindBidirectional(otherControl.availabilityCalendarProperty(),  availabilityCalendarProperty());
-        Bindings.unbindBidirectional(otherControl.availabilityGridProperty(),  availabilityGridProperty());
+        Bindings.unbindBidirectional(otherControl.editAvailabilityProperty(), editAvailabilityProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
         Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
 
         // unbind callbacks

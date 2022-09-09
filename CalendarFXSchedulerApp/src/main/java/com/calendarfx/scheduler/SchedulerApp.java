@@ -21,7 +21,10 @@ import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.CalendarView.Page;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
+import com.calendarfx.view.DetailedWeekView;
+import com.calendarfx.view.WeekView;
 import fr.brouillard.oss.cssfx.CSSFX;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -41,14 +44,20 @@ public class SchedulerApp extends Application {
         CalendarView calendarView = new CalendarView(Page.DAY, Page.WEEK);
         calendarView.showWeekPage();
 
+        DetailedWeekView detailedWeekView = calendarView.getWeekPage().getDetailedWeekView();
+        WeekView weekView = detailedWeekView.getWeekView();
+        DayView dayView = calendarView.getDayPage().getDetailedDayView().getDayView();
+
+        detailedWeekView.setShowToday(false);
+
         // extra button for week page
         ToggleButton editScheduleButton1 = new ToggleButton("Edit Schedule");
-        editScheduleButton1.selectedProperty().bindBidirectional(calendarView.getWeekPage().getDetailedWeekView().getWeekView().editAvailabilityProperty());
+        editScheduleButton1.selectedProperty().bindBidirectional(weekView.editAvailabilityProperty());
         ((Pane) calendarView.getWeekPage().getToolBarControls()).getChildren().add(editScheduleButton1);
 
         // extra button for day page
         ToggleButton editScheduleButton2 = new ToggleButton("Edit Schedule");
-        editScheduleButton2.selectedProperty().bindBidirectional(calendarView.getDayPage().getDetailedDayView().getDayView().editAvailabilityProperty());
+        editScheduleButton2.selectedProperty().bindBidirectional(dayView.editAvailabilityProperty());
         ((Pane) calendarView.getDayPage().getToolBarControls()).getChildren().add(editScheduleButton2);
 
         calendarView.setEnableTimeZoneSupport(true);

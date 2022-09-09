@@ -161,6 +161,8 @@ public class EntryDetailsView extends EntryPopOverPane {
         recurrenceButton.getItems().setAll(none, everyDay, everyWeek, everyMonth, everyYear, new SeparatorMenuItem(), custom);
         recurrenceButton.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
+        EntryMapView mapView = new EntryMapView(entry);
+
         GridPane box = new GridPane();
         box.getStyleClass().add("content");
         box.add(fullDayLabel, 0, 0);
@@ -174,6 +176,7 @@ public class EntryDetailsView extends EntryPopOverPane {
         box.add(recurrentLabel, 0, 4);
         box.add(recurrenceButton, 1, 4);
         box.add(summaryLabel, 1, 5);
+        box.add(mapView, 1, 6);
 
         GridPane.setFillWidth(zoneBox, true);
         GridPane.setHgrow(zoneBox, Priority.ALWAYS);
@@ -229,6 +232,7 @@ public class EntryDetailsView extends EntryPopOverPane {
         entry.recurrenceRuleProperty().addListener(weakRecurrenceRuleListener);
 
         updateRecurrenceRuleButton(entry);
+        updateSummaryLabel(entry);
 
         entry.recurrenceRuleProperty().addListener(weakUpdateSummaryLabelListener);
     }
@@ -242,8 +246,12 @@ public class EntryDetailsView extends EntryPopOverPane {
         if (rule != null && !rule.trim().equals("")) {
             String text = Util.convertRFC2445ToText(rule, entry.getStartDate());
             summaryLabel.setText(text);
+            summaryLabel.setVisible(true);
+            summaryLabel.setManaged(true);
         } else {
             summaryLabel.setText("");
+            summaryLabel.setVisible(false);
+            summaryLabel.setManaged(false);
         }
     }
 
