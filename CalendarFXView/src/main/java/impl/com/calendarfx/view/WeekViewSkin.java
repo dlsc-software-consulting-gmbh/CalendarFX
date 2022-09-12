@@ -18,6 +18,7 @@ package impl.com.calendarfx.view;
 
 import com.calendarfx.view.WeekDayView;
 import com.calendarfx.view.WeekView;
+import com.calendarfx.view.WeekView.WeekDayParameter;
 import javafx.beans.InvalidationListener;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.ColumnConstraints;
@@ -80,7 +81,7 @@ public class WeekViewSkin extends SkinBase<WeekView> {
 
         weekDayViews.clear();
 
-        Callback<WeekView.WeekDayParameter, WeekDayView> weekDayViewFactory = weekView.getWeekDayViewFactory();
+        Callback<WeekDayParameter, WeekDayView> weekDayViewFactory = weekView.getWeekDayViewFactory();
 
         int numberOfDays = weekView.getNumberOfDays();
 
@@ -89,11 +90,12 @@ public class WeekViewSkin extends SkinBase<WeekView> {
             con.setPercentWidth((double) 100 / (double) numberOfDays);
             dayGridPane.getColumnConstraints().add(con);
 
-            WeekView.WeekDayParameter param = new WeekView.WeekDayParameter(weekView);
+            WeekDayParameter param = new WeekDayParameter(weekView);
             WeekDayView weekDayView = weekDayViewFactory.call(param);
             weekDayView.getProperties().put("week.view", weekView);
             weekDayView.earliestTimeUsedProperty().addListener(it -> updateUsedTimes());
             weekDayView.latestTimeUsedProperty().addListener(it -> updateUsedTimes());
+            weekDayView.showTodayProperty().bind(weekView.showTodayProperty());
 
             if (i == 0) {
                 weekDayView.getStyleClass().add("first-day");

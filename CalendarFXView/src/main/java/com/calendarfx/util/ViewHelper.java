@@ -22,9 +22,9 @@ import com.calendarfx.view.DayViewBase;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.effect.Light.Point;
 import javafx.stage.Screen;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
@@ -103,7 +103,7 @@ public final class ViewHelper {
                 startTime = view.getZonedDateTimeStart();
                 endTime = view.getZonedDateTimeEnd();
 
-                long earlyHours = ChronoUnit.HOURS.between(minTime,startTime);
+                long earlyHours = ChronoUnit.HOURS.between(minTime, startTime);
                 long lateHours = ChronoUnit.HOURS.between(endTime, maxTime) + 1;
 
                 double hourHeightCompressed = view.getHourHeightCompressed();
@@ -180,7 +180,7 @@ public final class ViewHelper {
                 ZonedDateTime minTime = view.getZonedDateTimeMin();
                 ZonedDateTime maxTime = view.getZonedDateTimeMax();
 
-                long earlyHours = ChronoUnit.HOURS.between(minTime,startTime);
+                long earlyHours = ChronoUnit.HOURS.between(minTime, startTime);
                 long lateHours = ChronoUnit.HOURS.between(endTime, maxTime) + 1;
 
                 double hourHeightCompressed = view.getHourHeightCompressed();
@@ -236,6 +236,11 @@ public final class ViewHelper {
         ObservableList<Screen> screens = Screen.getScreensForRectangle(
                 entryBounds.getMinX(), entryBounds.getMinY(),
                 entryBounds.getWidth(), entryBounds.getHeight());
+
+        if (screens.isEmpty()) {
+            return null;
+
+        }
         Rectangle2D screenBounds = screens.get(0).getVisualBounds();
 
         double spaceLeft = entryBounds.getMinX();
@@ -257,19 +262,19 @@ public final class ViewHelper {
         return ArrowLocation.LEFT_TOP;
     }
 
-    public static Point findPopOverArrowPosition(Node node, double screenY, double arrowSize, ArrowLocation arrowLocation) {
-        Point point = new Point();
-        point.setY(screenY);
+    public static Point2D findPopOverArrowPosition(Node node, double screenY, double arrowSize, ArrowLocation arrowLocation) {
 
         Bounds entryBounds = node.localToScreen(node.getBoundsInLocal());
 
+        double screenX;
+
         if (arrowLocation == ArrowLocation.LEFT_TOP || arrowLocation == ArrowLocation.LEFT_BOTTOM) {
-            point.setX(entryBounds.getMaxX());
+            screenX = entryBounds.getMaxX();
         } else {
-            point.setX(entryBounds.getMinX() - arrowSize);
+            screenX = entryBounds.getMinX() - arrowSize;
         }
 
-        return point;
+        return new Point2D(screenX, screenY);
     }
 
     public static void scrollToRequestedTime(DateControl control, DayViewScrollPane scrollPane) {

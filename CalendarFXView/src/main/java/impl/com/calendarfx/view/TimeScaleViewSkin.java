@@ -263,7 +263,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
         double prefHeight = label.prefHeight(contentWidth);
 
-        double y = contentY + ViewHelper.getTimeLocation(getSkinnable(), time, false);
+        double y = contentY + ViewHelper.getTimeLocation(getSkinnable(), time, true);
 
         /*
          * Min and max calculations to ensure text is completely visible at the

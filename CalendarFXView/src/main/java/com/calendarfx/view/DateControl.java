@@ -30,11 +30,13 @@ import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -53,7 +55,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.effect.Light.Point;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
@@ -161,6 +162,8 @@ public abstract class DateControl extends CalendarFXControl {
     private final InvalidationListener updateCalendarListListener = (Observable it) -> updateCalendarList();
 
     private final WeakInvalidationListener weakUpdateCalendarListListener = new WeakInvalidationListener(updateCalendarListListener);
+
+    private Entry<?> requestedDetailEntry;
 
     /**
      * Constructs a new date control and initializes all factories and callbacks
@@ -412,6 +415,13 @@ public abstract class DateControl extends CalendarFXControl {
         getAvailableZoneIds().add(ZoneId.of("US/Eastern"));
         getAvailableZoneIds().add(ZoneId.of("US/Central"));
         getAvailableZoneIds().add(ZoneId.of("US/Pacific"));
+
+        createEntryClickCountProperty().addListener(it -> {
+            int createEntryClickCount = getCreateEntryClickCount();
+            if (createEntryClickCount <= 0 || createEntryClickCount > 3) {
+                throw new IllegalArgumentException("the click count for creating new entries must be between 1 and 3 but was " + createEntryClickCount);
+            }
+        });
     }
 
     private final ObservableMap<Calendar, BooleanProperty> calendarVisibilityMap = FXCollections.observableHashMap();
@@ -656,36 +666,50 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     private void doShowEntry(Entry<?> entry, boolean startEditing) {
+        layout(); // important so that entry view bounds can be found
+
         setDate(entry.getStartDate());
 
-        if (!entry.isFullDay()) {
-            setRequestedTime(entry.getStartTime());
-        }
+        Platform.runLater(() -> {
+            // do not scroll time when a location is already given
+            // a location is usually given when the user created a new entry via dragging
+            if (!entry.isFullDay()) {
+                // wiggle the requested time property
+                setRequestedTime(null);
+                setRequestedTime(entry.getStartTime());
+            }
 
-        if (startEditing) {
+            Platform.runLater(() -> {
+                if (startEditing) {
 
-            /*
-             * The UI first needs to update itself so that the matching entry
-             * view can be found.
-             */
-            Platform.runLater(() -> doEditEntry(entry));
-        } else {
-            Platform.runLater(() -> doBounceEntry(entry));
-        }
+                    /*
+                     * The UI first needs to update itself so that the matching entry
+                     * view can be found.
+                     */
+                    Platform.runLater(() -> doEditEntry(entry));
+                } else {
+                    Platform.runLater(() -> doBounceEntry(entry));
+                }
+            });
+        });
     }
 
     private void doEditEntry(Entry<?> entry) {
         EntryViewBase<?> entryView = findEntryView(entry);
 
-        if (entryView != null) {
-            entryView.bounce();
+        Platform.runLater(() -> {
+            if (entryView != null) {
+                entryView.bounce();
 
-            Point2D localToScreen = entryView.localToScreen(0, 0);
+                System.out.println(entryView.getLayoutBounds());
+                Point2D location = entryView.localToScreen(0, 0);
 
-            Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
-            EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, localToScreen.getX(), localToScreen.getY());
-            callback.call(param);
-        }
+                System.out.println(location);
+                Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
+                EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, location.getX(), location.getY());
+                callback.call(param);
+            }
+        });
     }
 
     private void doBounceEntry(Entry<?> entry) {
@@ -706,6 +730,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         if (entryPopOver == null || entryPopOver.isDetached()) {
             entryPopOver = new PopOver();
+            entryPopOver.setAnimated(false); // important, otherwise too many side-effects
         }
 
         EntryDetailsPopOverContentParameter param = new EntryDetailsPopOverContentParameter(entryPopOver, this, owner, entry);
@@ -718,8 +743,14 @@ public abstract class DateControl extends CalendarFXControl {
         entryPopOver.setContentNode(content);
 
         ArrowLocation location = ViewHelper.findPopOverArrowLocation(owner);
+        if (location == null) {
+            location = ArrowLocation.TOP_LEFT;
+        }
+
         entryPopOver.setArrowLocation(location);
-        Point position = ViewHelper.findPopOverArrowPosition(owner, screenY, entryPopOver.getArrowSize(), location);
+
+        Point2D position = ViewHelper.findPopOverArrowPosition(owner, screenY, entryPopOver.getArrowSize(), location);
+
         entryPopOver.show(owner, position.getX(), position.getY());
     }
 
@@ -2496,7 +2527,7 @@ public abstract class DateControl extends CalendarFXControl {
         this.availabilityGrid.set(availabilityGrid);
     }
 
-    private final ObjectProperty<Paint> availabilityFill = new SimpleObjectProperty<>(this, "availabilityFill", Color.rgb(0, 0, 0, .2));
+    private final ObjectProperty<Paint> availabilityFill = new SimpleObjectProperty<>(this, "availabilityFill", Color.rgb(0, 0, 0, .1));
 
     public final Paint getAvailabilityFill() {
         return availabilityFill.get();
@@ -2514,6 +2545,26 @@ public abstract class DateControl extends CalendarFXControl {
 
     public final void setAvailabilityFill(Paint availabilityFill) {
         this.availabilityFill.set(availabilityFill);
+    }
+
+    private final BooleanProperty showDetailsUponCreation = new SimpleBooleanProperty(this, "showDetailsUponCreation", true);
+
+    public final boolean isShowDetailsUponCreation() {
+        return showDetailsUponCreation.get();
+    }
+
+    /**
+     * Determines if the {@link #entryDetailsCallbackProperty()} will be used to display
+     * a dialog for a newly added calendar entry.
+     *
+     * @return true if the date control shows a dialog immediately after a new entry was added by the user
+     */
+    public final BooleanProperty showDetailsUponCreationProperty() {
+        return showDetailsUponCreation;
+    }
+
+    public final void setShowDetailsUponCreation(boolean showDetailsUponCreation) {
+        this.showDetailsUponCreation.set(showDetailsUponCreation);
     }
 
     /**
@@ -2564,6 +2615,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
         Bindings.bindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
         Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
+        Bindings.bindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
 
         if (bindDate) {
             Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
@@ -2573,6 +2625,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
         Bindings.bindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
         Bindings.bindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
+        Bindings.bindBidirectional(otherControl.createEntryClickCountProperty(), createEntryClickCountProperty());
 
         // bind callbacks
         Bindings.bindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
@@ -2630,6 +2683,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
         Bindings.unbindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
         Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
+        Bindings.unbindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
 
         // unbind callbacks
         Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
@@ -2737,6 +2791,26 @@ public abstract class DateControl extends CalendarFXControl {
 
     public final void setAvailableZoneIds(ObservableList<ZoneId> availableZoneIds) {
         this.availableZoneIds.set(availableZoneIds);
+    }
+
+    private final IntegerProperty createEntryClickCount = new SimpleIntegerProperty(this, "createEntryClickCount", 2);
+
+    public int getCreateEntryClickCount() {
+        return createEntryClickCount.get();
+    }
+
+    /**
+     * An integer that determines how many times the user has to perform a primary
+     * mouse button click in order to create a new entry.
+     *
+     * @return the number of mouse clicks required for creating a new entry
+     */
+    public IntegerProperty createEntryClickCountProperty() {
+        return createEntryClickCount;
+    }
+
+    public void setCreateEntryClickCount(int createEntryClickCount) {
+        this.createEntryClickCount.set(createEntryClickCount);
     }
 
     private static final String DATE_CONTROL_CATEGORY = "Date Control";

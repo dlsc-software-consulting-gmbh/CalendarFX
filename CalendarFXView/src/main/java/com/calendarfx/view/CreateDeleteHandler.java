@@ -42,7 +42,11 @@ class CreateDeleteHandler {
     }
 
     private void createEntry(MouseEvent evt) {
-        if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
+        if (!(dateControl instanceof DayView) && evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == dateControl.getCreateEntryClickCount()) {
+
+            if (!evt.isStillSincePress()) {
+                return;
+            }
 
             if (dateControl instanceof DayViewBase) {
                 DayViewBase dayViewBase = (DayViewBase) dateControl;
@@ -72,9 +76,14 @@ class CreateDeleteHandler {
 
                 Optional<Calendar> calendar = dateControl.getCalendarAt(evt.getX(), evt.getY());
                 if (time != null) {
-                    dateControl.createEntryAt(time, calendar.orElse(null));
+                    Entry<?> entry = dateControl.createEntryAt(time, calendar.orElse(null));
+                    if (dateControl.isShowDetailsUponCreation()) {
+                        dateControl.fireEvent(new RequestEvent(dateControl, dateControl, entry));
+                    }
                 }
             }
+
+            evt.consume();
         }
     }
 

@@ -38,6 +38,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.controlsfx.control.PropertySheet.Item;
 
 import java.time.Instant;
@@ -861,6 +863,20 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
     public final void setOnLassoFinished(BiConsumer<Instant, Instant> onLassoFinished) {
         this.onLassoFinished.set(onLassoFinished);
+    }
+
+    private final ObjectProperty<Paint> lassoColor = new SimpleObjectProperty<>(this, "lassoColor", Color.ALICEBLUE);
+
+    public final Paint getLassoColor() {
+        return lassoColor.get();
+    }
+
+    public final ObjectProperty<Paint> lassoColorProperty() {
+        return lassoColor;
+    }
+
+    public final void setLassoColor(Paint lassoColor) {
+        this.lassoColor.set(lassoColor);
     }
 
     private final ObjectProperty<Instant> lassoStart = new SimpleObjectProperty<>(this, "lassoStart");

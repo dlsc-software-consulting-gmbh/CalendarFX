@@ -122,8 +122,16 @@ public class DayViewScrollPane extends Pane {
         double y = ViewHelper.getTimeLocation(dayView, time, true);
         Insets insets = getInsets();
 
-        // place the given time at one third of the visible height
-        dayView.setTranslateY(Math.min(0, Math.max(-y + getHeight() / 3, getMaxTranslateY(insets))));
+        System.out.println("y: " + y);
+        System.out.println("t: " + dayView.getTranslateY());
+        // only scroll if the given time is not in the visible range
+        if (y < Math.abs(dayView.getTranslateY()) || y > Math.abs(dayView.getTranslateY()) + getHeight()) {
+            System.out.println("not visible");
+            // place the given time at one third of the visible height
+            dayView.setTranslateY(Math.min(0, Math.max(-y + getHeight() / 3, getMaxTranslateY(insets))));
+        } else {
+            System.out.println("visible");
+        }
     }
 
     private void updateVisibleTimeRange(String reason) {

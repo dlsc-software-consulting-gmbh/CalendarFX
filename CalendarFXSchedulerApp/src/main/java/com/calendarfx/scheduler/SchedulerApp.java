@@ -43,12 +43,15 @@ public class SchedulerApp extends Application {
     public void start(Stage primaryStage) {
         CalendarView calendarView = new CalendarView(Page.DAY, Page.WEEK);
         calendarView.showWeekPage();
+        calendarView.setEnableTimeZoneSupport(false);
+        calendarView.setCreateEntryClickCount(1);
 
         DetailedWeekView detailedWeekView = calendarView.getWeekPage().getDetailedWeekView();
         WeekView weekView = detailedWeekView.getWeekView();
         DayView dayView = calendarView.getDayPage().getDetailedDayView().getDayView();
 
         detailedWeekView.setShowToday(false);
+        detailedWeekView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
 
         // extra button for week page
         ToggleButton editScheduleButton1 = new ToggleButton("Edit Schedule");
@@ -59,9 +62,6 @@ public class SchedulerApp extends Application {
         ToggleButton editScheduleButton2 = new ToggleButton("Edit Schedule");
         editScheduleButton2.selectedProperty().bindBidirectional(dayView.editAvailabilityProperty());
         ((Pane) calendarView.getDayPage().getToolBarControls()).getChildren().add(editScheduleButton2);
-
-        calendarView.setEnableTimeZoneSupport(true);
-        calendarView.getWeekPage().getDetailedWeekView().setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
 
         Calendar katja = new Calendar("Katja");
         Calendar dirk = new Calendar("Dirk");

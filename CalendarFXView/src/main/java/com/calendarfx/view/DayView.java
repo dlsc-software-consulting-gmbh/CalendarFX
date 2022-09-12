@@ -61,6 +61,7 @@ public class DayView extends DayViewBase {
 	public DayView() {
 		getStyleClass().add(DAY_VIEW);
 
+		showTodayProperty().addListener(it -> updateStyleClasses());
 		todayProperty().addListener(evt -> updateStyleClasses());
 		dateProperty().addListener(evt -> updateStyleClasses());
 		selectionModeProperty().addListener(evt -> getSelections().clear());
@@ -79,7 +80,7 @@ public class DayView extends DayViewBase {
 
 	private void updateStyleClasses() {
 		LocalDate date = getDate();
-		if (date.equals(getToday())) {
+		if (date.equals(getToday()) && isShowToday()) {
 			if (!getStyleClass().contains(DAY_VIEW_TODAY)) {
 				getStyleClass().add(DAY_VIEW_TODAY);
 			}

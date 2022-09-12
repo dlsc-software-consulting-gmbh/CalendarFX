@@ -47,7 +47,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Control;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -115,9 +114,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         lateHoursRegion.getStyleClass().add("late-hours-region");
         lateHoursRegion.setManaged(false);
         getChildren().add(lateHoursRegion);
-
-        availabilityCanvas.widthProperty().bind(view.widthProperty());
-        availabilityCanvas.heightProperty().bind(view.heightProperty());
 
         InvalidationListener drawAvailabilityCanvasListener = it -> availabilityCanvas.draw();
         view.editAvailabilityProperty().addListener(drawAvailabilityCanvasListener);
@@ -414,6 +410,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
         super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
 
+        availabilityCanvas.relocate(contentX + 2, contentY);
+        availabilityCanvas.setWidth(contentWidth - 4);
+        availabilityCanvas.setHeight(contentHeight);
+
         availabilityCanvas.draw();
 
         if (getSkinnable().isScrollingEnabled()) {
@@ -421,10 +421,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         } else {
             layoutChildrenStatic(contentX, contentY, contentWidth, contentHeight);
         }
-    }
-
-    private void drawBackgroundEntries() {
-
     }
 
     protected void layoutChildrenInfiniteScrolling(double contentX, double contentY, double contentWidth, double contentHeight) {
@@ -1047,6 +1043,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     private class AvailabilityCanvas extends Canvas {
 
         public AvailabilityCanvas() {
+            setMouseTransparent(true);
             heightProperty().addListener(it -> draw());
             widthProperty().addListener(it -> draw());
         }
@@ -1076,21 +1073,21 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                         gc.fillRect(0, y1, getWidth(), y2 - y1);
                     });
                 }
+            }
 
-                if (dayView.isEditAvailability()) {
-                    Instant start = dayView.getLassoStart();
-                    Instant end = dayView.getLassoEnd();
+            if (dayView.isEditAvailability()) {
+                Instant start = dayView.getLassoStart();
+                Instant end = dayView.getLassoEnd();
 
-                    if (start != null && end != null) {
-                        double y1 = ViewHelper.getTimeLocation(dayView, start);
-                        double y2 = ViewHelper.getTimeLocation(dayView, end);
+                if (start != null && end != null) {
+                    double y1 = ViewHelper.getTimeLocation(dayView, start);
+                    double y2 = ViewHelper.getTimeLocation(dayView, end);
 
-                        double minY = Math.min(y1, y2);
-                        double maxY = Math.max(y1, y2);
+                    double minY = Math.min(y1, y2);
+                    double maxY = Math.max(y1, y2);
 
-                        gc.setFill(Color.rgb(0, 0, 0, .3));
-                        gc.fillRect(0, minY, getWidth(), maxY - minY);
-                    }
+                    gc.setFill(dayView.getLassoColor());
+                    gc.fillRect(0, minY, getWidth(), maxY - minY);
                 }
             }
         }

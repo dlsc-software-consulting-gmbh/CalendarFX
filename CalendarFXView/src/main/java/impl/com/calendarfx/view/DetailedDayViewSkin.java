@@ -23,7 +23,6 @@ import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DetailedDayView;
 import com.calendarfx.view.Messages;
-import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.TimeScaleView;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -107,7 +106,7 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         calendarHeaderView.visibleProperty().bind(view.layoutProperty().isEqualTo(DateControl.Layout.SWIMLANE));
 
         agendaView = view.getAgendaView();
-        agendaView.addEventHandler(RequestEvent.REQUEST_ENTRY, evt -> dayView.showEntry(evt.getEntry()));
+//        agendaView.addEventHandler(RequestEvent.REQUEST_ENTRY, evt -> dayView.editEntry(evt.getEntry()));
 
         RowConstraints row0 = new RowConstraints();
         row0.setFillHeight(true);

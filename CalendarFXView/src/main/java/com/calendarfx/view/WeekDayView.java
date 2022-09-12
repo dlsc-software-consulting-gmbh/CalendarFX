@@ -24,7 +24,7 @@ import javafx.scene.control.Skin;
 
 /**
  * A specialization of the regular {@link DayView} in order to support some customized
- * styling / customized behaviour. Additionally this view always has a reference to the
+ * styling / customized behaviour. Additionally, this view always has a reference to the
  * {@link WeekView} where it is being used.
  */
 public class WeekDayView extends DayView {
