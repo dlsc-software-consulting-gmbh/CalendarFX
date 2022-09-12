@@ -458,10 +458,12 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 line.getStyleClass().add(MIDNIGHT_LINE_STYLE_CLASS);
                 line.setStartX(snapPositionX(contentX));
                 line.setEndX(snapPositionX(contentX + contentWidth));
-            } else if (localTime.equals(LocalTime.NOON)) {
-                line.getStyleClass().add(NOON_LINE_STYLE_CLASS);
+            } else if (localTime.equals(LocalTime.NOON) ) {
                 line.setStartX(snapPositionX(contentX));
                 line.setEndX(snapPositionX(contentX + contentWidth));
+                if (view.isShowNoonMarker()) {
+                    line.getStyleClass().add(NOON_LINE_STYLE_CLASS);
+                }
             } else {
                 line.setStartX(snapPositionX(contentX + 4));
                 line.setEndX(snapPositionX(contentX + contentWidth - 4));

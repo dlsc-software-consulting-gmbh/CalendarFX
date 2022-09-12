@@ -1868,6 +1868,26 @@ public abstract class DateControl extends CalendarFXControl {
         showTodayProperty().set(show);
     }
 
+    private final BooleanProperty showNoonMarker = new SimpleBooleanProperty(this, "showNoonMarker", true);
+
+    public final boolean isShowNoonMarker() {
+        return showNoonMarker.get();
+    }
+
+    /**
+     * A property used to indicate whether the day view should mark noon with a special
+     * marker.
+     *
+     * @return true if noon will be marked in a special way
+     */
+    public final BooleanProperty showNoonMarkerProperty() {
+        return showNoonMarker;
+    }
+
+    public final void setShowNoonMarker(boolean showNoonMarker) {
+        this.showNoonMarker.set(showNoonMarker);
+    }
+
     private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now());
 
     /**
@@ -2616,6 +2636,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
         Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
         Bindings.bindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
+        Bindings.bindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
 
         if (bindDate) {
             Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
@@ -2684,6 +2705,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
         Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
         Bindings.unbindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
+        Bindings.unbindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
 
         // unbind callbacks
         Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());

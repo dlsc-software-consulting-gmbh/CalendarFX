@@ -47,7 +47,7 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
     @Override
     public Node getPanel(Stage stage) {
         ResourceCalendarView<String> resourceCalendarView = new ResourceCalendarView<>();
-
+        resourceCalendarView.setShowNoonMarker(false);
         resourceCalendarView.setOverlapResolutionStrategy(OverlapResolutionStrategy.VISUAL_BOUNDS);
         resourceCalendarView.setHeaderFactory(resource -> {
             Label label1 = new Label("IG-TR");
