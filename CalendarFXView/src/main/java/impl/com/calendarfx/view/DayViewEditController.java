@@ -170,9 +170,11 @@ public class DayViewEditController {
             return;
         }
 
-        VirtualGrid availabilityGrid = dayViewBase.getAvailabilityGrid();
-        setLassoStart(grid(dayViewBase.getInstantAt(evt), availabilityGrid));
-        setLassoEnd(grid(dayViewBase.getInstantAt(evt), availabilityGrid).plus(availabilityGrid.getAmount(), availabilityGrid.getUnit()));
+        if (!dayViewBase.isScrollingEnabled()) {
+            VirtualGrid availabilityGrid = dayViewBase.getAvailabilityGrid();
+            setLassoStart(grid(dayViewBase.getInstantAt(evt), availabilityGrid));
+            setLassoEnd(grid(dayViewBase.getInstantAt(evt), availabilityGrid).plus(availabilityGrid.getAmount(), availabilityGrid.getUnit()));
+        }
 
         dragMode = null;
         handle = null;
@@ -186,7 +188,7 @@ public class DayViewEditController {
         LOGGER.finer("mouse event y-coordinate:" + evt.getY());
         LOGGER.finer("time: " + dayViewBase.getZonedDateTimeAt(evt.getX(), evt.getY(), dayViewBase.getZoneId()));
 
-        if (evt.getTarget() instanceof DayView) {
+        if (!dayViewBase.isScrollingEnabled() && evt.getTarget() instanceof DayView) {
             Optional<Calendar> calendar = dayViewBase.getCalendarAt(evt.getX(), evt.getY());
             Instant instantAt = dayViewBase.getInstantAt(evt);
             ZonedDateTime time = ZonedDateTime.ofInstant(instantAt, dayViewBase.getZoneId());
@@ -274,14 +276,17 @@ public class DayViewEditController {
             return;
         }
 
-        getOnLassoFinished().accept(getLassoStart(), getLassoEnd());
+        if (!dayViewBase.isScrollingEnabled()) {
+            getOnLassoFinished().accept(getLassoStart(), getLassoEnd());
 
-        setLassoStart(null);
-        setLassoEnd(null);
+            setLassoStart(null);
+            setLassoEnd(null);
+        }
 
         if (!evt.getButton().equals(MouseButton.PRIMARY) || dragMode == null || !dragging) {
             return;
         }
+
         dragging = false;
 
         Calendar calendar = entry.getCalendar();
@@ -311,7 +316,9 @@ public class DayViewEditController {
     }
 
     private void mouseDragged(MouseEvent evt) {
-        setLassoEnd(grid(dayViewBase.getInstantAt(evt), dayViewBase.getAvailabilityGrid()));
+        if (!dayViewBase.isScrollingEnabled()) {
+            setLassoEnd(grid(dayViewBase.getInstantAt(evt), dayViewBase.getAvailabilityGrid()));
+        }
 
         if (!evt.getButton().equals(MouseButton.PRIMARY) || dragMode == null || !dragging) {
             return;
@@ -321,12 +328,6 @@ public class DayViewEditController {
         if (calendar.isReadOnly()) {
             return;
         }
-
-//        if (dayViewBase.getDraggedEntry() == null || dayEntryView.getParent() == null) {
-//            // we might see "mouse dragged" events close before "mouse pressed". in this case, our drag/dro handling
-//            // has not been fully initialized yet.
-//            return;
-//        }
 
         switch (dragMode) {
             case START_TIME:
