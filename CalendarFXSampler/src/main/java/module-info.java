@@ -3,7 +3,7 @@ open module com.calendarfx.sampler {
     requires transitive javafx.graphics;
 
     requires javafx.web;
-
+    requires fr.brouillard.oss.cssfx;
     requires com.calendarfx.view;
 
     exports com.calendarfx.demo to org.controlsfx.fxsampler;

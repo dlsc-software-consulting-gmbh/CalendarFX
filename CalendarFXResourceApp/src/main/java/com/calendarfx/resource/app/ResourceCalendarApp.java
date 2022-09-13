@@ -25,7 +25,7 @@ import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.EntryViewBase;
-import com.calendarfx.view.ResourceCalendarView;
+import com.calendarfx.view.resources.ResourceCalendarView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;

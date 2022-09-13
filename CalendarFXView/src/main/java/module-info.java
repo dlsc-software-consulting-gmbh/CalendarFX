@@ -14,12 +14,15 @@ module com.calendarfx.view {
     exports com.calendarfx.view.page;
     exports com.calendarfx.view.popover;
     exports com.calendarfx.view.print;
+    exports com.calendarfx.view.resources;
 
     exports impl.com.calendarfx.view;
     exports impl.com.calendarfx.view.page;
     exports impl.com.calendarfx.view.popover;
     exports impl.com.calendarfx.view.print;
+    exports impl.com.calendarfx.view.resources;
     exports impl.com.calendarfx.view.util;
 
     opens com.calendarfx.view;
+    opens com.calendarfx.view.resources;
 }

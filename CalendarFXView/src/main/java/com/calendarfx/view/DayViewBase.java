@@ -16,6 +16,7 @@
 
 package com.calendarfx.view;
 
+import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
@@ -71,6 +72,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * Constructs a new view.
      */
     public DayViewBase() {
+        scrollingEnabledProperty().addListener(it -> Thread.dumpStack());
 
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
             if (change.wasAdded()) {
@@ -102,6 +104,17 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         latestTimeUsedProperty().addListener(trimListener);
         trimTimeBoundsProperty().addListener(trimListener);
 
+        installDefaultLassoFinishedBehaviour();
+    }
+
+    /**
+     * Registers a {@link #onLassoFinishedProperty()} that will add a
+     * calendar entry for the lasso selection into the current availability
+     * calendar.
+     *
+     * @see #availabilityCalendarProperty()
+     */
+    public void installDefaultLassoFinishedBehaviour() {
         setOnLassoFinished((start, end) -> {
             if (start == null || end == null) {
                 return;
@@ -115,7 +128,8 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
                 }
 
                 Entry<?> entry = new Entry<>("Availability Entry", new Interval(start, end, getZoneId()));
-                getAvailabilityCalendar().addEntry(entry);
+                Calendar availabilityCalendar = getAvailabilityCalendar();
+                availabilityCalendar.addEntry(entry);
             }
         });
     }

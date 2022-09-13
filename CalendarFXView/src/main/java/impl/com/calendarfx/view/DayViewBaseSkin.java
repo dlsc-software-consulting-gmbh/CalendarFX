@@ -74,6 +74,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
     private void registerLayoutListener(Observable obs) {
         obs.addListener(layoutListener);
     }
+
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 

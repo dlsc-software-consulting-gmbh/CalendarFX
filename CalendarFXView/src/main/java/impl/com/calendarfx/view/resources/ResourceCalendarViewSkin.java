@@ -1,10 +1,11 @@
-package impl.com.calendarfx.view;
+package impl.com.calendarfx.view.resources;
 
 import com.calendarfx.model.Marker;
 import com.calendarfx.view.DayView;
-import com.calendarfx.view.ResourceCalendarView;
+import com.calendarfx.view.resources.ResourceCalendarView;
 import com.calendarfx.view.TimeScaleView;
 import com.calendarfx.view.VirtualGrid;
+import impl.com.calendarfx.view.DayViewBaseSkin;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;

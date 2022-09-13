@@ -87,6 +87,12 @@ public class DayViewEditController {
             }
         }));
         dayView.addEventFilter(MouseEvent.MOUSE_MOVED, this::mouseMoved);
+
+        lassoStartProperty().addListener(it -> dayView.setLassoStart(getLassoStart()));
+        lassoEndProperty().addListener(it -> dayView.setLassoEnd(getLassoEnd()));
+
+        setOnLassoFinished(dayView.getOnLassoFinished());
+        dayView.onLassoFinishedProperty().addListener(it -> setOnLassoFinished(dayView.getOnLassoFinished()));
     }
 
     private enum Handle {
@@ -174,6 +180,10 @@ public class DayViewEditController {
             VirtualGrid availabilityGrid = dayViewBase.getAvailabilityGrid();
             setLassoStart(grid(dayViewBase.getInstantAt(evt), availabilityGrid));
             setLassoEnd(grid(dayViewBase.getInstantAt(evt), availabilityGrid).plus(availabilityGrid.getAmount(), availabilityGrid.getUnit()));
+        }
+
+        if (dayViewBase.isEditAvailability()) {
+            return;
         }
 
         dragMode = null;
@@ -320,7 +330,7 @@ public class DayViewEditController {
             setLassoEnd(grid(dayViewBase.getInstantAt(evt), dayViewBase.getAvailabilityGrid()));
         }
 
-        if (!evt.getButton().equals(MouseButton.PRIMARY) || dragMode == null || !dragging) {
+        if (dayViewBase.isEditAvailability() || !evt.getButton().equals(MouseButton.PRIMARY) || dragMode == null || !dragging) {
             return;
         }
 

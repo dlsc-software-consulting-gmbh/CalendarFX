@@ -1,7 +1,9 @@
-package com.calendarfx.view;
+package com.calendarfx.view.resources;
 
 import com.calendarfx.model.Marker;
-import impl.com.calendarfx.view.ResourceCalendarViewSkin;
+import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase;
+import impl.com.calendarfx.view.resources.ResourceCalendarViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;

@@ -155,10 +155,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
              * installed on the week view, not on the individual days.
              */
             controller = new DayViewEditController(view);
-            controller.onLassoFinishedProperty().bind(view.onLassoFinishedProperty());
-
-            view.lassoStartProperty().bind(controller.lassoStartProperty());
-            view.lassoEndProperty().bind(controller.lassoEndProperty());
         }
 
         setupCurrentTimeMarkerSupport();
@@ -1062,11 +1058,14 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             Calendar availabilityCalendar = dayView.getAvailabilityCalendar();
 
             if (availabilityCalendar != null) {
+                System.out.println("drawing: " + availabilityCalendar.getName());
                 gc.setFill(dayView.getAvailabilityFill());
                 LocalDate date = dayView.getDate();
                 Map<LocalDate, List<Entry<?>>> entries = availabilityCalendar.findEntries(date, date, dayView.getZoneId());
                 List<Entry<?>> entriesOnDate = entries.get(date);
+                System.out.println("entries on date" + entriesOnDate);
                 if (entriesOnDate != null) {
+                    System.out.println("size: " + entriesOnDate.size());
                     entriesOnDate.forEach(entry -> {
                         ZonedDateTime startAsZonedDateTime = entry.getStartAsZonedDateTime();
                         ZonedDateTime endAsZonedDateTime = entry.getEndAsZonedDateTime();

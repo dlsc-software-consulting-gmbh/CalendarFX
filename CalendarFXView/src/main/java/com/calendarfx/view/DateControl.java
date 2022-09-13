@@ -2514,8 +2514,7 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     /**
-     * A background calendar can be used to display "availability" of
-     * a person or a resource.
+     * A background calendar used to display "availability" of a resource.
      *
      * @return the background calendar used for this view
      */
@@ -2523,8 +2522,8 @@ public abstract class DateControl extends CalendarFXControl {
         return availabilityCalendar;
     }
 
-    public final void setAvailabilityCalendar(Calendar availabilityGrid) {
-        this.availabilityCalendar.set(availabilityGrid);
+    public final void setAvailabilityCalendar(Calendar calendar) {
+        this.availabilityCalendar.set(calendar);
     }
 
     private final ObjectProperty<VirtualGrid> availabilityGrid = new SimpleObjectProperty<>(this, "availabilityGrid", new VirtualGrid("30 Minutes", "30 Minutes", ChronoUnit.MINUTES, 30));

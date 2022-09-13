@@ -106,7 +106,6 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         calendarHeaderView.visibleProperty().bind(view.layoutProperty().isEqualTo(DateControl.Layout.SWIMLANE));
 
         agendaView = view.getAgendaView();
-//        agendaView.addEventHandler(RequestEvent.REQUEST_ENTRY, evt -> dayView.editEntry(evt.getEntry()));
 
         RowConstraints row0 = new RowConstraints();
         row0.setFillHeight(true);

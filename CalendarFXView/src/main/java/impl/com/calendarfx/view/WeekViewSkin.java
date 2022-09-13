@@ -37,8 +37,6 @@ public class WeekViewSkin extends SkinBase<WeekView> {
 
     private final GridPane dayGridPane = new GridPane();
 
-    private final DayViewEditController controller;
-
     public WeekViewSkin(WeekView view) {
         super(view);
 
@@ -54,11 +52,7 @@ public class WeekViewSkin extends SkinBase<WeekView> {
         clip.heightProperty().bind(view.heightProperty());
         view.setClip(clip);
 
-        controller = new DayViewEditController(view);
-        controller.onLassoFinishedProperty().bind(view.onLassoFinishedProperty());
-
-        view.lassoStartProperty().bind(controller.lassoStartProperty());
-        view.lassoEndProperty().bind(controller.lassoEndProperty());
+        new DayViewEditController(view);
 
         getChildren().add(dayGridPane);
     }
