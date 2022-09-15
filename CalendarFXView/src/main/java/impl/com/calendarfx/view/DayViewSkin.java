@@ -1058,14 +1058,11 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             Calendar availabilityCalendar = dayView.getAvailabilityCalendar();
 
             if (availabilityCalendar != null) {
-                System.out.println("drawing: " + availabilityCalendar.getName());
                 gc.setFill(dayView.getAvailabilityFill());
                 LocalDate date = dayView.getDate();
                 Map<LocalDate, List<Entry<?>>> entries = availabilityCalendar.findEntries(date, date, dayView.getZoneId());
                 List<Entry<?>> entriesOnDate = entries.get(date);
-                System.out.println("entries on date" + entriesOnDate);
                 if (entriesOnDate != null) {
-                    System.out.println("size: " + entriesOnDate.size());
                     entriesOnDate.forEach(entry -> {
                         ZonedDateTime startAsZonedDateTime = entry.getStartAsZonedDateTime();
                         ZonedDateTime endAsZonedDateTime = entry.getEndAsZonedDateTime();
