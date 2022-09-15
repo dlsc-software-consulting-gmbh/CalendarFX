@@ -108,6 +108,71 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
     }
 
     /**
+     * A list of possible ways that entries can behave when the user switches
+     * to availability editing. The values determine if the entries should
+     * disappear, if they should become semi-transparent, or if they should stay
+     * completely visible.
+     */
+    public enum AvailabilityEditingEntryBehaviour {
+        /**
+         * Entry views will stay visible.
+         */
+        SHOW,
+
+        /**
+         * Entry views will be completely hidden.
+         */
+        HIDE,
+
+        /**
+         * Entry views will be semi-transparent.
+         */
+        OPACITY
+    }
+
+    private final ObjectProperty<AvailabilityEditingEntryBehaviour> entryViewAvailabilityEditingBehaviour = new SimpleObjectProperty<>(this, "entryViewAvailabilityEditingBehaviour", AvailabilityEditingEntryBehaviour.OPACITY);
+
+    public final AvailabilityEditingEntryBehaviour getEntryViewAvailabilityEditingBehaviour() {
+        return entryViewAvailabilityEditingBehaviour.get();
+    }
+
+    /**
+     * Determines how entry views should behave when the user switches to the availability editing
+     * mode. Entries can disappear, they can become semi-transparent, or the can stay completely
+     * visible.
+     *
+     * @return the behaviour of entry views when in availability editing mode
+     * @see DateControl#setEditAvailability(boolean)
+     */
+    public final ObjectProperty<AvailabilityEditingEntryBehaviour> entryViewAvailabilityEditingBehaviourProperty() {
+        return entryViewAvailabilityEditingBehaviour;
+    }
+
+    public final void setEntryViewAvailabilityEditingBehaviour(AvailabilityEditingEntryBehaviour behaviour) {
+        this.entryViewAvailabilityEditingBehaviour.set(behaviour);
+    }
+
+    private final DoubleProperty entryViewAvailabilityEditingOpacity = new SimpleDoubleProperty(this, "entryViewAvailabilityEditingOpacity", .25);
+
+    public final double getEntryViewAvailabilityEditingOpacity() {
+        return entryViewAvailabilityEditingOpacity.get();
+    }
+
+    /**
+     * A double value that determines how opaque entry views will be while the user is
+     * performing availability editing.
+     *
+     * @return the opacity value
+     */
+    public final DoubleProperty entryViewAvailabilityEditingOpacityProperty() {
+        return entryViewAvailabilityEditingOpacity;
+    }
+
+    public final void setEntryViewAvailabilityEditingOpacity(double entryViewAvailabilityEditingOpacity) {
+        this.entryViewAvailabilityEditingOpacity.set(entryViewAvailabilityEditingOpacity);
+    }
+
+    /**
      * Registers a {@link #onLassoFinishedProperty()} that will add a
      * calendar entry for the lasso selection into the current availability
      * calendar.
@@ -947,6 +1012,8 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.onLassoFinishedProperty(),  onLassoFinishedProperty());
         Bindings.bindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
         Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
+        Bindings.bindBidirectional(otherControl.entryViewAvailabilityEditingBehaviourProperty(), entryViewAvailabilityEditingBehaviourProperty());
+        Bindings.bindBidirectional(otherControl.entryViewAvailabilityEditingOpacityProperty(), entryViewAvailabilityEditingOpacityProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -968,6 +1035,8 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.onLassoFinishedProperty(),  onLassoFinishedProperty());
         Bindings.unbindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
         Bindings.unbindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
+        Bindings.unbindBidirectional(otherControl.entryViewAvailabilityEditingBehaviourProperty(), entryViewAvailabilityEditingBehaviourProperty());
+        Bindings.unbindBidirectional(otherControl.entryViewAvailabilityEditingOpacityProperty(), entryViewAvailabilityEditingOpacityProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";

@@ -20,11 +20,14 @@ package com.calendarfx.demo.views.resources;
 import com.calendarfx.demo.CalendarFXDateControlSample;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.DateControl;
-import com.calendarfx.view.resources.ResourcesView;
+import com.calendarfx.view.DayViewBase.AvailabilityEditingEntryBehaviour;
 import com.calendarfx.view.resources.Resource;
+import com.calendarfx.view.resources.ResourcesView;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 
@@ -60,7 +63,16 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         daysBox.setValue(resourcesView.getNumberOfDays());
         daysBox.valueProperty().addListener(it -> resourcesView.setNumberOfDays(daysBox.getValue()));
 
-        return new VBox(10, availabilityButton, datePicker, daysBox);
+        ChoiceBox<AvailabilityEditingEntryBehaviour> behaviourBox = new ChoiceBox<>();
+        behaviourBox.getItems().setAll(AvailabilityEditingEntryBehaviour.values());
+        behaviourBox.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingBehaviourProperty());
+
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(1);
+        slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
+
+        return new VBox(10, availabilityButton, datePicker, daysBox, new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider);
     }
 
     @Override

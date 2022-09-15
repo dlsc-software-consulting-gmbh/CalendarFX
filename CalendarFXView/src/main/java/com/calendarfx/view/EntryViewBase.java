@@ -21,6 +21,7 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.EntryContextMenuParameter;
 import com.calendarfx.view.DateControl.EntryDetailsParameter;
 import com.calendarfx.view.DateControl.Layer;
+import com.calendarfx.view.DayViewBase.AvailabilityEditingEntryBehaviour;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
@@ -270,9 +271,15 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
                 if (getLayer() != null) {
                     binding = binding.and(Bindings.createBooleanBinding(this::isAssignedLayerVisible, dateControl.visibleLayersProperty()));
                 }
-//                if (dateControl instanceof DayViewBase) {
-//                    binding = binding.and(dateControl.editAvailabilityProperty().not());
-//                }
+
+                if (dateControl instanceof DayViewBase) {
+                    DayViewBase dayView = (DayViewBase) dateControl;
+
+                    binding = binding.and(dayView.editAvailabilityProperty().not().or(dayView.entryViewAvailabilityEditingBehaviourProperty().isEqualTo(AvailabilityEditingEntryBehaviour.HIDE).not()));
+
+                    opacityProperty().bind(Bindings.createDoubleBinding(() -> dayView.isEditAvailability() && dayView.getEntryViewAvailabilityEditingBehaviour().equals(AvailabilityEditingEntryBehaviour.OPACITY) ? dayView.getEntryViewAvailabilityEditingOpacity() : 1,
+                            dayView.editAvailabilityProperty(), dayView.entryViewAvailabilityEditingBehaviourProperty(), dayView.entryViewAvailabilityEditingOpacityProperty()));
+                }
 
                 visibleProperty().bind(binding);
             }
