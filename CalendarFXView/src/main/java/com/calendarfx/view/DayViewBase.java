@@ -72,8 +72,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * Constructs a new view.
      */
     public DayViewBase() {
-        scrollingEnabledProperty().addListener(it -> Thread.dumpStack());
-
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
             if (change.wasAdded()) {
                 if (change.getKey().equals("show.current.time.marker")) {

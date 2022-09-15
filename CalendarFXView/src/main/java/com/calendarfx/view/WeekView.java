@@ -76,6 +76,7 @@ public class WeekView extends DayViewBase {
 
         setWeekDayViewFactory(param -> new WeekDayView());
         setNumberOfDays(numberOfDays);
+        setShowToday(true);
 
         dateProperty().addListener(it -> updateStartAndEndDates());
 

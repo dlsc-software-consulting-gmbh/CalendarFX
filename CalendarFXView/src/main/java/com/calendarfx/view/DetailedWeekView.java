@@ -73,29 +73,27 @@ public class DetailedWeekView extends DayViewBase {
     public DetailedWeekView(int numberOfDays) {
         setNumberOfDays(numberOfDays);
 
+
         getStyleClass().add(DEFAULT_STYLE_CLASS);
 
         calendarHeaderView = new CalendarHeaderView();
-        calendarHeaderView.numberOfDaysProperty().bind(numberOfDaysProperty());
+        calendarHeaderView.numberOfDaysProperty().bindBidirectional(numberOfDaysProperty());
         calendarHeaderView.bind(this);
 
         weekDayHeaderView = new WeekDayHeaderView();
-        weekDayHeaderView.showTodayProperty().bind(showTodayProperty());
+        weekDayHeaderView.showTodayProperty().bindBidirectional(showTodayProperty());
 
         bind(weekDayHeaderView, true);
         Bindings.bindBidirectional(weekDayHeaderView.numberOfDaysProperty(), numberOfDaysProperty());
         Bindings.bindBidirectional(weekDayHeaderView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());
 
         allDayView = new AllDayView(getNumberOfDays());
-        allDayView.showTodayProperty().bind(showTodayProperty());
 
         bind(allDayView, true);
         Bindings.bindBidirectional(allDayView.numberOfDaysProperty(), numberOfDaysProperty());
         Bindings.bindBidirectional(allDayView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());
 
         weekView = new WeekView();
-        weekView.showTodayProperty().bind(showTodayProperty());
-
         bind(weekView, true);
         Bindings.bindBidirectional(weekView.numberOfDaysProperty(), numberOfDaysProperty());
         Bindings.bindBidirectional(weekView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());

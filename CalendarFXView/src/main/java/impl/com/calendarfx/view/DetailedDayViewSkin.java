@@ -74,6 +74,7 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
 
         // the all-day view
         allDayView = view.getAllDayView();
+        allDayView.showTodayProperty().unbindBidirectional(view.showTodayProperty());
         allDayView.setShowToday(false);
         allDayView.setAdjustToFirstDayOfWeek(false);
 

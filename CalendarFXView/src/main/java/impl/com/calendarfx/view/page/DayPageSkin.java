@@ -202,7 +202,7 @@ public class DayPageSkin extends PageBaseSkin<DayPage> {
         getSkinnable().bind(dayView, true);
 
         AllDayView allDayView = dayView.getAllDayView();
-        allDayView.showTodayProperty().unbind(); // we need control over this
+        allDayView.showTodayProperty().unbindBidirectional(dayView.showTodayProperty()); // we need control over this
 
         return dayView;
     }
