@@ -25,4 +25,5 @@ module com.calendarfx.view {
 
     opens com.calendarfx.view;
     opens com.calendarfx.view.resources;
+    opens impl.com.calendarfx.view.resources;
 }

@@ -19,9 +19,9 @@ package impl.com.calendarfx.view.resources;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.AllDayView;
 import com.calendarfx.view.TimeScaleView;
-import com.calendarfx.view.resources.DetailedResourcesDayView;
-import com.calendarfx.view.resources.MultiResourceDayViewContainer;
+import com.calendarfx.view.WeekDayHeaderView;
 import com.calendarfx.view.resources.Resource;
+import com.calendarfx.view.resources.ResourcesView;
 import impl.com.calendarfx.view.DateControlSkin;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.application.Platform;
@@ -43,15 +43,15 @@ import javafx.util.Callback;
 
 import static com.calendarfx.util.ViewHelper.scrollToRequestedTime;
 
-public class DetailedResourcesDayViewSkin<T extends Resource<?>> extends DateControlSkin<DetailedResourcesDayView<T>> {
+public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<ResourcesView<T>> {
 
     private final GridPane gridPane;
-    private final MultiResourceDayViewContainer<T> dayViewContainer;
+    private final ResourcesContainer<T> resourcesViewContainer;
     private final DayViewScrollPane timeScaleScrollPane;
     private final DayViewScrollPane dayViewsScrollPane;
     private final ScrollBar scrollBar;
 
-    public DetailedResourcesDayViewSkin(DetailedResourcesDayView<T> view) {
+    public ResourcesViewSkin(ResourcesView<T> view) {
         super(view);
 
         scrollBar = new ScrollBar();
@@ -78,19 +78,20 @@ public class DetailedResourcesDayViewSkin<T extends Resource<?>> extends DateCon
 
         RowConstraints row1 = new RowConstraints();
         row1.setFillHeight(true);
+        row1.setPrefHeight(Region.USE_COMPUTED_SIZE);
         row1.setVgrow(Priority.ALWAYS);
+
 
         gridPane = new GridPane();
         gridPane.getRowConstraints().setAll(row0, row1);
         gridPane.getStyleClass().add("container");
 
-        dayViewContainer = new MultiResourceDayViewContainer<>();
-        dayViewContainer.resourcesProperty().bind(view.resourcesProperty());
-        view.bind(dayViewContainer, true);
+        resourcesViewContainer = new ResourcesContainer<>(view);
+        view.bind(resourcesViewContainer, true);
 
         getChildren().add(gridPane);
 
-        dayViewsScrollPane = new DayViewScrollPane(dayViewContainer, scrollBar);
+        dayViewsScrollPane = new DayViewScrollPane(resourcesViewContainer, scrollBar);
 
         /*
          * Run later when the control has become visible.
@@ -100,6 +101,7 @@ public class DetailedResourcesDayViewSkin<T extends Resource<?>> extends DateCon
         view.requestedTimeProperty().addListener(it -> scrollToRequestedTime(view, dayViewsScrollPane));
 
         view.resourcesProperty().addListener((Observable it) -> updateView());
+        view.numberOfDaysProperty().addListener((Observable it) -> updateView());
         updateView();
     }
 
@@ -108,7 +110,7 @@ public class DetailedResourcesDayViewSkin<T extends Resource<?>> extends DateCon
         gridPane.getChildren().clear();
         gridPane.getColumnConstraints().clear();
 
-        final DetailedResourcesDayView<T> view = getSkinnable();
+        final ResourcesView<T> view = getSkinnable();
 
         if (view.isShowTimeScaleView()) {
             ColumnConstraints timeScaleColumn = new ColumnConstraints();
@@ -150,6 +152,13 @@ public class DetailedResourcesDayViewSkin<T extends Resource<?>> extends DateCon
 
             resourceHeader.getStyleClass().add("resource-header-view");
             HBox.setHgrow(resourceHeader, Priority.ALWAYS);
+
+            WeekDayHeaderView weekDayHeaderView = view.getWeekDayHeaderViewFactory().call(resource);
+            weekDayHeaderView.numberOfDaysProperty().bind(view.numberOfDaysProperty());
+            view.bind(weekDayHeaderView, true);
+
+            resourceHeader.setPrefWidth(0); // so they all end up with the same percentage width
+            resourceHeader.getChildren().add(weekDayHeaderView);
 
             headerBox.getChildren().add(resourceHeader);
         }

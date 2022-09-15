@@ -89,7 +89,7 @@ public class WeekViewSkin extends SkinBase<WeekView> {
             weekDayView.getProperties().put("week.view", weekView);
             weekDayView.earliestTimeUsedProperty().addListener(it -> updateUsedTimes());
             weekDayView.latestTimeUsedProperty().addListener(it -> updateUsedTimes());
-            weekDayView.showTodayProperty().bind(weekView.showTodayProperty());
+            weekDayView.showTodayProperty().bindBidirectional(weekView.showTodayProperty());
 
             if (i == 0) {
                 weekDayView.getStyleClass().add("first-day");

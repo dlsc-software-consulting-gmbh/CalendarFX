@@ -21,11 +21,15 @@ import com.calendarfx.view.CalendarHeaderView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.TimeScaleView;
-import impl.com.calendarfx.view.resources.DetailedResourcesDayViewSkin;
+import com.calendarfx.view.WeekDayHeaderView;
+import com.calendarfx.view.WeekView;
+import impl.com.calendarfx.view.resources.ResourcesViewSkin;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -34,6 +38,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
+import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
 /**
@@ -47,20 +52,95 @@ import javafx.util.Callback;
  * <img src="doc-files/detailed-day-view-agenda.png" alt="Detailed Day View Agenda">
  *
  */
-public class DetailedResourcesDayView<T extends Resource<?>> extends DayViewBase {
+public class ResourcesView<T extends Resource<?>> extends DayViewBase {
 
-    private static final String DEFAULT_STYLE = "detailed-resources-day-view";
+    private static final String DEFAULT_STYLE = "resources-view";
+
 
     /**
      * Constructs a new day view.
      */
-    public DetailedResourcesDayView() {
+    public ResourcesView() {
         getStyleClass().add(DEFAULT_STYLE);
+        setShowToday(false);
     }
 
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new DetailedResourcesDayViewSkin(this);
+        return new ResourcesViewSkin(this);
+    }
+
+    private final ObjectProperty<Callback<T, AllDayView>> allDayViewFactory = new SimpleObjectProperty<>(this, "allDayViewFactory", it-> new AllDayView());
+
+    public final Callback<T, AllDayView> getAllDayViewFactory() {
+        return allDayViewFactory.get();
+    }
+
+    /**
+     * A factory used for creating a new {@link AllDayView} instance for each resource
+     * shown in the view.
+     *
+     * @return a factory for all day views
+     */
+    public final ObjectProperty<Callback<T, AllDayView>> allDayViewFactoryProperty() {
+        return allDayViewFactory;
+    }
+
+    public final void setAllDayViewFactory(Callback<T, AllDayView> allDayViewFactory) {
+        this.allDayViewFactory.set(allDayViewFactory);
+    }
+
+    private final ObjectProperty<Callback<T, WeekDayHeaderView>> weekDayHeaderViewFactory = new SimpleObjectProperty<>(this, "weekDayHeaderViewFactory", it-> new WeekDayHeaderView());
+
+    public final Callback<T, WeekDayHeaderView> getWeekDayHeaderViewFactory() {
+        return weekDayHeaderViewFactory.get();
+    }
+
+    /**
+     * A factory used for creating a new {@link WeekDayHeaderView} instance for each resource
+     * shown in the view.
+     *
+     * @return a factory for week day header views
+     */
+    public final ObjectProperty<Callback<T, WeekDayHeaderView>> weekDayHeaderViewFactoryProperty() {
+        return weekDayHeaderViewFactory;
+    }
+
+    public final void setWeekDayHeaderViewFactory(Callback<T, WeekDayHeaderView> factory) {
+        this.weekDayHeaderViewFactory.set(factory);
+    }
+
+    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7);
+
+    /**
+     * Stores the number of days that will be shown by this view.
+     *
+     * @return the number of days shown by the view
+     */
+    public final IntegerProperty numberOfDaysProperty() {
+        return numberOfDays;
+    }
+
+    /**
+     * Returns the value of {@link #numberOfDaysProperty()}.
+     *
+     * @return the number of days shown by the view
+     */
+    public final int getNumberOfDays() {
+        return numberOfDaysProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #numberOfDaysProperty()}.
+     *
+     * @param number the new number of days shown by the view
+     */
+    public final void setNumberOfDays(int number) {
+        if (number < 1) {
+            throw new IllegalArgumentException("invalid number of days, must be larger than 0 but was " + number);
+        }
+
+        numberOfDaysProperty().set(number);
     }
 
     private final ObjectProperty<Callback<T, Node>> resourceHeaderFactory = new SimpleObjectProperty<>(this,"headerFactory", resource -> {
@@ -191,5 +271,49 @@ public class DetailedResourcesDayView<T extends Resource<?>> extends DayViewBase
      */
     public final boolean isShowScrollBar() {
         return showScrollBar.get();
+    }
+
+    private final ObjectProperty<Callback<T, WeekView>> weekViewFactory = new SimpleObjectProperty<>(this, "weekViewFactory", resource -> new WeekView());
+
+    public final Callback<T, WeekView> getWeekViewFactory() {
+        return weekViewFactory.get();
+    }
+
+    /**
+     * A factory used for creating a new {@link WeekView} instance for each resource
+     * shown in the view.
+     *
+     * @return a factory for resource week views
+     */
+    public final ObjectProperty<Callback<T, WeekView>> weekViewFactoryProperty() {
+        return weekViewFactory;
+    }
+
+    public void setWeekViewFactory(Callback<T, WeekView> weekViewFactory) {
+        this.weekViewFactory.set(weekViewFactory);
+    }
+
+    private final ObjectProperty<Callback<T, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
+        Region region = new Region();
+        region.getStyleClass().add("resource-separator");
+        return region;
+    });
+
+
+    public final Callback<T, Region> getSeparatorFactory() {
+        return separatorFactory.get();
+    }
+
+    /**
+     * A factory used for creating the vertical separators between the resources.
+     *
+     * @return the resource separator factory
+     */
+    public final ObjectProperty<Callback<T, Region>> separatorFactoryProperty() {
+        return separatorFactory;
+    }
+
+    public final void setSeparatorFactory(Callback<T, Region> separatorFactory) {
+        this.separatorFactory.set(separatorFactory);
     }
 }

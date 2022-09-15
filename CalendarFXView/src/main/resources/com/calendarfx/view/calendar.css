@@ -2033,13 +2033,18 @@
 
 /*
  * --------------------------------------------------------------------------------------------------------------
- * Styles for the DetailedResourcesDayView control.
+ * Styles for the ResourcesView.
  */
-.detailed-resources-day-view {
+.resources-view {
 }
 
-.detailed-resources-day-view .header-box .resource-header-view .resource-header-label {
+.resources-view .header-box .resource-header-view .resource-header-label {
     -fx-padding: 5px;
     -fx-font-weight: bold;
     -fx-alignment: center;
+}
+
+.resources-view .resources-view-container .resource-separator {
+    -fx-pref-width: 5px;
+    -fx-background-color: lightgrey;
 }

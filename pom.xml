@@ -16,7 +16,7 @@
     <parent>
         <groupId>com.dlsc</groupId>
         <artifactId>dlsc-maven-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.2.0</version>
     </parent>
 
     <url>https://github.com/dlsc-software-consulting-gmbh/CalendarFX</url>

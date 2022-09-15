@@ -701,10 +701,8 @@ public abstract class DateControl extends CalendarFXControl {
             if (entryView != null) {
                 entryView.bounce();
 
-                System.out.println(entryView.getLayoutBounds());
                 Point2D location = entryView.localToScreen(0, 0);
 
-                System.out.println(location);
                 Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
                 EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, location.getX(), location.getY());
                 callback.call(param);
@@ -2636,6 +2634,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
         Bindings.bindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
         Bindings.bindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
+        Bindings.bindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
 
         if (bindDate) {
             Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
@@ -2705,6 +2704,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
         Bindings.unbindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
         Bindings.unbindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
+        Bindings.unbindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
 
         // unbind callbacks
         Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());

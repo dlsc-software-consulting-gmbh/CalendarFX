@@ -20,18 +20,21 @@ package com.calendarfx.demo.views.resources;
 import com.calendarfx.demo.CalendarFXDateControlSample;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.DateControl;
-import com.calendarfx.view.resources.DetailedResourcesDayView;
+import com.calendarfx.view.resources.ResourcesView;
 import com.calendarfx.view.resources.Resource;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.VBox;
 
-public class HelloDetailedResourcesDayView extends CalendarFXDateControlSample {
+public class HelloResourcesView extends CalendarFXDateControlSample {
 
-    private DetailedResourcesDayView detailedResouresDayView;
+    private ResourcesView resourcesView;
 
     @Override
     public String getSampleName() {
-        return "Detailed Resources Day View";
+        return "ResourcesView";
     }
 
     @Override
@@ -41,23 +44,32 @@ public class HelloDetailedResourcesDayView extends CalendarFXDateControlSample {
 
     @Override
     protected Class<?> getJavaDocClass() {
-        return DetailedResourcesDayView.class;
+        return ResourcesView.class;
     }
 
     @Override
     public Node getControlPanel() {
         ToggleButton availabilityButton = new ToggleButton("Edit Schedule");
-        availabilityButton.selectedProperty().bindBidirectional(detailedResouresDayView.editAvailabilityProperty());
-        return availabilityButton;
+        availabilityButton.selectedProperty().bindBidirectional(resourcesView.editAvailabilityProperty());
+
+        DatePicker datePicker = new DatePicker();
+        datePicker.valueProperty().bindBidirectional(resourcesView.dateProperty());
+
+        ChoiceBox<Integer> daysBox = new ChoiceBox<>();
+        daysBox.getItems().setAll(1, 2, 3, 4, 5, 7, 10, 14);
+        daysBox.setValue(resourcesView.getNumberOfDays());
+        daysBox.valueProperty().addListener(it -> resourcesView.setNumberOfDays(daysBox.getValue()));
+
+        return new VBox(10, availabilityButton, datePicker, daysBox);
     }
 
     @Override
     protected DateControl createControl() {
-        detailedResouresDayView = new DetailedResourcesDayView();
-        detailedResouresDayView.setPrefHeight(800);
-        detailedResouresDayView.setPrefWidth(700);
-        detailedResouresDayView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3), create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
-        return detailedResouresDayView;
+        resourcesView = new ResourcesView();
+        resourcesView.setPrefHeight(800);
+        resourcesView.setPrefWidth(700);
+        resourcesView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3), create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
+        return resourcesView;
     }
 
     private Resource<String> create(String name, Style style) {
