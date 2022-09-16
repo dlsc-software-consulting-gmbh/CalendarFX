@@ -3340,6 +3340,234 @@ public abstract class DateControl extends CalendarFXControl {
             }
         });
 
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(showNoonMarkerProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setShowNoonMarker((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isShowNoonMarker();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Show Noon Marker";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Show / hide markers for noon.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(editAvailabilityProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setEditAvailability((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isEditAvailability();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Edit Availability";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Allow editing of the availability calendar";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(enableTimeZoneSupportProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setEnableTimeZoneSupport((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isEnableTimeZoneSupport();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Enable Timezone Support";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Provide UI controls to work with timezones.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(showDetailsUponCreationProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setShowDetailsUponCreation((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isShowDetailsUponCreation();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Show Details upon Creation";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Show the details dialog immediately after creating a new entry";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(createEntryClickCountProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setCreateEntryClickCount((Integer) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getCreateEntryClickCount();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return Integer.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Create Entry Click Count";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Set the number of clicks needed to create a new entry.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(availabilityFillProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setAvailabilityFill((Paint) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getAvailabilityFill();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return Paint.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Availability Fill Color";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Availability Fill Color";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
         return items;
     }
 }

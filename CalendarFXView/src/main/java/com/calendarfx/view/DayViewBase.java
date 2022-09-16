@@ -1125,6 +1125,44 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
 
             @Override
             public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(enableCurrentTimeCircleProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setEnableCurrentTimeCircle((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isEnableCurrentCircleMarker();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Current time circle";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Show current time circle.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
                 return Optional.of(earlyLateHoursStrategyProperty());
             }
 
@@ -1463,6 +1501,92 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
             @Override
             public String getDescription() {
                 return "Controls when entries are considered overlapping";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(entryViewAvailabilityEditingBehaviourProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setEntryViewAvailabilityEditingBehaviour((AvailabilityEditingEntryBehaviour) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getEntryViewAvailabilityEditingBehaviour();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return AvailabilityEditingEntryBehaviour.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Availability Editing Entry Behaviour";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Determines how an entry view will be shown during availability editing.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+        });
+
+       items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(entryViewAvailabilityEditingOpacityProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setEntryViewAvailabilityEditingOpacity((double) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getEntryViewAvailabilityEditingOpacity();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return Double.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Availability Editing Entry Opacity";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Determines how opaque an entry view will be shown during availability editing.";
             }
 
             @Override
