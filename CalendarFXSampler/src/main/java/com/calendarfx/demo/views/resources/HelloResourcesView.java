@@ -25,6 +25,7 @@ import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -73,12 +74,15 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         behaviourBox.getItems().setAll(AvailabilityEditingEntryBehaviour.values());
         behaviourBox.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingBehaviourProperty());
 
+        CheckBox adjustBox = new CheckBox("Adjust first day of week");
+        adjustBox.selectedProperty().bindBidirectional(resourcesView.adjustToFirstDayOfWeekProperty());
+
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, datePicker, daysBox, new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider);
+        return new VBox(10, availabilityButton, datePicker, adjustBox, daysBox, new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider);
     }
 
     @Override
@@ -86,7 +90,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         resourcesView = new ResourcesView();
         resourcesView.setNumberOfDays(5);
         resourcesView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
-        resourcesView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3), create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
+        resourcesView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3)); //, create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
         return resourcesView;
     }
 

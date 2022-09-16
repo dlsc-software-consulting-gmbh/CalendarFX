@@ -69,7 +69,8 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         getStyleClass().add(DEFAULT_STYLE);
         setShowToday(false);
 
-        addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> editEntry(evt.getEntry())));
+        // calling "editEntry" with "false" flag because we do not want to change the start date of the view
+        addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> editEntry(evt.getEntry(), false)));
     }
 
     private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {
@@ -82,6 +83,37 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     @Override
     protected Skin<?> createDefaultSkin() {
         return new ResourcesViewSkin(this);
+    }
+
+    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);
+
+    /**
+     * A flag used to indicate that the view should always show the first day of
+     * the week (e.g. "Monday") at its beginning even if the
+     * {@link #dateProperty()} is set to another day (e.g. "Thursday").
+     *
+     * @return true if the view always shows the first day of the week
+     */
+    public final BooleanProperty adjustToFirstDayOfWeekProperty() {
+        return adjustToFirstDayOfWeek;
+    }
+
+    /**
+     * Returns the value of {@link #adjustToFirstDayOfWeekProperty()}.
+     *
+     * @return true if the view always shows the first day of the week
+     */
+    public final boolean isAdjustToFirstDayOfWeek() {
+        return adjustToFirstDayOfWeekProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #adjustToFirstDayOfWeekProperty()}.
+     *
+     * @param adjust if true the view will always show the first day of the week
+     */
+    public final void setAdjustToFirstDayOfWeek(boolean adjust) {
+        adjustToFirstDayOfWeekProperty().set(adjust);
     }
 
     private final ObjectProperty<Callback<T, AllDayView>> allDayViewFactory = new SimpleObjectProperty<>(this, "allDayViewFactory", it-> new AllDayView());
@@ -287,11 +319,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         return showScrollBar.get();
     }
 
-    private final ObjectProperty<Callback<T, WeekView>> weekViewFactory = new SimpleObjectProperty<>(this, "weekViewFactory", resource -> {
-        WeekView view = new WeekView();
-        view.setAdjustToFirstDayOfWeek(false);
-        return view;
-    });
+    private final ObjectProperty<Callback<T, WeekView>> weekViewFactory = new SimpleObjectProperty<>(this, "weekViewFactory", resource -> new WeekView());
 
     public final Callback<T, WeekView> getWeekViewFactory() {
         return weekViewFactory.get();

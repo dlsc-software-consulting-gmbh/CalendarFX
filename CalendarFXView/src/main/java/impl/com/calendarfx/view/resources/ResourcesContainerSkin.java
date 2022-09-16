@@ -34,49 +34,54 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
     private void updateView() {
         container.getChildren().clear();
 
-        ResourcesContainer<T> resourcesViewContainer = getSkinnable();
-        ObservableList<T> resources = resourcesViewContainer.getResources();
+        ResourcesContainer<T> container = getSkinnable();
+        ObservableList<T> resources = container.getResources();
         for (int i = 0; i < resources.size(); i++) {
             T resource = resources.get(i);
 
-            WeekView weekView = resourcesViewContainer.getWeekViewFactory().call(resource);
+            WeekView weekView = container.getWeekViewFactory().call(resource);
 
             weekView.setPrefWidth(0); // so they all end up with the same percentage width
 
             // bind day view to container but remove bindings that interfere
-            resourcesViewContainer.bind(weekView, true);
-            Bindings.unbindBidirectional(resourcesViewContainer.defaultCalendarProviderProperty(), weekView.defaultCalendarProviderProperty());
-            Bindings.unbindBidirectional(resourcesViewContainer.draggedEntryProperty(), weekView.draggedEntryProperty());
-            Bindings.unbindBidirectional(resourcesViewContainer.enableCurrentTimeMarkerProperty(), weekView.enableCurrentTimeMarkerProperty());
-            Bindings.unbindBidirectional(resourcesViewContainer.enableCurrentTimeCircleProperty(), weekView.enableCurrentTimeCircleProperty());
-            Bindings.unbindBidirectional(resourcesViewContainer.availabilityCalendarProperty(), weekView.availabilityCalendarProperty());
-            Bindings.unbindBidirectional(resourcesViewContainer.lassoStartProperty(), weekView.lassoStartProperty());
-            Bindings.unbindBidirectional(resourcesViewContainer.lassoEndProperty(), weekView.lassoEndProperty());
-            Bindings.unbindBidirectional(resourcesViewContainer.onLassoFinishedProperty(), weekView.onLassoFinishedProperty());
-            Bindings.unbindContentBidirectional(resourcesViewContainer.getCalendarSources(), weekView.getCalendarSources());
+            container.bind(weekView, true);
+
+            // rebind "adjust"
+            weekView.adjustToFirstDayOfWeekProperty().bind(container.adjustToFirstDayOfWeekProperty());
+
+            // unbind what is not needed
+            Bindings.unbindBidirectional(container.defaultCalendarProviderProperty(), weekView.defaultCalendarProviderProperty());
+            Bindings.unbindBidirectional(container.draggedEntryProperty(), weekView.draggedEntryProperty());
+            Bindings.unbindBidirectional(container.enableCurrentTimeMarkerProperty(), weekView.enableCurrentTimeMarkerProperty());
+            Bindings.unbindBidirectional(container.enableCurrentTimeCircleProperty(), weekView.enableCurrentTimeCircleProperty());
+            Bindings.unbindBidirectional(container.availabilityCalendarProperty(), weekView.availabilityCalendarProperty());
+            Bindings.unbindBidirectional(container.lassoStartProperty(), weekView.lassoStartProperty());
+            Bindings.unbindBidirectional(container.lassoEndProperty(), weekView.lassoEndProperty());
+            Bindings.unbindBidirectional(container.onLassoFinishedProperty(), weekView.onLassoFinishedProperty());
+            Bindings.unbindContentBidirectional(container.getCalendarSources(), weekView.getCalendarSources());
 
             weekView.setEnableCurrentTimeCircle(i == 0);
             weekView.setEnableCurrentTimeMarker(true);
 
             weekView.setAvailabilityCalendar(resource.getAvailabilityCalendar());
             weekView.installDefaultLassoFinishedBehaviour();
-            weekView.numberOfDaysProperty().bind(resourcesViewContainer.numberOfDaysProperty());
+            weekView.numberOfDaysProperty().bind(container.numberOfDaysProperty());
 
-            resourcesViewContainer.numberOfDaysProperty().addListener(it -> System.out.println("number of days (multi resources): " + weekView.getNumberOfDays()));
+            container.numberOfDaysProperty().addListener(it -> System.out.println("number of days (multi resources): " + weekView.getNumberOfDays()));
             weekView.numberOfDaysProperty().addListener(it -> System.out.println("number of days: " + weekView.getNumberOfDays()));
 
             CalendarSource calendarSource = createCalendarSource(resource);
             weekView.getCalendarSources().setAll(calendarSource);
             weekView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
 
-            container.getChildren().add(weekView);
+            this.container.getChildren().add(weekView);
 
             if (i < resources.size() - 1) {
-                Callback<T, Region> separatorFactory = resourcesViewContainer.getSeparatorFactory();
+                Callback<T, Region> separatorFactory = container.getSeparatorFactory();
                 if (separatorFactory != null) {
                     Region separator = separatorFactory.call(resource);
                     if (separator != null) {
-                        container.getChildren().add(separator);
+                        this.container.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);
                     }
                 }

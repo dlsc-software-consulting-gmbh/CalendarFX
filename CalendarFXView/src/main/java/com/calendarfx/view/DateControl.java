@@ -650,25 +650,40 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void showEntry(Entry<?> entry) {
         requireNonNull(entry);
-        doShowEntry(entry, false);
+        doShowEntry(entry, false, true);
     }
 
     /**
      * Adjusts the current view / page in such a way that the given entry
-     * becomes visible and brings up the details editor / UI for the entry
+     * becomes visible and brings up the detail editor / UI for the entry
      * (default is a popover).
      *
      * @param entry the entry to show
      */
     public final void editEntry(Entry<?> entry) {
         requireNonNull(entry);
-        doShowEntry(entry, true);
+        doShowEntry(entry, true, true);
     }
 
-    private void doShowEntry(Entry<?> entry, boolean startEditing) {
+    /**
+     * Adjusts the current view / page in such a way that the given entry
+     * becomes visible and brings up the detail editor / UI for the entry
+     * (default is a popover).
+     *
+     * @param entry the entry to show
+     * @param changeDate change the date of the control to the entry's start date
+     */
+    public final void editEntry(Entry<?> entry, boolean changeDate) {
+        requireNonNull(entry);
+        doShowEntry(entry, true, changeDate);
+    }
+
+    private void doShowEntry(Entry<?> entry, boolean startEditing, boolean changeDate) {
         layout(); // important so that entry view bounds can be found
 
-        setDate(entry.getStartDate());
+        if (changeDate) {
+            setDate(entry.getStartDate());
+        }
 
         Platform.runLater(() -> {
             // do not scroll time when a location is already given

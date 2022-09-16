@@ -4,9 +4,11 @@ import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.WeekView;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,11 +30,43 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
         resourcesProperty().bind(view.resourcesProperty());
         numberOfDaysProperty().bind(view.numberOfDaysProperty());
         weekViewFactoryProperty().bind(view.weekViewFactoryProperty());
+        adjustToFirstDayOfWeekProperty().bind(view.adjustToFirstDayOfWeekProperty());
     }
 
     @Override
     protected Skin<?> createDefaultSkin() {
         return new ResourcesContainerSkin<>(this);
+    }
+
+    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);
+
+    /**
+     * A flag used to indicate that the view should always show the first day of
+     * the week (e.g. "Monday") at its beginning even if the
+     * {@link #dateProperty()} is set to another day (e.g. "Thursday").
+     *
+     * @return true if the view always shows the first day of the week
+     */
+    public final BooleanProperty adjustToFirstDayOfWeekProperty() {
+        return adjustToFirstDayOfWeek;
+    }
+
+    /**
+     * Returns the value of {@link #adjustToFirstDayOfWeekProperty()}.
+     *
+     * @return true if the view always shows the first day of the week
+     */
+    public final boolean isAdjustToFirstDayOfWeek() {
+        return adjustToFirstDayOfWeekProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #adjustToFirstDayOfWeekProperty()}.
+     *
+     * @param adjust if true the view will always show the first day of the week
+     */
+    public final void setAdjustToFirstDayOfWeek(boolean adjust) {
+        adjustToFirstDayOfWeekProperty().set(adjust);
     }
 
     private final ListProperty<T> resources = new SimpleListProperty<>(this, "resources", FXCollections.observableArrayList());
