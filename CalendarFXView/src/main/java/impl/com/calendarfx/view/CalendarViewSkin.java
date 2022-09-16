@@ -346,9 +346,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         updateToggleButtons();
     }
 
-    private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> runnable) {
+    private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {
         if (!evt.isConsumed()) {
-            runnable.accept(evt);
+            consumer.accept(evt);
             evt.consume();
         }
     }

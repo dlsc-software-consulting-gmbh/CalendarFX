@@ -72,9 +72,9 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> editEntry(evt.getEntry())));
     }
 
-    private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> runnable) {
+    private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {
         if (!evt.isConsumed()) {
-            runnable.accept(evt);
+            consumer.accept(evt);
             evt.consume();
         }
     }
