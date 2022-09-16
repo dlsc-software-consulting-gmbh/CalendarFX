@@ -2255,8 +2255,7 @@ public abstract class DateControl extends CalendarFXControl {
         getSelections().clear();
     }
 
-    private final ObjectProperty<VirtualGrid> virtualGrid = new SimpleObjectProperty<>(this, "virtualGrid",
-            new VirtualGrid(Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_NAME"), Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_SHORT_NAME"), ChronoUnit.MINUTES, 15));
+    private final ObjectProperty<VirtualGrid> virtualGrid = new SimpleObjectProperty<>(this, "virtualGrid", new VirtualGrid(Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_NAME"), Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_SHORT_NAME"), ChronoUnit.MINUTES, 15));
 
     /**
      * A virtual grid used for snapping to invisible grid lines while editing

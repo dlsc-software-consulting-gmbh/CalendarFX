@@ -33,6 +33,7 @@ import com.calendarfx.view.EntryViewBase;
 import com.calendarfx.view.EntryViewBase.AlignmentStrategy;
 import com.calendarfx.view.EntryViewBase.HeightLayoutStrategy;
 import com.calendarfx.view.EntryViewBase.Position;
+import com.calendarfx.view.VirtualGrid;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.TimeBoundsResolver;
 import impl.com.calendarfx.view.util.VisualBoundsResolver;
@@ -98,7 +99,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     private double startY;
 
-    private final AvailabilityCanvas availabilityCanvas = new AvailabilityCanvas();
+    private final BackgroundCanvas backgroundCanvas = new BackgroundCanvas();
 
     public DayViewSkin(T view) {
         super(view);
@@ -115,10 +116,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         lateHoursRegion.setManaged(false);
         getChildren().add(lateHoursRegion);
 
-        InvalidationListener drawAvailabilityCanvasListener = it -> availabilityCanvas.draw();
-        view.editAvailabilityProperty().addListener(drawAvailabilityCanvasListener);
+        InvalidationListener drawBackgroundCanvasListener = it -> backgroundCanvas.draw();
+        view.editAvailabilityProperty().addListener(drawBackgroundCanvasListener);
 
-        getChildren().add(availabilityCanvas);
+        getChildren().add(backgroundCanvas);
 
         if (!view.isScrollingEnabled()) {
             // Static lines use different styling for early / late hours, we do not want that
@@ -142,9 +143,9 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         currentTimeLine.visibleProperty().bind(view.enableCurrentTimeMarkerProperty().and(view.editAvailabilityProperty().not()));
         getChildren().add(currentTimeLine);
 
-        view.lassoStartProperty().addListener(drawAvailabilityCanvasListener);
-        view.lassoEndProperty().addListener(drawAvailabilityCanvasListener);
-        view.editAvailabilityProperty().addListener(drawAvailabilityCanvasListener);
+        view.lassoStartProperty().addListener(drawBackgroundCanvasListener);
+        view.lassoEndProperty().addListener(drawBackgroundCanvasListener);
+        view.editAvailabilityProperty().addListener(drawBackgroundCanvasListener);
 
         view.availabilityCalendarProperty().addListener((obs, oldCalendar, newCalendar) -> listenToAvailabilityCalendar(oldCalendar, newCalendar));
         listenToAvailabilityCalendar(null, view.getAvailabilityCalendar());
@@ -225,9 +226,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 startY = evt.getScreenY();
             }
         });
+
+        view.gridLinesProperty().addListener(drawBackgroundCanvasListener);
+        view.gridLineColorProperty().addListener(drawBackgroundCanvasListener);
+
     }
 
-    private final EventHandler<CalendarEvent> availabilityHandler = evt -> availabilityCanvas.draw();
+    private final EventHandler<CalendarEvent> availabilityHandler = evt -> backgroundCanvas.draw();
 
     private final WeakEventHandler<CalendarEvent> weakAvailabilityHandler = new WeakEventHandler<>(availabilityHandler);
 
@@ -337,7 +342,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             line.getStyleClass().add(styleClass);
         }
         lines.add(line);
-        getChildren().add(line);
+        //getChildren().add(line);
     }
 
     private void updateLineStyling() {
@@ -406,11 +411,11 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
         super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
 
-        availabilityCanvas.relocate(contentX + 2, contentY);
-        availabilityCanvas.setWidth(contentWidth - 4);
-        availabilityCanvas.setHeight(contentHeight);
+        backgroundCanvas.relocate(contentX, contentY);
+        backgroundCanvas.setWidth(contentWidth);
+        backgroundCanvas.setHeight(contentHeight);
 
-        availabilityCanvas.draw();
+        backgroundCanvas.draw();
 
         if (getSkinnable().isScrollingEnabled()) {
             layoutChildrenInfiniteScrolling(contentX, contentY, contentWidth, contentHeight);
@@ -1038,9 +1043,9 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         return getSkinnable().isCalendarVisible(calendar);
     }
 
-    private class AvailabilityCanvas extends Canvas {
+    private class BackgroundCanvas extends Canvas {
 
-        public AvailabilityCanvas() {
+        BackgroundCanvas() {
             setMouseTransparent(true);
             heightProperty().addListener(it -> draw());
             widthProperty().addListener(it -> draw());
@@ -1051,7 +1056,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         }
 
         public void draw() {
-            GraphicsContext gc = availabilityCanvas.getGraphicsContext2D();
+            GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
 
             T dayView = getSkinnable();
@@ -1088,6 +1093,32 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                     gc.fillRect(0, minY, getWidth(), maxY - minY);
                 }
             }
+
+            gc.setStroke(dayView.getGridLineColor());
+
+            ZonedDateTime startTime = dayView.getZonedDateTimeMin();
+            ZonedDateTime endTime = dayView.getZonedDateTimeMax();
+
+            if (dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE)) {
+                startTime = dayView.getZonedDateTimeStart();
+                endTime = dayView.getZonedDateTimeEnd();
+            }
+
+            VirtualGrid virtualGrid = dayView.getGridLines();
+
+            do {
+                double y = ViewHelper.getTimeLocation(dayView, startTime);
+                if (startTime.toLocalTime().getMinute() == 0) {
+                    gc.setLineDashes(null);
+                } else {
+                    gc.setLineDashes(2, 2);
+                }
+                gc.strokeLine(0, y, getWidth(), y);
+                startTime = startTime.plus(virtualGrid.getAmount(), virtualGrid.getUnit());
+            } while (startTime.isBefore(endTime));
+
+            gc.setLineDashes(null);
+            gc.strokeLine(getWidth() - gc.getLineWidth(), 0, getWidth() - gc.getLineWidth(), getHeight() - 1);
         }
     }
 }

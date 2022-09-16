@@ -107,6 +107,45 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         setMinWidth(0); // important, so that multi day views apply same width for all day views
     }
 
+    private final ObjectProperty<VirtualGrid> gridLines = new SimpleObjectProperty<>(this, "virtualGrid", new VirtualGrid("Grid Lines", "Grid", ChronoUnit.MINUTES, 30));
+
+    public final VirtualGrid getGridLines() {
+        return gridLines.get();
+    }
+
+    /**
+     * A virtual grid used to control the placement of lightweight grid lines in the background
+     * of the view. These grid lines are drawn via the canvas API.
+     *
+     * @return the grid lines virtual grid object
+     */
+    public final ObjectProperty<VirtualGrid> gridLinesProperty() {
+        return gridLines;
+    }
+
+    public final void setGridLines(VirtualGrid gridLines) {
+        this.gridLines.set(gridLines);
+    }
+
+    private final ObjectProperty<Paint> gridLineColor = new SimpleObjectProperty<>(this, "gridLineColor", Color.LIGHTGRAY);
+
+    public final Paint getGridLineColor() {
+        return gridLineColor.get();
+    }
+
+    /**
+     * A color used to draw the lightweight grid lines in a background canvas.
+     *
+     * @return the grid line color
+     */
+    public final ObjectProperty<Paint> gridLineColorProperty() {
+        return gridLineColor;
+    }
+
+    public final void setGridLineColor(Paint gridLineColor) {
+        this.gridLineColor.set(gridLineColor);
+    }
+
     /**
      * A list of possible ways that entries can behave when the user switches
      * to availability editing. The values determine if the entries should
@@ -1014,6 +1053,8 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.bindBidirectional(otherControl.entryViewAvailabilityEditingBehaviourProperty(), entryViewAvailabilityEditingBehaviourProperty());
         Bindings.bindBidirectional(otherControl.entryViewAvailabilityEditingOpacityProperty(), entryViewAvailabilityEditingOpacityProperty());
+        Bindings.bindBidirectional(otherControl.gridLinesProperty(), gridLinesProperty());
+        Bindings.bindBidirectional(otherControl.gridLineColorProperty(), gridLineColorProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -1037,6 +1078,8 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.unbindBidirectional(otherControl.entryViewAvailabilityEditingBehaviourProperty(), entryViewAvailabilityEditingBehaviourProperty());
         Bindings.unbindBidirectional(otherControl.entryViewAvailabilityEditingOpacityProperty(), entryViewAvailabilityEditingOpacityProperty());
+        Bindings.unbindBidirectional(otherControl.gridLinesProperty(), gridLinesProperty());
+        Bindings.unbindBidirectional(otherControl.gridLineColorProperty(), gridLineColorProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";
@@ -1557,7 +1600,93 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
             }
         });
 
-       items.add(new Item() {
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(gridLinesProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setGridLines((VirtualGrid) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getGridLines();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return VirtualGrid.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Grid used for drawing grid lines";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Specifies the grid size.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(gridLineColorProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setGridLineColor((Paint) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getGridLineColor();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return Paint.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Color used for drawing grid lines";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Specifies the grid line color.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+        });
+
+        items.add(new Item() {
 
             @Override
             public Optional<ObservableValue<?>> getObservableValue() {

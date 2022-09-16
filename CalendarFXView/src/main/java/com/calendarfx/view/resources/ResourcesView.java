@@ -22,6 +22,7 @@ import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.TimeScaleView;
+import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.WeekDayHeaderView;
 import com.calendarfx.view.WeekView;
 import impl.com.calendarfx.view.resources.ResourcesViewSkin;
@@ -42,6 +43,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
+import java.time.temporal.ChronoUnit;
 import java.util.function.Consumer;
 
 import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
@@ -71,6 +73,9 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
 
         // calling "editEntry" with "false" flag because we do not want to change the start date of the view
         addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> editEntry(evt.getEntry(), false)));
+
+        setVirtualGrid(new VirtualGrid("Editing Grid", "Editing Grid", ChronoUnit.MINUTES, 20));
+        setGridLines(new VirtualGrid("Visible Grid", "Visible Grid", ChronoUnit.MINUTES, 20));
     }
 
     private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {
