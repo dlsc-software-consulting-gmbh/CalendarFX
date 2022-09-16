@@ -136,13 +136,17 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
             if (view.isShowAllDayView()) {
                 AllDayView allDayView = new AllDayView();
+                allDayView.setAdjustToFirstDayOfWeek(false);
 
+                // bind AllDayView
                 view.bind(allDayView, true);
+                allDayView.numberOfDaysProperty().bind(view.numberOfDaysProperty());
+
+                // some unbindings for AllDayView
                 Bindings.unbindBidirectional(view.defaultCalendarProviderProperty(), allDayView.defaultCalendarProviderProperty());
                 Bindings.unbindBidirectional(view.draggedEntryProperty(), allDayView.draggedEntryProperty());
                 Bindings.unbindContentBidirectional(view.getCalendarSources(), allDayView.getCalendarSources());
 
-                allDayView.setNumberOfDays(1);
                 CalendarSource calendarSource = createCalendarSource(resource);
                 allDayView.getCalendarSources().setAll(calendarSource);
                 allDayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
@@ -154,6 +158,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             HBox.setHgrow(resourceHeader, Priority.ALWAYS);
 
             WeekDayHeaderView weekDayHeaderView = view.getWeekDayHeaderViewFactory().call(resource);
+            weekDayHeaderView.setAdjustToFirstDayOfWeek(false);
             weekDayHeaderView.numberOfDaysProperty().bind(view.numberOfDaysProperty());
             view.bind(weekDayHeaderView, true);
 

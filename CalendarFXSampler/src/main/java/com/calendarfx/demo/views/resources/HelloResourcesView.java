@@ -21,6 +21,7 @@ import com.calendarfx.demo.CalendarFXDateControlSample;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase.AvailabilityEditingEntryBehaviour;
+import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
 import javafx.scene.Node;
@@ -51,6 +52,11 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
     }
 
     @Override
+    protected boolean isSupportingDeveloperConsole() {
+        return false;
+    }
+
+    @Override
     public Node getControlPanel() {
         ToggleButton availabilityButton = new ToggleButton("Edit Schedule");
         availabilityButton.selectedProperty().bindBidirectional(resourcesView.editAvailabilityProperty());
@@ -78,8 +84,8 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
-        resourcesView.setPrefHeight(800);
-        resourcesView.setPrefWidth(700);
+        resourcesView.setNumberOfDays(5);
+        resourcesView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
         resourcesView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3), create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
         return resourcesView;
     }

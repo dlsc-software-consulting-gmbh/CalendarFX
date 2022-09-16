@@ -319,7 +319,7 @@ public class DayViewEditController {
         if (draggedEntry != null) {
             entry.setInterval(draggedEntry.getInterval());
             dayViewBase.setDraggedEntry(null);
-            if (dayViewBase.isShowDetailsUponCreation() && showEntryDetails) {
+            if (dayViewBase.isShowDetailsUponEntryCreation() && showEntryDetails) {
                 dayViewBase.fireEvent(new RequestEvent(dayViewBase, dayViewBase, entry));
             }
         }

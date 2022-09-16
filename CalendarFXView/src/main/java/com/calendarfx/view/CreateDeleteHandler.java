@@ -77,7 +77,7 @@ class CreateDeleteHandler {
                 Optional<Calendar> calendar = dateControl.getCalendarAt(evt.getX(), evt.getY());
                 if (time != null) {
                     Entry<?> entry = dateControl.createEntryAt(time, calendar.orElse(null));
-                    if (dateControl.isShowDetailsUponCreation()) {
+                    if (dateControl.isShowDetailsUponEntryCreation()) {
                         dateControl.fireEvent(new RequestEvent(dateControl, dateControl, entry));
                     }
                 }

@@ -944,7 +944,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         this.onLassoFinished.set(onLassoFinished);
     }
 
-    private final ObjectProperty<Paint> lassoColor = new SimpleObjectProperty<>(this, "lassoColor", Color.ALICEBLUE);
+    private final ObjectProperty<Paint> lassoColor = new SimpleObjectProperty<>(this, "lassoColor", Color.GREY);
 
     public final Paint getLassoColor() {
         return lassoColor.get();

@@ -40,6 +40,7 @@ public class WeekViewSkin extends SkinBase<WeekView> {
     public WeekViewSkin(WeekView view) {
         super(view);
 
+
         final InvalidationListener rebuildListener = it -> buildDays();
         view.numberOfDaysProperty().addListener(rebuildListener);
         view.adjustToFirstDayOfWeekProperty().addListener(rebuildListener);

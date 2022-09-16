@@ -23,6 +23,7 @@ import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.CalendarView.Page;
 import com.calendarfx.view.DeveloperConsole;
 import com.calendarfx.view.Messages;
+import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.SearchResultView;
 import com.calendarfx.view.SourceView;
 import com.calendarfx.view.YearMonthView;
@@ -65,6 +66,7 @@ import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.ZoneId;
+import java.util.function.Consumer;
 
 import static com.calendarfx.view.CalendarView.Page.DAY;
 import static com.calendarfx.view.CalendarView.Page.MONTH;
@@ -113,12 +115,12 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             });
         }
 
-        view.addEventHandler(REQUEST_DATE, evt -> view.showDate(evt.getDate()));
-        view.addEventHandler(REQUEST_DATE_TIME, evt -> view.showDateTime(evt.getDateTime()));
-        view.addEventHandler(REQUEST_WEEK, evt -> view.showWeek(evt.getYear(), evt.getWeekOfYear()));
-        view.addEventHandler(REQUEST_YEAR_MONTH, evt -> view.showYearMonth(evt.getYearMonth()));
-        view.addEventHandler(REQUEST_YEAR, evt -> view.showYear(evt.getYear()));
-        view.addEventHandler(REQUEST_ENTRY, evt -> view.getSelectedPageView().editEntry(evt.getEntry()));
+        view.addEventHandler(REQUEST_DATE, evt -> maybeRunAndConsume(evt, e -> view.showDate(evt.getDate())));
+        view.addEventHandler(REQUEST_DATE_TIME, evt -> maybeRunAndConsume(evt, e -> view.showDateTime(evt.getDateTime())));
+        view.addEventHandler(REQUEST_WEEK, evt -> maybeRunAndConsume(evt, e -> view.showWeek(evt.getYear(), evt.getWeekOfYear())));
+        view.addEventHandler(REQUEST_YEAR_MONTH, evt -> maybeRunAndConsume(evt, e -> view.showYearMonth(evt.getYearMonth())));
+        view.addEventHandler(REQUEST_YEAR, evt -> maybeRunAndConsume(evt, e -> view.showYear(evt.getYear())));
+        view.addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> view.getSelectedPageView().editEntry(evt.getEntry())));
 
         view.getAvailablePages().addListener((Observable it) -> buildSwitcher());
 
@@ -342,6 +344,13 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         selectedPage.toFront();
 
         updateToggleButtons();
+    }
+
+    private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> runnable) {
+        if (!evt.isConsumed()) {
+            runnable.accept(evt);
+            evt.consume();
+        }
     }
 
     private void openTray() {

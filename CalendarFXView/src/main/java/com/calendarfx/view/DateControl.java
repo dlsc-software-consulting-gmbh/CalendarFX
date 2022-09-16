@@ -2564,10 +2564,10 @@ public abstract class DateControl extends CalendarFXControl {
         this.availabilityFill.set(availabilityFill);
     }
 
-    private final BooleanProperty showDetailsUponCreation = new SimpleBooleanProperty(this, "showDetailsUponCreation", true);
+    private final BooleanProperty showDetailsUponEntryCreation = new SimpleBooleanProperty(this, "showDetailsUponEntryCreation", true);
 
-    public final boolean isShowDetailsUponCreation() {
-        return showDetailsUponCreation.get();
+    public final boolean isShowDetailsUponEntryCreation() {
+        return showDetailsUponEntryCreation.get();
     }
 
     /**
@@ -2576,12 +2576,12 @@ public abstract class DateControl extends CalendarFXControl {
      *
      * @return true if the date control shows a dialog immediately after a new entry was added by the user
      */
-    public final BooleanProperty showDetailsUponCreationProperty() {
-        return showDetailsUponCreation;
+    public final BooleanProperty showDetailsUponEntryCreationProperty() {
+        return showDetailsUponEntryCreation;
     }
 
-    public final void setShowDetailsUponCreation(boolean showDetailsUponCreation) {
-        this.showDetailsUponCreation.set(showDetailsUponCreation);
+    public final void setShowDetailsUponEntryCreation(boolean showDetailsUponEntryCreation) {
+        this.showDetailsUponEntryCreation.set(showDetailsUponEntryCreation);
     }
 
     /**
@@ -2632,7 +2632,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
         Bindings.bindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
         Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
-        Bindings.bindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
+        Bindings.bindBidirectional(otherControl.showDetailsUponEntryCreationProperty(), showDetailsUponEntryCreationProperty());
         Bindings.bindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
         Bindings.bindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
 
@@ -2702,7 +2702,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
         Bindings.unbindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
         Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
-        Bindings.unbindBidirectional(otherControl.showDetailsUponCreationProperty(), showDetailsUponCreationProperty());
+        Bindings.unbindBidirectional(otherControl.showDetailsUponEntryCreationProperty(), showDetailsUponEntryCreationProperty());
         Bindings.unbindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
         Bindings.unbindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
 
@@ -3458,17 +3458,17 @@ public abstract class DateControl extends CalendarFXControl {
 
             @Override
             public Optional<ObservableValue<?>> getObservableValue() {
-                return Optional.of(showDetailsUponCreationProperty());
+                return Optional.of(showDetailsUponEntryCreationProperty());
             }
 
             @Override
             public void setValue(Object value) {
-                setShowDetailsUponCreation((boolean) value);
+                setShowDetailsUponEntryCreation((boolean) value);
             }
 
             @Override
             public Object getValue() {
-                return isShowDetailsUponCreation();
+                return isShowDetailsUponEntryCreation();
             }
 
             @Override

@@ -20,6 +20,7 @@ import com.calendarfx.view.AllDayView;
 import com.calendarfx.view.CalendarHeaderView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
+import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.TimeScaleView;
 import com.calendarfx.view.WeekDayHeaderView;
 import com.calendarfx.view.WeekView;
@@ -40,6 +41,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
+
+import java.util.function.Consumer;
+
+import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
 
 /**
  * The detailed day view is a composite control consisting of a {@link DayView},
@@ -63,6 +68,15 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     public ResourcesView() {
         getStyleClass().add(DEFAULT_STYLE);
         setShowToday(false);
+
+        addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> editEntry(evt.getEntry())));
+    }
+
+    private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> runnable) {
+        if (!evt.isConsumed()) {
+            runnable.accept(evt);
+            evt.consume();
+        }
     }
 
     @Override
@@ -273,7 +287,11 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         return showScrollBar.get();
     }
 
-    private final ObjectProperty<Callback<T, WeekView>> weekViewFactory = new SimpleObjectProperty<>(this, "weekViewFactory", resource -> new WeekView());
+    private final ObjectProperty<Callback<T, WeekView>> weekViewFactory = new SimpleObjectProperty<>(this, "weekViewFactory", resource -> {
+        WeekView view = new WeekView();
+        view.setAdjustToFirstDayOfWeek(false);
+        return view;
+    });
 
     public final Callback<T, WeekView> getWeekViewFactory() {
         return weekViewFactory.get();
