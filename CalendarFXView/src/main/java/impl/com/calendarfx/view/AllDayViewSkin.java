@@ -32,8 +32,7 @@ import javafx.beans.InvalidationListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
@@ -57,16 +56,16 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
     private static final String ALL_DAY_BACKGROUND_REGION_WEEKEND = "weekend";
 
     private final DataLoader dataLoader;
-    private final GridPane pane;
+    private final HBox container;
 
     public AllDayViewSkin(AllDayView view) {
         super(view);
 
         view.setFocusTraversable(true);
 
-        pane = new GridPane();
-        pane.getStyleClass().add("container");
-        getChildren().add(pane);
+        container = new HBox();
+        container.getStyleClass().add("container");
+        getChildren().add(container);
 
         // update backgrounds
         InvalidationListener updateBackgroundsListener = evt -> updateBackgrounds();
@@ -296,8 +295,6 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         }
     }
 
-    private final TimeBoundsResolver resolver = new TimeBoundsResolver();
-
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 
@@ -397,34 +394,35 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
     }
 
     private void updateBackgrounds() {
-        // the day views
+        container.getChildren().clear();
 
-        pane.getChildren().clear();
-        List<ColumnConstraints> constraints = new ArrayList<>();
+        AllDayView allDayView = getSkinnable();
+        Callback<AllDayView, Region> separatorFactory = allDayView.getSeparatorFactory();
 
-        int numberOfDays = getSkinnable().getNumberOfDays();
+        int numberOfDays = allDayView.getNumberOfDays();
         for (int i = 0; i < numberOfDays; i++) {
-            ColumnConstraints con = new ColumnConstraints();
-            con.setPercentWidth((double) 100 / (double) numberOfDays);
-            constraints.add(con);
             Region region = new Region();
+            region.setPrefWidth(1); // equal width distribution
             region.setMaxWidth(Double.MAX_VALUE);
             region.getStyleClass().add(ALL_DAY_BACKGROUND_REGION);
-            GridPane.setHgrow(region, Priority.ALWAYS);
-            GridPane.setVgrow(region, Priority.ALWAYS);
-            GridPane.setFillHeight(region, true);
-            GridPane.setFillWidth(region, true);
 
             final int day = i;
-            getSkinnable().dateProperty().addListener(evt -> updateRegion(region, day));
+            allDayView.dateProperty().addListener(evt -> updateRegion(region, day));
             updateRegion(region, day);
 
-            pane.add(region, i, 0);
+            HBox.setHgrow(region, Priority.ALWAYS);
+            container.getChildren().add(region);
+
+            if (separatorFactory != null && i < numberOfDays - 1) {
+                Region separator = separatorFactory.call(allDayView);
+                if (separator != null) {
+                    container.getChildren().add(separator);
+                    HBox.setHgrow(separator, Priority.NEVER);
+                }
+            }
         }
 
-        pane.getColumnConstraints().setAll(constraints);
-
-        getSkinnable().requestLayout();
+        allDayView.requestLayout();
     }
 
     private void updateRegion(Region region, int day) {

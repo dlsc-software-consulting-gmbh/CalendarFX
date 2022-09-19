@@ -31,6 +31,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import org.controlsfx.control.PropertySheet.Item;
 
@@ -106,14 +107,36 @@ public class WeekDayHeaderView extends DateControl {
      * @param factory
      *            the cell factory
      */
-    public final void setCellFactory(
-            Callback<WeekDayHeaderView, WeekDayCell> factory) {
+    public final void setCellFactory(Callback<WeekDayHeaderView, WeekDayCell> factory) {
         requireNonNull(factory);
         cellFactoryProperty().set(factory);
     }
 
-    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(
-            this, "numberOfDays", 7);
+    private final ObjectProperty<Callback<WeekDayHeaderView, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
+        Region region = new Region();
+        region.getStyleClass().add("weekday-separator");
+        return region;
+    });
+
+
+    public final Callback<WeekDayHeaderView, Region> getSeparatorFactory() {
+        return separatorFactory.get();
+    }
+
+    /**
+     * A factory used for creating (optional) vertical separators between the week day headers.
+     *
+     * @return the separator factory
+     */
+    public final ObjectProperty<Callback<WeekDayHeaderView, Region>> separatorFactoryProperty() {
+        return separatorFactory;
+    }
+
+    public final void setSeparatorFactory(Callback<WeekDayHeaderView, Region> separatorFactory) {
+        this.separatorFactory.set(separatorFactory);
+    }
+
+    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7);
 
     /**
      * Stores the number of days that will be shown by this view. This value

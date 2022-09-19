@@ -41,6 +41,20 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
 
             WeekView weekView = container.getWeekViewFactory().call(resource);
 
+            weekView.getStyleClass().removeAll("only", "first", "middle", "last");
+
+            if (resources.size() == 1) {
+                weekView.getStyleClass().add("only");
+            } else {
+                if (i == 0) {
+                    weekView.getStyleClass().add("first");
+                } else if (i == resources.size() - 1) {
+                    weekView.getStyleClass().add("last");
+                } else {
+                    weekView.getStyleClass().add("middle");
+                }
+            }
+
             weekView.setPrefWidth(0); // so they all end up with the same percentage width
 
             // bind day view to container but remove bindings that interfere

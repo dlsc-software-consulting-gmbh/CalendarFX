@@ -197,7 +197,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     private final ObjectProperty<Callback<T, Node>> resourceHeaderFactory = new SimpleObjectProperty<>(this,"headerFactory", resource -> {
         Label label = new Label(resource.toString());
         label.setAlignment(Pos.CENTER);
-        label.getStyleClass().add("resource-header-label");
+        label.getStyleClass().add("resource-header");
         label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         return label;
     });

@@ -107,6 +107,43 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         setMinWidth(0); // important, so that multi day views apply same width for all day views
     }
 
+    /**
+     * A list of possible grid types supported by the day view.
+     *
+     * @see #gridTypeProperty()
+     * @see #gridLinesProperty()
+     * @see #gridLineColorProperty()
+     */
+    public enum GridType {
+        STANDARD,
+        CUSTOM
+    }
+
+    private final ObjectProperty<GridType> gridType = new SimpleObjectProperty<>(this, "gridType", GridType.STANDARD);
+
+    public final GridType getGridType() {
+        return gridType.get();
+    }
+
+    /**
+     * Determines the type of grid / grid lines will be used for full hours,
+     * half hours, and so on. The {@link GridType#STANDARD} only supports grid lines
+     * for full hours and half hours. The {@link GridType#CUSTOM} can be configured
+     * via a {@link VirtualGrid} to show any kind of grid lines.
+     *
+     * @return the grid type
+     *
+     * @see #gridLinesProperty()
+     * @see #gridLineColorProperty()
+     */
+    public final ObjectProperty<GridType> gridTypeProperty() {
+        return gridType;
+    }
+
+    public final void setGridType(GridType gridType) {
+        this.gridType.set(gridType);
+    }
+
     private final ObjectProperty<VirtualGrid> gridLines = new SimpleObjectProperty<>(this, "virtualGrid", new VirtualGrid("Grid Lines", "Grid", ChronoUnit.MINUTES, 30));
 
     public final VirtualGrid getGridLines() {
@@ -1055,6 +1092,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.entryViewAvailabilityEditingOpacityProperty(), entryViewAvailabilityEditingOpacityProperty());
         Bindings.bindBidirectional(otherControl.gridLinesProperty(), gridLinesProperty());
         Bindings.bindBidirectional(otherControl.gridLineColorProperty(), gridLineColorProperty());
+        Bindings.bindBidirectional(otherControl.gridTypeProperty(), gridTypeProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -1080,6 +1118,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.entryViewAvailabilityEditingOpacityProperty(), entryViewAvailabilityEditingOpacityProperty());
         Bindings.unbindBidirectional(otherControl.gridLinesProperty(), gridLinesProperty());
         Bindings.unbindBidirectional(otherControl.gridLineColorProperty(), gridLineColorProperty());
+        Bindings.unbindBidirectional(otherControl.gridTypeProperty(), gridTypeProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";
@@ -1673,6 +1712,49 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
             @Override
             public String getDescription() {
                 return "Specifies the grid line color.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(gridTypeProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setGridType((GridType) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getGridType();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return GridType.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Grid Type";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Specifies the grid type.";
             }
 
             @Override

@@ -120,6 +120,14 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             gridPane.add(timeScaleScrollPane, 0, 1);
         }
 
+        Region upperLeftCorner = new Region();
+        upperLeftCorner.getStyleClass().add("upper-left-corner");
+        gridPane.add(upperLeftCorner, 0, 0);
+
+        Region upperRightCorner = new Region();
+        upperRightCorner.getStyleClass().add("upper-right-corner");
+        gridPane.add(upperRightCorner, 2, 0);
+
         HBox headerBox = new HBox();
         headerBox.getStyleClass().add("header-box");
 
@@ -131,8 +139,23 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         ObservableList<T> resources = view.getResources();
         for (int i = 0; i < resources.size(); i++) {
             T resource = resources.get(i);
+
             Node headerNode = resourceHeaderFactory.call(resource);
+
             VBox resourceHeader = new VBox(headerNode);
+            resourceHeader.getStyleClass().removeAll("only", "first", "middle", "last");
+
+            if (resources.size() == 1) {
+                resourceHeader.getStyleClass().add("only");
+            } else {
+                if (i == 0) {
+                    resourceHeader.getStyleClass().add("first");
+                } else if (i == resources.size() - 1) {
+                    resourceHeader.getStyleClass().add("last");
+                } else {
+                    resourceHeader.getStyleClass().add("middle");
+                }
+            }
 
             if (view.isShowAllDayView()) {
                 AllDayView allDayView = new AllDayView();
@@ -158,7 +181,6 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             }
 
             resourceHeader.getStyleClass().add("resource-header-view");
-            HBox.setHgrow(resourceHeader, Priority.ALWAYS);
 
             WeekDayHeaderView weekDayHeaderView = view.getWeekDayHeaderViewFactory().call(resource);
             weekDayHeaderView.adjustToFirstDayOfWeekProperty().bind(view.adjustToFirstDayOfWeekProperty());
@@ -169,6 +191,18 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             resourceHeader.getChildren().add(weekDayHeaderView);
 
             headerBox.getChildren().add(resourceHeader);
+            HBox.setHgrow(resourceHeader, Priority.ALWAYS);
+
+            if (i < resources.size() - 1) {
+                Callback<T, Region> separatorFactory = view.getSeparatorFactory();
+                if (separatorFactory != null) {
+                    Region separator = separatorFactory.call(resource);
+                    if (separator != null) {
+                        headerBox.getChildren().add(separator);
+                        HBox.setHgrow(separator, Priority.NEVER);
+                    }
+                }
+            }
         }
 
         ColumnConstraints dayViewsConstraints = new ColumnConstraints();

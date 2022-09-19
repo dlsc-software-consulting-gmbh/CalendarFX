@@ -68,13 +68,11 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     /**
      * Constructs a new view for the given number of days.
      *
-     * @param numberOfDays
-     *            the number of days to be shown by this view
+     * @param numberOfDays the number of days to be shown by this view
      */
     public AllDayView(int numberOfDays) {
         if (numberOfDays <= 0) {
-            throw new IllegalArgumentException(
-                    "number of days must be larger than zero");
+            throw new IllegalArgumentException("number of days must be larger than zero");
         }
 
         getStyleClass().add(ALL_DAY_VIEW);
@@ -122,8 +120,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
      */
     public final ObjectProperty<Insets> extraPaddingProperty() {
         if (extraPadding == null) {
-            extraPadding = new StyleableObjectProperty<Insets>(new Insets(2, 0,
-                    9, 0)) {
+            extraPadding = new StyleableObjectProperty<>(new Insets(2, 0, 9, 0)) {
 
                 @Override
                 public CssMetaData<AllDayView, Insets> getCssMetaData() {
@@ -157,8 +154,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     /**
      * Sets the value of {@link #extraPaddingProperty()}.
      *
-     * @param padding
-     *            padding insets
+     * @param padding padding insets
      */
     public final void setExtraPadding(Insets padding) {
         requireNonNull(padding);
@@ -209,8 +205,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     /**
      * Sets the value of the {@link #rowHeightProperty()}.
      *
-     * @param height
-     *            the new row height
+     * @param height the new row height
      */
     public final void setRowHeight(double height) {
         rowHeightProperty().set(height);
@@ -259,13 +254,11 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     /**
      * Sets the value of {@link #rowSpacingProperty()}.
      *
-     * @param space
-     *            the space between rows in pixel
+     * @param space the space between rows in pixel
      */
     public final void setRowSpacing(double space) {
         if (space < 0) {
-            throw new IllegalArgumentException(
-                    "row spacing can not be smaller than zero");
+            throw new IllegalArgumentException("row spacing can not be smaller than zero");
         }
         rowSpacingProperty().set(space);
     }
@@ -313,15 +306,13 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     /**
      * Sets the value of {@link #columnSpacingProperty()}.
      *
-     * @param space
-     *            the space between columns in pixel
+     * @param space the space between columns in pixel
      */
     public final void setColumnSpacing(double space) {
         columnSpacingProperty().set(space);
     }
 
-    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(
-            this, "adjustToFirstDayOfWeek", true);
+    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);
 
     /**
      * A flag used to indicate that the view should always show the first day of
@@ -349,15 +340,13 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     /**
      * Sets the value of {@link #adjustToFirstDayOfWeekProperty()}.
      *
-     * @param adjust
-     *            if true the view will always show the first day of the week
+     * @param adjust if true the view will always show the first day of the week
      */
     public final void setAdjustToFirstDayOfWeek(boolean adjust) {
         adjustToFirstDayOfWeekProperty().set(adjust);
     }
 
-    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(
-            this, "numberOfDays");
+    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays");
 
     /**
      * Stores the number of days that will be shown by this view. This value
@@ -382,21 +371,17 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
     /**
      * Sets the value of {@link #numberOfDaysProperty()}.
      *
-     * @param number
-     *            the new number of days shown by the view
+     * @param number the new number of days shown by the view
      */
     public final void setNumberOfDays(int number) {
         if (number < 1) {
-            throw new IllegalArgumentException(
-                    "invalid number of days, must be larger than 0 but was "
-                            + number);
+            throw new IllegalArgumentException("invalid number of days, must be larger than 0 but was " + number);
         }
 
         numberOfDaysProperty().set(number);
     }
 
-    private final ObjectProperty<Callback<Entry<?>, AllDayEntryView>> entryViewFactory = new SimpleObjectProperty<>(
-            this, "entryViewFactory", AllDayEntryView::new);
+    private final ObjectProperty<Callback<Entry<?>, AllDayEntryView>> entryViewFactory = new SimpleObjectProperty<>(this, "entryViewFactory", AllDayEntryView::new);
 
     /**
      * A callback used for producing views for entries. The views have to be of
@@ -422,10 +407,33 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
      *
      * @param factory the new entry view factory
      */
-    public final void setEntryViewFactory(
-            Callback<Entry<?>, AllDayEntryView> factory) {
+    public final void setEntryViewFactory(Callback<Entry<?>, AllDayEntryView> factory) {
         requireNonNull(factory);
         entryViewFactoryProperty().set(factory);
+    }
+
+    private final ObjectProperty<Callback<AllDayView, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it -> {
+        Region region = new Region();
+        region.getStyleClass().add("weekday-separator");
+        return region;
+    });
+
+
+    public final Callback<AllDayView, Region> getSeparatorFactory() {
+        return separatorFactory.get();
+    }
+
+    /**
+     * A factory used for creating (optional) vertical separators between the all day view.
+     *
+     * @return the separator factory
+     */
+    public final ObjectProperty<Callback<AllDayView, Region>> separatorFactoryProperty() {
+        return separatorFactory;
+    }
+
+    public final void setSeparatorFactory(Callback<AllDayView, Region> separatorFactory) {
+        this.separatorFactory.set(separatorFactory);
     }
 
     private static class StyleableProperties {

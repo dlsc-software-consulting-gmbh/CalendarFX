@@ -27,6 +27,7 @@ import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
+import com.calendarfx.view.DayViewBase.GridType;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import com.calendarfx.view.DraggedEntry;
 import com.calendarfx.view.EntryViewBase;
@@ -199,6 +200,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         view.startTimeProperty().addListener(styleLinesListener);
         view.endTimeProperty().addListener(styleLinesListener);
         view.earlyLateHoursStrategyProperty().addListener(styleLinesListener);
+        view.gridTypeProperty().addListener(styleLinesListener);
 
         loadData("initial data loading");
 
@@ -229,6 +231,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         view.gridLinesProperty().addListener(drawBackgroundCanvasListener);
         view.gridLineColorProperty().addListener(drawBackgroundCanvasListener);
+        view.gridTypeProperty().addListener(drawBackgroundCanvasListener);
 
     }
 
@@ -342,7 +345,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             line.getStyleClass().add(styleClass);
         }
         lines.add(line);
-        //getChildren().add(line);
+        getChildren().add(line);
     }
 
     private void updateLineStyling() {
@@ -385,24 +388,28 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 }
             }
 
-            switch (dayView.getEarlyLateHoursStrategy()) {
-                case HIDE:
-                    /*
-                     * We do not show ... a) lines before the start time and after
-                     * the end time b) lines directly on the start time or end time
-                     * because they make the UI look messy
-                     */
-                    line.setVisible(!time.isBefore(startTime) && !time.equals(startTime) && !time.isAfter(endTime) && !time.equals(endTime));
-                    break;
-                case SHOW:
-                    line.setVisible(true);
-                    break;
-                case SHOW_COMPRESSED:
-                    line.setVisible(!halfHourLine);
-                    break;
-                default:
-                    break;
+            if (dayView.getGridType().equals(GridType.STANDARD)) {
+                switch (dayView.getEarlyLateHoursStrategy()) {
+                    case HIDE:
+                        /*
+                         * We do not show ... a) lines before the start time and after
+                         * the end time b) lines directly on the start time or end time
+                         * because they make the UI look messy
+                         */
+                        line.setVisible(!time.isBefore(startTime) && !time.equals(startTime) && !time.isAfter(endTime) && !time.equals(endTime));
+                        break;
+                    case SHOW:
+                        line.setVisible(true);
+                        break;
+                    case SHOW_COMPRESSED:
+                        line.setVisible(!halfHourLine);
+                        break;
+                    default:
+                        break;
 
+                }
+            } else {
+                line.setVisible(false);
             }
         }
     }
@@ -1094,31 +1101,32 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 }
             }
 
-            gc.setStroke(dayView.getGridLineColor());
+            if (dayView.getGridType().equals(GridType.CUSTOM)) {
+                gc.setStroke(dayView.getGridLineColor());
 
-            ZonedDateTime startTime = dayView.getZonedDateTimeMin();
-            ZonedDateTime endTime = dayView.getZonedDateTimeMax();
+                ZonedDateTime startTime = dayView.getZonedDateTimeMin();
+                ZonedDateTime endTime = dayView.getZonedDateTimeMax();
 
-            if (dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE)) {
-                startTime = dayView.getZonedDateTimeStart();
-                endTime = dayView.getZonedDateTimeEnd();
+                if (dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE)) {
+                    startTime = dayView.getZonedDateTimeStart();
+                    endTime = dayView.getZonedDateTimeEnd();
+                }
+
+                VirtualGrid virtualGrid = dayView.getGridLines();
+
+                do {
+                    double y = ViewHelper.getTimeLocation(dayView, startTime);
+                    if (startTime.toLocalTime().getMinute() == 0) {
+                        gc.setLineDashes(null);
+                    } else {
+                        gc.setLineDashes(2, 2);
+                    }
+                    gc.strokeLine(0, y, getWidth(), y);
+                    startTime = startTime.plus(virtualGrid.getAmount(), virtualGrid.getUnit());
+                } while (startTime.isBefore(endTime));
             }
 
-            VirtualGrid virtualGrid = dayView.getGridLines();
-
-            do {
-                double y = ViewHelper.getTimeLocation(dayView, startTime);
-                if (startTime.toLocalTime().getMinute() == 0) {
-                    gc.setLineDashes(null);
-                } else {
-                    gc.setLineDashes(2, 2);
-                }
-                gc.strokeLine(0, y, getWidth(), y);
-                startTime = startTime.plus(virtualGrid.getAmount(), virtualGrid.getUnit());
-            } while (startTime.isBefore(endTime));
-
             gc.setLineDashes(null);
-            gc.strokeLine(getWidth() - gc.getLineWidth(), 0, getWidth() - gc.getLineWidth(), getHeight() - 1);
         }
     }
 }

@@ -18,10 +18,13 @@
 package com.calendarfx.demo.views.resources;
 
 import com.calendarfx.demo.CalendarFXDateControlSample;
+import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
+import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase.AvailabilityEditingEntryBehaviour;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
+import com.calendarfx.view.DayViewBase.GridType;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
 import javafx.scene.Node;
@@ -32,6 +35,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class HelloResourcesView extends CalendarFXDateControlSample {
 
@@ -74,6 +80,10 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         behaviourBox.getItems().setAll(AvailabilityEditingEntryBehaviour.values());
         behaviourBox.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingBehaviourProperty());
 
+        ChoiceBox<GridType> gridTypeBox = new ChoiceBox<>();
+        gridTypeBox.getItems().setAll(GridType.values());
+        gridTypeBox.valueProperty().bindBidirectional(resourcesView.gridTypeProperty());
+
         CheckBox adjustBox = new CheckBox("Adjust first day of week");
         adjustBox.selectedProperty().bindBidirectional(resourcesView.adjustToFirstDayOfWeekProperty());
 
@@ -82,13 +92,14 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, datePicker, adjustBox, daysBox, new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider);
+        return new VBox(10, availabilityButton, datePicker, adjustBox, daysBox, new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox);
     }
 
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
         resourcesView.setNumberOfDays(5);
+        resourcesView.setGridType(GridType.CUSTOM);
         resourcesView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
         resourcesView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3)); //, create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
         return resourcesView;
@@ -98,9 +109,25 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         Resource<String> resource = new Resource(name);
         resource.getAvailabilityCalendar().setName("Availability of " + name);
         resource.getCalendar().setStyle(style);
-        resource.getCalendar().addEventHandler(evt -> System.out.println(evt));
-        resource.getAvailabilityCalendar().addEventHandler(evt -> System.out.println(evt));
+        fillAvailabilities(resource.getAvailabilityCalendar());
         return resource;
+    }
+
+    private void fillAvailabilities(Calendar calendar) {
+        LocalDate date = LocalDate.now();
+        for (int i = 0; i < 14; i++) {
+            // fourteen days is enough for this demo
+            Entry morning = new Entry("Morning");
+            morning.setInterval(date, LocalTime.MIN, date, LocalTime.of(8, 0));
+            calendar.addEntry(morning);
+            Entry noon = new Entry("Noon");
+            noon.setInterval(date, LocalTime.of(12, 0), date, LocalTime.of(13, 0));
+            calendar.addEntry(noon);
+            Entry evening = new Entry("Evening");
+            evening.setInterval(date, LocalTime.of(18, 0), date, LocalTime.MAX);
+            calendar.addEntry(evening);
+            date = date.plusDays(1);
+        }
     }
 
     public static void main(String[] args) {
