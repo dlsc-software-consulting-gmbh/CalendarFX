@@ -124,9 +124,11 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         upperLeftCorner.getStyleClass().add("upper-left-corner");
         gridPane.add(upperLeftCorner, 0, 0);
 
-        Region upperRightCorner = new Region();
-        upperRightCorner.getStyleClass().add("upper-right-corner");
-        gridPane.add(upperRightCorner, 2, 0);
+        if (view.isShowScrollBar()) {
+            Region upperRightCorner = new Region();
+            upperRightCorner.getStyleClass().add("upper-right-corner");
+            gridPane.add(upperRightCorner, 2, 0);
+        }
 
         HBox headerBox = new HBox();
         headerBox.getStyleClass().add("header-box");

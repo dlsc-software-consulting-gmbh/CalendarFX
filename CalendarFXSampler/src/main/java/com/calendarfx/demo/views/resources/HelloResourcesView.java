@@ -76,6 +76,11 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         daysBox.setValue(resourcesView.getNumberOfDays());
         daysBox.valueProperty().addListener(it -> resourcesView.setNumberOfDays(daysBox.getValue()));
 
+        ChoiceBox<Integer> clicksBox = new ChoiceBox<>();
+        clicksBox.getItems().setAll(1, 2, 3);
+        clicksBox.setValue(resourcesView.getCreateEntryClickCount());
+        clicksBox.valueProperty().addListener(it -> resourcesView.setCreateEntryClickCount(clicksBox.getValue()));
+
         ChoiceBox<AvailabilityEditingEntryBehaviour> behaviourBox = new ChoiceBox<>();
         behaviourBox.getItems().setAll(AvailabilityEditingEntryBehaviour.values());
         behaviourBox.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingBehaviourProperty());
@@ -87,18 +92,26 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         CheckBox adjustBox = new CheckBox("Adjust first day of week");
         adjustBox.selectedProperty().bindBidirectional(resourcesView.adjustToFirstDayOfWeekProperty());
 
+        CheckBox scrollbarBox = new CheckBox("Show scrollbar");
+        scrollbarBox.selectedProperty().bindBidirectional(resourcesView.showScrollBarProperty());
+
+        CheckBox detailsBox = new CheckBox("Show details upon creation");
+        detailsBox.selectedProperty().bindBidirectional(resourcesView.showDetailsUponEntryCreationProperty());
+
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, datePicker, adjustBox, daysBox, new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox);
+        return new VBox(10, availabilityButton, datePicker, adjustBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
+                new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, detailsBox);
     }
 
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
         resourcesView.setNumberOfDays(5);
+        resourcesView.setCreateEntryClickCount(1);
         resourcesView.setGridType(GridType.CUSTOM);
         resourcesView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
         resourcesView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3)); //, create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
