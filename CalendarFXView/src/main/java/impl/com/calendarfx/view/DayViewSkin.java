@@ -917,6 +917,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     private DayEntryView doAddEntryView(Entry<?> entry) {
         Callback<Entry<?>, DayEntryView> factory = getSkinnable().getEntryViewFactory();
+
         DayEntryView view = factory.call(entry);
         view.getProperties().put("control", getSkinnable());
         view.setManaged(false);
@@ -941,12 +942,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         for (int i = 0; i < childrenSize; i++) {
             Node node = entryViewGroup.getChildren().get(i);
-            if (node instanceof DayEntryView) {
-                DayEntryView view = (DayEntryView) node;
-                Entry<?> viewEntry = view.getEntry();
-                if (viewEntry.getStartAsZonedDateTime().isAfter(entry.getStartAsZonedDateTime())) {
-                    return i;
-                }
+            DayEntryView view = (DayEntryView) node;
+            Entry<?> viewEntry = view.getEntry();
+            if (viewEntry.getStartAsZonedDateTime().isAfter(entry.getStartAsZonedDateTime())) {
+                return i;
             }
         }
 
