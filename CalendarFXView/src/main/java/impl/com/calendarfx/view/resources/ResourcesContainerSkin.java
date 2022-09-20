@@ -10,11 +10,15 @@ import impl.com.calendarfx.view.DayViewBaseSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
+
+import java.time.LocalDate;
 
 public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSkin<ResourcesContainer<T>> {
 
@@ -54,6 +58,9 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
         for (int dayIndex = 0; dayIndex < numberOfDays; dayIndex++) {
 
             HBox resourcesBox = new HBox();
+            ObjectProperty<LocalDate> dateProperty = new SimpleObjectProperty<>(this, "date");
+            final int additionalDays = dayIndex;
+            dateProperty.bind(Bindings.createObjectBinding(() -> container.getDate().plusDays(additionalDays), container.dateProperty()));
 
             for (int resourceIndex = 0; resourceIndex < resources.size(); resourceIndex++) {
                 T resource = resources.get(resourceIndex);
@@ -75,7 +82,9 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
                 }
 
                 // bind day view to container but remove bindings that interfere
-                container.bind(dayView, true);
+                container.bind(dayView, false);
+
+                dayView.dateProperty().bind(dateProperty);
 
                 // unbind what is not needed
                 Bindings.unbindBidirectional(container.defaultCalendarProviderProperty(), dayView.defaultCalendarProviderProperty());
@@ -90,6 +99,7 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
 
                 dayView.setEnableCurrentTimeMarker(true);
                 dayView.setEnableCurrentTimeCircle(dayIndex == 0 && resourceIndex == 0);
+
                 dayView.setAvailabilityCalendar(resource.getAvailabilityCalendar());
                 dayView.installDefaultLassoFinishedBehaviour();
 
@@ -112,7 +122,7 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
             this.container.getChildren().add(resourcesBox);
 
             if (dayIndex < numberOfDays - 1) {
-                Callback<ResourcesView<T>, Region> separatorFactory = container.getSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = container.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
                     Region separator = separatorFactory.call(container.getResourcesView());
                     if (separator != null) {
@@ -183,7 +193,7 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
             this.container.getChildren().add(weekView);
 
             if (i < resources.size() - 1) {
-                Callback<ResourcesView<T>, Region> separatorFactory = container.getSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = container.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
                     Region separator = separatorFactory.call(container.getResourcesView());
                     if (separator != null) {

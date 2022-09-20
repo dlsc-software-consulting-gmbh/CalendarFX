@@ -22,11 +22,14 @@ import com.calendarfx.view.TimeScaleView;
 import com.calendarfx.view.WeekDayHeaderView;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
+import com.calendarfx.view.resources.ResourcesView.Type;
 import impl.com.calendarfx.view.DateControlSkin;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -39,6 +42,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+
+import java.time.LocalDate;
 
 import static com.calendarfx.util.ViewHelper.scrollToRequestedTime;
 
@@ -69,6 +74,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         view.showTimeScaleViewProperty().addListener(updateViewListener);
         view.layoutProperty().addListener(updateViewListener);
         view.showScrollBarProperty().addListener(updateViewListener);
+        view.showTimeScaleViewProperty().addListener(updateViewListener);
         view.resourcesProperty().addListener(updateViewListener);
         view.numberOfDaysProperty().addListener(updateViewListener);
         view.typeProperty().addListener(updateViewListener);
@@ -110,6 +116,15 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         gridPane.getChildren().clear();
         gridPane.getColumnConstraints().clear();
 
+        ResourcesView<T> view = getSkinnable();
+        if (view.getType().equals(Type.RESOURCES_OVER_DATE)) {
+            updateViewResourcesOverDates();
+        } else {
+            updateViewDatesOverResources();
+        }
+    }
+
+    private void updateViewDatesOverResources() {
         final ResourcesView<T> view = getSkinnable();
 
         if (view.isShowTimeScaleView()) {
@@ -118,11 +133,187 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             timeScaleColumn.setHgrow(Priority.NEVER);
             gridPane.getColumnConstraints().add(timeScaleColumn);
             gridPane.add(timeScaleScrollPane, 0, 1);
+
+            Node upperLeftCorner = view.getUpperLeftCorner();
+            upperLeftCorner.getStyleClass().add("upper-left-corner");
+            gridPane.add(upperLeftCorner, 0, 0);
         }
 
-        Node upperLeftCorner = view.getUpperLeftCorner();
-        upperLeftCorner.getStyleClass().add("upper-left-corner");
-        gridPane.add(upperLeftCorner, 0, 0);
+        if (view.isShowScrollBar()) {
+            Node upperRightCorner = view.getUpperRightCorner();
+            upperRightCorner.getStyleClass().add("upper-right-corner");
+            gridPane.add(upperRightCorner, 2, 0);
+        }
+
+        Callback<T, Node> resourceHeaderFactory = view.getResourceHeaderFactory();
+
+        ObservableList<T> resources = view.getResources();
+
+        HBox headerBox = new HBox();
+        headerBox.getStyleClass().add("header-box");
+
+        gridPane.add(headerBox, 1, 0);
+
+        for (int dayIndex = 0; dayIndex < view.getNumberOfDays(); dayIndex++) {
+            ObjectProperty<LocalDate> dateProperty = new SimpleObjectProperty<>(this, "date");
+            final int additionalDays = dayIndex;
+            dateProperty.bind(Bindings.createObjectBinding(() -> view.getDate().plusDays(additionalDays), view.dateProperty()));
+
+            VBox dayBox = new VBox();
+            dayBox.getStyleClass().add("day-box");
+            HBox.setHgrow(dayBox, Priority.ALWAYS);
+
+            WeekDayHeaderView weekDayHeaderView = new WeekDayHeaderView();
+            view.bind(weekDayHeaderView, false);
+            weekDayHeaderView.dateProperty().bind(dateProperty);
+            weekDayHeaderView.setNumberOfDays(1);
+            weekDayHeaderView.setAdjustToFirstDayOfWeek(false);
+
+            weekDayHeaderView.getStyleClass().removeAll("only", "first", "middle", "last");
+
+            if (view.getNumberOfDays() == 1) {
+                weekDayHeaderView.getStyleClass().add("only");
+            } else {
+                if (dayIndex == 0) {
+                    weekDayHeaderView.getStyleClass().add("first");
+                } else if (dayIndex == view.getNumberOfDays() - 1) {
+                    weekDayHeaderView.getStyleClass().add("last");
+                } else {
+                    weekDayHeaderView.getStyleClass().add("middle");
+                }
+            }
+
+            dayBox.getChildren().add(weekDayHeaderView);
+
+            HBox allResourcesBox = new HBox();
+            dayBox.getChildren().add(allResourcesBox);
+
+            headerBox.getChildren().add(dayBox);
+
+            // separator between dates
+            if (dayIndex < view.getNumberOfDays() - 1) {
+                Callback<ResourcesView<T>, Region> separatorFactory = view.getLargeSeparatorFactory();
+                if (separatorFactory != null) {
+                    Region separator = separatorFactory.call(view);
+                    if (separator != null) {
+                        headerBox.getChildren().add(separator);
+                        HBox.setHgrow(separator, Priority.NEVER);
+                    }
+                }
+            }
+
+            for (int resourceIndex = 0; resourceIndex < resources.size(); resourceIndex++) {
+                T resource = resources.get(resourceIndex);
+
+                Node resourceHeaderNode = resourceHeaderFactory.call(resource);
+
+                VBox singleResourceBox = new VBox(resourceHeaderNode);
+                HBox.setHgrow(singleResourceBox, Priority.ALWAYS);
+
+                allResourcesBox.getChildren().add(singleResourceBox);
+
+                resourceHeaderNode.getStyleClass().removeAll("only", "first", "middle", "last");
+
+                if (resources.size() == 1) {
+                    resourceHeaderNode.getStyleClass().add("only");
+                } else {
+                    if (resourceIndex == 0) {
+                        resourceHeaderNode.getStyleClass().add("first");
+                    } else if (resourceIndex == resources.size() - 1) {
+                        resourceHeaderNode.getStyleClass().add("last");
+                    } else {
+                        resourceHeaderNode.getStyleClass().add("middle");
+                    }
+                }
+
+                if (view.isShowAllDayView()) {
+                    AllDayView allDayView = new AllDayView();
+
+                    allDayView.getStyleClass().removeAll("only", "first", "middle", "last");
+
+                    if (resources.size() == 1) {
+                        allDayView.getStyleClass().add("only");
+                    } else {
+                        if (resourceIndex == 0) {
+                            allDayView.getStyleClass().add("first");
+                        } else if (resourceIndex == resources.size() - 1) {
+                            allDayView.getStyleClass().add("last");
+                        } else {
+                            allDayView.getStyleClass().add("middle");
+                        }
+                    }
+
+                    // bind AllDayView
+                    view.bind(allDayView, false);
+
+                    Bindings.unbindBidirectional(view.adjustToFirstDayOfWeekProperty(), allDayView.adjustToFirstDayOfWeekProperty());
+                    Bindings.unbindBidirectional(view.numberOfDaysProperty(), allDayView.numberOfDaysProperty());
+
+                    allDayView.dateProperty().bind(dateProperty);
+                    allDayView.setAdjustToFirstDayOfWeek(false);
+                    allDayView.setNumberOfDays(1);
+
+                    // some unbindings for AllDayView
+                    Bindings.unbindBidirectional(view.defaultCalendarProviderProperty(), allDayView.defaultCalendarProviderProperty());
+                    Bindings.unbindBidirectional(view.draggedEntryProperty(), allDayView.draggedEntryProperty());
+                    Bindings.unbindContentBidirectional(view.getCalendarSources(), allDayView.getCalendarSources());
+
+                    CalendarSource calendarSource = createCalendarSource(resource);
+                    allDayView.getCalendarSources().setAll(calendarSource);
+                    allDayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
+
+                    singleResourceBox.getChildren().add(allDayView);
+                }
+
+                singleResourceBox.setPrefWidth(0); // so they all end up with the same percentage width
+
+                HBox.setHgrow(singleResourceBox, Priority.ALWAYS);
+
+                if (resourceIndex < resources.size() - 1) {
+                    Callback<ResourcesView<T>, Region> separatorFactory = view.getSmallSeparatorFactory();
+                    if (separatorFactory != null) {
+                        Region separator = separatorFactory.call(view);
+                        if (separator != null) {
+                            allResourcesBox.getChildren().add(separator);
+                            HBox.setHgrow(separator, Priority.NEVER);
+                        }
+                    }
+                }
+            }
+        }
+
+        ColumnConstraints dayViewsConstraints = new ColumnConstraints();
+        dayViewsConstraints.setFillWidth(true);
+        dayViewsConstraints.setHgrow(Priority.ALWAYS);
+        gridPane.getColumnConstraints().add(dayViewsConstraints);
+        gridPane.add(dayViewsScrollPane, 1, 1);
+
+        if (view.isShowScrollBar()) {
+            ColumnConstraints scrollbarConstraint = new ColumnConstraints();
+            scrollbarConstraint.setFillWidth(true);
+            scrollbarConstraint.setHgrow(Priority.NEVER);
+            scrollbarConstraint.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            gridPane.getColumnConstraints().add(scrollbarConstraint);
+
+            gridPane.add(scrollBar, 2, 1);
+        }
+    }
+
+    private void updateViewResourcesOverDates() {
+        final ResourcesView<T> view = getSkinnable();
+
+        if (view.isShowTimeScaleView()) {
+            ColumnConstraints timeScaleColumn = new ColumnConstraints();
+            timeScaleColumn.setFillWidth(true);
+            timeScaleColumn.setHgrow(Priority.NEVER);
+            gridPane.getColumnConstraints().add(timeScaleColumn);
+
+            gridPane.add(timeScaleScrollPane, 0, 1);
+
+            Node upperLeftCorner = view.getUpperLeftCorner();
+            upperLeftCorner.getStyleClass().add("upper-left-corner");
+            gridPane.add(upperLeftCorner, 0, 0);
+        }
 
         if (view.isShowScrollBar()) {
             Node upperRightCorner = view.getUpperRightCorner();
@@ -196,7 +387,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             HBox.setHgrow(resourceHeader, Priority.ALWAYS);
 
             if (i < resources.size() - 1) {
-                Callback<ResourcesView<T>, Region> separatorFactory = view.getSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = view.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
                     Region separator = separatorFactory.call(view);
                     if (separator != null) {

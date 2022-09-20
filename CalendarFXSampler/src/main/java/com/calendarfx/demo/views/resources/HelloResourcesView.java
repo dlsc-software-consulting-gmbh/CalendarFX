@@ -28,6 +28,8 @@ import com.calendarfx.view.DayViewBase.GridType;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
 import com.calendarfx.view.resources.ResourcesView.Type;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -42,6 +44,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 
 public class HelloResourcesView extends CalendarFXDateControlSample {
 
@@ -79,6 +82,11 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         daysBox.getItems().setAll(1, 2, 3, 4, 5, 7, 10, 14);
         daysBox.setValue(resourcesView.getNumberOfDays());
         daysBox.valueProperty().addListener(it -> resourcesView.setNumberOfDays(daysBox.getValue()));
+
+        ChoiceBox<Integer> numberOfResourcesBox = new ChoiceBox<>();
+        numberOfResourcesBox.getItems().setAll(1, 2, 3, 4, 5);
+        numberOfResourcesBox.setValue(resourcesView.getResources().size());
+        numberOfResourcesBox.valueProperty().addListener(it -> resourcesView.getResources().setAll(createResources(numberOfResourcesBox.getValue())));
 
         ChoiceBox<Integer> clicksBox = new ChoiceBox<>();
         clicksBox.getItems().setAll(1, 2, 3);
@@ -123,6 +131,12 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         CheckBox scrollbarBox = new CheckBox("Show scrollbar");
         scrollbarBox.selectedProperty().bindBidirectional(resourcesView.showScrollBarProperty());
 
+        CheckBox timescaleBox = new CheckBox("Show timescale");
+        timescaleBox.selectedProperty().bindBidirectional(resourcesView.showTimeScaleViewProperty());
+
+        CheckBox allDayBox = new CheckBox("Show all day events");
+        allDayBox.selectedProperty().bindBidirectional(resourcesView.showAllDayViewProperty());
+
         CheckBox detailsBox = new CheckBox("Show details upon creation");
         detailsBox.selectedProperty().bindBidirectional(resourcesView.showDetailsUponEntryCreationProperty());
 
@@ -131,8 +145,8 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, new Label("View type"), typeBox, datePicker, adjustBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
-                new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, detailsBox);
+        return new VBox(10, availabilityButton, new Label("View type"), typeBox, datePicker, adjustBox, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
+                new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, timescaleBox, allDayBox, detailsBox);
     }
 
     @Override
@@ -143,8 +157,32 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         resourcesView.setCreateEntryClickCount(1);
         resourcesView.setGridType(GridType.CUSTOM);
         resourcesView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
-        resourcesView.getResources().addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3)); //, create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
+        resourcesView.getResources().setAll(createResources(3));
+        resourcesView.setShowDetailsUponEntryCreation(false);
         return resourcesView;
+    }
+
+    private List<Resource<String>> createResources(int count) {
+        ObservableList<Resource<String>> result = FXCollections.observableArrayList();
+        switch (count) {
+            case 1:
+                result.addAll(create("Dirk", Style.STYLE1));
+                break;
+            case 2:
+                result.addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2));
+                break;
+            case 3:
+                result.addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3));
+                break;
+            case 4:
+                result.addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3), create("Jule", Style.STYLE4));
+                break;
+            case 5:
+                result.addAll(create("Dirk", Style.STYLE1), create("Katja", Style.STYLE2), create("Philip", Style.STYLE3), create("Jule", Style.STYLE4), create("Armin", Style.STYLE5));
+                break;
+        }
+
+        return result;
     }
 
     private Resource<String> create(String name, Style style) {

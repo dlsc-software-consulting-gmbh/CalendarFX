@@ -32,7 +32,8 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
 
         numberOfDaysProperty().bind(view.numberOfDaysProperty());
         resourcesProperty().bind(view.resourcesProperty());
-        separatorFactoryProperty().bind(view.separatorFactoryProperty());
+        smallSeparatorFactoryProperty().bind(view.smallSeparatorFactoryProperty());
+        largeSeparatorFactoryProperty().bind(view.largeSeparatorFactoryProperty());
         resourcesProperty().bind(view.resourcesProperty());
         numberOfDaysProperty().bind(view.numberOfDaysProperty());
         weekViewFactoryProperty().bind(view.weekViewFactoryProperty());
@@ -187,10 +188,28 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
         this.dayViewFactory.set(dayViewFactory);
     }
 
-    private final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory");
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> smallSeparatorFactory = new SimpleObjectProperty<>(this, "smallSeparatorFactory", it-> {
+        Region region = new Region();
+        region.getStyleClass().add("small-separator");
+        return region;
+    });
 
-    public final Callback<ResourcesView<T>, Region> getSeparatorFactory() {
-        return separatorFactory.get();
+    public final Callback<ResourcesView<T>, Region> getSmallSeparatorFactory() {
+        return smallSeparatorFactory.get();
+    }
+
+    public final ObjectProperty<Callback<ResourcesView<T>, Region>> smallSeparatorFactoryProperty() {
+        return smallSeparatorFactory;
+    }
+
+    public final void setSmallSeparatorFactory(Callback<ResourcesView<T>, Region> smallSeparatorFactory) {
+        this.smallSeparatorFactory.set(smallSeparatorFactory);
+    }
+
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> largeSeparatorFactory = new SimpleObjectProperty<>(this, "largeSeparatorFactory");
+
+    public final Callback<ResourcesView<T>, Region> getLargeSeparatorFactory() {
+        return largeSeparatorFactory.get();
     }
 
     /**
@@ -198,12 +217,12 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
      *
      * @return the resource separator factory
      */
-    public final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactoryProperty() {
-        return separatorFactory;
+    public final ObjectProperty<Callback<ResourcesView<T>, Region>> largeSeparatorFactoryProperty() {
+        return largeSeparatorFactory;
     }
 
-    public final void setSeparatorFactory(Callback<ResourcesView<T>, Region> separatorFactory) {
-        this.separatorFactory.set(separatorFactory);
+    public final void setLargeSeparatorFactory(Callback<ResourcesView<T>, Region> largeSeparatorFactory) {
+        this.largeSeparatorFactory.set(largeSeparatorFactory);
     }
 }
 

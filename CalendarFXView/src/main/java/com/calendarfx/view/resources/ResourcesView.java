@@ -26,6 +26,7 @@ import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.WeekDayHeaderView;
 import com.calendarfx.view.WeekView;
 import impl.com.calendarfx.view.resources.ResourcesViewSkin;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -46,6 +47,7 @@ import javafx.util.Callback;
 
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.function.Consumer;
 
 import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
@@ -89,6 +91,17 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         weekNumberLabel.setAlignment(Pos.CENTER);
         weekNumberLabel.textProperty().bind(Bindings.createStringBinding(() -> DateTimeFormatter.ofPattern("w").format(getDate()), dateProperty()));
         setUpperLeftCorner(weekNumberLabel);
+
+        InvalidationListener adjustListener = it -> maybeAdjustToFirstDayOfWeek();
+        dateProperty().addListener(adjustListener);
+        adjustToFirstDayOfWeekProperty().addListener(adjustListener);
+        maybeAdjustToFirstDayOfWeek();
+    }
+
+    private void maybeAdjustToFirstDayOfWeek() {
+        if (isAdjustToFirstDayOfWeek()) {
+            setDate(getDate().with(TemporalAdjusters.previousOrSame(getFirstDayOfWeek())));
+        }
     }
 
     /**
@@ -451,15 +464,33 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.upperRightCorner.set(upperRightCorner);
     }
 
-    private final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> smallSeparatorFactory = new SimpleObjectProperty<>(this, "smallSeparatorFactory", it-> {
         Region region = new Region();
-        region.getStyleClass().add("resource-separator");
+        region.getStyleClass().add("small-separator");
+        return region;
+    });
+
+    public final Callback<ResourcesView<T>, Region> getSmallSeparatorFactory() {
+        return smallSeparatorFactory.get();
+    }
+
+    public final ObjectProperty<Callback<ResourcesView<T>, Region>> smallSeparatorFactoryProperty() {
+        return smallSeparatorFactory;
+    }
+
+    public final void setSmallSeparatorFactory(Callback<ResourcesView<T>, Region> smallSeparatorFactory) {
+        this.smallSeparatorFactory.set(smallSeparatorFactory);
+    }
+
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> largeSeparatorFactory = new SimpleObjectProperty<>(this, "largeSeparatorFactory", it-> {
+        Region region = new Region();
+        region.getStyleClass().add("large-separator");
         return region;
     });
 
 
-    public final Callback<ResourcesView<T>, Region> getSeparatorFactory() {
-        return separatorFactory.get();
+    public final Callback<ResourcesView<T>, Region> getLargeSeparatorFactory() {
+        return largeSeparatorFactory.get();
     }
 
     /**
@@ -467,11 +498,11 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
      *
      * @return the resource separator factory
      */
-    public final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactoryProperty() {
-        return separatorFactory;
+    public final ObjectProperty<Callback<ResourcesView<T>, Region>> largeSeparatorFactoryProperty() {
+        return largeSeparatorFactory;
     }
 
-    public final void setSeparatorFactory(Callback<ResourcesView<T>, Region> separatorFactory) {
-        this.separatorFactory.set(separatorFactory);
+    public final void setLargeSeparatorFactory(Callback<ResourcesView<T>, Region> largeSeparatorFactory) {
+        this.largeSeparatorFactory.set(largeSeparatorFactory);
     }
 }
