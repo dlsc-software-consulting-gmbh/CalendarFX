@@ -26,6 +26,7 @@ import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.WeekDayHeaderView;
 import com.calendarfx.view.WeekView;
 import impl.com.calendarfx.view.resources.ResourcesViewSkin;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
@@ -43,6 +44,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Consumer;
 
@@ -80,6 +82,13 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         setVirtualGrid(grid);
         setAvailabilityGrid(grid);
         setGridLines(grid);
+
+        Label weekNumberLabel = new Label();
+        weekNumberLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        weekNumberLabel.getStyleClass().add("week-number-label");
+        weekNumberLabel.setAlignment(Pos.CENTER);
+        weekNumberLabel.textProperty().bind(Bindings.createStringBinding(() -> DateTimeFormatter.ofPattern("w").format(getDate()), dateProperty()));
+        setUpperLeftCorner(weekNumberLabel);
     }
 
     private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {
@@ -348,7 +357,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.weekViewFactory.set(weekViewFactory);
     }
 
-    private final ObjectProperty<Node> upperLeftCorner = new SimpleObjectProperty<>(this, "upperLeftCorner", new Region());
+    private final ObjectProperty<Node> upperLeftCorner = new SimpleObjectProperty<>(this, "upperLeftCorner");
 
     public final Node getUpperLeftCorner() {
         return upperLeftCorner.get();
