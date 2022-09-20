@@ -36,8 +36,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 
 public class HelloResourcesView extends CalendarFXDateControlSample {
 
@@ -127,7 +129,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
     }
 
     private void fillAvailabilities(Calendar calendar) {
-        LocalDate date = LocalDate.now();
+        LocalDate date = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         for (int i = 0; i < 14; i++) {
             // fourteen days is enough for this demo
             Entry morning = new Entry("Morning");

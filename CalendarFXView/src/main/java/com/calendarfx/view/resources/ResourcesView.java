@@ -75,8 +75,11 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         // calling "editEntry" with "false" flag because we do not want to change the start date of the view
         addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> editEntry(evt.getEntry(), false)));
 
-        setVirtualGrid(new VirtualGrid("Editing Grid", "Editing Grid", ChronoUnit.MINUTES, 20));
-        setGridLines(new VirtualGrid("Visible Grid", "Visible Grid", ChronoUnit.MINUTES, 20));
+        VirtualGrid grid = new VirtualGrid("Editing Grid", "Editing Grid", ChronoUnit.MINUTES, 20);
+
+        setVirtualGrid(grid);
+        setAvailabilityGrid(grid);
+        setGridLines(grid);
     }
 
     private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {

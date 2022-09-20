@@ -172,14 +172,14 @@ public class DayViewEditController {
     private void mousePressed(MouseEvent evt) {
         showEntryDetails = false;
 
-        if (evt.isConsumed() || evt.getClickCount() > 1) {
+        if (evt.isConsumed() || !evt.getButton().equals(MouseButton.PRIMARY) || evt.getClickCount() > 1) {
             return;
         }
 
         if (!dayViewBase.isScrollingEnabled()) {
             VirtualGrid availabilityGrid = dayViewBase.getAvailabilityGrid();
-            setLassoStart(grid(dayViewBase.getInstantAt(evt), availabilityGrid));
-            setLassoEnd(grid(dayViewBase.getInstantAt(evt), availabilityGrid).plus(availabilityGrid.getAmount(), availabilityGrid.getUnit()));
+            setLassoStart(snapToGrid(dayViewBase.getInstantAt(evt), availabilityGrid, false));
+            setLassoEnd(snapToGrid(dayViewBase.getInstantAt(evt), availabilityGrid, false).plus(availabilityGrid.getAmount(), availabilityGrid.getUnit()));
         }
 
         if (dayViewBase.isEditAvailability()) {
@@ -189,10 +189,6 @@ public class DayViewEditController {
         dragMode = null;
         handle = null;
 
-        if (!evt.getButton().equals(MouseButton.PRIMARY)) {
-            return;
-        }
-
         LOGGER.finer("mouse event source: " + evt.getSource());
         LOGGER.finer("mouse event target: " + evt.getTarget());
         LOGGER.finer("mouse event y-coordinate:" + evt.getY());
@@ -201,10 +197,20 @@ public class DayViewEditController {
         if (!dayViewBase.isScrollingEnabled() && evt.getTarget() instanceof DayView) {
             Optional<Calendar> calendar = dayViewBase.getCalendarAt(evt.getX(), evt.getY());
             Instant instantAt = dayViewBase.getInstantAt(evt);
-            ZonedDateTime time = ZonedDateTime.ofInstant(instantAt, dayViewBase.getZoneId());
 
+            VirtualGrid virtualGrid = dayViewBase.getVirtualGrid();
+            if (virtualGrid != null) {
+                instantAt = snapToGrid(instantAt, virtualGrid, false);
+            }
+
+            ZonedDateTime time = ZonedDateTime.ofInstant(instantAt, dayViewBase.getZoneId());
             entry = dayViewBase.createEntryAt(time, calendar.orElse(null));
-            entry.setInterval(entry.getInterval().withEndTime(entry.getInterval().getStartTime().plus(dayViewBase.getVirtualGrid().getAmount(), dayViewBase.getVirtualGrid().getUnit())));
+
+            if (virtualGrid != null) {
+                entry.setInterval(entry.getInterval().withEndTime(entry.getInterval().getStartTime().plus(virtualGrid.getAmount(), virtualGrid.getUnit())));
+            } else {
+                entry.setInterval(entry.getInterval().withEndTime(entry.getInterval().getStartTime().plus(entry.getMinimumDuration())));
+            }
 
             DayView dayView = null;
 
@@ -327,7 +333,7 @@ public class DayViewEditController {
 
     private void mouseDragged(MouseEvent evt) {
         if (!dayViewBase.isScrollingEnabled()) {
-            setLassoEnd(grid(dayViewBase.getInstantAt(evt), dayViewBase.getAvailabilityGrid()));
+            setLassoEnd(snapToGrid(dayViewBase.getInstantAt(evt), dayViewBase.getAvailabilityGrid(), true));
         }
 
         if (dayViewBase.isEditAvailability() || !evt.getButton().equals(MouseButton.PRIMARY) || dragMode == null || !dragging) {
@@ -369,7 +375,7 @@ public class DayViewEditController {
     private void changeStartTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayViewBase.getDraggedEntry();
 
-        Instant gridTime = fixTimeIfOutsideView(evt, grid(dayViewBase.getInstantAt(evt)));
+        Instant gridTime = fixTimeIfOutsideView(evt, snapToGrid(dayViewBase.getInstantAt(evt), dayViewBase.getVirtualGrid(), true));
 
         LOGGER.finer("changing start time, time = " + gridTime);
 
@@ -416,7 +422,7 @@ public class DayViewEditController {
     private void changeEndTime(MouseEvent evt) {
         DraggedEntry draggedEntry = dayViewBase.getDraggedEntry();
 
-        Instant gridTime = fixTimeIfOutsideView(evt, grid(dayViewBase.getInstantAt(evt)));
+        Instant gridTime = fixTimeIfOutsideView(evt, snapToGrid(dayViewBase.getInstantAt(evt), dayViewBase.getVirtualGrid(), true));
 
         LOGGER.finer("changing end time, time = " + gridTime);
 
@@ -462,7 +468,7 @@ public class DayViewEditController {
             Instant newStartTime = locationTime.minus(offsetDuration);
             LOGGER.fine("new start time = " + newStartTime);
 
-            newStartTime = grid(newStartTime);
+            newStartTime = snapToGrid(newStartTime, dayViewBase.getVirtualGrid(), true);
             Instant newEndTime = newStartTime.plus(entryDuration);
 
             LOGGER.fine("new start time (grid) = " + newStartTime);
@@ -491,30 +497,19 @@ public class DayViewEditController {
         return true;
     }
 
-//    private void requestLayout() {
-//        dayViewBase.requestLayout();
-//        if (dayEntryView != null) {
-//            Parent parent = dayEntryView.getParent();
-//            if (parent != null) {
-//                parent.requestLayout();
-//            }
-//        }
-//
-//        if (dayViewBase instanceof WeekView) {
-//            ((WeekView) dayViewBase).getWeekDayViews().forEach(Parent::requestLayout);
-//        }
-//    }
+    private Instant snapToGrid(Instant time, VirtualGrid grid, boolean checkCloser) {
+        if (grid == null) {
+            return time;
+        }
 
-    private Instant grid(Instant time) {
-        return grid(time, dayViewBase.getVirtualGrid());
-    }
-
-    private Instant grid(Instant time, VirtualGrid grid) {
         DayOfWeek firstDayOfWeek = dayViewBase.getFirstDayOfWeek();
         Instant lowerTime = grid.adjustTime(time, dayViewBase.getZoneId(), false, firstDayOfWeek);
-        Instant upperTime = grid.adjustTime(time, dayViewBase.getZoneId(), true, firstDayOfWeek);
-        if (Duration.between(time, upperTime).abs().minus(Duration.between(time, lowerTime).abs()).isNegative()) {
-            return upperTime;
+
+        if (checkCloser) {
+            Instant upperTime = grid.adjustTime(time, dayViewBase.getZoneId(), true, firstDayOfWeek);
+            if (Duration.between(time, upperTime).abs().minus(Duration.between(time, lowerTime).abs()).isNegative()) {
+                return upperTime;
+            }
         }
 
         return lowerTime;
