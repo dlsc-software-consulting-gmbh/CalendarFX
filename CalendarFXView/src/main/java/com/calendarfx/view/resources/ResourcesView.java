@@ -70,6 +70,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     public ResourcesView() {
         getStyleClass().add(DEFAULT_STYLE);
         setShowToday(false);
+        setGridType(GridType.CUSTOM);
 
         // calling "editEntry" with "false" flag because we do not want to change the start date of the view
         addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> editEntry(evt.getEntry(), false)));
