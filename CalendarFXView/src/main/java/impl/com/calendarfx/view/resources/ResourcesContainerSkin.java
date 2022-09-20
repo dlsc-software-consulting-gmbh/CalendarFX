@@ -1,8 +1,11 @@
 package impl.com.calendarfx.view.resources;
 
 import com.calendarfx.model.CalendarSource;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.WeekView;
 import com.calendarfx.view.resources.Resource;
+import com.calendarfx.view.resources.ResourcesView;
+import com.calendarfx.view.resources.ResourcesView.Type;
 import impl.com.calendarfx.view.DayViewBaseSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -26,6 +29,8 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
         InvalidationListener updateViewListener = (Observable it) -> updateView();
         view.getResources().addListener(updateViewListener);
         view.numberOfDaysProperty().addListener(updateViewListener);
+        view.typeProperty().addListener(updateViewListener);
+
         updateView();
 
         getChildren().add(container);
@@ -33,7 +38,94 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
 
     private void updateView() {
         container.getChildren().clear();
+        ResourcesContainer<T> skinnable = getSkinnable();
+        if (skinnable.getType().equals(Type.RESOURCES_OVER_DATE)) {
+            updateViewResourcesOverDates();
+        } else {
+            updateViewDatesOverResources();
+        }
+    }
 
+    private void updateViewDatesOverResources() {
+        ResourcesContainer<T> container = getSkinnable();
+        ObservableList<T> resources = container.getResources();
+        int numberOfDays = container.getNumberOfDays();
+
+        for (int dayIndex = 0; dayIndex < numberOfDays; dayIndex++) {
+
+            HBox resourcesBox = new HBox();
+
+            for (int resourceIndex = 0; resourceIndex < resources.size(); resourceIndex++) {
+                T resource = resources.get(resourceIndex);
+
+                DayView dayView = container.getDayViewFactory().call(resource);
+
+                dayView.getStyleClass().removeAll("only", "first", "middle", "last");
+
+                if (resources.size() == 1) {
+                    dayView.getStyleClass().add("only");
+                } else {
+                    if (resourceIndex == 0) {
+                        dayView.getStyleClass().add("first");
+                    } else if (resourceIndex == resources.size() - 1) {
+                        dayView.getStyleClass().add("last");
+                    } else {
+                        dayView.getStyleClass().add("middle");
+                    }
+                }
+
+                // bind day view to container but remove bindings that interfere
+                container.bind(dayView, true);
+
+                // unbind what is not needed
+                Bindings.unbindBidirectional(container.defaultCalendarProviderProperty(), dayView.defaultCalendarProviderProperty());
+                Bindings.unbindBidirectional(container.draggedEntryProperty(), dayView.draggedEntryProperty());
+                Bindings.unbindBidirectional(container.enableCurrentTimeMarkerProperty(), dayView.enableCurrentTimeMarkerProperty());
+                Bindings.unbindBidirectional(container.enableCurrentTimeCircleProperty(), dayView.enableCurrentTimeCircleProperty());
+                Bindings.unbindBidirectional(container.availabilityCalendarProperty(), dayView.availabilityCalendarProperty());
+                Bindings.unbindBidirectional(container.lassoStartProperty(), dayView.lassoStartProperty());
+                Bindings.unbindBidirectional(container.lassoEndProperty(), dayView.lassoEndProperty());
+                Bindings.unbindBidirectional(container.onLassoFinishedProperty(), dayView.onLassoFinishedProperty());
+                Bindings.unbindContentBidirectional(container.getCalendarSources(), dayView.getCalendarSources());
+
+                dayView.setEnableCurrentTimeMarker(true);
+                dayView.setEnableCurrentTimeCircle(dayIndex == 0 && resourceIndex == 0);
+                dayView.setAvailabilityCalendar(resource.getAvailabilityCalendar());
+                dayView.installDefaultLassoFinishedBehaviour();
+
+                CalendarSource calendarSource = createCalendarSource(resource);
+                dayView.getCalendarSources().setAll(calendarSource);
+                dayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
+
+                dayView.setPrefWidth(0); // so they all end up with the same percentage width
+                HBox.setHgrow(dayView, Priority.ALWAYS);
+                resourcesBox.getChildren().add(dayView);
+
+                if (resourceIndex < resources.size() - 1) {
+                    Region separator = new Region();
+                    separator.getStyleClass().add("weekday-separator"); // not really separating weekdays, but we want it to look the same
+                    resourcesBox.getChildren().add(separator);
+                    HBox.setHgrow(separator, Priority.NEVER);
+                }
+            }
+
+            this.container.getChildren().add(resourcesBox);
+
+            if (dayIndex < numberOfDays - 1) {
+                Callback<ResourcesView<T>, Region> separatorFactory = container.getSeparatorFactory();
+                if (separatorFactory != null) {
+                    Region separator = separatorFactory.call(container.getResourcesView());
+                    if (separator != null) {
+                        this.container.getChildren().add(separator);
+                        HBox.setHgrow(separator, Priority.NEVER);
+                    }
+                }
+            }
+            HBox.setHgrow(resourcesBox, Priority.ALWAYS);
+        }
+    }
+
+    private void updateViewResourcesOverDates() {
         ResourcesContainer<T> container = getSkinnable();
         ObservableList<T> resources = container.getResources();
         for (int i = 0; i < resources.size(); i++) {
@@ -91,9 +183,9 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
             this.container.getChildren().add(weekView);
 
             if (i < resources.size() - 1) {
-                Callback<T, Region> separatorFactory = container.getSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = container.getSeparatorFactory();
                 if (separatorFactory != null) {
-                    Region separator = separatorFactory.call(resource);
+                    Region separator = separatorFactory.call(container.getResourcesView());
                     if (separator != null) {
                         this.container.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);

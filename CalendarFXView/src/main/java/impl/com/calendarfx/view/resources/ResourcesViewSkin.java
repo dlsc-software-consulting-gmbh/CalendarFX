@@ -26,7 +26,6 @@ import impl.com.calendarfx.view.DateControlSkin;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
@@ -65,11 +64,14 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
         timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
 
-        final InvalidationListener visibilityListener = it -> updateView();
-        view.showAllDayViewProperty().addListener(visibilityListener);
-        view.showTimeScaleViewProperty().addListener(visibilityListener);
-        view.layoutProperty().addListener(visibilityListener);
-        view.showScrollBarProperty().addListener(visibilityListener);
+        InvalidationListener updateViewListener = it -> updateView();
+        view.showAllDayViewProperty().addListener(updateViewListener);
+        view.showTimeScaleViewProperty().addListener(updateViewListener);
+        view.layoutProperty().addListener(updateViewListener);
+        view.showScrollBarProperty().addListener(updateViewListener);
+        view.resourcesProperty().addListener(updateViewListener);
+        view.numberOfDaysProperty().addListener(updateViewListener);
+        view.typeProperty().addListener(updateViewListener);
 
         RowConstraints row0 = new RowConstraints();
         row0.setFillHeight(true);
@@ -100,8 +102,6 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
         view.requestedTimeProperty().addListener(it -> scrollToRequestedTime(view, dayViewsScrollPane));
 
-        view.resourcesProperty().addListener((Observable it) -> updateView());
-        view.numberOfDaysProperty().addListener((Observable it) -> updateView());
         updateView();
     }
 
@@ -196,9 +196,9 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             HBox.setHgrow(resourceHeader, Priority.ALWAYS);
 
             if (i < resources.size() - 1) {
-                Callback<T, Region> separatorFactory = view.getSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = view.getSeparatorFactory();
                 if (separatorFactory != null) {
-                    Region separator = separatorFactory.call(resource);
+                    Region separator = separatorFactory.call(view);
                     if (separator != null) {
                         headerBox.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);

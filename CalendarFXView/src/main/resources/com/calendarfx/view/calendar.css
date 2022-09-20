@@ -2147,6 +2147,10 @@
 
 .resources-view .weekday-separator {
     -size: 1px;
+    -fx-pref-width: -size;
+    -fx-min-width: -size;
+    -fx-max-width: -size;
+    -fx-background-color: lightgrey;
 }
 
 .resources-view .resource-separator {

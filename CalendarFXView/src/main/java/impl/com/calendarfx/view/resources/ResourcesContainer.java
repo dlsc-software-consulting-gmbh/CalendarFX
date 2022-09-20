@@ -1,9 +1,11 @@
 package impl.com.calendarfx.view.resources;
 
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.WeekView;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
+import com.calendarfx.view.resources.ResourcesView.Type;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
@@ -20,7 +22,11 @@ import javafx.util.Callback;
 
 public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
 
+    private final ResourcesView<T> resourcesView;
+
     public ResourcesContainer(ResourcesView<T> view) {
+        this.resourcesView = view;
+
         getStyleClass().add("resources-view-container");
         setShowToday(false);
 
@@ -30,12 +36,37 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
         resourcesProperty().bind(view.resourcesProperty());
         numberOfDaysProperty().bind(view.numberOfDaysProperty());
         weekViewFactoryProperty().bind(view.weekViewFactoryProperty());
+        dayViewFactoryProperty().bind(view.dayViewFactoryProperty());
         adjustToFirstDayOfWeekProperty().bind(view.adjustToFirstDayOfWeekProperty());
+        typeProperty().bind(view.typeProperty());
     }
 
     @Override
     protected Skin<?> createDefaultSkin() {
         return new ResourcesContainerSkin<>(this);
+    }
+
+    public final ResourcesView<T> getResourcesView() {
+        return resourcesView;
+    }
+
+    private final ObjectProperty<Type> type = new SimpleObjectProperty<>(this, "type", Type.RESOURCES_OVER_DATE);
+
+    public final Type getType() {
+        return type.get();
+    }
+
+    /**
+     * Determines the visualization type: resoruces over dates or dates over resources.
+     *
+     * @return the visualization type
+     */
+    public final ObjectProperty<Type> typeProperty() {
+        return type;
+    }
+
+    public final void setType(Type type) {
+        this.type.set(type);
     }
 
     private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);
@@ -136,9 +167,29 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
         this.weekViewFactory.set(weekViewFactory);
     }
 
-    private final ObjectProperty<Callback<T, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory");
+    private final ObjectProperty<Callback<T, DayView>> dayViewFactory = new SimpleObjectProperty<>(this, "dayViewFactory");
 
-    public final Callback<T, Region> getSeparatorFactory() {
+    public final Callback<T, DayView> getDayViewFactory() {
+        return dayViewFactory.get();
+    }
+
+    /**
+     * A factory used for creating a new {@link DayView} instance for a resource day
+     * shown in the view.
+     *
+     * @return a factory for resource day views
+     */
+    public final ObjectProperty<Callback<T, DayView>> dayViewFactoryProperty() {
+        return dayViewFactory;
+    }
+
+    public void setDayViewFactory(Callback<T, DayView> dayViewFactory) {
+        this.dayViewFactory.set(dayViewFactory);
+    }
+
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory");
+
+    public final Callback<ResourcesView<T>, Region> getSeparatorFactory() {
         return separatorFactory.get();
     }
 
@@ -147,11 +198,11 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
      *
      * @return the resource separator factory
      */
-    public final ObjectProperty<Callback<T, Region>> separatorFactoryProperty() {
+    public final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactoryProperty() {
         return separatorFactory;
     }
 
-    public final void setSeparatorFactory(Callback<T, Region> separatorFactory) {
+    public final void setSeparatorFactory(Callback<ResourcesView<T>, Region> separatorFactory) {
         this.separatorFactory.set(separatorFactory);
     }
 }

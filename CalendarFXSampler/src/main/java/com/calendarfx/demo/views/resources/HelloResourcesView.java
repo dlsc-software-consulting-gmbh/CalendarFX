@@ -27,6 +27,7 @@ import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.DayViewBase.GridType;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
+import com.calendarfx.view.resources.ResourcesView.Type;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -35,6 +36,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -87,6 +89,30 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         behaviourBox.getItems().setAll(AvailabilityEditingEntryBehaviour.values());
         behaviourBox.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingBehaviourProperty());
 
+        ChoiceBox<Type> typeBox = new ChoiceBox<>();
+        typeBox.getItems().setAll(Type.values());
+        typeBox.valueProperty().bindBidirectional(resourcesView.typeProperty());
+        typeBox.setConverter(new StringConverter<Type>() {
+            @Override
+            public String toString(Type object) {
+                if (object != null) {
+                    if (object.equals(Type.RESOURCES_OVER_DATE)) {
+                        return "Resources over date";
+                    } else if (object.equals(Type.DATE_OVER_RESOURCES)) {
+                        return "Date over resources";
+                    } else {
+                        return "unknown view type: " + object.name();
+                    }
+                }
+                return "";
+            }
+
+            @Override
+            public Type fromString(String string) {
+                return null;
+            }
+        });
+
         ChoiceBox<GridType> gridTypeBox = new ChoiceBox<>();
         gridTypeBox.getItems().setAll(GridType.values());
         gridTypeBox.valueProperty().bindBidirectional(resourcesView.gridTypeProperty());
@@ -105,13 +131,14 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, datePicker, adjustBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
+        return new VBox(10, availabilityButton, new Label("View type"), typeBox, datePicker, adjustBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
                 new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, detailsBox);
     }
 
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
+        resourcesView.setType(Type.DATE_OVER_RESOURCES);
         resourcesView.setNumberOfDays(5);
         resourcesView.setCreateEntryClickCount(1);
         resourcesView.setGridType(GridType.CUSTOM);

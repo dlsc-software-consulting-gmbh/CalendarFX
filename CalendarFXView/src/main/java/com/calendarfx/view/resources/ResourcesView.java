@@ -91,6 +91,42 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         setUpperLeftCorner(weekNumberLabel);
     }
 
+    /**
+     * A list of possible visualization types that the resources view can support.
+     */
+    public enum Type {
+        /**
+         * Display the resources at the very top and then one or more days below each
+         * resource.
+         */
+        RESOURCES_OVER_DATE,
+
+        /**
+         * Display the dates at the very top and then one or more resources below each
+         * date.
+         */
+        DATE_OVER_RESOURCES
+    }
+
+    private final ObjectProperty<Type> type = new SimpleObjectProperty<>(this, "type", Type.RESOURCES_OVER_DATE);
+
+    public final Type getType() {
+        return type.get();
+    }
+
+    /**
+     * Determines the visualization type: resoruces over dates or dates over resources.
+     *
+     * @return the visualization type
+     */
+    public final ObjectProperty<Type> typeProperty() {
+        return type;
+    }
+
+    public final void setType(Type type) {
+        this.type.set(type);
+    }
+
     private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {
         if (!evt.isConsumed()) {
             consumer.accept(evt);
@@ -357,6 +393,26 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.weekViewFactory.set(weekViewFactory);
     }
 
+    private final ObjectProperty<Callback<T, DayView>> dayViewFactory = new SimpleObjectProperty<>(this, "dayViewFactory", resource -> new DayView());
+
+    public final Callback<T, DayView> getDayViewFactory() {
+        return dayViewFactory.get();
+    }
+
+    /**
+     * A factory used for creating a new {@link DayView} instance for a resource day
+     * shown in the view.
+     *
+     * @return a factory for resource day views
+     */
+    public final ObjectProperty<Callback<T, DayView>> dayViewFactoryProperty() {
+        return dayViewFactory;
+    }
+
+    public void setDayViewFactory(Callback<T, DayView> dayViewFactory) {
+        this.dayViewFactory.set(dayViewFactory);
+    }
+
     private final ObjectProperty<Node> upperLeftCorner = new SimpleObjectProperty<>(this, "upperLeftCorner");
 
     public final Node getUpperLeftCorner() {
@@ -395,14 +451,14 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.upperRightCorner.set(upperRightCorner);
     }
 
-    private final ObjectProperty<Callback<T, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
         Region region = new Region();
         region.getStyleClass().add("resource-separator");
         return region;
     });
 
 
-    public final Callback<T, Region> getSeparatorFactory() {
+    public final Callback<ResourcesView<T>, Region> getSeparatorFactory() {
         return separatorFactory.get();
     }
 
@@ -411,11 +467,11 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
      *
      * @return the resource separator factory
      */
-    public final ObjectProperty<Callback<T, Region>> separatorFactoryProperty() {
+    public final ObjectProperty<Callback<ResourcesView<T>, Region>> separatorFactoryProperty() {
         return separatorFactory;
     }
 
-    public final void setSeparatorFactory(Callback<T, Region> separatorFactory) {
+    public final void setSeparatorFactory(Callback<ResourcesView<T>, Region> separatorFactory) {
         this.separatorFactory.set(separatorFactory);
     }
 }
