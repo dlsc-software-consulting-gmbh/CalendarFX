@@ -129,7 +129,12 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         focusedProperty().addListener(it -> processFocus());
 
-        addEventHandler(MouseEvent.MOUSE_CLICKED, evt -> showDetails(evt, evt.getScreenX(), evt.getScreenY()));
+        addEventHandler(MouseEvent.MOUSE_CLICKED, evt -> {
+            if (evt.getButton().equals(PRIMARY) && evt.getClickCount() == 2) {
+                showDetails(evt, evt.getScreenX(), evt.getScreenY());
+            }
+        });
+
         addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, evt -> {
             DateControl dateControl = getDateControl();
             if (dateControl != null) {
