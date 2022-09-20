@@ -344,6 +344,44 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.weekViewFactory.set(weekViewFactory);
     }
 
+    private final ObjectProperty<Node> upperLeftCorner = new SimpleObjectProperty<>(this, "upperLeftCorner", new Region());
+
+    public final Node getUpperLeftCorner() {
+        return upperLeftCorner.get();
+    }
+
+    /**
+     * Specifies a node that will be placed in the upper left corner of the view.
+     *
+     * @return the upper left corner node
+     */
+    public final ObjectProperty<Node> upperLeftCornerProperty() {
+        return upperLeftCorner;
+    }
+
+    public final void setUpperLeftCorner(Node upperLeftCorner) {
+        this.upperLeftCorner.set(upperLeftCorner);
+    }
+
+    private final ObjectProperty<Node> upperRightCorner = new SimpleObjectProperty<>(this, "upperRightCorner", new Region());
+
+    public final Node getUpperRightCorner() {
+        return upperRightCorner.get();
+    }
+
+    /**
+     * Specifies a node that will be placed in the upper right corner of the view.
+     *
+     * @return the upper right corner node
+     */
+    public final ObjectProperty<Node> upperRightCornerProperty() {
+        return upperRightCorner;
+    }
+
+    public final void setUpperRightCorner(Node upperRightCorner) {
+        this.upperRightCorner.set(upperRightCorner);
+    }
+
     private final ObjectProperty<Callback<T, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
         Region region = new Region();
         region.getStyleClass().add("resource-separator");

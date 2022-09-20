@@ -120,12 +120,12 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             gridPane.add(timeScaleScrollPane, 0, 1);
         }
 
-        Region upperLeftCorner = new Region();
+        Node upperLeftCorner = view.getUpperLeftCorner();
         upperLeftCorner.getStyleClass().add("upper-left-corner");
         gridPane.add(upperLeftCorner, 0, 0);
 
         if (view.isShowScrollBar()) {
-            Region upperRightCorner = new Region();
+            Node upperRightCorner = view.getUpperRightCorner();
             upperRightCorner.getStyleClass().add("upper-right-corner");
             gridPane.add(upperRightCorner, 2, 0);
         }
