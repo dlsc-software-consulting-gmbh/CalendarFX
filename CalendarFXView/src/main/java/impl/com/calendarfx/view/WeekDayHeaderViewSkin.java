@@ -17,7 +17,7 @@
 package impl.com.calendarfx.view;
 
 import com.calendarfx.view.WeekDayHeaderView;
-import com.calendarfx.view.WeekDayHeaderView.WeekDayCell;
+import com.calendarfx.view.WeekDayHeaderView.WeekDayHeaderCell;
 import javafx.beans.InvalidationListener;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.HBox;
@@ -67,10 +67,10 @@ public class WeekDayHeaderViewSkin extends SkinBase<WeekDayHeaderView> {
         final int numberOfDays = view.getNumberOfDays();
 
         Callback<WeekDayHeaderView, Region> separatorFactory = view.getSeparatorFactory();
-        Callback<WeekDayHeaderView, WeekDayCell> cellFactory = view.getCellFactory();
+        Callback<WeekDayHeaderView, WeekDayHeaderCell> cellFactory = view.getCellFactory();
 
         for (int i = 0; i < numberOfDays; i++) {
-            WeekDayCell cell = cellFactory.call(view);
+            WeekDayHeaderCell cell = cellFactory.call(view);
             cell.setPrefWidth(1); // equal width distribution
 
             final int dayCount = i;
@@ -94,7 +94,7 @@ public class WeekDayHeaderViewSkin extends SkinBase<WeekDayHeaderView> {
         }
     }
 
-    private void updateCell(WeekDayCell cell, int dayCount) {
+    private void updateCell(WeekDayHeaderCell cell, int dayCount) {
         LocalDate startDate = getSkinnable().getDate();
         LocalDate date = getDate(startDate, dayCount);
         cell.setDate(date);
