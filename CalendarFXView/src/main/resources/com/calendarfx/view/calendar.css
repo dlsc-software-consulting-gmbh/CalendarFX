@@ -20,6 +20,8 @@
  */
 
 * {
+    -fx-font-family: "Arial";
+
     -style1-color: rgba(119.0, 192.0, 75.0, 0.9);
     -style2-color: rgba(65.0, 143.0, 203.0, 0.9);
     -style3-color: rgba(247.0, 209.0, 91.0, 0.9);
@@ -2050,6 +2052,11 @@
  * Styles for the ResourcesView.
  */
 .resources-view {
+}
+
+.resources-view .week-number-label {
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
 }
 
 .resources-view .header-box .resource-header-view .resource-header {
