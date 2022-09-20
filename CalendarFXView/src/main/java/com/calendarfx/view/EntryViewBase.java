@@ -276,9 +276,6 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
                     DayViewBase dayView = (DayViewBase) dateControl;
 
                     binding = binding.and(dayView.editAvailabilityProperty().not().or(dayView.entryViewAvailabilityEditingBehaviourProperty().isEqualTo(AvailabilityEditingEntryBehaviour.HIDE).not()));
-
-                    opacityProperty().bind(Bindings.createDoubleBinding(() -> dayView.isEditAvailability() && dayView.getEntryViewAvailabilityEditingBehaviour().equals(AvailabilityEditingEntryBehaviour.OPACITY) ? dayView.getEntryViewAvailabilityEditingOpacity() : 1,
-                            dayView.editAvailabilityProperty(), dayView.entryViewAvailabilityEditingBehaviourProperty(), dayView.entryViewAvailabilityEditingOpacityProperty()));
                 }
 
                 visibleProperty().bind(binding);
@@ -1087,8 +1084,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     @Override
     public String toString() {
-        return "EntryViewBase [entry=" + getEntry() + ", selected="
-                + isSelected() + "]";
+        return "EntryViewBase [entry=" + getEntry() + ", selected=" + isSelected() + "]";
     }
 
     private static final String ENTRY_VIEW_CATEGORY = "Entry View Base";

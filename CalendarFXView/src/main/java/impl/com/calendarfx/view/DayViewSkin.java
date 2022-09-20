@@ -26,6 +26,7 @@ import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DateControl.Layer;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
+import com.calendarfx.view.DayViewBase.AvailabilityEditingEntryBehaviour;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.DayViewBase.GridType;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
@@ -42,8 +43,10 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.event.WeakEventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -102,8 +105,14 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     private final BackgroundCanvas backgroundCanvas = new BackgroundCanvas();
 
+    private final Group entryViewGroup = new Group();
+
     public DayViewSkin(T view) {
         super(view);
+
+        entryViewGroup.setManaged(false);
+        entryViewGroup.opacityProperty().bind(Bindings.createDoubleBinding(() -> view.isEditAvailability() && view.getEntryViewAvailabilityEditingBehaviour().equals(AvailabilityEditingEntryBehaviour.OPACITY) ? view.getEntryViewAvailabilityEditingOpacity() : 1,
+                view.editAvailabilityProperty(), view.entryViewAvailabilityEditingBehaviourProperty(), view.entryViewAvailabilityEditingOpacityProperty()));
 
         earlyHoursRegion = new Region();
         earlyHoursRegion.setMouseTransparent(true);
@@ -127,6 +136,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             // when scrolling is enabled. In that case all lines need to look the same.
             createStaticLines();
         }
+
+        getChildren().add(entryViewGroup);
 
         currentTimeCircle = new Circle(4);
         currentTimeCircle.getStyleClass().add("current-time-circle");
@@ -466,7 +477,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 line.getStyleClass().add(MIDNIGHT_LINE_STYLE_CLASS);
                 line.setStartX(snapPositionX(contentX));
                 line.setEndX(snapPositionX(contentX + contentWidth));
-            } else if (localTime.equals(LocalTime.NOON) ) {
+            } else if (localTime.equals(LocalTime.NOON)) {
                 line.setStartX(snapPositionX(contentX));
                 line.setEndX(snapPositionX(contentX + contentWidth));
                 if (view.isShowNoonMarker()) {
@@ -619,8 +630,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private <G> Map<G, List<DayEntryView>> groupEntryViewsBy(Function<DayEntryView, G> groupByFunction, Predicate<DayEntryView> viewEntryFilter) {
-        return getChildren().stream()
-                .filter(DayEntryView.class::isInstance)
+        return entryViewGroup.getChildren().stream()
                 .map(DayEntryView.class::cast)
                 .filter(viewEntryFilter)
                 .collect(Collectors.groupingBy(groupByFunction));
@@ -868,24 +878,20 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private boolean removeEntryView(Entry<?> entry) {
-        boolean removed = getChildren().removeIf(node -> {
-            if (node instanceof DayEntryView) {
-                DayEntryView view = (DayEntryView) node;
+        boolean removed = entryViewGroup.getChildren().removeIf(node -> {
+            DayEntryView view = (DayEntryView) node;
 
-                Entry<?> removedEntry = entry;
-                if (removedEntry.getRecurrenceSourceEntry() != null) {
-                    removedEntry = removedEntry.getRecurrenceSourceEntry();
-                }
-
-                Entry<?> viewEntry = view.getEntry();
-                if (viewEntry.getRecurrenceSourceEntry() != null) {
-                    viewEntry = viewEntry.getRecurrenceSourceEntry();
-                }
-
-                return viewEntry.getId().equals(removedEntry.getId());
+            Entry<?> removedEntry = entry;
+            if (removedEntry.getRecurrenceSourceEntry() != null) {
+                removedEntry = removedEntry.getRecurrenceSourceEntry();
             }
 
-            return false;
+            Entry<?> viewEntry = view.getEntry();
+            if (viewEntry.getRecurrenceSourceEntry() != null) {
+                viewEntry = viewEntry.getRecurrenceSourceEntry();
+            }
+
+            return viewEntry.getId().equals(removedEntry.getId());
         });
 
         if (removed && !(entry instanceof DraggedEntry) && LoggingDomain.VIEW.isLoggable(Level.FINE)) {
@@ -917,7 +923,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         int index = findIndex(entry);
 
-        getChildren().add(index, view);
+        entryViewGroup.getChildren().add(index, view);
 
         if (!(entry instanceof DraggedEntry) && LoggingDomain.VIEW.isLoggable(Level.FINE)) {
             LoggingDomain.VIEW.fine("added entry view " + entry.getTitle() + ", day = " + getSkinnable().getDate());
@@ -931,10 +937,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
      * view. The right order is important for TAB traversal to work properly.
      */
     private int findIndex(Entry<?> entry) {
-        int childrenSize = getChildren().size();
+        int childrenSize = entryViewGroup.getChildren().size();
 
         for (int i = 0; i < childrenSize; i++) {
-            Node node = getChildren().get(i);
+            Node node = entryViewGroup.getChildren().get(i);
             if (node instanceof DayEntryView) {
                 DayEntryView view = (DayEntryView) node;
                 Entry<?> viewEntry = view.getEntry();
@@ -950,7 +956,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     private void updateEntries(String reason) {
         displayedDate = getSkinnable().getDate();
 
-        getChildren().removeIf(node -> node instanceof DayEntryView);
+        entryViewGroup.getChildren().clear();
 
         Map<LocalDate, List<Entry<?>>> dataMap = new HashMap<>();
         dataLoader.loadEntries(dataMap);
@@ -1004,7 +1010,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         getSkinnable().requestLayout();
 
-        LoggingDomain.VIEW.fine("updating entries in day view " + getSkinnable().getDate() + ": reason = " + reason + ", entry count: " + getChildren().stream().filter(child -> child instanceof DayEntryView).count());
+        LoggingDomain.VIEW.fine("updating entries in day view " + getSkinnable().getDate() + ": reason = " + reason + ", entry count: " + entryViewGroup.getChildren().size());
     }
 
     @Override
