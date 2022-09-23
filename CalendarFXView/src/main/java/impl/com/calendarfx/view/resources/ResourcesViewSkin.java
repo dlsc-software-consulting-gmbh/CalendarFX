@@ -50,7 +50,7 @@ import static com.calendarfx.util.ViewHelper.scrollToRequestedTime;
 public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<ResourcesView<T>> {
 
     private final GridPane gridPane;
-    private final ResourcesContainer<T> resourcesViewContainer;
+    private final ResourcesContainer<T> resourcesContainer;
     private final DayViewScrollPane timeScaleScrollPane;
     private final DayViewScrollPane dayViewsScrollPane;
     private final ScrollBar scrollBar;
@@ -75,9 +75,9 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         view.layoutProperty().addListener(updateViewListener);
         view.showScrollBarProperty().addListener(updateViewListener);
         view.showTimeScaleViewProperty().addListener(updateViewListener);
-        view.resourcesProperty().addListener(updateViewListener);
         view.numberOfDaysProperty().addListener(updateViewListener);
         view.typeProperty().addListener(updateViewListener);
+        view.getResources().addListener(updateViewListener);
 
         RowConstraints row0 = new RowConstraints();
         row0.setFillHeight(true);
@@ -89,17 +89,16 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         row1.setPrefHeight(Region.USE_COMPUTED_SIZE);
         row1.setVgrow(Priority.ALWAYS);
 
-
         gridPane = new GridPane();
         gridPane.getRowConstraints().setAll(row0, row1);
         gridPane.getStyleClass().add("container");
 
-        resourcesViewContainer = new ResourcesContainer<>(view);
-        view.bind(resourcesViewContainer, true);
+        resourcesContainer = new ResourcesContainer<>(view);
+        view.bind(resourcesContainer, true);
 
         getChildren().add(gridPane);
 
-        dayViewsScrollPane = new DayViewScrollPane(resourcesViewContainer, scrollBar);
+        dayViewsScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
 
         /*
          * Run later when the control has become visible.
@@ -117,6 +116,8 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         gridPane.getColumnConstraints().clear();
 
         ResourcesView<T> view = getSkinnable();
+        view.unbindAll();
+
         if (view.getType().equals(Type.RESOURCES_OVER_DATE)) {
             updateViewResourcesOverDates();
         } else {

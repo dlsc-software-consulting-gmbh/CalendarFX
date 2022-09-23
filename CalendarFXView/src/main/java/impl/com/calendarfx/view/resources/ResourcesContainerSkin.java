@@ -42,8 +42,11 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
 
     private void updateView() {
         container.getChildren().clear();
-        ResourcesContainer<T> skinnable = getSkinnable();
-        if (skinnable.getType().equals(Type.RESOURCES_OVER_DATE)) {
+
+        ResourcesContainer<T> resourcesContainer = getSkinnable();
+        resourcesContainer.unbindAll();
+
+        if (resourcesContainer.getType().equals(Type.RESOURCES_OVER_DATE)) {
             updateViewResourcesOverDates();
         } else {
             updateViewDatesOverResources();
@@ -162,7 +165,7 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
             // bind day view to container but remove bindings that interfere
             container.bind(weekView, true);
 
-            // rebind "adjust"
+            // bind additionally "adjust"
             weekView.adjustToFirstDayOfWeekProperty().bind(container.adjustToFirstDayOfWeekProperty());
 
             // unbind what is not needed
@@ -174,17 +177,16 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
             Bindings.unbindBidirectional(container.lassoStartProperty(), weekView.lassoStartProperty());
             Bindings.unbindBidirectional(container.lassoEndProperty(), weekView.lassoEndProperty());
             Bindings.unbindBidirectional(container.onLassoFinishedProperty(), weekView.onLassoFinishedProperty());
+
             Bindings.unbindContentBidirectional(container.getCalendarSources(), weekView.getCalendarSources());
 
             weekView.setEnableCurrentTimeCircle(i == 0);
             weekView.setEnableCurrentTimeMarker(true);
-
             weekView.setAvailabilityCalendar(resource.getAvailabilityCalendar());
-            weekView.installDefaultLassoFinishedBehaviour();
-            weekView.numberOfDaysProperty().bind(container.numberOfDaysProperty());
 
-            container.numberOfDaysProperty().addListener(it -> System.out.println("number of days (multi resources): " + weekView.getNumberOfDays()));
-            weekView.numberOfDaysProperty().addListener(it -> System.out.println("number of days: " + weekView.getNumberOfDays()));
+            weekView.installDefaultLassoFinishedBehaviour();
+
+            weekView.numberOfDaysProperty().bind(container.numberOfDaysProperty());
 
             CalendarSource calendarSource = createCalendarSource(resource);
             weekView.getCalendarSources().setAll(calendarSource);
