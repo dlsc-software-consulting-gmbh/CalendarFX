@@ -27,7 +27,7 @@
         </project.github.repository>
         <local.repository.path>/tmp/repository</local.repository.path>
         <java.version>11</java.version>
-        <javafx.version>18</javafx.version>
+        <javafx.version>19</javafx.version>
         <ikonli.version>12.3.1</ikonli.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>

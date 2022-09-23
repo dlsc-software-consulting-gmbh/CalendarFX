@@ -42,6 +42,7 @@ import impl.com.calendarfx.view.util.VisualBoundsResolver;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
@@ -205,7 +206,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         });
 
         view.suspendUpdatesProperty().addListener(evt -> loadData("suspend updates was set to false"));
-        view.getCalendars().addListener((javafx.beans.Observable obs) -> loadData("list of calendars changed"));
+        view.getCalendars().addListener((Observable obs) -> loadData("list of calendars changed"));
 
         final InvalidationListener styleLinesListener = it -> updateLineStyling();
         view.startTimeProperty().addListener(styleLinesListener);
@@ -243,7 +244,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         view.gridLinesProperty().addListener(drawBackgroundCanvasListener);
         view.gridLineColorProperty().addListener(drawBackgroundCanvasListener);
         view.gridTypeProperty().addListener(drawBackgroundCanvasListener);
-
     }
 
     private final EventHandler<CalendarEvent> availabilityHandler = evt -> backgroundCanvas.draw();
@@ -1059,8 +1059,10 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
         BackgroundCanvas() {
             setMouseTransparent(true);
-            heightProperty().addListener(it -> draw());
-            widthProperty().addListener(it -> draw());
+
+            InvalidationListener redrawListener = it -> draw();
+            heightProperty().addListener(redrawListener);
+            widthProperty().addListener(redrawListener);
         }
 
         public boolean isResizable() {

@@ -6,12 +6,10 @@ import com.calendarfx.view.DayViewBase;
 import impl.com.calendarfx.view.resources.ResourceCalendarViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyMapProperty;
 import javafx.beans.property.ReadOnlyMapWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -74,18 +72,15 @@ public class ResourceCalendarView<T> extends DayViewBase {
         this.showTimeScale.set(showTimeScale);
     }
 
-    private final ListProperty<Marker> markers = new SimpleListProperty<>(this, "markers", FXCollections.observableArrayList());
+    private final ObservableList<Marker> markers = FXCollections.observableArrayList();
 
+    /**
+     * A list of marker lines that can be added to the view.
+     *
+     * @return visible horizontal markers
+     */
     public final ObservableList<Marker> getMarkers() {
-        return markers.get();
-    }
-
-    public final ListProperty<Marker> markersProperty() {
         return markers;
-    }
-
-    public final void setMarkers(ObservableList<Marker> markers) {
-        this.markers.set(markers);
     }
 
     private void partialUnbinding(DayView otherControl) {
@@ -136,17 +131,9 @@ public class ResourceCalendarView<T> extends DayViewBase {
         return dayViewMap.get(resource);
     }
 
-    private final ListProperty<T> resources = new SimpleListProperty<>(this, "resources", FXCollections.observableArrayList());
+    private final ObservableList<T> resources = FXCollections.observableArrayList();
 
     public ObservableList<T> getResources() {
-        return resources.get();
-    }
-
-    public ListProperty<T> resourcesProperty() {
         return resources;
-    }
-
-    public void setResources(ObservableList<T> resources) {
-        this.resources.set(resources);
     }
 }

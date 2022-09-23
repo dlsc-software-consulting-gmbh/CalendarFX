@@ -35,8 +35,8 @@ import static java.util.logging.Level.FINE;
  *
  *
  * <img src="doc-files/calendar-source.png" alt="Calendar Source View">
- *
- *
+ * <p>
+ * <p>
  * Calendar sources can be shown to the user via the {@link SourceView} control.
  */
 public class CalendarSource {
@@ -46,29 +46,28 @@ public class CalendarSource {
      */
     public CalendarSource() {
         if (MODEL.isLoggable(FINE)) {
-            getCalendars().addListener(
-                    (Change<? extends Calendar> change) -> {
-                        while (change.next()) {
-                            if (change.wasAdded()) {
-                                for (Calendar calendar : change.getAddedSubList()) {
-                                    LoggingDomain.MODEL.fine("added calendar " + calendar.getName() + " to source "
-                                            + getName());
-                                }
-                            } else if (change.wasRemoved()) {
-                                for (Calendar calendar : change.getRemoved()) {
-                                    MODEL.fine("removed calendar " + calendar.getName() + " from source " + getName());
-                                }
-                            }
+
+            getCalendars().addListener((Change<? extends Calendar> change) -> {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        for (Calendar calendar : change.getAddedSubList()) {
+                            LoggingDomain.MODEL.fine("added calendar " + calendar.getName() + " to source " + getName());
                         }
-                    });
+                    } else if (change.wasRemoved()) {
+                        for (Calendar calendar : change.getRemoved()) {
+                            MODEL.fine("removed calendar " + calendar.getName() + " from source " + getName());
+                        }
+                    }
+                }
+            });
+
         }
     }
 
     /**
      * Constructs a new calendar source with the given name.
      *
-     * @param name
-     *            the name of the calendar source, e.g. "Google", "Apple"
+     * @param name the name of the calendar source, e.g. "Google", "Apple"
      */
     public CalendarSource(String name) {
         this();
@@ -89,8 +88,7 @@ public class CalendarSource {
     /**
      * Sets the value of {@link #nameProperty()}.
      *
-     * @param name
-     *            the new name for the calendar source
+     * @param name the new name for the calendar source
      */
     public final void setName(String name) {
         MODEL.fine("changing name to " + name);

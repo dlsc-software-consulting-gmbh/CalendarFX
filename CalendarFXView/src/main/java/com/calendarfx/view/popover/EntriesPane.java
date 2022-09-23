@@ -48,7 +48,7 @@ class EntriesPane extends VBox {
         this.dateControl = Objects.requireNonNull(dateControl, "date control can not be null");
 
         setMinSize(0, 0);
-        entries.addListener((Observable evt) -> update());
+        getEntries().addListener((Observable evt) -> update());
         getStyleClass().add("entries-pane");
         setAlignment(Pos.CENTER);
     }

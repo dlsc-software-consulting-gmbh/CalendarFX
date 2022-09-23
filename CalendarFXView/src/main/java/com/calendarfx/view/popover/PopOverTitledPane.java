@@ -46,28 +46,27 @@ public class PopOverTitledPane extends TitledPane {
         setContentDisplay(TEXT_ONLY);
         setGraphic(summaryContent);
 
-        expandedProperty().addListener(
-                (value, oldExpanded, newExpanded) -> {
-                    if (newExpanded) {
-                        setContentDisplay(ContentDisplay.TEXT_ONLY);
-                        detailedContent.setOpacity(0);
-                        FadeTransition fadeInContent = new FadeTransition(getFadingDuration());
-                        fadeInContent.setFromValue(0);
-                        fadeInContent.setToValue(1);
-                        fadeInContent.setNode(detailedContent);
-                        fadeInContent.play();
-                    } else {
-                        if (summaryContent != null) {
-                            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                            summaryContent.setOpacity(0);
-                            FadeTransition fadeInSummary = new FadeTransition(getFadingDuration());
-                            fadeInSummary.setFromValue(0);
-                            fadeInSummary.setToValue(1);
-                            fadeInSummary.setNode(summaryContent);
-                            fadeInSummary.play();
-                        }
-                    }
-                });
+        expandedProperty().addListener((value, oldExpanded, newExpanded) -> {
+            if (newExpanded) {
+                setContentDisplay(ContentDisplay.TEXT_ONLY);
+                detailedContent.setOpacity(0);
+                FadeTransition fadeInContent = new FadeTransition(getFadingDuration());
+                fadeInContent.setFromValue(0);
+                fadeInContent.setToValue(1);
+                fadeInContent.setNode(detailedContent);
+                fadeInContent.play();
+            } else {
+                if (summaryContent != null) {
+                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                    summaryContent.setOpacity(0);
+                    FadeTransition fadeInSummary = new FadeTransition(getFadingDuration());
+                    fadeInSummary.setFromValue(0);
+                    fadeInSummary.setToValue(1);
+                    fadeInSummary.setNode(summaryContent);
+                    fadeInSummary.play();
+                }
+            }
+        });
     }
 
     private final ObjectProperty<Duration> fadingDuration = new SimpleObjectProperty<>(this, "fadingDuration", Duration.seconds(.2));

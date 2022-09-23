@@ -1,10 +1,8 @@
 package com.calendarfx.model;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -74,17 +72,9 @@ public class Marker {
         this.style.set(style);
     }
 
-    private final ListProperty<String> styleClass = new SimpleListProperty<>(this, "styleClass", FXCollections.observableArrayList());
+    private final ObservableList<String> styleClass = FXCollections.observableArrayList();
 
     public final ObservableList<String> getStyleClass() {
-        return styleClass.get();
-    }
-
-    public final ListProperty<String> styleClassProperty() {
         return styleClass;
-    }
-
-    public final void setStyleClass(ObservableList<String> styleClass) {
-        this.styleClass.set(styleClass);
     }
 }

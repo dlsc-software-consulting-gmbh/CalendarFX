@@ -18,6 +18,8 @@ package com.calendarfx.view.popover;
 
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -53,6 +55,10 @@ public class EntryMapView extends EntryPopOverPane {
 
     private final ImageLoader imageLoader = new ImageLoader();
 
+    private final InvalidationListener invalidationListener = it -> imageLoader.restart();
+
+    private final WeakInvalidationListener weakInvalidationListener = new WeakInvalidationListener(invalidationListener);
+
     public EntryMapView(Entry<?> entry) {
         this.entry = Objects.requireNonNull(entry);
 
@@ -85,7 +91,7 @@ public class EntryMapView extends EntryPopOverPane {
 
         getChildren().add(mapViewPane);
 
-        entry.locationProperty().addListener(it -> imageLoader.restart());
+        entry.locationProperty().addListener(weakInvalidationListener);
 
         visibleProperty().bind(imageLoader.valueProperty().isNotNull());
         managedProperty().bind(imageLoader.valueProperty().isNotNull());

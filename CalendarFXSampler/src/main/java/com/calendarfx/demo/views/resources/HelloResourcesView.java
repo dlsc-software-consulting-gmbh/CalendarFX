@@ -159,6 +159,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         resourcesView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
         resourcesView.getResources().setAll(createResources(3));
         resourcesView.setShowDetailsUponEntryCreation(false);
+
         return resourcesView;
     }
 

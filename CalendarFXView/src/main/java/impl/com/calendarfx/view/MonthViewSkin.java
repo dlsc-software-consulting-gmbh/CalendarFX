@@ -149,7 +149,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
         view.getSelectedDates().addListener((Observable observable) -> updateDaySelection());
 
-        view.getCalendars().addListener((javafx.beans.Observable obs) -> updateEntries("list of calendars changed"));
+        view.getCalendars().addListener((Observable obs) -> updateEntries("list of calendars changed"));
         view.suspendUpdatesProperty().addListener(it -> updateEntries("suspend updates set to false"));
     }
 

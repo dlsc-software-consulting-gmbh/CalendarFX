@@ -21,6 +21,7 @@ import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.util.ViewHelper;
+import com.calendarfx.util.WeakList;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
 import com.calendarfx.view.popover.EntryPopOverContentPane;
@@ -31,13 +32,11 @@ import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -77,6 +76,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -163,8 +163,6 @@ public abstract class DateControl extends CalendarFXControl {
 
     private final WeakInvalidationListener weakUpdateCalendarListListener = new WeakInvalidationListener(updateCalendarListListener);
 
-    private Entry<?> requestedDetailEntry;
-
     /**
      * Constructs a new date control and initializes all factories and callbacks
      * with default implementations.
@@ -176,7 +174,6 @@ public abstract class DateControl extends CalendarFXControl {
             if (count < 0) {
                 throw new IllegalArgumentException("usage count can not be smaller than zero, but was " + count);
             }
-
 
             switch (count) {
                 case 0:
@@ -2455,15 +2452,32 @@ public abstract class DateControl extends CalendarFXControl {
         return result;
     }
 
-    private final List<DateControl> boundDateControls = FXCollections.observableArrayList();
+    private final WeakList<DateControl> boundDateControls = new WeakList<>();
 
     /**
      * Returns all data controls that are bound to this control.
      *
      * @return the bound date controls / sub controls / children controls
      */
-    public final List<DateControl> getBoundDateControls() {
+    public final WeakList<DateControl> getBoundDateControls() {
         return boundDateControls;
+    }
+
+    /**
+     * Unbinds all bound date controls.
+     *
+     * @see #bind(DateControl, boolean)
+     * @see #unbind(DateControl)
+     */
+    public final void unbindAll() {
+        WeakList<DateControl> controls = getBoundDateControls();
+        Iterator<DateControl> iterator = controls.iterator();
+        while (iterator.hasNext()) {
+            DateControl next = iterator.next();
+            System.out.println("next: " + next.getClass().getSimpleName());
+            unbind(next);
+        }
+        System.out.println("---------");
     }
 
     // hyperlink support
@@ -2614,16 +2628,14 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void bind(DateControl otherControl, boolean bindDate) {
         requireNonNull(otherControl);
-
         boundDateControls.add(otherControl);
 
-        // bind maps
+        // bind collections
         Bindings.bindContentBidirectional(otherControl.getCalendarVisibilityMap(), getCalendarVisibilityMap());
-
-        // bind lists and sets
         Bindings.bindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
         Bindings.bindContentBidirectional(otherControl.getSelections(), getSelections());
         Bindings.bindContentBidirectional(otherControl.getWeekendDays(), getWeekendDays());
+        Bindings.bindContentBidirectional(otherControl.getAvailableZoneIds(), getAvailableZoneIds());
 
         // bind properties
         Bindings.bindBidirectional(otherControl.suspendUpdatesProperty(), suspendUpdatesProperty());
@@ -2636,6 +2648,9 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
         Bindings.bindBidirectional(otherControl.weekFieldsProperty(), weekFieldsProperty());
         Bindings.bindBidirectional(otherControl.layoutProperty(), layoutProperty());
+        if (bindDate) {
+            Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
+        }
 
         Bindings.bindBidirectional(otherControl.todayProperty(), todayProperty());
         Bindings.bindBidirectional(otherControl.zoneIdProperty(), zoneIdProperty());
@@ -2644,15 +2659,10 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.bindBidirectional(otherControl.timeProperty(), timeProperty());
         Bindings.bindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
-        Bindings.bindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
         Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
         Bindings.bindBidirectional(otherControl.showDetailsUponEntryCreationProperty(), showDetailsUponEntryCreationProperty());
         Bindings.bindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
         Bindings.bindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
-
-        if (bindDate) {
-            Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
-        }
 
         Bindings.bindBidirectional(otherControl.editAvailabilityProperty(), editAvailabilityProperty());
         Bindings.bindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
@@ -2679,15 +2689,13 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void unbind(DateControl otherControl) {
         requireNonNull(otherControl);
-        boundDateControls.remove(otherControl);
 
-        // unbind maps
+        // unbind collections
         Bindings.unbindContentBidirectional(otherControl.getCalendarVisibilityMap(), getCalendarVisibilityMap());
-
-        // unbind lists
         Bindings.unbindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
         Bindings.unbindContentBidirectional(otherControl.getSelections(), getSelections());
         Bindings.unbindContentBidirectional(otherControl.getWeekendDays(), getWeekendDays());
+        Bindings.unbindContentBidirectional(otherControl.getAvailableZoneIds(), getAvailableZoneIds());
 
         // unbind properties
         Bindings.unbindBidirectional(otherControl.suspendUpdatesProperty(), suspendUpdatesProperty());
@@ -2709,16 +2717,16 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.unbindBidirectional(otherControl.timeProperty(), timeProperty());
         Bindings.unbindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
-        Bindings.unbindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
         Bindings.unbindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
+        Bindings.unbindBidirectional(otherControl.showDetailsUponEntryCreationProperty(), showDetailsUponEntryCreationProperty());
+        Bindings.unbindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
+        Bindings.unbindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
 
         Bindings.unbindBidirectional(otherControl.editAvailabilityProperty(), editAvailabilityProperty());
         Bindings.unbindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
         Bindings.unbindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
         Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
-        Bindings.unbindBidirectional(otherControl.showDetailsUponEntryCreationProperty(), showDetailsUponEntryCreationProperty());
-        Bindings.unbindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
-        Bindings.unbindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
+        Bindings.unbindBidirectional(otherControl.createEntryClickCountProperty(), createEntryClickCountProperty());
 
         // unbind callbacks
         Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
@@ -2807,11 +2815,7 @@ public abstract class DateControl extends CalendarFXControl {
         return usagePolicy.get();
     }
 
-    private final ListProperty<ZoneId> availableZoneIds = new SimpleListProperty<>(this, "availableZoneIds", FXCollections.observableArrayList());
-
-    public final ObservableList<ZoneId> getAvailableZoneIds() {
-        return availableZoneIds.get();
-    }
+    private final ObservableList<ZoneId> availableZoneIds = FXCollections.observableArrayList();
 
     /**
      * A list of time zones / time zone IDs that will be available to the user
@@ -2820,12 +2824,8 @@ public abstract class DateControl extends CalendarFXControl {
      *
      * @return the list of available time zone IDs
      */
-    public final ListProperty<ZoneId> availableZoneIdsProperty() {
+    public final ObservableList<ZoneId> getAvailableZoneIds() {
         return availableZoneIds;
-    }
-
-    public final void setAvailableZoneIds(ObservableList<ZoneId> availableZoneIds) {
-        this.availableZoneIds.set(availableZoneIds);
     }
 
     private final IntegerProperty createEntryClickCount = new SimpleIntegerProperty(this, "createEntryClickCount", 2);

@@ -25,11 +25,13 @@ import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DraggedEntry;
 import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.MapChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.event.WeakEventHandler;
 import javafx.scene.control.SkinBase;
 
 import java.time.LocalDate;
@@ -43,6 +45,10 @@ import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
 public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C> {
 
+   private final InvalidationListener calendarVisibilityListener = it -> calendarVisibilityChanged();
+
+    private final WeakInvalidationListener weakCalendarVisibilityListener = new WeakInvalidationListener(calendarVisibilityListener);
+
     public DateControlSkin(C control) {
         super(control);
 
@@ -53,7 +59,7 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
         control.getCalendars().addListener(this::calendarListChanged);
 
         for (Calendar calendar : control.getCalendars()) {
-            calendar.addEventHandler(calendarListener);
+            calendar.addEventHandler(weakCalendarListener);
         }
 
         MapChangeListener<? super Object, ? super Object> propertiesListener = change -> {
@@ -68,21 +74,19 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
 
         control.getProperties().addListener(propertiesListener);
 
-        InvalidationListener calendarVisibilityListener = it -> calendarVisibilityChanged();
-
         for (Calendar calendar : control.getCalendars()) {
-            control.getCalendarVisibilityProperty(calendar).addListener(calendarVisibilityListener);
+            control.getCalendarVisibilityProperty(calendar).addListener(weakCalendarVisibilityListener);
         }
 
         control.getCalendars().addListener((Change<? extends Calendar> change) -> {
             while (change.next()) {
                 if (change.wasAdded()) {
                     for (Calendar calendar : change.getAddedSubList()) {
-                        control.getCalendarVisibilityProperty(calendar).addListener(calendarVisibilityListener);
+                        control.getCalendarVisibilityProperty(calendar).addListener(weakCalendarVisibilityListener);
                     }
                 } else if (change.wasRemoved()) {
                     for (Calendar calendar : change.getRemoved()) {
-                        control.getCalendarVisibilityProperty(calendar).removeListener(calendarVisibilityListener);
+                        control.getCalendarVisibilityProperty(calendar).removeListener(weakCalendarVisibilityListener);
                     }
                 }
             }
@@ -92,25 +96,25 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
     protected void refreshData() {
     }
 
-    private final InvalidationListener calendarVisibilityChanged = it -> calendarVisibilityChanged();
-
     protected void calendarVisibilityChanged() {
     }
 
     private final EventHandler<CalendarEvent> calendarListener = this::calendarChanged;
+
+    private final WeakEventHandler<CalendarEvent> weakCalendarListener = new WeakEventHandler<>(calendarListener);
 
     private void calendarListChanged(Change<? extends Calendar> change) {
         C dateControl = getSkinnable();
         while (change.next()) {
             if (change.wasAdded()) {
                 for (Calendar calendar : change.getAddedSubList()) {
-                    calendar.addEventHandler(calendarListener);
-                    dateControl.getCalendarVisibilityProperty(calendar).addListener(calendarVisibilityChanged);
+                    calendar.addEventHandler(weakCalendarListener);
+                    dateControl.getCalendarVisibilityProperty(calendar).addListener(weakCalendarVisibilityListener);
                 }
             } else if (change.wasRemoved()) {
                 for (Calendar calendar : change.getRemoved()) {
-                    calendar.removeEventHandler(calendarListener);
-                    dateControl.getCalendarVisibilityProperty(calendar).removeListener(calendarVisibilityChanged);
+                    calendar.removeEventHandler(weakCalendarListener);
+                    dateControl.getCalendarVisibilityProperty(calendar).removeListener(weakCalendarVisibilityListener);
                 }
             }
         }

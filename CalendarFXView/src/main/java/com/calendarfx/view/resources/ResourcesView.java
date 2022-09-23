@@ -30,11 +30,9 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -276,18 +274,15 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.resourceHeaderFactory.set(resourceHeaderFactory);
     }
 
-    private final ListProperty<T> resources = new SimpleListProperty<>(this, "resources", FXCollections.observableArrayList());
+    private final ObservableList<T> resources = FXCollections.observableArrayList();
 
+    /**
+     * The resources to be shown in this view.
+     *
+     * @return the list of resources
+     */
     public final ObservableList<T> getResources() {
-        return resources.get();
-    }
-
-    public final ListProperty<T> resourcesProperty() {
         return resources;
-    }
-
-    public final void setResources(ObservableList<T> resources) {
-        this.resources.set(resources);
     }
 
     // show all day view support

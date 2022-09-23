@@ -19,6 +19,7 @@ package impl.com.calendarfx.view;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.view.CalendarHeaderView;
 import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
@@ -41,11 +42,14 @@ public class CalendarHeaderViewSkin extends SkinBase<CalendarHeaderView> {
     private final PseudoClass MIDDLE_COLUMN = PseudoClass.getPseudoClass("middle");
     private final PseudoClass LAST_COLUMN = PseudoClass.getPseudoClass("last");
 
+    private final InvalidationListener calendarVisibilityListener = it -> updateColumns();
+
+    private final WeakInvalidationListener weakCalendarVisibilityListener = new WeakInvalidationListener(calendarVisibilityListener);
+
     /**
      * Constructs a new header view skin.
      *
-     * @param view
-     *            the control to skin
+     * @param view the control to skin
      */
     public CalendarHeaderViewSkin(CalendarHeaderView view) {
         super(view);
@@ -60,30 +64,27 @@ public class CalendarHeaderViewSkin extends SkinBase<CalendarHeaderView> {
 
         updateColumns();
 
-        InvalidationListener calendarVisibilityListener = it -> updateColumns();
-
         for (Calendar calendar : getSkinnable().getCalendars()) {
-            view.getCalendarVisibilityProperty(calendar).addListener(calendarVisibilityListener);
+            view.getCalendarVisibilityProperty(calendar).addListener(weakCalendarVisibilityListener);
         }
 
-        getSkinnable().getCalendars()
-                .addListener((Change<? extends Calendar> change) -> {
-                    while (change.next()) {
-                        if (change.wasAdded()) {
-                            for (Calendar calendar : change.getAddedSubList()) {
-                                view.getCalendarVisibilityProperty(calendar).addListener(calendarVisibilityListener);
-                            }
-                        } else if (change.wasRemoved()) {
-                            for (Calendar calendar : change.getRemoved()) {
-                                view.getCalendarVisibilityProperty(calendar).removeListener(calendarVisibilityListener);
-                            }
-                        }
+        getSkinnable().getCalendars().addListener((Change<? extends Calendar> change) -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (Calendar calendar : change.getAddedSubList()) {
+                        view.getCalendarVisibilityProperty(calendar).addListener(weakCalendarVisibilityListener);
                     }
+                } else if (change.wasRemoved()) {
+                    for (Calendar calendar : change.getRemoved()) {
+                        view.getCalendarVisibilityProperty(calendar).removeListener(weakCalendarVisibilityListener);
+                    }
+                }
+            }
 
-                    updateColumns();
-                });
+            updateColumns();
+        });
 
-        view.visibleProperty().addListener(calendarVisibilityListener);
+        view.visibleProperty().addListener(weakCalendarVisibilityListener);
     }
 
     private void updateColumns() {
@@ -132,9 +133,7 @@ public class CalendarHeaderViewSkin extends SkinBase<CalendarHeaderView> {
 
                     Node calendarLabel = factory.call(calendar);
 
-                    calendarLabel.getStyleClass().addAll(
-                            "default-style-calendar-header",
-                            calendar.getStyle() + "-calendar-header");
+                    calendarLabel.getStyleClass().addAll("default-style-calendar-header", calendar.getStyle() + "-calendar-header");
                     dayGridPane.add(calendarLabel, j, 0);
 
                     GridPane.setHgrow(calendarLabel, Priority.ALWAYS);
@@ -143,10 +142,8 @@ public class CalendarHeaderViewSkin extends SkinBase<CalendarHeaderView> {
                     GridPane.setFillWidth(calendarLabel, true);
 
                     calendarLabel.pseudoClassStateChanged(FIRST_COLUMN, j == 0);
-                    calendarLabel.pseudoClassStateChanged(MIDDLE_COLUMN,
-                            j > 0 && j < calendarCount - 1);
-                    calendarLabel.pseudoClassStateChanged(LAST_COLUMN,
-                            j == calendarCount - 1);
+                    calendarLabel.pseudoClassStateChanged(MIDDLE_COLUMN, j > 0 && j < calendarCount - 1);
+                    calendarLabel.pseudoClassStateChanged(LAST_COLUMN, j == calendarCount - 1);
                 }
 
                 dayGridPane.getColumnConstraints().setAll(dayConstraints);

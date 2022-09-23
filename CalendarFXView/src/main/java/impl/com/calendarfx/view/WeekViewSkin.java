@@ -87,8 +87,11 @@ public class WeekViewSkin extends SkinBase<WeekView> {
             WeekDayView weekDayView = weekDayViewFactory.call(param);
             weekDayView.setPrefWidth(1); // equal width distribution
             weekDayView.getProperties().put("week.view", weekView);
-            weekDayView.earliestTimeUsedProperty().addListener(it -> updateUsedTimes());
-            weekDayView.latestTimeUsedProperty().addListener(it -> updateUsedTimes());
+
+            InvalidationListener updateUsedTimesListener = it -> updateUsedTimes();
+            weekDayView.earliestTimeUsedProperty().addListener(updateUsedTimesListener);
+            weekDayView.latestTimeUsedProperty().addListener(updateUsedTimesListener);
+
             weekDayView.showTodayProperty().bindBidirectional(weekView.showTodayProperty());
 
             if (i == 0) {

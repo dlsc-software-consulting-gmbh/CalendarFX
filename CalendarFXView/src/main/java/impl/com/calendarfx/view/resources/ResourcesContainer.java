@@ -6,13 +6,12 @@ import com.calendarfx.view.WeekView;
 import com.calendarfx.view.resources.Resource;
 import com.calendarfx.view.resources.ResourcesView;
 import com.calendarfx.view.resources.ResourcesView.Type;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,11 +29,11 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
         getStyleClass().add("resources-view-container");
         setShowToday(false);
 
+        Bindings.bindContentBidirectional(getResources(), view.getResources());
+
         numberOfDaysProperty().bind(view.numberOfDaysProperty());
-        resourcesProperty().bind(view.resourcesProperty());
         smallSeparatorFactoryProperty().bind(view.smallSeparatorFactoryProperty());
         largeSeparatorFactoryProperty().bind(view.largeSeparatorFactoryProperty());
-        resourcesProperty().bind(view.resourcesProperty());
         numberOfDaysProperty().bind(view.numberOfDaysProperty());
         weekViewFactoryProperty().bind(view.weekViewFactoryProperty());
         dayViewFactoryProperty().bind(view.dayViewFactoryProperty());
@@ -101,18 +100,15 @@ public class ResourcesContainer<T extends Resource<?>> extends DayViewBase {
         adjustToFirstDayOfWeekProperty().set(adjust);
     }
 
-    private final ListProperty<T> resources = new SimpleListProperty<>(this, "resources", FXCollections.observableArrayList());
+    private final ObservableList<T> resources = FXCollections.observableArrayList();
 
+    /**
+     * The resources to be shown in this view.
+     *
+     * @return the list of resources
+     */
     public final ObservableList<T> getResources() {
-        return resources.get();
-    }
-
-    public final ListProperty<T> resourcesProperty() {
         return resources;
-    }
-
-    public final void setResources(ObservableList<T> resources) {
-        this.resources.set(resources);
     }
 
     private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7);

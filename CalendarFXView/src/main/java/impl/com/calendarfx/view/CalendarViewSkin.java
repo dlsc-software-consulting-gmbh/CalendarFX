@@ -35,6 +35,7 @@ import com.calendarfx.view.print.ViewType;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.HPos;
@@ -101,7 +102,10 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
     private SourceView sourceView;
 
     private final InvalidationListener entriesVisibilityListener = obs -> updateCalendarVisibility();
+    private final InvalidationListener weakEntriesVisibilityListener = new WeakInvalidationListener(entriesVisibilityListener);
+
     private final InvalidationListener printEntriesVisibilityListener = obs -> updatePrintVisibility();
+    private final InvalidationListener weakPrintEntriesVisibilityListener = new WeakInvalidationListener(printEntriesVisibilityListener);
 
     public CalendarViewSkin(CalendarView view) {
         super(view);
@@ -167,9 +171,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             }
         });
 
-        Platform.runLater(() -> sourceView.getCalendarVisibilityMap().keySet().forEach(calendar -> sourceView.getCalendarVisibilityProperty(calendar).addListener(entriesVisibilityListener)));
+        Platform.runLater(() -> sourceView.getCalendarVisibilityMap().keySet().forEach(calendar -> sourceView.getCalendarVisibilityProperty(calendar).addListener(weakEntriesVisibilityListener)));
 
-        view.selectedPageProperty().addListener(entriesVisibilityListener);
+        view.selectedPageProperty().addListener(weakEntriesVisibilityListener);
 
         ColumnConstraints leftColumn = new ColumnConstraints();
         ColumnConstraints centerColumn = new ColumnConstraints();
@@ -540,8 +544,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             SourceView printSource = printView.getSettingsView().getSourceView();
 
             for (Calendar calendar : printSource.getCalendarVisibilityMap().keySet()) {
-                printSource.getCalendarVisibilityProperty(calendar).removeListener(printEntriesVisibilityListener);
-                printSource.getCalendarVisibilityProperty(calendar).addListener(printEntriesVisibilityListener);
+                printSource.getCalendarVisibilityProperty(calendar).removeListener(weakPrintEntriesVisibilityListener);
+                printSource.getCalendarVisibilityProperty(calendar).addListener(weakPrintEntriesVisibilityListener);
             }
 
         });

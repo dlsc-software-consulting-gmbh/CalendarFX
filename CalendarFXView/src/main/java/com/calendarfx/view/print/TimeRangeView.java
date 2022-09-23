@@ -69,7 +69,7 @@ public class TimeRangeView extends ViewTypeControl {
      */
     public TimeRangeView() {
 
-        viewTypeProperty().addListener(obse -> {
+        viewTypeProperty().addListener(obs -> {
             startDate.removeListener(OldValuesListener);
             endDate.removeListener(OldValuesListener);
         });

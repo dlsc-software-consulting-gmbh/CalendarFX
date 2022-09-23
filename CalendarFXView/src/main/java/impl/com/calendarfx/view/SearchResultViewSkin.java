@@ -50,15 +50,11 @@ public class SearchResultViewSkin extends SkinBase<SearchResultView> {
         listView.setItems(view.getSearchResults());
         listView.setCellFactory(new SearchResultCellFactory());
         listView.setPlaceholder(placeholderLabel);
-        listView.getSelectionModel().selectedItemProperty()
-                .addListener(it -> view.getProperties().put(
-                        "selected.search.result",
-                        listView.getSelectionModel().getSelectedItem()));
+        listView.getSelectionModel().selectedItemProperty().addListener(it -> view.getProperties().put("selected.search.result", listView.getSelectionModel().getSelectedItem()));
         getChildren().add(listView);
     }
 
-    public class SearchResultCellFactory
-            implements Callback<ListView<Entry<?>>, ListCell<Entry<?>>> {
+    public class SearchResultCellFactory implements Callback<ListView<Entry<?>>, ListCell<Entry<?>>> {
 
         @Override
         public ListCell<Entry<?>> call(ListView<Entry<?>> param) {
