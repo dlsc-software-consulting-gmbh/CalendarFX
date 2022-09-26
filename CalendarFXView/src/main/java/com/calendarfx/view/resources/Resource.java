@@ -57,6 +57,10 @@ public class Resource<T> {
 
     @Override
     public String toString() {
-        return getUserObject().toString();
+        if (getUserObject() != null) {
+            return getUserObject().toString();
+        }
+
+        return super.toString();
     }
 }
