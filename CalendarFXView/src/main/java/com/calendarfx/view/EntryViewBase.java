@@ -30,6 +30,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -37,6 +38,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -130,7 +132,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         focusedProperty().addListener(it -> processFocus());
 
         addEventHandler(MouseEvent.MOUSE_CLICKED, evt -> {
-            if (evt.getButton().equals(PRIMARY) && evt.getClickCount() == 2) {
+            if (evt.getButton().equals(PRIMARY) && evt.isStillSincePress() && evt.getClickCount() == getDetailsClickCount()) {
                 showDetails(evt, evt.getScreenX(), evt.getScreenY());
             }
         });
@@ -229,6 +231,28 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         bindEntry(entry);
 
         layerProperty().addListener(weakLayerListener);
+    }
+
+    private final IntegerProperty detailsClickCount = new SimpleIntegerProperty(this, "detailsClickCount", 2);
+
+    public final int getDetailsClickCount() {
+        return detailsClickCount.get();
+    }
+
+    /**
+     * Determins the click count that is required to trigger the
+     * "show details" action.
+     *
+     * @see DateControl#entryDetailsCallbackProperty()
+     *
+     * @return the "show details" click count
+     */
+    public final IntegerProperty detailsClickCountProperty() {
+        return detailsClickCount;
+    }
+
+    public final void setDetailsClickCount(int detailsClickCount) {
+        this.detailsClickCount.set(detailsClickCount);
     }
 
     /**
