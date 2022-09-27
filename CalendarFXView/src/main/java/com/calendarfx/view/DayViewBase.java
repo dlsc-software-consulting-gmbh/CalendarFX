@@ -1006,7 +1006,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         setVisibleHours(Math.min(24, (int) getStartTime().until(getEndTime(), ChronoUnit.HOURS)));
     }
 
-    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) -> System.out.println("lasso start: " + getLassoStart() + ", lasso end: " + getLassoEnd()));
+    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) -> {});
 
     public final BiConsumer<Instant, Instant> getOnLassoFinished() {
         return onLassoFinished.get();
