@@ -71,21 +71,22 @@ public class DayViewEditController {
 
         final EventHandler<MouseEvent> mouseReleasedHandler = this::mouseReleased;
         // mouse released is very important for us. register with the scene, so we get that in any case.
-//        if (dayView.getScene() != null) {
+        if (dayView.getScene() != null) {
             dayView.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
             dayView.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
-//        }
-//        // also register with the scene property. Mostly to remove our event filter if the component gets destroyed.
-//        dayView.sceneProperty().addListener(((observable, oldValue, newValue) -> {
-//            if (oldValue != null) {
-//                oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
-//            }
-//            if (newValue != null) {
-//                newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                newValue.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
-//            }
-//        }));
+        }
+
+        // also register with the scene property. Mostly to remove our event filter if the component gets destroyed.
+        dayView.sceneProperty().addListener(((observable, oldValue, newValue) -> {
+            if (oldValue != null) {
+                oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+                oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
+            }
+            if (newValue != null) {
+                newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+                newValue.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
+            }
+        }));
         dayView.addEventFilter(MouseEvent.MOUSE_MOVED, this::mouseMoved);
 
         lassoStartProperty().addListener(it -> dayView.setLassoStart(getLassoStart()));
@@ -543,7 +544,7 @@ public class DayViewEditController {
         this.lassoEnd.set(lassoEnd);
     }
 
-    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) -> System.out.println("lasso start: " + getLassoStart() + ", lasso end: " + getLassoEnd()));
+    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) ->{});
 
     public final BiConsumer<Instant, Instant> getOnLassoFinished() {
         return onLassoFinished.get();
