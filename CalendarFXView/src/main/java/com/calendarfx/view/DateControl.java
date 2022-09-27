@@ -561,7 +561,7 @@ public abstract class DateControl extends CalendarFXControl {
      * that the time passed to the factory will be adjusted based on the current
      * virtual grid settings (see {@link #virtualGridProperty()}).
      *
-     * @param time     the time where the entry will be created (the entry start
+     * @param time     the time point where the entry will be created (the entry start
      *                 time)
      * @param calendar the calendar to which the new entry will be added (if null the
      *                 default calendar provider will be invoked)
@@ -600,12 +600,13 @@ public abstract class DateControl extends CalendarFXControl {
             CreateEntryParameter param = new CreateEntryParameter(this, calendar, time);
             Callback<CreateEntryParameter, Entry<?>> factory = getEntryFactory();
             Entry<?> entry = factory.call(param);
+
+            /*
+             * This is OK. The factory can return NULL. In this case we
+             * assume that the application does not allow to create an entry
+             * at the given location.
+             */
             if (entry != null) {
-                /*
-                 * This is OK. The factory can return NULL. In this case we
-                 * assume that the application does not allow to create an entry
-                 * at the given location.
-                 */
                 entry.setCalendar(calendar);
             }
 
@@ -826,13 +827,12 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * Returns the default calendar. Applications can add the new entry to
-         * this calendar by calling {@link Entry#setCalendar(Calendar)} or the
-         * can choose any other calendar.
+         * Returns the calendar to which the entry will be added. Applications can add the new entry to
+         * this calendar by calling {@link Entry#setCalendar(Calendar)} or they can choose any other calendar.
          *
-         * @return the default calendar
+         * @return the calendar
          */
-        public Calendar getDefaultCalendar() {
+        public Calendar getCalendar() {
             return calendar;
         }
 
@@ -2474,10 +2474,8 @@ public abstract class DateControl extends CalendarFXControl {
         Iterator<DateControl> iterator = controls.iterator();
         while (iterator.hasNext()) {
             DateControl next = iterator.next();
-            System.out.println("next: " + next.getClass().getSimpleName());
             unbind(next);
         }
-        System.out.println("---------");
     }
 
     // hyperlink support
