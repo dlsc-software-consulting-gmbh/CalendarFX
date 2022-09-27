@@ -74,7 +74,7 @@ import static java.util.logging.Level.FINE;
  *
  *
  * <h2>Recurrence</h2>
- *
+ * <p>
  * This class supports the industry standard for defining recurring events (RFC
  * 2445). For recurring events the method {@link #setRecurrenceRule(String)}
  * must be fed with a valid RRULE string, for example "RRULE:FREQ=DAILY" for an
@@ -698,7 +698,8 @@ public class Entry<T> implements Comparable<Entry<?>> {
                         try {
                             Recur<LocalDate> recur = new Recur<>(newRecurrence.replaceFirst("^RRULE:", ""));
                             setRecurrenceEnd(Objects.requireNonNullElse(recur.getUntil(), LocalDate.MAX));
-                        } catch (IllegalArgumentException | DateTimeParseException e) {
+                        } catch (IllegalArgumentException |
+                                 DateTimeParseException e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -1496,6 +1497,25 @@ public class Entry<T> implements Comparable<Entry<?>> {
         return Util.intersect(interval.getStartZonedDateTime(), interval.getEndZonedDateTime(), st, et);
     }
 
+    private final BooleanProperty hidden = new SimpleBooleanProperty(this, "hidden", false);
+
+    public final boolean isHidden() {
+        return hidden.get();
+    }
+
+    public final BooleanProperty hiddenProperty() {
+        return hidden;
+    }
+
+    /**
+     * An entry can be made explicityl hidden.
+     *
+     * @param hidden true if the entry should not be visible in the calendar
+     */
+    public final void setHidden(boolean hidden) {
+        this.hidden.set(hidden);
+    }
+
     private boolean isRecurrenceShowing(Entry<?> entry, ZonedDateTime st, ZonedDateTime et, ZoneId zoneId) {
         String recurrenceRule = entry.getRecurrenceRule().replaceFirst("^RRULE:", "");
 
@@ -1580,25 +1600,32 @@ public class Entry<T> implements Comparable<Entry<?>> {
     @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Entry other = (Entry) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
 
         String recId = getRecurrenceId();
         String otherRecId = other.getRecurrenceId();
 
         if (recId == null) {
             return otherRecId == null;
-        } else return recId.equals(otherRecId);
+        }
+
+        return recId.equals(otherRecId);
     }
 
     private static final String ENTRY_CATEGORY = "Entry";
