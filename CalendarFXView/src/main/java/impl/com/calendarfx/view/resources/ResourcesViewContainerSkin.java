@@ -10,43 +10,43 @@ import impl.com.calendarfx.view.DayViewBaseSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
-import java.time.LocalDate;
+public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBaseSkin<ResourcesViewContainer<T>> {
 
-public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSkin<ResourcesContainer<T>> {
+    private final HBox box = new HBox();
 
-    private final HBox container = new HBox();
+    private final ResourcesView<T> resourcesView;
 
-    public ResourcesContainerSkin(ResourcesContainer<T> view) {
+    public ResourcesViewContainerSkin(ResourcesViewContainer<T> view) {
         super(view);
 
-        container.getStyleClass().add("container");
-        container.setFillHeight(true);
+        box.getStyleClass().add("container");
+        box.setFillHeight(true);
+
+        resourcesView = view.getResourcesView();
 
         InvalidationListener updateViewListener = (Observable it) -> updateView();
-        view.getResources().addListener(updateViewListener);
-        view.numberOfDaysProperty().addListener(updateViewListener);
-        view.typeProperty().addListener(updateViewListener);
+        resourcesView.getResources().addListener(updateViewListener);
+        resourcesView.numberOfDaysProperty().addListener(updateViewListener);
+        resourcesView.typeProperty().addListener(updateViewListener);
 
         updateView();
 
-        getChildren().add(container);
+        getChildren().add(box);
     }
 
     private void updateView() {
-        container.getChildren().clear();
+        box.getChildren().clear();
 
-        ResourcesContainer<T> resourcesContainer = getSkinnable();
+        ResourcesViewContainer<T> resourcesContainer = getSkinnable();
         resourcesContainer.unbindAll();
 
-        if (resourcesContainer.getType().equals(Type.RESOURCES_OVER_DATE)) {
+        if (resourcesView.getType().equals(Type.RESOURCES_OVER_DATE)) {
             updateViewResourcesOverDates();
         } else {
             updateViewDatesOverResources();
@@ -54,21 +54,22 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
     }
 
     private void updateViewDatesOverResources() {
-        ResourcesContainer<T> container = getSkinnable();
-        ObservableList<T> resources = container.getResources();
-        int numberOfDays = container.getNumberOfDays();
+        ResourcesViewContainer<T> container = getSkinnable();
+        ObservableList<T> resources = resourcesView.getResources();
+        int numberOfDays = resourcesView.getNumberOfDays();
 
         for (int dayIndex = 0; dayIndex < numberOfDays; dayIndex++) {
 
             HBox resourcesBox = new HBox();
-            ObjectProperty<LocalDate> dateProperty = new SimpleObjectProperty<>(this, "date");
-            final int additionalDays = dayIndex;
-            dateProperty.bind(Bindings.createObjectBinding(() -> container.getDate().plusDays(additionalDays), container.dateProperty()));
 
             for (int resourceIndex = 0; resourceIndex < resources.size(); resourceIndex++) {
                 T resource = resources.get(resourceIndex);
 
-                DayView dayView = container.getDayViewFactory().call(resource);
+                DayView dayView = resourcesView.getDayViewFactory().call(resource);
+
+                final int additionalDays = dayIndex;
+
+                dayView.dateProperty().bind(Bindings.createObjectBinding(() -> container.getDate().plusDays(additionalDays), container.dateProperty()));
 
                 dayView.getStyleClass().removeAll("only", "first", "middle", "last");
 
@@ -86,8 +87,6 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
 
                 // bind day view to container but remove bindings that interfere
                 container.bind(dayView, false);
-
-                dayView.dateProperty().bind(dateProperty);
 
                 // unbind what is not needed
                 Bindings.unbindBidirectional(container.defaultCalendarProviderProperty(), dayView.defaultCalendarProviderProperty());
@@ -122,14 +121,14 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
                 }
             }
 
-            this.container.getChildren().add(resourcesBox);
+            this.box.getChildren().add(resourcesBox);
 
             if (dayIndex < numberOfDays - 1) {
-                Callback<ResourcesView<T>, Region> separatorFactory = container.getLargeSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = resourcesView.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
                     Region separator = separatorFactory.call(container.getResourcesView());
                     if (separator != null) {
-                        this.container.getChildren().add(separator);
+                        this.box.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);
                     }
                 }
@@ -139,12 +138,12 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
     }
 
     private void updateViewResourcesOverDates() {
-        ResourcesContainer<T> container = getSkinnable();
-        ObservableList<T> resources = container.getResources();
+        ResourcesViewContainer<T> container = getSkinnable();
+        ObservableList<T> resources = resourcesView.getResources();
         for (int i = 0; i < resources.size(); i++) {
             T resource = resources.get(i);
 
-            WeekView weekView = container.getWeekViewFactory().call(resource);
+            WeekView weekView = resourcesView.getWeekViewFactory().call(resource);
 
             weekView.getStyleClass().removeAll("only", "first", "middle", "last");
 
@@ -166,7 +165,7 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
             container.bind(weekView, true);
 
             // bind additionally "adjust"
-            weekView.adjustToFirstDayOfWeekProperty().bind(container.adjustToFirstDayOfWeekProperty());
+            weekView.adjustToFirstDayOfWeekProperty().bind(resourcesView.adjustToFirstDayOfWeekProperty());
 
             // unbind what is not needed
             Bindings.unbindBidirectional(container.defaultCalendarProviderProperty(), weekView.defaultCalendarProviderProperty());
@@ -186,20 +185,20 @@ public class ResourcesContainerSkin<T extends Resource<?>> extends DayViewBaseSk
 
             weekView.installDefaultLassoFinishedBehaviour();
 
-            weekView.numberOfDaysProperty().bind(container.numberOfDaysProperty());
+            weekView.numberOfDaysProperty().bind(resourcesView.numberOfDaysProperty());
 
             CalendarSource calendarSource = createCalendarSource(resource);
             weekView.getCalendarSources().setAll(calendarSource);
             weekView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
 
-            this.container.getChildren().add(weekView);
+            this.box.getChildren().add(weekView);
 
             if (i < resources.size() - 1) {
-                Callback<ResourcesView<T>, Region> separatorFactory = container.getLargeSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = resourcesView.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
                     Region separator = separatorFactory.call(container.getResourcesView());
                     if (separator != null) {
-                        this.container.getChildren().add(separator);
+                        this.box.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);
                     }
                 }

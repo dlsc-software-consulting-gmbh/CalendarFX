@@ -50,7 +50,7 @@ import static com.calendarfx.util.ViewHelper.scrollToRequestedTime;
 public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<ResourcesView<T>> {
 
     private final GridPane gridPane;
-    private final ResourcesContainer<T> resourcesContainer;
+    private final ResourcesViewContainer<T> resourcesContainer;
     private final DayViewScrollPane timeScaleScrollPane;
     private final DayViewScrollPane dayViewsScrollPane;
     private final ScrollBar scrollBar;
@@ -93,7 +93,8 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         gridPane.getRowConstraints().setAll(row0, row1);
         gridPane.getStyleClass().add("container");
 
-        resourcesContainer = new ResourcesContainer<>(view);
+        resourcesContainer = new ResourcesViewContainer<>(view);
+
         view.bind(resourcesContainer, true);
 
         getChildren().add(gridPane);
@@ -116,8 +117,6 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         gridPane.getColumnConstraints().clear();
 
         ResourcesView<T> view = getSkinnable();
-        view.unbindAll();
-
         if (view.getType().equals(Type.RESOURCES_OVER_DATE)) {
             updateViewResourcesOverDates();
         } else {
