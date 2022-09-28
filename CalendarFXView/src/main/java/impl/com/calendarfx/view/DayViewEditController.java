@@ -72,21 +72,19 @@ public class DayViewEditController {
         dayView.addEventFilter(MouseEvent.MOUSE_DRAGGED, this::mouseDragged);
 
         final EventHandler<MouseEvent> mouseReleasedHandler = this::mouseReleased;
+
         // mouse released is very important for us. register with the scene, so we get that in any case.
         if (dayView.getScene() != null) {
             dayView.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//            dayView.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
         }
 
         // also register with the scene property. Mostly to remove our event filter if the component gets destroyed.
         dayView.sceneProperty().addListener(((observable, oldValue, newValue) -> {
             if (oldValue != null) {
                 oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
             if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                newValue.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
         }));
         dayView.addEventFilter(MouseEvent.MOUSE_MOVED, this::mouseMoved);
@@ -174,6 +172,8 @@ public class DayViewEditController {
 
     private void mousePressed(MouseEvent evt) {
         showEntryDetails = false;
+
+        System.out.println("target: " + evt.getTarget());
 
         if (evt.isConsumed() || !evt.getButton().equals(MouseButton.PRIMARY) || evt.getClickCount() > 1) {
             return;
@@ -337,9 +337,9 @@ public class DayViewEditController {
         DraggedEntry draggedEntry = dayViewBase.getDraggedEntry();
 
         if (draggedEntry != null) {
+            dayViewBase.setDraggedEntry(null);
             if (!draggedEntry.isHidden()) {
                 entry.setInterval(draggedEntry.getInterval());
-                dayViewBase.setDraggedEntry(null);
                 if (dayViewBase.isShowDetailsUponEntryCreation() && showEntryDetails) {
                     dayViewBase.fireEvent(new RequestEvent(dayViewBase, dayViewBase, entry));
                 }

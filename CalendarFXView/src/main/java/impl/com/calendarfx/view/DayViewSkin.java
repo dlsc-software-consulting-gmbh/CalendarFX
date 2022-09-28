@@ -112,6 +112,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     public DayViewSkin(T view) {
         super(view);
 
+        entryViewGroup.setMouseTransparent(false);
         entryViewGroup.setManaged(false);
         entryViewGroup.opacityProperty().bind(Bindings.createDoubleBinding(() -> view.isEditAvailability() && view.getEntryViewAvailabilityEditingBehaviour().equals(AvailabilityEditingEntryBehaviour.OPACITY) ? view.getEntryViewAvailabilityEditingOpacity() : 1,
                 view.editAvailabilityProperty(), view.entryViewAvailabilityEditingBehaviourProperty(), view.entryViewAvailabilityEditingOpacityProperty()));
