@@ -61,6 +61,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
@@ -76,7 +77,6 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -107,7 +107,7 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  * properties will be bound to each other. This not only includes date and time
  * zone properties but also all the factory and detail callbacks. This allows an
  * application to create a complex calendar control and to configure only that
- * control without worrying about the date controls that are nested inside of
+ * control without worrying about the date controls that are nested inside
  * it. The children will all "inherit" their settings from the parent control.
  *
  * <h2>Current Date, Today, First Day of Week</h2> The {@link #dateProperty()}
@@ -168,8 +168,6 @@ public abstract class DateControl extends CalendarFXControl {
      * with default implementations.
      */
     protected DateControl() {
-        setOnMouseClicked(evt -> requestFocus());
-
         setUsagePolicy(count -> {
             if (count < 0) {
                 throw new IllegalArgumentException("usage count can not be smaller than zero, but was " + count);
@@ -217,14 +215,12 @@ public abstract class DateControl extends CalendarFXControl {
          */
         setDefaultCalendarProvider(control -> {
             List<CalendarSource> sources = getCalendarSources();
-            if (sources != null) {
-                for (CalendarSource s : sources) {
-                    List<? extends Calendar> calendars = s.getCalendars();
-                    if (calendars != null && !calendars.isEmpty()) {
-                        for (Calendar c : calendars) {
-                            if (!c.isReadOnly() && isCalendarVisible(c)) {
-                                return c;
-                            }
+            for (CalendarSource s : sources) {
+                List<? extends Calendar> calendars = s.getCalendars();
+                if (calendars != null && !calendars.isEmpty()) {
+                    for (Calendar c : calendars) {
+                        if (!c.isReadOnly() && isCalendarVisible(c)) {
+                            return c;
                         }
                     }
                 }
@@ -264,11 +260,11 @@ public abstract class DateControl extends CalendarFXControl {
             if (evt instanceof MouseEvent) {
                 MouseEvent mouseEvent = (MouseEvent) evt;
                 if (mouseEvent.getClickCount() == 2) {
-                    showEntryDetails(param.getEntry(), param.getOwner(), param.getScreenY());
+                    showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
                     return true;
                 }
             } else {
-                showEntryDetails(param.getEntry(), param.getOwner(), param.getScreenY());
+                showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
                 return true;
             }
 
@@ -307,7 +303,7 @@ public abstract class DateControl extends CalendarFXControl {
                 Callback<EntryDetailsParameter, Boolean> detailsCallback = getEntryDetailsCallback();
                 if (detailsCallback != null) {
                     ContextMenuEvent ctxEvent = param.getContextMenuEvent();
-                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, ctxEvent.getScreenX(), ctxEvent.getScreenY());
+                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, getScene().getRoot(), ctxEvent.getScreenX(), ctxEvent.getScreenY());
                     detailsCallback.call(entryDetailsParam);
                 }
             });
@@ -356,7 +352,10 @@ public abstract class DateControl extends CalendarFXControl {
                     Calendar calendar = entry.getCalendar();
                     if (!calendar.isReadOnly()) {
                         if (entry.isRecurrence()) {
-                            entry.getRecurrenceSourceEntry().removeFromCalendar();
+                            Entry<?> recurrenceSourceEntry = entry.getRecurrenceSourceEntry();
+                            if (recurrenceSourceEntry != null) {
+                                recurrenceSourceEntry.removeFromCalendar();
+                            }
                         } else {
                             entry.removeFromCalendar();
                         }
@@ -386,7 +385,6 @@ public abstract class DateControl extends CalendarFXControl {
             }
 
             if (!usesOwnContextMenu) {
-                evt.consume();
                 Callback<ContextMenuParameter, ContextMenu> callback = getContextMenuCallback();
                 if (callback != null) {
                     Callback<DateControl, Calendar> calendarProvider = getDefaultCalendarProvider();
@@ -399,9 +397,10 @@ public abstract class DateControl extends CalendarFXControl {
                     ContextMenuParameter param = new ContextMenuParameter(evt, DateControl.this, calendar, time);
                     ContextMenu menu = callback.call(param);
                     if (menu != null) {
-                        setContextMenu(menu);
-                        menu.show(DateControl.this, evt.getScreenX(), evt.getScreenY());
+                        menu.show(getScene().getWindow(), evt.getScreenX(), evt.getScreenY());
                     }
+
+                    evt.consume();
                 }
             }
         });
@@ -542,14 +541,14 @@ public abstract class DateControl extends CalendarFXControl {
      * note that the time passed to the factory will be adjusted based on the
      * current virtual grid settings (see {@link #virtualGridProperty()}).
      *
-     * @param time the time where the entry will be created (the entry start
+     * @param time the time point where the entry will be created (the entry start
      *             time)
      * @return the new calendar entry or null if no entry could be created
      * @see #setEntryFactory(Callback)
      * @see #setVirtualGrid(VirtualGrid)
      */
     public final Entry<?> createEntryAt(ZonedDateTime time) {
-        return createEntryAt(time, null);
+        return createEntryAt(time, null, false);
     }
 
     /**
@@ -570,6 +569,28 @@ public abstract class DateControl extends CalendarFXControl {
      * @see #setVirtualGrid(VirtualGrid)
      */
     public final Entry<?> createEntryAt(ZonedDateTime time, Calendar calendar) {
+        return createEntryAt(time, calendar, false);
+    }
+
+    /**
+     * Creates a new entry at the given time. The method delegates the actual
+     * instance creation to the entry factory (see
+     * {@link #entryFactoryProperty()}). The factory receives a parameter object
+     * that contains the calendar where the entry can be added, however the
+     * factory can choose to add the entry to any calendar it likes. Please note
+     * that the time passed to the factory will be adjusted based on the current
+     * virtual grid settings (see {@link #virtualGridProperty()}).
+     *
+     * @param time            the time point where the entry will be created (the entry start
+     *                        time)
+     * @param calendar        the calendar to which the new entry will be added (if null the
+     *                        default calendar provider will be invoked)
+     * @param initiallyHidden entry will be invisible until the application calls {@link Entry#setHidden(boolean)}.
+     * @return the new calendar entry or null if no entry could be created
+     * @see #setEntryFactory(Callback)
+     * @see #setVirtualGrid(VirtualGrid)
+     */
+    public final Entry<?> createEntryAt(ZonedDateTime time, Calendar calendar, boolean initiallyHidden) {
         requireNonNull(time);
         VirtualGrid grid = getVirtualGrid();
         if (grid != null) {
@@ -597,6 +618,7 @@ public abstract class DateControl extends CalendarFXControl {
              * entry would not be shown to the user.
              */
             setCalendarVisibility(calendar, true);
+
             CreateEntryParameter param = new CreateEntryParameter(this, calendar, time);
             Callback<CreateEntryParameter, Entry<?>> factory = getEntryFactory();
             Entry<?> entry = factory.call(param);
@@ -607,6 +629,7 @@ public abstract class DateControl extends CalendarFXControl {
              * at the given location.
              */
             if (entry != null) {
+                entry.setHidden(initiallyHidden);
                 entry.setCalendar(calendar);
             }
 
@@ -615,6 +638,8 @@ public abstract class DateControl extends CalendarFXControl {
         } else {
 
             Alert alert = new Alert(AlertType.WARNING);
+            alert.initOwner(this.getScene().getWindow());
+            alert.initModality(Modality.WINDOW_MODAL);
             alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
             alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"));
             String newLine = System.getProperty("line.separator");
@@ -668,7 +693,7 @@ public abstract class DateControl extends CalendarFXControl {
      * becomes visible and brings up the detail editor / UI for the entry
      * (default is a popover).
      *
-     * @param entry the entry to show
+     * @param entry      the entry to show
      * @param changeDate change the date of the control to the entry's start date
      */
     public final void editEntry(Entry<?> entry, boolean changeDate) {
@@ -717,7 +742,7 @@ public abstract class DateControl extends CalendarFXControl {
                 Point2D location = entryView.localToScreen(0, 0);
 
                 Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
-                EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, location.getX(), location.getY());
+                EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, getScene().getRoot(), location.getX(), location.getY());
                 callback.call(param);
             }
         });
@@ -733,7 +758,7 @@ public abstract class DateControl extends CalendarFXControl {
 
     private PopOver entryPopOver;
 
-    private void showEntryDetails(Entry<?> entry, Node owner, double screenY) {
+    private void showEntryDetails(Entry<?> entry, Node node, Node owner, double screenY) {
         Callback<EntryDetailsPopOverContentParameter, Node> contentCallback = getEntryDetailsPopOverContentCallback();
         if (contentCallback == null) {
             throw new IllegalStateException("No content callback found for entry popover");
@@ -741,7 +766,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         if (entryPopOver == null || entryPopOver.isDetached()) {
             entryPopOver = new PopOver();
-            entryPopOver.setAnimated(false); // important, otherwise too many side-effects
+            entryPopOver.setAnimated(false); // important, otherwise too many side effects
         }
 
         EntryDetailsPopOverContentParameter param = new EntryDetailsPopOverContentParameter(entryPopOver, this, owner, entry);
@@ -753,16 +778,16 @@ public abstract class DateControl extends CalendarFXControl {
 
         entryPopOver.setContentNode(content);
 
-        ArrowLocation location = ViewHelper.findPopOverArrowLocation(owner);
+        ArrowLocation location = ViewHelper.findPopOverArrowLocation(node);
         if (location == null) {
             location = ArrowLocation.TOP_LEFT;
         }
 
         entryPopOver.setArrowLocation(location);
 
-        Point2D position = ViewHelper.findPopOverArrowPosition(owner, screenY, entryPopOver.getArrowSize(), location);
+        Point2D position = ViewHelper.findPopOverArrowPosition(node, screenY, entryPopOver.getArrowSize(), location);
 
-        entryPopOver.show(owner, position.getX(), position.getY());
+        entryPopOver.show(node, position.getX(), position.getY());
     }
 
     /**
@@ -799,7 +824,7 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * The parameter object passed to the entry factory. It contains the most
      * important parameters for creating a new entry: the requesting date
-     * control, the time where the user performed a double click and the default
+     * control, the time point where the user performed a double click and the default
      * calendar.
      *
      * @see DateControl#entryFactoryProperty()
@@ -873,8 +898,6 @@ public abstract class DateControl extends CalendarFXControl {
      * <p>
      * The code below shows the default entry factory that is set on every date
      * control.
-     *
-     *
      * <pre>
      * setEntryFactory(param -&gt; {
      * 	DateControl control = param.getControl();
@@ -969,7 +992,7 @@ public abstract class DateControl extends CalendarFXControl {
      * account.
      *
      * <h2>Code Example</h2> The code below shows the default implementation of
-     * this factory. Applications can choose to bring up a full featured user
+     * this factory. Applications can choose to bring up a full-featured user
      * interface / dialog to specify the exact location of the source (either
      * locally or over a network). A local calendar source might read its data
      * from an XML file while a remote source could load data from a web
@@ -1046,7 +1069,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * Convenience method to easily lookup the entry for which the view was
+         * Convenience method to easily look up the entry for which the view was
          * created.
          *
          * @return the calendar entry
@@ -1056,7 +1079,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * Convenience method to easily lookup the calendar of the entry for
+         * Convenience method to easily look up the calendar of the entry for
          * which the view was created.
          *
          * @return the calendar
@@ -1172,7 +1195,7 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * A property that stores a callback used for editing entries. If an edit operation will be executed
-     * on an entry then the callback will be invoked to determine if the operation is allowed. By default
+     * on an entry then the callback will be invoked to determine if the operation is allowed. By default,
      * all operations listed inside {@link EditOperation} are allowed.
      *
      * @return the property
@@ -1211,8 +1234,6 @@ public abstract class DateControl extends CalendarFXControl {
      *
      * <h2>Code Example</h2> The code below shows the default implementation of
      * this callback.
-     *
-     *
      * <pre>
      * setEntryContextMenuCallback(param -&gt; {
      * 	EntryViewBase&lt;?&gt; entryView = param.getEntryView();
@@ -1290,7 +1311,7 @@ public abstract class DateControl extends CalendarFXControl {
          * @param dateControl the date control where the event occurred
          * @param calendar    the (default) calendar where newly created entries should
          *                    be added (can be null if no editable calendar was found)
-         * @param time        the time where the mouse click occurred
+         * @param time        the time point where the mouse click occurred
          */
         public ContextMenuParameter(ContextMenuEvent evt, DateControl dateControl, Calendar calendar, ZonedDateTime time) {
             super(evt, dateControl);
@@ -1310,7 +1331,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * The time where the mouse click occurred.
+         * The time point where the mouse click occurred.
          *
          * @return the time shown at the mouse click location
          */
@@ -1336,8 +1357,6 @@ public abstract class DateControl extends CalendarFXControl {
      * <h2>Code Example</h2>
      * <p>
      * The code below shows a part of the default implementation:
-     *
-     *
      * <pre>
      * setContextMenuCallback(param -&gt; {
      * 	ContextMenu menu = new ContextMenu();
@@ -1382,7 +1401,7 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * The default calendar provider is responsible for returning a calendar
      * that can be used to add a new entry. This way the user can add new
-     * entries by simply double clicking inside the view without the need of
+     * entries by simply double-clicking inside the view without the need of
      * first showing a calendar selection UI. This can be changed by setting a
      * callback that prompts the user with a dialog.
      *
@@ -1391,8 +1410,6 @@ public abstract class DateControl extends CalendarFXControl {
      * The code shown below is the default implementation of this provider. It
      * returns the first calendar of the first source. If no source is available
      * it will return null.
-     *
-     *
      * <pre>
      * setDefaultCalendarProvider(control -&gt; {
      * 	List&lt;CalendarSource&gt; sources = getCalendarSources();
@@ -1459,6 +1476,7 @@ public abstract class DateControl extends CalendarFXControl {
         private final Node owner;
         private final double screenX;
         private final double screenY;
+        private final Node node;
 
         /**
          * Constructs a new parameter object.
@@ -1472,9 +1490,10 @@ public abstract class DateControl extends CalendarFXControl {
          * @param screenX    the screen location where the event occurred
          * @param screenY    the screen location where the event occurred
          */
-        public DetailsParameter(InputEvent inputEvent, DateControl control, Node owner, double screenX, double screenY) {
+        public DetailsParameter(InputEvent inputEvent, DateControl control, Node node, Node owner, double screenX, double screenY) {
             this.inputEvent = inputEvent;
             this.dateControl = requireNonNull(control);
+            this.node = requireNonNull(node);
             this.owner = requireNonNull(owner);
             this.screenX = screenX;
             this.screenY = screenY;
@@ -1484,12 +1503,23 @@ public abstract class DateControl extends CalendarFXControl {
          * Returns the node that should be used as the owner of a dialog /
          * popover. We should not use the entry view as the owner of a dialog /
          * popover because views come and go. We need something that lives
-         * longer.
+         * longer. A good candidate will be the root node of the scene.
          *
-         * @return an owner node for the details dialog / popover
+         * @return an owner node for the detail dialog / popover
          */
         public Node getOwner() {
             return owner;
+        }
+
+        /**
+         * Returns the node that will be used for calculating the position
+         * of the detail dialog / popover. Popovers will point an arrow at the
+         * given node.
+         *
+         * @return the annotated node
+         */
+        public Node getNode() {
+            return node;
         }
 
         /**
@@ -1547,13 +1577,14 @@ public abstract class DateControl extends CalendarFXControl {
          *                   selection)
          * @param control    the control where the event occurred
          * @param entry      the entry for which details are requested
+         * @param node       the node to which the popover will be placed relative too (when using popovers)
          * @param owner      a node that can be used as an owner for the dialog or
          *                   popover
          * @param screenX    the screen location where the event occurred
          * @param screenY    the screen location where the event occurred
          */
-        public EntryDetailsParameter(InputEvent inputEvent, DateControl control, Entry<?> entry, Node owner, double screenX, double screenY) {
-            super(inputEvent, control, owner, screenX, screenY);
+        public EntryDetailsParameter(InputEvent inputEvent, DateControl control, Entry<?> entry, Node node, Node owner, double screenX, double screenY) {
+            super(inputEvent, control, node, owner, screenX, screenY);
             this.entry = entry;
         }
 
@@ -1584,13 +1615,13 @@ public abstract class DateControl extends CalendarFXControl {
          *                   selection)
          * @param control    the control where the event occurred
          * @param date       the date for which details are required
-         * @param owner      a node that can be used as an owner for the dialog or
-         *                   popover
+         * @param node       the annotated node (popover will point at it with an arrow)
+         * @param owner      a node that can be used as an owner for the dialog or popover
          * @param screenX    the screen location where the event occurred
          * @param screenY    the screen location where the event occurred
          */
-        public DateDetailsParameter(InputEvent inputEvent, DateControl control, Node owner, LocalDate date, double screenX, double screenY) {
-            super(inputEvent, control, owner, screenX, screenY);
+        public DateDetailsParameter(InputEvent inputEvent, DateControl control, Node node, Node owner, LocalDate date, double screenX, double screenY) {
+            super(inputEvent, control, node, owner, screenX, screenY);
             this.localDate = requireNonNull(date);
         }
 
@@ -1732,7 +1763,7 @@ public abstract class DateControl extends CalendarFXControl {
         /**
          * Constructs a new parameter object.
          *
-         * @param popOver the pop over for which details will be created
+         * @param popOver the popover for which details will be created
          * @param control the control where the event occurred
          * @param node    the node where the event occurred
          * @param entry   the entry for which details will be shown
@@ -1849,9 +1880,8 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * A flag used to indicate that the view will mark the area that represents
-     * the value of {@link #todayProperty()}. By default this area will be
+     * the value of {@link #todayProperty()}. By default, this area will be
      * filled with a different color (red) than the rest (white).
-     *
      * <img src="doc-files/all-day-view-today.png" alt="All Day View Today">
      *
      * @return true if today will be shown differently
@@ -2125,7 +2155,7 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     /**
-     * A convenience method to lookup the first day of the week ("Monday" in
+     * A convenience method to look up the first day of the week ("Monday" in
      * Germany, "Sunday" in the US). This method delegates to
      * {@link WeekFields#getFirstDayOfWeek()}.
      *
@@ -2143,7 +2173,7 @@ public abstract class DateControl extends CalendarFXControl {
      * currently attached to this date control. This is a convenience list that
      * "flattens" the two level structure of sources and their calendars. It is
      * a read-only list because calendars can not be added directly to a date
-     * control. Instead they are added to calendar sources and those sources are
+     * control. Instead, they are added to calendar sources and those sources are
      * then added to the control.
      *
      * @return the list of all calendars shown by this control
@@ -2341,7 +2371,7 @@ public abstract class DateControl extends CalendarFXControl {
     private final ObjectProperty<Layout> layout = new SimpleObjectProperty<>(this, "layout", Layout.STANDARD);
 
     /**
-     * Stores the strategy used by the view to layout the entries of several
+     * Stores the strategy used by the view to lay out the entries of several
      * calendars at once. The standard layout ignores the source calendar of an
      * entry and finds the next available place in the UI that satisfies the
      * time bounds of the entry. The {@link Layout#SWIMLANE} strategy allocates
@@ -2471,9 +2501,7 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void unbindAll() {
         WeakList<DateControl> controls = getBoundDateControls();
-        Iterator<DateControl> iterator = controls.iterator();
-        while (iterator.hasNext()) {
-            DateControl next = iterator.next();
+        for (DateControl next : controls) {
             unbind(next);
         }
     }
@@ -2483,7 +2511,7 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * A property used to control whether the control allows the user to click on it or an element
-     * inside of it in order to "jump" to another screen with more detail. Example: in the {@link CalendarView}
+     * inside it in order to "jump" to another screen with more detail. Example: in the {@link CalendarView}
      * the user can click on the "day of month" label of a cell inside the {@link MonthSheetView} in
      * order to switch to the {@link DayPage} where the user will see all entries scheduled for that day.
      *
@@ -3272,7 +3300,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         items.add(new Item() {
             @Override
-            public Optional<ObservableValue<? extends Object>> getObservableValue() {
+            public Optional<ObservableValue<?>> getObservableValue() {
                 return Optional.empty();
             }
 
@@ -3313,7 +3341,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         items.add(new Item() {
             @Override
-            public Optional<ObservableValue<? extends Object>> getObservableValue() {
+            public Optional<ObservableValue<?>> getObservableValue() {
                 return Optional.empty();
             }
 

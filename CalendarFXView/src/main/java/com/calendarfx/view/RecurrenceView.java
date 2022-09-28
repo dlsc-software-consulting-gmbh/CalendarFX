@@ -17,7 +17,7 @@
 package com.calendarfx.view;
 
 import com.calendarfx.model.Entry;
-import com.calendarfx.util.Util;
+
 import impl.com.calendarfx.view.RecurrenceViewSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

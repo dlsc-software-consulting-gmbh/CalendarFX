@@ -21,28 +21,23 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+class CreateAndDeleteHandler extends DeleteHandler {
 
-class CreateDeleteHandler {
 
-    private final DateControl dateControl;
-
-    public CreateDeleteHandler(DateControl control) {
-        this.dateControl = requireNonNull(control);
-
+    public CreateAndDeleteHandler(DateControl control) {
+        super(control);
         dateControl.addEventHandler(MouseEvent.MOUSE_CLICKED, this::createEntry);
-        dateControl.addEventHandler(KeyEvent.KEY_PRESSED, this::deleteEntries);
     }
 
     private void createEntry(MouseEvent evt) {
-        if (!(dateControl instanceof DayView) && evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == dateControl.getCreateEntryClickCount()) {
+        System.out.println("entry click count: " + dateControl.getCreateEntryClickCount());
+        if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == dateControl.getCreateEntryClickCount()) {
 
             if (!evt.isStillSincePress()) {
                 return;
@@ -84,35 +79,6 @@ class CreateDeleteHandler {
             }
 
             evt.consume();
-        }
-    }
-
-    private void deleteEntries(KeyEvent evt) {
-        switch (evt.getCode()) {
-            case DELETE:
-            case BACK_SPACE:
-                for (Entry<?> entry : dateControl.getSelections()) {
-                    if (!dateControl.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
-                        continue;
-                    }
-                    if (entry.isRecurrence()) {
-                        entry = entry.getRecurrenceSourceEntry();
-                    }
-                    if (!dateControl.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
-                        continue;
-                    }
-
-                    Calendar calendar = entry.getCalendar();
-                    if (calendar != null && !calendar.isReadOnly()) {
-                        entry.removeFromCalendar();
-                    }
-                }
-                dateControl.clearSelection();
-                break;
-            case F5:
-                dateControl.refreshData();
-            default:
-                break;
         }
     }
 }

@@ -19,6 +19,7 @@ package com.calendarfx.view.popover;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.Messages;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
@@ -42,7 +43,7 @@ public class EntryPopOverContentPane extends PopOverContentPane {
     private final WeakInvalidationListener weakHideListener = new WeakInvalidationListener(hideListener);
 
     private final InvalidationListener fullDayListener = obs -> {
-        if (getEntry().isFullDay() && !getPopOver().isDetached()) {
+        if (getEntry().isFullDay() && !getPopOver().isDetached() && getDateControl() instanceof DayViewBase) {
             getPopOver().setDetached(true);
         }
     };

@@ -21,12 +21,12 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.util.Util;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DateControl.DateDetailsParameter;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.YearMonthView;
+import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.geometry.HPos;
@@ -507,11 +507,10 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
         case NONE:
             break;
         case SHOW_DETAILS:
-            Callback<DateDetailsParameter, Boolean> callback = view
-                    .getDateDetailsCallback();
-            DateDetailsParameter param = new DateDetailsParameter(evt, view,
-                    node, date, evt.getScreenX(), evt.getScreenY());
-            callback.call(param);
+            Callback<DateDetailsParameter, Boolean> callback = view.getDateDetailsCallback();
+            if (callback != null) {
+                callback.call(new DateDetailsParameter(evt, view, node, node.getScene().getRoot(), date, evt.getScreenX(), evt.getScreenY()));
+            }
             break;
         case PERFORM_SELECTION:
             boolean multiSelect = evt.isShiftDown() || evt.isShortcutDown();

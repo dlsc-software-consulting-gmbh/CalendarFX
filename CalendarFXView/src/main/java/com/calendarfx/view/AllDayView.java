@@ -17,8 +17,8 @@
 package com.calendarfx.view;
 
 import com.calendarfx.model.Entry;
-import com.calendarfx.util.Util;
 import impl.com.calendarfx.view.AllDayViewSkin;
+import impl.com.calendarfx.view.util.Util;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -78,7 +78,7 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
         getStyleClass().add(ALL_DAY_VIEW);
         setNumberOfDays(numberOfDays);
 
-        new CreateDeleteHandler(this);
+        new CreateAndDeleteHandler(this);
     }
 
     /**

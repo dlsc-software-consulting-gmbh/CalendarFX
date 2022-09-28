@@ -21,7 +21,7 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DateControl.DateDetailsParameter;
 import com.calendarfx.view.DateSelectionModel;
 import com.calendarfx.view.MonthSheetView;
 import com.calendarfx.view.MonthSheetView.DateCell;
@@ -409,9 +409,10 @@ public class MonthSheetViewSkin extends DateControlSkin<MonthSheetView> implemen
     private void showDateDetails(LocalDate date) {
         DateCell cell = cellMap.get(date);
         Bounds bounds = cell.localToScreen(cell.getLayoutBounds());
-        Callback<DateControl.DateDetailsParameter, Boolean> callback = getSkinnable().getDateDetailsCallback();
-        DateControl.DateDetailsParameter param = new DateControl.DateDetailsParameter(null, getSkinnable(), cell, date, bounds.getMinX(), bounds.getMinY());
-        callback.call(param);
+        Callback<DateDetailsParameter, Boolean> callback = getSkinnable().getDateDetailsCallback();
+        if (callback != null) {
+            callback.call(new DateDetailsParameter(null, getSkinnable(), cell, cell.getScene().getRoot(), date, bounds.getMinX(), bounds.getMinY()));
+        }
     }
 
     private final WeakEventHandler<MouseEvent> weakCellClickedHandler = new WeakEventHandler<>(cellClickedHandler);

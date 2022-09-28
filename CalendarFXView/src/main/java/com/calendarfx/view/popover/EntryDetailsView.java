@@ -17,12 +17,12 @@
 package com.calendarfx.view.popover;
 
 import com.calendarfx.model.Entry;
-import com.calendarfx.util.Util;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RecurrenceView;
 import com.calendarfx.view.TimeField;
 import impl.com.calendarfx.view.ZoneIdStringConverter;
+import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;

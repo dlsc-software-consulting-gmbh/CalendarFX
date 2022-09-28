@@ -185,7 +185,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
 
             weekView.installDefaultLassoFinishedBehaviour();
 
-            weekView.numberOfDaysProperty().bind(resourcesView.numberOfDaysProperty());
+            weekView.numberOfDaysProperty().bindBidirectional(resourcesView.numberOfDaysProperty());
 
             CalendarSource calendarSource = createCalendarSource(resource);
             weekView.getCalendarSources().setAll(calendarSource);

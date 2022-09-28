@@ -57,7 +57,7 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
 
         setEntryViewFactory(MonthEntryView::new);
 
-        new CreateDeleteHandler(this);
+        new CreateAndDeleteHandler(this);
 
         getSelectedDates().addListener((Observable it) -> {
             if (getSelectedDates().size() == 1) {

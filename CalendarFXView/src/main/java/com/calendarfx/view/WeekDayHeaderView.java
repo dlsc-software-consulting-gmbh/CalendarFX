@@ -16,8 +16,8 @@
 
 package com.calendarfx.view;
 
-import com.calendarfx.util.Util;
 import impl.com.calendarfx.view.WeekDayHeaderViewSkin;
+import impl.com.calendarfx.view.util.Util;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;

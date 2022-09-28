@@ -38,6 +38,7 @@ import com.calendarfx.view.EntryViewBase.Position;
 import com.calendarfx.view.VirtualGrid;
 import impl.com.calendarfx.view.util.Placement;
 import impl.com.calendarfx.view.util.TimeBoundsResolver;
+import impl.com.calendarfx.view.util.Util;
 import impl.com.calendarfx.view.util.VisualBoundsResolver;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -550,11 +551,13 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             line.setEndY(yy);
         }
 
-        // the dragged entry view
-        if (draggedEntryView != null) {
-            boolean showing = isRelevant(draggedEntryView.getEntry());
-            draggedEntryView.setVisible(showing);
-        }
+//        // the dragged entry view
+//        if (draggedEntryView != null) {
+//            Entry<?> draggedEntry = draggedEntryView.getEntry();
+//            if (!draggedEntry.isHidden()) {
+//                //draggedEntry.setHidden(!isRelevant(draggedEntry));
+//            }
+//        }
 
         layoutEntries(contentX, contentY, contentWidth, contentHeight);
         layoutCurrentTime(contentX, contentY, contentWidth);
@@ -878,7 +881,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private boolean removeEntryView(Entry<?> entry) {
-        boolean removed = entryViewGroup.getChildren().removeIf(node -> {
+        boolean removed = Util.removeChildren(entryViewGroup, node -> {
             DayEntryView view = (DayEntryView) node;
 
             Entry<?> removedEntry = entry;

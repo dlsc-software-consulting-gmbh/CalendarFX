@@ -16,10 +16,11 @@
 
 package com.calendarfx.view.print;
 
-import com.calendarfx.util.Util;
+
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.print.TimeRangeField.TimeRangeFieldValue;
 import impl.com.calendarfx.view.print.TimeRangeViewSkin;
+import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;

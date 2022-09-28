@@ -21,12 +21,13 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.util.Util;
 import com.calendarfx.view.EntryViewBase.Position;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.MonthEntryView;
 import com.calendarfx.view.MonthView;
 import com.calendarfx.view.RequestEvent;
+import impl.com.calendarfx.view.util.Util;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -624,7 +625,8 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
             this.week = week;
             this.day = day;
 
-            entries.addListener((Observable evt) -> update());
+            // since JavaFX 19 this needs to be run later
+            entries.addListener((Observable evt) -> Platform.runLater(() -> update()));
 
             setMinSize(0, 0);
             setPrefSize(0, 0);
@@ -654,7 +656,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         }
 
         private void update() {
-            getChildren().removeIf(node -> node instanceof MonthEntryView);
+            Util.removeChildren(this, node -> node instanceof MonthEntryView);
 
             if (!entries.isEmpty()) {
 

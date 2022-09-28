@@ -227,7 +227,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
 
             Interval oldInterval = getValue();
 
-            if (!Util.equals(newInterval, oldInterval)) {
+            if (!Objects.equals(newInterval, oldInterval)) {
 
                 Calendar calendar = getCalendar();
 
@@ -672,7 +672,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 public void set(String newRecurrence) {
                     String oldRecurrence = get();
 
-                    if (!Util.equals(oldRecurrence, newRecurrence)) {
+                    if (!Objects.equals(oldRecurrence, newRecurrence)) {
 
                         Calendar calendar = getCalendar();
 
@@ -839,7 +839,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         public void set(Calendar newCalendar) {
             Calendar oldCalendar = get();
 
-            if (!Util.equals(oldCalendar, newCalendar)) {
+            if (!Objects.equals(oldCalendar, newCalendar)) {
 
                 if (oldCalendar != null) {
                     if (!isRecurrence()) {
@@ -1004,7 +1004,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         public void set(String newTitle) {
             String oldTitle = get();
 
-            if (!Util.equals(oldTitle, newTitle)) {
+            if (!Objects.equals(oldTitle, newTitle)) {
                 super.set(newTitle);
 
                 Calendar calendar = getCalendar();
@@ -1062,7 +1062,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 public void set(String newLocation) {
                     String oldLocation = get();
 
-                    if (!Util.equals(oldLocation, newLocation)) {
+                    if (!Objects.equals(oldLocation, newLocation)) {
 
                         super.set(newLocation);
 
@@ -1215,7 +1215,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         public void set(boolean newFullDay) {
             boolean oldFullDay = get();
 
-            if (!Util.equals(oldFullDay, newFullDay)) {
+            if (!Objects.equals(oldFullDay, newFullDay)) {
 
                 super.set(newFullDay);
 
@@ -1508,7 +1508,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
     }
 
     /**
-     * An entry can be made explicityl hidden.
+     * An entry can be made explicitly hidden.
      *
      * @param hidden true if the entry should not be visible in the calendar
      */

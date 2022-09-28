@@ -70,7 +70,7 @@ public class DayView extends DayViewBase {
 
 		setEntryViewFactory(DayEntryView::new);
 
-		new CreateDeleteHandler(this);
+		new DeleteHandler(this);
 	}
 
 	@Override

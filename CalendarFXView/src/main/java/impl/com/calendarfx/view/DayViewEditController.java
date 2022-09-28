@@ -19,8 +19,8 @@ package impl.com.calendarfx.view;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DateControl.EditOperation;
+import com.calendarfx.view.DateControl.EntryEditParameter;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
@@ -37,6 +37,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -55,6 +56,7 @@ public class DayViewEditController {
     private static final Logger LOGGER = LoggingDomain.EDITING;
 
     private boolean dragging;
+    private boolean creating;
     private final DayViewBase dayViewBase;
     private DayEntryView dayEntryView;
     private Entry<?> entry;
@@ -73,18 +75,18 @@ public class DayViewEditController {
         // mouse released is very important for us. register with the scene, so we get that in any case.
         if (dayView.getScene() != null) {
             dayView.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-            dayView.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
+//            dayView.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
         }
 
         // also register with the scene property. Mostly to remove our event filter if the component gets destroyed.
         dayView.sceneProperty().addListener(((observable, oldValue, newValue) -> {
             if (oldValue != null) {
                 oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-                oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
+//                oldValue.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
             if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-                newValue.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
+//                newValue.addEventFilter(MouseEvent.MOUSE_EXITED, mouseReleasedHandler);
             }
         }));
         dayView.addEventFilter(MouseEvent.MOUSE_MOVED, this::mouseMoved);
@@ -123,17 +125,17 @@ public class DayViewEditController {
         LOGGER.finer("y-coordinate inside entry view: " + y);
 
         if (y > dayEntryView.getHeight() - 5) {
-            if (dayEntryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.USE_START_AND_END_TIME) && dayViewBase.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_END))) {
+            if (dayEntryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.USE_START_AND_END_TIME) && dayViewBase.getEntryEditPolicy().call(new EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_END))) {
                 dragMode = DraggedEntry.DragMode.END_TIME;
                 handle = Handle.BOTTOM;
             }
         } else if (y < 5) {
-            if (dayEntryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.USE_START_AND_END_TIME) && dayViewBase.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_START))) {
+            if (dayEntryView.getHeightLayoutStrategy().equals(HeightLayoutStrategy.USE_START_AND_END_TIME) && dayViewBase.getEntryEditPolicy().call(new EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_START))) {
                 dragMode = DraggedEntry.DragMode.START_TIME;
                 handle = Handle.TOP;
             }
         } else {
-            if (dayViewBase.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayViewBase, entry, EditOperation.MOVE))) {
+            if (dayViewBase.getEntryEditPolicy().call(new EntryEditParameter(dayViewBase, entry, EditOperation.MOVE))) {
                 dragMode = DraggedEntry.DragMode.START_AND_END_TIME;
                 handle = Handle.CENTER;
             }
@@ -195,7 +197,12 @@ public class DayViewEditController {
         LOGGER.finer("mouse event y-coordinate:" + evt.getY());
         LOGGER.finer("time: " + dayViewBase.getZonedDateTimeAt(evt.getX(), evt.getY(), dayViewBase.getZoneId()));
 
+        boolean initiallyHideDraggedEntry = false;
+        creating = false;
+
         if (!dayViewBase.isScrollingEnabled() && evt.getTarget() instanceof DayView) {
+            creating = true;
+
             Optional<Calendar> calendar = dayViewBase.getCalendarAt(evt.getX(), evt.getY());
             Instant instantAt = dayViewBase.getInstantAt(evt);
 
@@ -205,7 +212,7 @@ public class DayViewEditController {
             }
 
             ZonedDateTime time = ZonedDateTime.ofInstant(instantAt, dayViewBase.getZoneId());
-            entry = dayViewBase.createEntryAt(time, calendar.orElse(null));
+            entry = dayViewBase.createEntryAt(time, calendar.orElse(null), true);
 
             if (virtualGrid != null) {
                 entry.setInterval(entry.getInterval().withEndTime(entry.getInterval().getStartTime().plus(virtualGrid.getAmount(), virtualGrid.getUnit())));
@@ -228,6 +235,9 @@ public class DayViewEditController {
                 dragging = true;
                 showEntryDetails = true;
             }
+
+            initiallyHideDraggedEntry = true;
+
         } else if (evt.getTarget() instanceof EntryViewBase) {
             initDragModeAndHandle(evt);
         } else {
@@ -237,9 +247,11 @@ public class DayViewEditController {
         LOGGER.finer("drag mode: " + dragMode);
         LOGGER.finer("handle: " + handle);
 
+        Callback<EntryEditParameter, Boolean> entryEditPolicy = dayViewBase.getEntryEditPolicy();
+
         switch (dragMode) {
             case START_AND_END_TIME:
-                if (dayViewBase.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayViewBase, entry, EditOperation.MOVE))) {
+                if (entryEditPolicy.call(new EntryEditParameter(dayViewBase, entry, EditOperation.MOVE))) {
                     dragging = true;
                     if (dayEntryView != null) {
                         dayEntryView.getProperties().put("dragged", true);
@@ -257,7 +269,7 @@ public class DayViewEditController {
                 }
                 break;
             case END_TIME:
-                if (dayViewBase.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_END))) {
+                if (entryEditPolicy.call(new EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_END))) {
                     dragging = true;
                     if (dayEntryView != null) {
                         dayEntryView.getProperties().put("dragged-end", true);
@@ -265,7 +277,7 @@ public class DayViewEditController {
                 }
                 break;
             case START_TIME:
-                if (dayViewBase.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_START))) {
+                if (entryEditPolicy.call(new EntryEditParameter(dayViewBase, entry, EditOperation.CHANGE_START))) {
                     dragging = true;
                     if (dayEntryView != null) {
                         dayEntryView.getProperties().put("dragged-start", true);
@@ -283,6 +295,7 @@ public class DayViewEditController {
         if (dayViewBase != null) {
             DraggedEntry draggedEntry = new DraggedEntry(entry, dragMode);
             draggedEntry.setOffsetDuration(offsetDuration);
+            draggedEntry.setHidden(initiallyHideDraggedEntry);
             dayViewBase.setDraggedEntry(draggedEntry);
         }
     }
@@ -324,15 +337,23 @@ public class DayViewEditController {
         DraggedEntry draggedEntry = dayViewBase.getDraggedEntry();
 
         if (draggedEntry != null) {
-            entry.setInterval(draggedEntry.getInterval());
-            dayViewBase.setDraggedEntry(null);
-            if (dayViewBase.isShowDetailsUponEntryCreation() && showEntryDetails) {
-                dayViewBase.fireEvent(new RequestEvent(dayViewBase, dayViewBase, entry));
+            if (!draggedEntry.isHidden()) {
+                entry.setInterval(draggedEntry.getInterval());
+                dayViewBase.setDraggedEntry(null);
+                if (dayViewBase.isShowDetailsUponEntryCreation() && showEntryDetails) {
+                    dayViewBase.fireEvent(new RequestEvent(dayViewBase, dayViewBase, entry));
+                }
+            } else {
+                entry.removeFromCalendar();
             }
         }
     }
 
     private void mouseDragged(MouseEvent evt) {
+        if (evt.isStillSincePress()) {
+            return;
+        }
+
         if (!dayViewBase.isScrollingEnabled()) {
             setLassoEnd(snapToGrid(dayViewBase.getInstantAt(evt), dayViewBase.getAvailabilityGrid(), true));
         }
@@ -344,6 +365,17 @@ public class DayViewEditController {
         Calendar calendar = entry.getCalendar();
         if (calendar.isReadOnly()) {
             return;
+        }
+
+        /*
+         * We might run in the sampler application. Then the entry view will not
+         * be inside a date control.
+         */
+        DraggedEntry draggedEntry = dayViewBase.getDraggedEntry();
+
+        if (draggedEntry != null) {
+            draggedEntry.getOriginalEntry().setHidden(false);
+            draggedEntry.setHidden(false);
         }
 
         switch (dragMode) {
@@ -544,7 +576,8 @@ public class DayViewEditController {
         this.lassoEnd.set(lassoEnd);
     }
 
-    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) ->{});
+    private final ObjectProperty<BiConsumer<Instant, Instant>> onLassoFinished = new SimpleObjectProperty<>(this, "onLassoFinished", (start, end) -> {
+    });
 
     public final BiConsumer<Instant, Instant> getOnLassoFinished() {
         return onLassoFinished.get();

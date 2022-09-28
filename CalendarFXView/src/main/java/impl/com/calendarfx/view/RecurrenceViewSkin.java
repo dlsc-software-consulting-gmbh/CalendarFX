@@ -17,9 +17,9 @@
 package impl.com.calendarfx.view;
 
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.util.Util;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.RecurrenceView;
+import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
@@ -370,8 +370,7 @@ public class RecurrenceViewSkin extends SkinBase<RecurrenceView> {
             weekDaySaturdayButton.setSelected(isSelected(Day.SA, days));
             weekDaySundayButton.setSelected(isSelected(Day.SU, days));
 
-            summary.setText(Util.convertRFC2445ToText(rule,
-                    getSkinnable().getStartDate()));
+            summary.setText(Util.convertRFC2445ToText(rule, getSkinnable().getStartDate()));
         } catch (IllegalArgumentException | DateTimeParseException e) {
             e.printStackTrace();
         }

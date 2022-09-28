@@ -19,7 +19,6 @@ package com.calendarfx.google.model;
 import com.calendarfx.model.Entry;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventAttendee;
-import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -29,6 +28,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
+import java.util.Objects;
 
 /**
  * Custom entry representing a google event. This contains all the required
@@ -83,7 +84,7 @@ public class GoogleEntry extends Entry<Event> {
         public void set(boolean newValue) {
             boolean oldValue = get();
 
-            if (!Util.equals(oldValue, newValue)) {
+            if (!Objects.equals(oldValue, newValue)) {
                 super.set(newValue);
 
                 if (getCalendar() instanceof GoogleCalendar) {
@@ -119,7 +120,7 @@ public class GoogleEntry extends Entry<Event> {
         public void set(boolean newValue) {
             boolean oldValue = get();
 
-            if (!Util.equals(oldValue, newValue)) {
+            if (!Objects.equals(oldValue, newValue)) {
                 super.set(newValue);
 
                 if (getCalendar() instanceof GoogleCalendar) {
@@ -151,7 +152,7 @@ public class GoogleEntry extends Entry<Event> {
         public void set(boolean newValue) {
             boolean oldValue = get();
 
-            if (!Util.equals(oldValue, newValue)) {
+            if (!Objects.equals(oldValue, newValue)) {
                 super.set(newValue);
 
                 if (getCalendar() instanceof GoogleCalendar) {

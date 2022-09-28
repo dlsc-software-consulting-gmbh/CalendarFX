@@ -46,8 +46,7 @@ import static com.calendarfx.view.VirtualGrid.OFF;
  *
  * @see DateControl#setContextMenuCallback(Callback)
  */
-public class ContextMenuProvider
-        implements Callback<ContextMenuParameter, ContextMenu> {
+public class ContextMenuProvider implements Callback<ContextMenuParameter, ContextMenu> {
 
     @Override
     public ContextMenu call(ContextMenuParameter param) {
