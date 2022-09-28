@@ -1062,7 +1062,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         this.lassoEnd.set(lassoEnd);
     }
 
-    private final BooleanProperty enableStartAndEndTimesFlip = new SimpleBooleanProperty(this, "enableStartAndEndTimesFlip", true);
+    private final BooleanProperty enableStartAndEndTimesFlip = new SimpleBooleanProperty(this, "enableStartAndEndTimesFlip", false);
 
     public final boolean isEnableStartAndEndTimesFlip() {
         return enableStartAndEndTimesFlip.get();

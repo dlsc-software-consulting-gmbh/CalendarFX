@@ -19,6 +19,7 @@ package com.calendarfx.view;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseButton;
@@ -36,7 +37,6 @@ class CreateAndDeleteHandler extends DeleteHandler {
     }
 
     private void createEntry(MouseEvent evt) {
-        System.out.println("entry click count: " + dateControl.getCreateEntryClickCount());
         if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == dateControl.getCreateEntryClickCount()) {
 
             if (!evt.isStillSincePress()) {
@@ -73,7 +73,7 @@ class CreateAndDeleteHandler extends DeleteHandler {
                 if (time != null) {
                     Entry<?> entry = dateControl.createEntryAt(time, calendar.orElse(null));
                     if (dateControl.isShowDetailsUponEntryCreation()) {
-                        dateControl.fireEvent(new RequestEvent(dateControl, dateControl, entry));
+                        Platform.runLater(() -> dateControl.fireEvent(new RequestEvent(dateControl, dateControl, entry)));
                     }
                 }
             }

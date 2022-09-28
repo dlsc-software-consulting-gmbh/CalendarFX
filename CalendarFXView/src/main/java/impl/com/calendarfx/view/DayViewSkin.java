@@ -551,13 +551,12 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             line.setEndY(yy);
         }
 
-//        // the dragged entry view
-//        if (draggedEntryView != null) {
-//            Entry<?> draggedEntry = draggedEntryView.getEntry();
-//            if (!draggedEntry.isHidden()) {
-//                //draggedEntry.setHidden(!isRelevant(draggedEntry));
-//            }
-//        }
+        // the dragged entry view
+        if (draggedEntryView != null) {
+            Entry<?> draggedEntry = draggedEntryView.getEntry();
+            draggedEntryView.visibleProperty().unbind();
+            draggedEntryView.setVisible(isRelevant(draggedEntry));
+        }
 
         layoutEntries(contentX, contentY, contentWidth, contentHeight);
         layoutCurrentTime(contentX, contentY, contentWidth);

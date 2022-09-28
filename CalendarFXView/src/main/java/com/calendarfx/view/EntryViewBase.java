@@ -236,8 +236,6 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         bindVisibility();
 
         layerProperty().addListener(weakBindVisibilityListener);
-
-        visibleProperty().addListener(it -> System.out.println("Entry: " + entry.getTitle() + ", visible = " + isVisible()));
     }
 
     private final IntegerProperty detailsClickCount = new SimpleIntegerProperty(this, "detailsClickCount", 2);

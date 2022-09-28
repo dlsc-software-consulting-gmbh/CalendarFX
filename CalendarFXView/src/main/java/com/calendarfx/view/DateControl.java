@@ -787,7 +787,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         Point2D position = ViewHelper.findPopOverArrowPosition(node, screenY, entryPopOver.getArrowSize(), location);
 
-        entryPopOver.show(node, position.getX(), position.getY());
+        entryPopOver.show(owner, position.getX(), position.getY());
     }
 
     /**

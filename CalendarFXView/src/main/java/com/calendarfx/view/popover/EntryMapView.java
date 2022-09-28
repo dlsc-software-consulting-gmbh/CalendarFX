@@ -147,7 +147,7 @@ public class EntryMapView extends EntryPopOverPane {
         return null;
     }
 
-    private final StringProperty googleApiKey = new SimpleStringProperty(this, "googleApiKey", System.getProperty("google.api.key"));
+    private final StringProperty googleApiKey = new SimpleStringProperty(this, "googleApiKey", System.getProperty("calendarfx.google.api.key"));
 
     public final String getGoogleApiKey() {
         return googleApiKey.get();

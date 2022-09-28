@@ -423,10 +423,17 @@ public class DayViewEditController {
             ZonedDateTime gridZonedTime = ZonedDateTime.ofInstant(gridTime, draggedEntry.getZoneId());
 
             if (gridTime.isAfter(entry.getEndAsZonedDateTime().toInstant())) {
-                startTime = entry.getEndTime();
-                startDate = entry.getEndDate();
-                endTime = gridZonedTime.toLocalTime();
-                endDate = gridZonedTime.toLocalDate();
+                if (dayViewBase.isEnableStartAndEndTimesFlip()) {
+                    startTime = entry.getEndTime();
+                    startDate = entry.getEndDate();
+                    endTime = gridZonedTime.toLocalTime();
+                    endDate = gridZonedTime.toLocalDate();
+                } else {
+                    startTime = entry.getEndTime().minus(entry.getMinimumDuration());
+                    startDate = entry.getEndDate();
+                    endTime = entry.getEndTime();
+                    endDate = entry.getEndDate();
+                }
             } else {
                 startDate = gridZonedTime.toLocalDate();
                 startTime = gridZonedTime.toLocalTime();
@@ -438,18 +445,6 @@ public class DayViewEditController {
 
             draggedEntry.setInterval(startDate, startTime, endDate, endTime);
         }
-    }
-
-    private Instant fixTimeIfOutsideView(MouseEvent evt, Instant gridTime) {
-        /*
-         * Fix the time calculation if the mouse cursor exits the day view area.
-         * Note: day view can also be a WeekView as it extends DayViewBase.
-         */
-        if (evt.getX() > dayViewBase.getWidth() || evt.getX() < 0) {
-            ZonedDateTime zdt = ZonedDateTime.ofInstant(gridTime, entry.getZoneId());
-            gridTime = ZonedDateTime.of(entry.getStartDate(), zdt.toLocalTime(), zdt.getZone()).toInstant();
-        }
-        return gridTime;
     }
 
     private void changeEndTime(MouseEvent evt) {
@@ -472,10 +467,17 @@ public class DayViewEditController {
             ZonedDateTime gridZonedTime = ZonedDateTime.ofInstant(gridTime, draggedEntry.getZoneId());
 
             if (gridTime.isBefore(entry.getStartAsZonedDateTime().toInstant())) {
-                endTime = entry.getStartTime();
-                endDate = entry.getStartDate();
-                startTime = gridZonedTime.toLocalTime();
-                startDate = gridZonedTime.toLocalDate();
+                if (dayViewBase.isEnableStartAndEndTimesFlip()) {
+                    endTime = entry.getStartTime();
+                    endDate = entry.getStartDate();
+                    startTime = gridZonedTime.toLocalTime();
+                    startDate = gridZonedTime.toLocalDate();
+                } else {
+                    startTime = entry.getStartTime();
+                    startDate = entry.getStartDate();
+                    endTime = entry.getStartTime().plus(entry.getMinimumDuration());
+                    endDate = entry.getStartDate();
+                }
             } else {
                 startTime = entry.getStartTime();
                 startDate = entry.getStartDate();
@@ -518,6 +520,18 @@ public class DayViewEditController {
 
             draggedEntry.setInterval(startDate, startTime, endDate, endTime);
         }
+    }
+
+    private Instant fixTimeIfOutsideView(MouseEvent evt, Instant gridTime) {
+        /*
+         * Fix the time calculation if the mouse cursor exits the day view area.
+         * Note: day view can also be a WeekView as it extends DayViewBase.
+         */
+        if (evt.getX() > dayViewBase.getWidth() || evt.getX() < 0) {
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(gridTime, entry.getZoneId());
+            gridTime = ZonedDateTime.of(entry.getStartDate(), zdt.toLocalTime(), zdt.getZone()).toInstant();
+        }
+        return gridTime;
     }
 
     private boolean isMinimumDuration(Entry<?> entry, Instant timeA, Instant timeB) {
