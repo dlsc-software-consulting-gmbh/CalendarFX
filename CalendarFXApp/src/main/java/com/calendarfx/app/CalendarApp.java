@@ -95,7 +95,7 @@ public class CalendarApp extends Application {
         updateTimeThread.start();
 
         Scene scene = new Scene(stackPane);
-        scene.focusOwnerProperty().addListener(it -> System.out.println("focus owner: " + scene.getFocusOwner()));
+//        scene.focusOwnerProperty().addListener(it -> System.out.println("focus owner: " + scene.getFocusOwner()));
         CSSFX.start(scene);
 
         primaryStage.setTitle("Calendar");

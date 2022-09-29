@@ -140,13 +140,16 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         CheckBox detailsBox = new CheckBox("Show details upon creation");
         detailsBox.selectedProperty().bindBidirectional(resourcesView.showDetailsUponEntryCreationProperty());
 
+        CheckBox flipBox = new CheckBox("Enable start / end flip over");
+        flipBox.selectedProperty().bindBidirectional(resourcesView.enableStartAndEndTimesFlipProperty());
+
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
         return new VBox(10, availabilityButton, new Label("View type"), typeBox, datePicker, adjustBox, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
-                new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, timescaleBox, allDayBox, detailsBox);
+                new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, timescaleBox, allDayBox, detailsBox, flipBox);
     }
 
     @Override

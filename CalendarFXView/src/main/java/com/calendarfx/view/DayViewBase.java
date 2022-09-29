@@ -1113,6 +1113,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.gridLinesProperty(), gridLinesProperty());
         Bindings.bindBidirectional(otherControl.gridLineColorProperty(), gridLineColorProperty());
         Bindings.bindBidirectional(otherControl.gridTypeProperty(), gridTypeProperty());
+        Bindings.bindBidirectional(otherControl.enableStartAndEndTimesFlipProperty(), enableStartAndEndTimesFlipProperty());
     }
 
     public final void unbind(DayViewBase otherControl) {
@@ -1139,6 +1140,7 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.gridLinesProperty(), gridLinesProperty());
         Bindings.unbindBidirectional(otherControl.gridLineColorProperty(), gridLineColorProperty());
         Bindings.unbindBidirectional(otherControl.gridTypeProperty(), gridTypeProperty());
+        Bindings.unbindBidirectional(otherControl.enableStartAndEndTimesFlipProperty(), enableStartAndEndTimesFlipProperty());
     }
 
     private static final String DAY_VIEW_BASE_CATEGORY = "Date View Base";

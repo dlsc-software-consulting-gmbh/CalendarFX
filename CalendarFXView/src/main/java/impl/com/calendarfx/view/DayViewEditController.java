@@ -179,17 +179,31 @@ public class DayViewEditController {
             return;
         }
 
-        if (evt.getClickCount() == 2 && view.getCreateEntryClickCount() == 2) {
-            createEntryAt(evt, false);
+        // mouse clicks only work on day views, not on entry views
+        if (!evt.getTarget().equals(view)) {
+            return;
+        }
+
+        if (evt.getClickCount() == view.getCreateEntryClickCount()) {
+            Entry<?> entry = createEntryAt(evt);
+            evt.consume();
+
+            if (view.isShowDetailsUponEntryCreation()) {
+                view.fireEvent(new RequestEvent(view, view, entry));
+            }
         }
     }
 
     private Operation operation = Operation.NONE;
 
+    private MouseEvent mousePressedEvent;
+
     private void mousePressed(MouseEvent evt) {
-        if (evt.isConsumed() || evt.getClickCount() > 1 || !evt.getButton().equals(MouseButton.PRIMARY)) {
+        if (evt.isConsumed() || !evt.getButton().equals(MouseButton.PRIMARY)) {
             return;
         }
+
+        mousePressedEvent = evt;
 
         entry = null;
 
@@ -212,9 +226,12 @@ public class DayViewEditController {
         }
     }
 
+    private boolean entryEditingAllowed;
+
     private void mousePressedEditEntry(MouseEvent evt) {
-        System.out.println("event on an entry view");
         operation = Operation.EDIT_ENTRY;
+
+        entryEditingAllowed = false;
 
         dragMode = null;
         handle = null;
@@ -223,8 +240,6 @@ public class DayViewEditController {
         LOGGER.finer("mouse event target: " + evt.getTarget());
         LOGGER.finer("mouse event y-coordinate:" + evt.getY());
         LOGGER.finer("time: " + view.getZonedDateTimeAt(evt.getX(), evt.getY(), view.getZoneId()));
-
-        boolean initiallyHideDraggedEntry = false;
 
         boolean successfulInitialization = initDragModeAndHandle(evt);
 
@@ -242,10 +257,6 @@ public class DayViewEditController {
                     if (entryEditPolicy.call(new EntryEditParameter(view, entry, EditOperation.MOVE))) {
                         operationAllowed = true;
 
-                        if (dayEntryView != null) {
-                            dayEntryView.getProperties().put("dragged", true);
-                        }
-
                         Instant time = view.getInstantAt(evt);
                         offsetDuration = Duration.between(entry.getStartAsZonedDateTime().toInstant(), time);
                         entryDuration = entry.getDuration();
@@ -253,24 +264,16 @@ public class DayViewEditController {
                         LOGGER.finer("time at mouse pressed location: " + time);
                         LOGGER.finer("offset duration: " + offsetDuration);
                         LOGGER.finer("entry duration: " + entryDuration);
-
-                        view.requestLayout();
                     }
                     break;
                 case END_TIME:
                     if (entryEditPolicy.call(new EntryEditParameter(view, entry, EditOperation.CHANGE_END))) {
                         operationAllowed = true;
-                        if (dayEntryView != null) {
-                            dayEntryView.getProperties().put("dragged-end", true);
-                        }
                     }
                     break;
                 case START_TIME:
                     if (entryEditPolicy.call(new EntryEditParameter(view, entry, EditOperation.CHANGE_START))) {
                         operationAllowed = true;
-                        if (dayEntryView != null) {
-                            dayEntryView.getProperties().put("dragged-start", true);
-                        }
                     }
                     break;
                 default:
@@ -281,15 +284,7 @@ public class DayViewEditController {
                 return;
             }
 
-            if (view != null) {
-                DraggedEntry draggedEntry = new DraggedEntry(entry, dragMode);
-                draggedEntry.setOffsetDuration(offsetDuration);
-                draggedEntry.setHidden(initiallyHideDraggedEntry);
-                view.setDraggedEntry(draggedEntry);
-            }
-        } else {
-            System.out.println("nope");
-            LOGGER.fine("unsuccessful initialization");
+            entryEditingAllowed = true;
         }
     }
 
@@ -297,54 +292,18 @@ public class DayViewEditController {
         if (view.isEditAvailability()) {
             mousePressedEditAvailability(evt);
         } else {
-            mousePressedCreateEntry(evt);
+            operation = Operation.CREATE_ENTRY;
         }
     }
 
     private void mousePressedEditAvailability(MouseEvent evt) {
-        System.out.println("mouse pressed to edit availability");
         operation = Operation.EDIT_AVAILABILITY;
         VirtualGrid availabilityGrid = view.getAvailabilityGrid();
         setLassoStart(snapToGrid(view.getInstantAt(evt), availabilityGrid, false));
         setLassoEnd(snapToGrid(view.getInstantAt(evt), availabilityGrid, false).plus(availabilityGrid.getAmount(), availabilityGrid.getUnit()));
     }
 
-    private void mousePressedCreateEntry(MouseEvent evt) {
-        if (view.getCreateEntryClickCount() == evt.getClickCount()) {
-            operation = Operation.CREATE_ENTRY;
-
-            dragMode = null;
-            handle = null;
-
-            entry = createEntryAt(evt, true);
-
-            DayView dayView = null;
-
-            if (view instanceof DayView) {
-                dayView = (DayView) view;
-            } else if (view instanceof WeekView) {
-                WeekView weekView = (WeekView) view;
-                dayView = weekView.getWeekDayViews().get(0);
-            }
-
-            if (dayView != null) {
-                dragMode = DragMode.END_TIME;
-                handle = Handle.BOTTOM;
-            }
-
-            if (dayEntryView != null) {
-                dayEntryView.getProperties().put("dragged-end", true);
-            }
-
-            DraggedEntry draggedEntry = new DraggedEntry(entry, dragMode);
-            draggedEntry.setOffsetDuration(offsetDuration);
-            draggedEntry.setHidden(true);
-            view.setDraggedEntry(draggedEntry);
-        }
-    }
-
-    private Entry<?> createEntryAt(MouseEvent evt, boolean hidden) {
-        System.out.println("CREATING AN ENTRY");
+    private Entry<?> createEntryAt(MouseEvent evt) {
         Optional<Calendar> calendar = view.getCalendarAt(evt.getX(), evt.getY());
         Instant instantAt = view.getInstantAt(evt);
 
@@ -354,13 +313,25 @@ public class DayViewEditController {
         }
 
         ZonedDateTime time = ZonedDateTime.ofInstant(instantAt, view.getZoneId());
-        Entry<?> newEntry = view.createEntryAt(time, calendar.orElse(null), hidden);
+        Entry<?> newEntry = view.createEntryAt(time, calendar.orElse(null), false);
+
+        Duration duration = newEntry.getMinimumDuration();
+
+        LOGGER.fine("minimum duration for the entry is " + duration);
 
         if (virtualGrid != null) {
-            newEntry.setInterval(newEntry.getInterval().withEndTime(newEntry.getInterval().getStartTime().plus(virtualGrid.getAmount(), virtualGrid.getUnit())));
-        } else {
-            newEntry.setInterval(newEntry.getInterval().withEndTime(newEntry.getInterval().getStartTime().plus(newEntry.getMinimumDuration())));
+            LOGGER.fine("checking the virtual grid duration");
+            Duration gridAmount = Duration.of(virtualGrid.getAmount(), virtualGrid.getUnit());
+            if (gridAmount.toMillis() > duration.toMillis()) {
+                LOGGER.fine("using the grid amount as it is longer than the minimum duration of the entry");
+                duration = gridAmount;
+            }
         }
+
+        newEntry.setInterval(newEntry.getInterval().withEndTime(newEntry.getInterval().getStartTime().plus(duration)));
+
+        view.getSelections().clear();
+        view.getSelections().add(newEntry);
 
         return newEntry;
     }
@@ -393,16 +364,65 @@ public class DayViewEditController {
     }
 
     private void mouseDraggedCreateEntry(MouseEvent evt) {
-        DraggedEntry draggedEntry = view.getDraggedEntry();
-        draggedEntry.getOriginalEntry().setHidden(false);
-        draggedEntry.setHidden(false);
+        if (entry == null) {
+            dragMode = null;
+            handle = null;
+
+            // Important, use the initial mouse event when the user pressed the button
+            entry = createEntryAt(mousePressedEvent);
+
+            DayView dayView = null;
+
+            if (view instanceof DayView) {
+                dayView = (DayView) view;
+            } else if (view instanceof WeekView) {
+                WeekView weekView = (WeekView) view;
+                dayView = weekView.getWeekDayViews().get(0);
+            }
+
+            if (dayView != null) {
+                dragMode = DragMode.END_TIME;
+                handle = Handle.BOTTOM;
+            }
+
+            if (dayEntryView != null) {
+                dayEntryView.getProperties().put("dragged-end", true);
+            }
+
+            DraggedEntry draggedEntry = new DraggedEntry(entry, dragMode);
+            draggedEntry.setOffsetDuration(offsetDuration);
+            view.setDraggedEntry(draggedEntry);
+        }
+
         changeEndTime(evt);
     }
 
     private void mouseDraggedEditEntry(MouseEvent evt) {
-        DraggedEntry draggedEntry = view.getDraggedEntry();
-        draggedEntry.getOriginalEntry().setHidden(false);
-        draggedEntry.setHidden(false);
+        if (entryEditingAllowed && view.getDraggedEntry() == null) {
+            DraggedEntry draggedEntry = new DraggedEntry(entry, dragMode);
+            draggedEntry.setOffsetDuration(offsetDuration);
+            view.setDraggedEntry(draggedEntry);
+
+            switch (dragMode) {
+                case START_AND_END_TIME:
+                    if (dayEntryView != null) {
+                        dayEntryView.getProperties().put("dragged", true);
+                    }
+                    break;
+                case END_TIME:
+                    if (dayEntryView != null) {
+                        dayEntryView.getProperties().put("dragged-end", true);
+                    }
+                    break;
+                case START_TIME:
+                    if (dayEntryView != null) {
+                        dayEntryView.getProperties().put("dragged-start", true);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         switch (dragMode) {
             case START_TIME:
@@ -479,30 +499,30 @@ public class DayViewEditController {
     }
 
     private void mouseReleasedCreateEntry() {
-        Calendar calendar = entry.getCalendar();
-        if (calendar.isReadOnly()) {
-            return;
-        }
+        if (entry != null) {
+            Calendar calendar = entry.getCalendar();
+            if (calendar.isReadOnly()) {
+                return;
+            }
 
-        if (dayEntryView != null) {
-            dayEntryView.getProperties().put("dragged", false);
-            dayEntryView.getProperties().put("dragged-start", false);
-            dayEntryView.getProperties().put("dragged-end", false);
-        }
+            if (dayEntryView != null) {
+                dayEntryView.getProperties().put("dragged", false);
+                dayEntryView.getProperties().put("dragged-start", false);
+                dayEntryView.getProperties().put("dragged-end", false);
+            }
 
-        /*
-         * We might run in the sampler application. Then the entry view will not
-         * be inside a date control.
-         */
-        DraggedEntry draggedEntry = view.getDraggedEntry();
+            /*
+             * We might run in the sampler application. Then the entry view will not
+             * be inside a date control.
+             */
+            DraggedEntry draggedEntry = view.getDraggedEntry();
 
-        if (draggedEntry != null) {
-            view.setDraggedEntry(null);
-            draggedEntry.setHidden(false);
-            draggedEntry.getOriginalEntry().setHidden(false);
-            entry.setInterval(draggedEntry.getInterval());
-            if (view.isShowDetailsUponEntryCreation() && operation.equals(Operation.CREATE_ENTRY)) {
-                view.fireEvent(new RequestEvent(view, view, entry));
+            if (draggedEntry != null) {
+                view.setDraggedEntry(null);
+                entry.setInterval(draggedEntry.getInterval());
+                if (view.isShowDetailsUponEntryCreation() && operation.equals(Operation.CREATE_ENTRY)) {
+                    view.fireEvent(new RequestEvent(view, view, entry));
+                }
             }
         }
     }

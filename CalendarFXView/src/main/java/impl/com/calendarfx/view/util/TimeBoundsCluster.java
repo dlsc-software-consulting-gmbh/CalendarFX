@@ -88,9 +88,7 @@ public final class TimeBoundsCluster {
             entryEndTime = entryEndTime.with(LocalTime.MAX);
         }
 
-        return entryStartTime.isBefore(endTime)
-                && entryEndTime.isAfter(startTime);
-
+        return entryStartTime.isBefore(endTime) && entryEndTime.isAfter(startTime);
     }
 
     public List<Placement> resolve() {
