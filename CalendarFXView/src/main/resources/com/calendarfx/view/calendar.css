@@ -976,9 +976,19 @@
     -fx-background-insets: 0.0 2.0 0.0 0.0;
 }
 
-.default-style-entry-small:selected > .default-style-entry-small-title-label {
-    -fx-text-fill: white;
+.default-style-entry-small > .default-style-entry-small-title-label {
+}
+
+.all-day-view .default-style-entry-small > .default-style-entry-small-title-label {
     -fx-font-weight: bold;
+}
+
+.default-style-entry-small > .default-style-entry-small-time-label {
+}
+
+.default-style-entry-small:selected > .default-style-entry-small-title-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
 }
 
 .default-style-entry-small:selected > .default-style-entry-small-time-label {
@@ -995,7 +1005,6 @@
 .default-style-entry-small-time-label {
     -fx-font-size: 0.8em;
     -fx-text-fill: gray;
-    -fx-font-weight: bold;
 }
 
 .default-style-entry-small-time-label-full-day {
