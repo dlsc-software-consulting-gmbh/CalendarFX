@@ -186,6 +186,8 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             dayBox.getChildren().add(weekDayHeaderView);
 
             HBox allResourcesBox = new HBox();
+            VBox.setVgrow(allResourcesBox, Priority.ALWAYS);
+
             dayBox.getChildren().add(allResourcesBox);
 
             headerBox.getChildren().add(dayBox);
@@ -227,7 +229,9 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                 }
 
                 if (view.isShowAllDayView()) {
-                    AllDayView allDayView = new AllDayView();
+
+                    Callback<T, AllDayView> allDayViewFactory = view.getAllDayViewFactory();
+                    AllDayView allDayView = allDayViewFactory.call(resource);
 
                     allDayView.getStyleClass().removeAll("only", "first", "middle", "last");
 
@@ -262,6 +266,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                     allDayView.getCalendarSources().setAll(calendarSource);
                     allDayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
 
+                    VBox.setVgrow(allDayView, Priority.ALWAYS);
                     singleResourceBox.getChildren().add(allDayView);
                 }
 
@@ -324,7 +329,6 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         HBox headerBox = new HBox();
         headerBox.getStyleClass().add("header-box");
 
-        headerBox.setFillHeight(true);
         gridPane.add(headerBox, 1, 0);
 
         Callback<T, Node> resourceHeaderFactory = view.getResourceHeaderFactory();

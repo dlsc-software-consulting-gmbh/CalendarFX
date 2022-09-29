@@ -969,6 +969,7 @@
 /* Small entries */
 .default-style-entry-small {
     -fx-padding: 0.15em 0.5em 0.15em 0.5em;
+    -fx-font-size: 0.9em;
 }
 
 .default-style-entry-small-only, .default-style-entry-small-last {
@@ -976,7 +977,6 @@
 }
 
 .default-style-entry-small:selected > .default-style-entry-small-title-label {
-    -fx-font-size: 0.9em;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
@@ -2052,6 +2052,8 @@
  * Styles for the ResourcesView.
  */
 .resources-view {
+    -fx-border-width: 1px;
+    -fx-border-color: lightgrey;
 }
 
 .resources-view .week-number-label {
@@ -2064,12 +2066,12 @@
 }
 
 .resources-view .header-box .day-box .weekday-header-view {
-    -fx-border-width: 1px 0px 0px 0px;
+    -fx-border-width: 0px 0px 0px 0px;
 }
 
 .resources-view .header-box .day-box .resource-header {
-    -fx-border-color: lightgrey;
     -fx-padding: 5px;
+    -fx-border-color: lightgrey;
     -fx-font-weight: bold;
     -fx-alignment: center;
 }
@@ -2101,7 +2103,7 @@
 }
 
 .resources-view .header-box .resource-header-view.first .resource-header {
-    -fx-border-width: 1px 0px 1px 0px;
+    -fx-border-width: 0px 0px 1px 0px;
 }
 
 .resources-view .header-box .resource-header-view.first .weekday-header-view {
@@ -2113,7 +2115,7 @@
 }
 
 .resources-view .header-box .resource-header-view.last .resource-header {
-    -fx-border-width: 1px 0px 1px 0px;
+    -fx-border-width: 0px 0px 1px 0px;
 }
 
 .resources-view .header-box .resource-header-view.last .all-day-view {
@@ -2126,7 +2128,7 @@
 
 .resources-view .header-box .resource-header-view.only .resource-header,
 .resources-view .header-box .resource-header-view.middle .resource-header {
-    -fx-border-width: 1px 0px 1px 0px;
+    -fx-border-width: 0px 0px 1px 0px;
 }
 
 .resources-view .header-box .resource-header-view.only .weekday-header-view,
@@ -2144,7 +2146,7 @@
 }
 
 .resources-view .resources-view-container .week-view.first {
-    -fx-border-width: 0px 0px 1px 1px;
+    -fx-border-width: 0px 0px 1px 0px;
 }
 
 .resources-view .resources-view-container .week-view.only {
@@ -2161,17 +2163,17 @@
 
 .resources-view .upper-left-corner {
     -fx-border-color: lightgrey;
-    -fx-border-width: 1px 1px 1px 1px;
+    -fx-border-width: 0px 1px 1px 0px;
 }
 
 .resources-view .upper-right-corner {
     -fx-border-color: lightgrey;
-    -fx-border-width: 1px 1px 1px 1px;
+    -fx-border-width: 0px 0px 1px 1px;
 }
 
 .resources-view .time-scale {
     -fx-border-color: lightgrey;
-    -fx-border-width: 0px 0px 1px 1px;
+    -fx-border-width: 0px 1px 1px 0px;
 }
 
 .resources-view .weekday-separator {

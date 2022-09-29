@@ -321,11 +321,6 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
     }
 
     @Override
-    protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
-    }
-
-    @Override
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
         super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
 

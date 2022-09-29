@@ -78,12 +78,12 @@ public class DayViewEditController {
         }
 
         // also register with the scene property. Mostly to remove our event filter if the component gets destroyed.
-        dayView.sceneProperty().addListener(((observable, oldValue, newValue) -> {
-            if (oldValue != null) {
-                oldValue.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+        dayView.sceneProperty().addListener(((observable, oldScene, newScene) -> {
+            if (oldScene != null) {
+                oldScene.removeEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
             }
-            if (newValue != null) {
-                newValue.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+            if (newScene != null) {
+                newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
             }
         }));
         dayView.addEventFilter(MouseEvent.MOUSE_MOVED, this::mouseMoved);
@@ -175,12 +175,18 @@ public class DayViewEditController {
     }
 
     private void mouseClicked(MouseEvent evt) {
+        // standard checks
         if (evt.isConsumed() || !evt.isStillSincePress() || !evt.getButton().equals(MouseButton.PRIMARY)) {
             return;
         }
 
+        // do not create new entries while the user is editing the availability calendar
+        if (view.isEditAvailability()) {
+            return;
+        }
+
         // mouse clicks only work on day views, not on entry views
-        if (!evt.getTarget().equals(view)) {
+        if (!(evt.getTarget() instanceof DayViewBase)) {
             return;
         }
 
@@ -212,10 +218,9 @@ public class DayViewEditController {
         LOGGER.finer("mouse event y-coordinate:" + evt.getY());
         LOGGER.finer("time: " + view.getZonedDateTimeAt(evt.getX(), evt.getY(), view.getZoneId()));
 
-        if (DayViewBase.class.isAssignableFrom(evt.getTarget().getClass())) {
+        if (evt.getTarget() instanceof DayViewBase) {
             mousePressedOnDayView(evt);
-        } else if (EntryViewBase.class.isAssignableFrom(evt.getTarget().getClass())) {
-
+        } else if (evt.getTarget() instanceof EntryViewBase) {
             if (view.isEditAvailability()) {
                 if (!view.isScrollingEnabled()) {
                     mousePressedEditAvailability(evt);
