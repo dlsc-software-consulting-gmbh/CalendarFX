@@ -481,7 +481,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
          */
         if (control != null && getParent() != null) {
             Callback<EntryDetailsParameter, Boolean> callback = control.getEntryDetailsCallback();
-            EntryDetailsParameter param = new EntryDetailsParameter(evt, control, getEntry(), this, getScene().getRoot(), x, y);
+            EntryDetailsParameter param = new EntryDetailsParameter(evt, control, getEntry(), this, this, x, y);
             callback.call(param);
         }
     }
