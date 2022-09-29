@@ -303,7 +303,7 @@ public abstract class DateControl extends CalendarFXControl {
                 Callback<EntryDetailsParameter, Boolean> detailsCallback = getEntryDetailsCallback();
                 if (detailsCallback != null) {
                     ContextMenuEvent ctxEvent = param.getContextMenuEvent();
-                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, getScene().getRoot(), ctxEvent.getScreenX(), ctxEvent.getScreenY());
+                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, entryView, ctxEvent.getScreenX(), ctxEvent.getScreenY());
                     detailsCallback.call(entryDetailsParam);
                 }
             });
@@ -742,7 +742,7 @@ public abstract class DateControl extends CalendarFXControl {
                 Point2D location = entryView.localToScreen(0, 0);
 
                 Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
-                EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, getScene().getRoot(), location.getX(), location.getY());
+                EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, entryView, location.getX(), location.getY());
                 callback.call(param);
             }
         });
