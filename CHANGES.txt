@@ -4,6 +4,15 @@ RELEASE NOTES, VERSION 11.12.x (October 2022)
 
 *** NEW FEATURES
 
+DayView / WeekDayView / WeekView
+--------------------------------
+
+It is now possible to create new entries via press and drag. It is also
+possible to configure whether new entries shall be created after a single or
+a double click. We also changed the behaviour to automatically bring up the
+popover for newly created entries as this is what most people would expect.
+This can be configured by calling DateControl.setShowDetailsUponEntryCreation.
+
 ResourcesView
 -------------
 
@@ -16,27 +25,35 @@ model class. This class stores a regular calendar and a special one called the
 "availability calendar". The availability of a resource can be edited when the
 view's "editAvailability" property is set to true.
 
-BackgroundCanvas
-----------------
+BackgroundCanvas (mainly private API)
+---------------------------------
 
-To visualize the availability of a Resource we decided to use a canvas instead
+To visualize the availability of a resource we decided to use a canvas instead
 of scene graph nodes. The performance is just much better and availability is
 usually expressed by greying out the background of a resource. For controlling
-the availability granularity and color please see DateControl#availabilityGrid
+the availability granularity and color please see DateControl.availabilityGrid
 and DateControl#availabilityColor.
 
 The background canvas also renders new light-weight grid lines. This is needed
 as the availability grid could lead to the creation of many more grid lines
 compared to the previous full- and half-hour grid lines. However, these light-
-weight grid lines can not be styled via CSS. See the DateControl#gridLineColor
+weight grid lines can not be styled via CSS. See the DateControl.gridLineColor
 property.
 
 DayEntryView
 ------------
 
 It is now possible to set a "click count" number for showing the details of an
-entry view. In the past the user always had to double click on the entry. Now
-a single or a tripple click can also be configured.
+entry view. In the past the user always had to double-click on the entry. Now
+a single or a tripple-click can also be configured.
+
+Google Map View
+---------------
+
+A new view class has been added that is capable of looking up a static map
+image from Google based on a given address / location string. The class is
+called EntryMapView and is part of the EntryDetailsView. The map view will
+only be visible if an address and a Google Maps API key exist.
 
 *** ENHANCEMENTS
 
@@ -54,7 +71,24 @@ Calendar
 A new "user object" property was added to the calendar so that a link can be
 created between the calendar and its data source or its business object.
 
+Interval
+--------
+
+A new "with" method has been added to derive a new interval from an existing
+interval by passing in a new duration. Interval.withDuration(...).
+
 *** FIXES
+
+Recurrence
+----------
 
 Recurrence entries were not updated correctly in certain circumstances. This
 has been fixed.
+
+Memory Leaks
+------------
+
+Memory leaks were recently introduced after we started using the ListProperty
+class, e.g. for "available time zones" and for "resources". There seems to be
+a known issue when applications try to "unbind" from a ListProperty. This seems
+to fail and objects in the collection are not being collected.
