@@ -17,15 +17,17 @@
 package impl.com.calendarfx.view;
 
 import com.calendarfx.view.WeekDayHeaderView;
-import com.calendarfx.view.WeekDayHeaderView.WeekDayCell;
+import com.calendarfx.view.WeekDayHeaderView.WeekDayHeaderCell;
 import javafx.beans.InvalidationListener;
 import javafx.scene.control.SkinBase;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.time.temporal.ChronoField.DAY_OF_WEEK;
 
@@ -33,15 +35,15 @@ public class WeekDayHeaderViewSkin extends SkinBase<WeekDayHeaderView> {
 
     private static final String TODAY = "today";
 
-    private final GridPane pane;
+    private final HBox hbox;
 
     public WeekDayHeaderViewSkin(WeekDayHeaderView view) {
         super(view);
 
-        pane = new GridPane();
-        pane.getStyleClass().add("container");
+        hbox = new HBox();
+        hbox.getStyleClass().add("container");
 
-        getChildren().add(pane);
+        getChildren().add(hbox);
 
         final InvalidationListener updateListener = it -> updateControl();
 
@@ -54,37 +56,45 @@ public class WeekDayHeaderViewSkin extends SkinBase<WeekDayHeaderView> {
         updateControl();
     }
 
-    private void updateControl() {
-        pane.getChildren().clear();
-        pane.getColumnConstraints().clear();
+    private final List<InvalidationListener> listeners = new ArrayList<>();
 
+    private void updateControl() {
+        hbox.getChildren().clear();
         // the day views
         WeekDayHeaderView view = getSkinnable();
+        listeners.forEach(l -> view.dateProperty().removeListener(l));
+
         final int numberOfDays = view.getNumberOfDays();
 
-        Callback<WeekDayHeaderView, WeekDayCell> cellFactory = view.getCellFactory();
+        Callback<WeekDayHeaderView, Region> separatorFactory = view.getSeparatorFactory();
+        Callback<WeekDayHeaderView, WeekDayHeaderCell> cellFactory = view.getCellFactory();
+
         for (int i = 0; i < numberOfDays; i++) {
-            ColumnConstraints con = new ColumnConstraints();
-            con.setPercentWidth((double) 100 / (double) numberOfDays);
-            pane.getColumnConstraints().add(con);
-            WeekDayCell cell = cellFactory.call(view);
-            GridPane.setHgrow(cell, Priority.ALWAYS);
-            GridPane.setVgrow(cell, Priority.ALWAYS);
-            GridPane.setFillHeight(cell, true);
-            GridPane.setFillWidth(cell, true);
+            WeekDayHeaderCell cell = cellFactory.call(view);
+            cell.setPrefWidth(1); // equal width distribution
 
             final int dayCount = i;
-            /*
-             * TODO: listener must be removed when number of days change.
-             */
-            view.dateProperty().addListener(evt -> updateCell(cell, dayCount));
+
+            InvalidationListener invalidationListener = evt -> updateCell(cell, dayCount);
+            listeners.add(invalidationListener);
+
+            view.dateProperty().addListener(invalidationListener);
             updateCell(cell, dayCount);
 
-            pane.add(cell, i, 0);
+            HBox.setHgrow(cell, Priority.ALWAYS);
+            hbox.getChildren().add(cell);
+
+            if (separatorFactory != null && i < numberOfDays - 1) {
+                Region separator = separatorFactory.call(view);
+                if (separator != null) {
+                    HBox.setHgrow(separator, Priority.NEVER);
+                    hbox.getChildren().add(separator);
+                }
+            }
         }
     }
 
-    private void updateCell(WeekDayCell cell, int dayCount) {
+    private void updateCell(WeekDayHeaderCell cell, int dayCount) {
         LocalDate startDate = getSkinnable().getDate();
         LocalDate date = getDate(startDate, dayCount);
         cell.setDate(date);

@@ -21,6 +21,7 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl.EntryContextMenuParameter;
 import com.calendarfx.view.DateControl.EntryDetailsParameter;
 import com.calendarfx.view.DateControl.Layer;
+import com.calendarfx.view.DayViewBase.AvailabilityEditingEntryBehaviour;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import javafx.animation.ScaleTransition;
 import javafx.beans.InvalidationListener;
@@ -29,6 +30,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -36,6 +38,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -99,7 +102,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
 
-    private final Entry<?> entry;
+    private Entry<?> entry;
 
     private final ListChangeListener<? super String> styleListener = change -> {
         while (change.next()) {
@@ -113,22 +116,31 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     private final WeakListChangeListener<? super String> weakStyleListener = new WeakListChangeListener<>(styleListener);
 
+    private final InvalidationListener bindVisibilityListener = it -> bindVisibility();
+
+    private final WeakInvalidationListener weakBindVisibilityListener = new WeakInvalidationListener(bindVisibilityListener);
+
     /**
      * Constructs a new view for the given entry.
      *
      * @param entry the calendar entry
      */
     protected EntryViewBase(Entry<?> entry) {
-        this.entry = requireNonNull(entry);
+        setEntry(entry);
 
-        entry.getStyleClass().addListener(weakStyleListener);
         getStyleClass().addAll(entry.getStyleClass());
 
         setFocusTraversable(true);
 
         focusedProperty().addListener(it -> processFocus());
 
-        addEventHandler(MouseEvent.MOUSE_CLICKED, evt -> showDetails(evt, evt.getScreenX(), evt.getScreenY()));
+        addEventHandler(MouseEvent.MOUSE_CLICKED, evt -> {
+            if (evt.getButton().equals(PRIMARY) && evt.isStillSincePress() && evt.getClickCount() == getDetailsClickCount()) {
+                showDetails(evt, evt.getScreenX(), evt.getScreenY());
+            }
+            evt.consume();
+        });
+
         addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, evt -> {
             DateControl dateControl = getDateControl();
             if (dateControl != null) {
@@ -141,11 +153,11 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
                     EntryContextMenuParameter param = new EntryContextMenuParameter(evt, dateControl, EntryViewBase.this);
                     ContextMenu menu = callback.call(param);
                     if (menu != null) {
-                        menu.show(this, evt.getScreenX(), evt.getScreenY());
+                        menu.show(getScene().getWindow(), evt.getScreenX(), evt.getScreenY());
+                        evt.consume();
                     }
                 }
             }
-            evt.consume();
         });
 
         @SuppressWarnings("unchecked")
@@ -219,9 +231,39 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
         addEventHandler(MouseEvent.MOUSE_PRESSED, this::performSelection);
 
-        bindEntry(entry);
+        bindEntry();
+        bindVisibility();
 
-        layerProperty().addListener(weakLayerListener);
+        layerProperty().addListener(weakBindVisibilityListener);
+    }
+
+    public void setEntry(Entry<?> entry) {
+        this.entry = requireNonNull(entry);
+        this.entry.getStyleClass().addListener(weakStyleListener);
+        this.entry = entry;
+        bindEntry();
+        bindVisibility();
+    }
+
+    private final IntegerProperty detailsClickCount = new SimpleIntegerProperty(this, "detailsClickCount", 2);
+
+    public final int getDetailsClickCount() {
+        return detailsClickCount.get();
+    }
+
+    /**
+     * Determines the click count that is required to trigger the
+     * "show details" action.
+     *
+     * @return the "show details" click count
+     * @see DateControl#entryDetailsCallbackProperty()
+     */
+    public final IntegerProperty detailsClickCountProperty() {
+        return detailsClickCount;
+    }
+
+    public final void setDetailsClickCount(int detailsClickCount) {
+        this.detailsClickCount.set(detailsClickCount);
     }
 
     /**
@@ -233,15 +275,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         return entry;
     }
 
-    private final InvalidationListener calendarListener = it -> bindVisibility();
-
-    private final WeakInvalidationListener weakCalendarListener = new WeakInvalidationListener(calendarListener);
-
-    private final InvalidationListener layerListener = it -> bindVisibility();
-
-    private final WeakInvalidationListener weakLayerListener = new WeakInvalidationListener(layerListener);
-
-    private void bindEntry(Entry<?> entry) {
+    private void bindEntry() {
         setStartDate(entry.getStartDate());
         setEndDate(entry.getEndDate());
         setStartTime(entry.getStartTime());
@@ -255,21 +289,44 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
             getProperties().put("selected", true);
         }
 
-        entry.calendarProperty().addListener(weakCalendarListener);
+        entry.hiddenProperty().addListener(weakBindVisibilityListener);
+        entry.calendarProperty().addListener(weakBindVisibilityListener);
     }
 
     private void bindVisibility() {
         Entry<?> entry = getEntry();
-        if (entry != null && getDateControl() != null) {
+
+        T dateControl = getDateControl();
+
+        if (entry != null && dateControl != null) {
             Calendar calendar = entry.getCalendar();
 
+            // the entry view can be hidden
+            BooleanBinding binding = Bindings.createBooleanBinding(() -> !isHidden(), hiddenProperty());
+
             if (calendar != null) {
-                BooleanBinding binding = Bindings.and(getDateControl().getCalendarVisibilityProperty(calendar), Bindings.not(hiddenProperty()));
-                if (getLayer() != null) {
-                    binding = binding.and(Bindings.createBooleanBinding(this::isAssignedLayerVisible, getDateControl().visibleLayersProperty()));
-                }
-                visibleProperty().bind(binding);
+                // the calendar can be hidden
+                binding = binding.and(dateControl.getCalendarVisibilityProperty(calendar));
             }
+
+            // the entry itself can also be hidden
+            binding = binding.and(entry.hiddenProperty().not());
+
+            if (getLayer() != null) {
+                binding = binding.and(Bindings.createBooleanBinding(this::isAssignedLayerVisible, dateControl.visibleLayersProperty()));
+            }
+
+            if (dateControl instanceof DayViewBase) {
+                /*
+                 * Day views support editing of an availability calendar. During editing the
+                 * entries might be shown, hidden, or become somewhat transparent.
+                 */
+                DayViewBase dayView = (DayViewBase) dateControl;
+
+                binding = binding.and(dayView.editAvailabilityProperty().not().or(dayView.entryViewAvailabilityEditingBehaviourProperty().isEqualTo(AvailabilityEditingEntryBehaviour.HIDE).not()));
+            }
+
+            visibleProperty().bind(binding);
         }
     }
 
@@ -431,7 +488,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
          */
         if (control != null && getParent() != null) {
             Callback<EntryDetailsParameter, Boolean> callback = control.getEntryDetailsCallback();
-            EntryDetailsParameter param = new EntryDetailsParameter(evt, control, getEntry(), this, x, y);
+            EntryDetailsParameter param = new EntryDetailsParameter(evt, control, getEntry(), this, this, x, y);
             callback.call(param);
         }
     }
@@ -919,7 +976,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * Width percentage is only used for width computation when {@link #prefWidthProperty()}
      * of view entry has no defined value and when {@link #alignmentStrategyProperty()}
      * is not {@link AlignmentStrategy#FILL}.
-     *</p>
+     * </p>
+     *
      * @return the entry percentage width
      */
     public final DoubleProperty widthPercentageProperty() {
@@ -1006,9 +1064,9 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * require the entry to simply use the preferred width of the view and align the
      * entry's view on the left, the center, or the middle.
      * <p>
-     *     If the time intervals of two entries are overlapping then the entries might
-     *     be placed in two columns. The alignment strategy would then determine the layout
-     *     of the entry within its column.
+     * If the time intervals of two entries are overlapping then the entries might
+     * be placed in two columns. The alignment strategy would then determine the layout
+     * of the entry within its column.
      * </p>
      *
      * @see #setAlignmentStrategy(AlignmentStrategy)
@@ -1074,8 +1132,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     @Override
     public String toString() {
-        return "EntryViewBase [entry=" + getEntry() + ", selected="
-                + isSelected() + "]";
+        return "EntryViewBase [entry=" + getEntry() + ", selected=" + isSelected() + "]";
     }
 
     private static final String ENTRY_VIEW_CATEGORY = "Entry View Base";
@@ -1192,6 +1249,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
             }
 
             getProperties().remove(disableFocusHandlingKey);
+
+            evt.consume();
         }
     }
 

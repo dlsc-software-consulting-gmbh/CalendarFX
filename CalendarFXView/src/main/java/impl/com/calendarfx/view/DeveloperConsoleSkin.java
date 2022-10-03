@@ -32,6 +32,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.WeakEventHandler;
 import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -70,6 +71,7 @@ public class DeveloperConsoleSkin extends SkinBase<DeveloperConsole> {
 
     private final ObservableList<LogEntry> masterData = FXCollections.observableArrayList();
     private final EventHandler<CalendarEvent> calendarListener = evt -> addEvent(evt, LogEntryType.CALENDAR_EVENT);
+    private final WeakEventHandler<CalendarEvent> weakCalendarListener = new WeakEventHandler<>(calendarListener);
 
     public DeveloperConsoleSkin(DeveloperConsole view) {
         super(view);
@@ -225,26 +227,24 @@ public class DeveloperConsoleSkin extends SkinBase<DeveloperConsole> {
     private void setDateControl(DateControl control) {
         requireNonNull(control);
 
-        control.addEventFilter(RequestEvent.REQUEST,
-                evt -> addEvent(evt, LogEntryType.REQUEST_EVENT));
-        control.addEventFilter(LoadEvent.LOAD,
-                evt -> addEvent(evt, LogEntryType.LOAD_EVENT));
+        control.addEventFilter(RequestEvent.REQUEST, evt -> addEvent(evt, LogEntryType.REQUEST_EVENT));
+        control.addEventFilter(LoadEvent.LOAD, evt -> addEvent(evt, LogEntryType.LOAD_EVENT));
 
         // listen to calendars
 
         for (Calendar calendar : control.getCalendars()) {
-            calendar.addEventHandler(calendarListener);
+            calendar.addEventHandler(weakCalendarListener);
         }
 
         ListChangeListener<? super Calendar> l = change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
                     for (Calendar c : change.getAddedSubList()) {
-                        c.addEventHandler(calendarListener);
+                        c.addEventHandler(weakCalendarListener);
                     }
                 } else if (change.wasRemoved()) {
                     for (Calendar c : change.getRemoved()) {
-                        c.removeEventHandler(calendarListener);
+                        c.removeEventHandler(weakCalendarListener);
                     }
                 }
             }
@@ -252,12 +252,9 @@ public class DeveloperConsoleSkin extends SkinBase<DeveloperConsole> {
 
         control.getCalendars().addListener(l);
 
-        Bindings.bindBidirectional(datePicker.valueProperty(),
-                control.dateProperty());
-        Bindings.bindBidirectional(todayPicker.valueProperty(),
-                control.todayProperty());
-        Bindings.bindBidirectional(timeField.valueProperty(),
-                control.timeProperty());
+        Bindings.bindBidirectional(datePicker.valueProperty(), control.dateProperty());
+        Bindings.bindBidirectional(todayPicker.valueProperty(), control.todayProperty());
+        Bindings.bindBidirectional(timeField.valueProperty(), control.timeProperty());
         timeField.setDisable(false);
     }
 
@@ -266,12 +263,11 @@ public class DeveloperConsoleSkin extends SkinBase<DeveloperConsole> {
             switch (item.getLogEntryType()) {
                 case CALENDAR_EVENT:
                     return showCalendarEvents.isSelected();
-                case INFO:
-                    return true;
                 case LOAD_EVENT:
                     return showLoadEvents.isSelected();
                 case REQUEST_EVENT:
                     return showRequestEvents.isSelected();
+                case INFO:
                 default:
                     return true;
             }

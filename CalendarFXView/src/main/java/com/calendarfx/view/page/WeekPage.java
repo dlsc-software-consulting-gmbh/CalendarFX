@@ -60,6 +60,7 @@ public class WeekPage extends PageBase {
         getStyleClass().add("week-page");
         setDateTimeFormatter(DateTimeFormatter.ofPattern(Messages.getString("WeekPage.DATE_FORMAT")));
 
+        this.toolBarControls.getStyleClass().add("toolbar-controls-box");
         this.detailedWeekView = new DetailedWeekView();
 
         FontIcon layoutIcon = new FontIcon(FontAwesome.TABLE);

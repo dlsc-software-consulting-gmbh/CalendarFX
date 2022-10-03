@@ -19,13 +19,14 @@ package com.calendarfx.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class IntervalTest {
 
@@ -130,6 +131,19 @@ public class IntervalTest {
 
         // then
         assertThat(interval.getEndTime(), is(equalTo(newTime)));
+    }
+
+    @Test
+    public void shouldChangeDuration() {
+        // given
+        Duration newDuration = Duration.ofMinutes(30);
+
+        // when
+        interval = interval.withDuration(newDuration);
+
+        // then
+        assertThat(interval.getDuration(), is(equalTo(newDuration)));
+        assertThat(interval.getEndTime(), is(equalTo(interval.getStartTime().plus(newDuration))));
     }
 
     @Test

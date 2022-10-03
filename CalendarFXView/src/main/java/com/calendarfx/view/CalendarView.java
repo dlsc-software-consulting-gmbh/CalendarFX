@@ -25,12 +25,10 @@ import com.calendarfx.view.print.PrintView;
 import impl.com.calendarfx.view.CalendarViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -144,6 +142,11 @@ public class CalendarView extends DateControl {
         });
     }
 
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new CalendarViewSkin(this);
+    }
+
     public PageBase getPageView(Page page) {
         switch (page) {
             case DAY:
@@ -174,23 +177,16 @@ public class CalendarView extends DateControl {
         YEAR
     }
 
-    private final ListProperty<Page> availablePages = new SimpleListProperty<>(this, "availablePages", FXCollections.observableArrayList());
+    private final ObservableList<Page> availablePages = FXCollections.observableArrayList();
 
-    public ObservableList<Page> getAvailablePages() {
-        return availablePages.get();
-    }
-
-    public ListProperty<Page> availablePagesProperty() {
+    /**
+     * Returns the list of pages that will be available within the calendar view (day, week,
+     * month, year).
+     *
+     * @return the available pages
+     */
+    public final ObservableList<Page> getAvailablePages() {
         return availablePages;
-    }
-
-    public void setAvailablePages(ObservableList<Page> availablePages) {
-        this.availablePages.set(availablePages);
-    }
-
-    @Override
-    protected Skin<?> createDefaultSkin() {
-        return new CalendarViewSkin(this);
     }
 
     /**

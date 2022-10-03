@@ -16,8 +16,8 @@
 
 package com.calendarfx.view;
 
-import com.calendarfx.util.Util;
 import impl.com.calendarfx.view.WeekDayHeaderViewSkin;
+import impl.com.calendarfx.view.util.Util;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -31,6 +31,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import org.controlsfx.control.PropertySheet.Item;
 
@@ -71,7 +72,7 @@ public class WeekDayHeaderView extends DateControl {
         startDate.set(getDate());
         endDate.set(getDate().plusDays(getNumberOfDays() - 1));
 
-        setCellFactory(date -> new WeekDayCell(this));
+        setCellFactory(date -> new WeekDayHeaderCell(this));
     }
 
     @Override
@@ -79,15 +80,15 @@ public class WeekDayHeaderView extends DateControl {
         return new WeekDayHeaderViewSkin(this);
     }
 
-    private final ObjectProperty<Callback<WeekDayHeaderView, WeekDayCell>> cellFactory = new SimpleObjectProperty<>(this, "cellFactory");
+    private final ObjectProperty<Callback<WeekDayHeaderView, WeekDayHeaderCell>> cellFactory = new SimpleObjectProperty<>(this, "cellFactory");
 
     /**
-     * A cell factory used for creating instances of {@link WeekDayCell} that will
+     * A cell factory used for creating instances of {@link WeekDayHeaderCell} that will
      * be used to display the weekend day names.
      *
      * @return the cell factory
      */
-    public final ObjectProperty<Callback<WeekDayHeaderView, WeekDayCell>> cellFactoryProperty() {
+    public final ObjectProperty<Callback<WeekDayHeaderView, WeekDayHeaderCell>> cellFactoryProperty() {
         return cellFactory;
     }
 
@@ -96,7 +97,7 @@ public class WeekDayHeaderView extends DateControl {
      *
      * @return the cell factory
      */
-    public final Callback<WeekDayHeaderView, WeekDayCell> getCellFactory() {
+    public final Callback<WeekDayHeaderView, WeekDayHeaderCell> getCellFactory() {
         return cellFactoryProperty().get();
     }
 
@@ -106,14 +107,36 @@ public class WeekDayHeaderView extends DateControl {
      * @param factory
      *            the cell factory
      */
-    public final void setCellFactory(
-            Callback<WeekDayHeaderView, WeekDayCell> factory) {
+    public final void setCellFactory(Callback<WeekDayHeaderView, WeekDayHeaderCell> factory) {
         requireNonNull(factory);
         cellFactoryProperty().set(factory);
     }
 
-    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(
-            this, "numberOfDays", 7);
+    private final ObjectProperty<Callback<WeekDayHeaderView, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
+        Region region = new Region();
+        region.getStyleClass().add("weekday-separator");
+        return region;
+    });
+
+
+    public final Callback<WeekDayHeaderView, Region> getSeparatorFactory() {
+        return separatorFactory.get();
+    }
+
+    /**
+     * A factory used for creating (optional) vertical separators between the week day headers.
+     *
+     * @return the separator factory
+     */
+    public final ObjectProperty<Callback<WeekDayHeaderView, Region>> separatorFactoryProperty() {
+        return separatorFactory;
+    }
+
+    public final void setSeparatorFactory(Callback<WeekDayHeaderView, Region> separatorFactory) {
+        this.separatorFactory.set(separatorFactory);
+    }
+
+    private final IntegerProperty numberOfDays = new SimpleIntegerProperty(this, "numberOfDays", 7);
 
     /**
      * Stores the number of days that will be shown by this view. This value
@@ -223,20 +246,18 @@ public class WeekDayHeaderView extends DateControl {
      *
      * @see WeekDayHeaderView#cellFactoryProperty()
      */
-    public static class WeekDayCell extends Label {
-
-        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Messages.getString("WeekDayHeaderView.CELL_DATE_FORMAT"));
+    public static class WeekDayHeaderCell extends Label {
 
         /**
          * Constructs a new date cell.
          *
          * @param view the weekday header view
          */
-        public WeekDayCell(WeekDayHeaderView view) {
+        public WeekDayHeaderCell(WeekDayHeaderView view) {
             Objects.requireNonNull(view);
             getStyleClass().add("cell");
             setMaxWidth(Double.MAX_VALUE);
-            dateProperty().addListener(it -> setText(formatter.format(getDate())));
+            dateProperty().addListener(it -> setText(getFormatter().format(getDate())));
             if (view.isEnableHyperlinks()) {
                 getStyleClass().add("date-hyperlink");
                 setOnMouseClicked(evt -> {
@@ -245,6 +266,25 @@ public class WeekDayHeaderView extends DateControl {
                     }
                 });
             }
+        }
+
+        private final ObjectProperty<DateTimeFormatter> formatter = new SimpleObjectProperty<>(this, "", DateTimeFormatter.ofPattern(Messages.getString("WeekDayHeaderView.CELL_DATE_FORMAT")));
+
+        public final DateTimeFormatter getFormatter() {
+            return formatter.get();
+        }
+
+        /**
+         * The formatter to be used for the date.
+         *
+         * @return the date formatter
+         */
+        public final ObjectProperty<DateTimeFormatter> formatterProperty() {
+            return formatter;
+        }
+
+        public final void setFormatter(DateTimeFormatter formatter) {
+            this.formatter.set(formatter);
         }
 
         private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now());

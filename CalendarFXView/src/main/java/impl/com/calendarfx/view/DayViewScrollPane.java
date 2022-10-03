@@ -18,16 +18,13 @@ package impl.com.calendarfx.view;
 
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.ViewHelper;
-import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayViewBase;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.event.EventTarget;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
@@ -125,8 +122,11 @@ public class DayViewScrollPane extends Pane {
         double y = ViewHelper.getTimeLocation(dayView, time, true);
         Insets insets = getInsets();
 
-        // place the given time at one third of the visible height
-        dayView.setTranslateY(Math.min(0, Math.max(-y + getHeight() / 3, getMaxTranslateY(insets))));
+        // only scroll if the given time is not in the visible range
+        if (y < Math.abs(dayView.getTranslateY()) || y > Math.abs(dayView.getTranslateY()) + getHeight()) {
+            // place the given time at one third of the visible height
+            dayView.setTranslateY(Math.min(0, Math.max(-y + getHeight() / 3, getMaxTranslateY(insets))));
+        }
     }
 
     private void updateVisibleTimeRange(String reason) {
@@ -218,19 +218,6 @@ public class DayViewScrollPane extends Pane {
         return (getHeight() - insets.getTop() - insets.getBottom()) - dayView.getHeight();
     }
 
-    private boolean isOnEntry(EventTarget target) {
-        if (target == null || !(target instanceof Node)) {
-            return false;
-        }
-
-        Node node = (Node) target;
-        if (node instanceof DayEntryView) {
-            return true;
-        }
-
-        return isOnEntry(node.getParent());
-    }
-
     private void autoscrollIfNeeded(DragEvent evt) {
         evt.acceptTransferModes(TransferMode.ANY);
 
@@ -297,7 +284,7 @@ public class DayViewScrollPane extends Pane {
         private double yOffset;
 
         public ScrollThread() {
-            super("Autoscrolling List View");
+            super("Autoscrolling ScrollPane");
             setDaemon(true);
         }
 

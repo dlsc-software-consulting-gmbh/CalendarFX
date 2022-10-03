@@ -19,6 +19,7 @@ package com.calendarfx.demo;
 
 import com.calendarfx.util.CalendarFX;
 import com.calendarfx.view.CalendarFXControl;
+import fr.brouillard.oss.cssfx.CSSFX;
 import fxsampler.SampleBase;
 import impl.com.calendarfx.view.CalendarPropertySheet;
 import javafx.geometry.Pos;
@@ -37,6 +38,7 @@ public abstract class CalendarFXSample extends SampleBase {
     public Node getPanel(Stage stage) {
         control = createControl();
         requireNonNull(control, "missing date control");
+        CSSFX.start();
         return wrap(control);
     }
 

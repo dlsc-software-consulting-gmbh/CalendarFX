@@ -26,8 +26,9 @@ import com.calendarfx.view.AgendaView.AgendaEntry;
 import com.calendarfx.view.Messages;
 import impl.com.calendarfx.view.util.Util;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -79,18 +80,21 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
         borderPane.setCenter(listView);
         borderPane.setTop(statusLabel);
 
-        InvalidationListener reloadListener = it -> updateList("a view property has changed, property = " + it.toString());
+        ChangeListener reloadListener = (obs, oldValue, newValue) -> updateList("a view property has changed, property = " + obs.toString());
         view.lookAheadPeriodInDaysProperty().addListener(reloadListener);
         view.lookBackPeriodInDaysProperty().addListener(reloadListener);
         view.enableHyperlinksProperty().addListener(reloadListener);
-        view.getCalendars().addListener(reloadListener);
+        view.dateProperty().addListener(reloadListener);
+
+        ListChangeListener<? super Calendar> calendarListListener = change -> {
+            updateList("the calendar list has changed");
+            listenToCalendars();
+        };
+
+        view.getCalendars().addListener(calendarListListener);
 
         updateList("initial loading");
-
         listenToCalendars();
-
-        view.getCalendars().addListener((Observable observable) -> listenToCalendars());
-        view.dateProperty().addListener(reloadListener);
     }
 
     private final InvalidationListener calendarVisibilityChanged = it -> updateList("calendar visibility changed");
@@ -154,13 +158,18 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
         Map<LocalDate, List<Entry<?>>> dataMap = new HashMap<>();
         dataLoader.loadEntries(dataMap);
+
         List<AgendaEntry> listEntries = new ArrayList<>();
         for (LocalDate date : dataMap.keySet()) {
             AgendaEntry listViewEntry = new AgendaEntry(date);
             for (Entry<?> entry : dataMap.get(date)) {
-                listViewEntry.getEntries().add(entry);
+                if (!entry.isHidden()) {
+                    listViewEntry.getEntries().add(entry);
+                }
             }
-            listEntries.add(listViewEntry);
+            if (!listViewEntry.getEntries().isEmpty()) {
+                listEntries.add(listViewEntry);
+            }
         }
 
         Collections.sort(listEntries);

@@ -23,7 +23,6 @@ import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DetailedDayView;
 import com.calendarfx.view.Messages;
-import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.TimeScaleView;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -69,12 +68,13 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         dayViewScrollPane = new DayViewScrollPane(dayView, scrollBar);
         dayViewScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-scroll-pane");
 
-        // the time scale
+        // the timescale
         TimeScaleView timeScale = view.getTimeScaleView();
         Bindings.bindBidirectional(timeScale.translateYProperty(), dayView.translateYProperty());
 
         // the all-day view
         allDayView = view.getAllDayView();
+        allDayView.showTodayProperty().unbindBidirectional(view.showTodayProperty());
         allDayView.setShowToday(false);
         allDayView.setAdjustToFirstDayOfWeek(false);
 
@@ -91,6 +91,7 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         // time scale scroll pane
         timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
         timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
+        timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
 
         // separator
         separator = new Separator(Orientation.VERTICAL);
@@ -106,7 +107,6 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         calendarHeaderView.visibleProperty().bind(view.layoutProperty().isEqualTo(DateControl.Layout.SWIMLANE));
 
         agendaView = view.getAgendaView();
-        agendaView.addEventHandler(RequestEvent.REQUEST_ENTRY, evt -> dayView.showEntry(evt.getEntry()));
 
         RowConstraints row0 = new RowConstraints();
         row0.setFillHeight(true);

@@ -20,6 +20,8 @@
  */
 
 * {
+    -fx-font-family: "Arial";
+
     -style1-color: rgba(119.0, 192.0, 75.0, 0.9);
     -style2-color: rgba(65.0, 143.0, 203.0, 0.9);
     -style3-color: rgba(247.0, 209.0, 91.0, 0.9);
@@ -214,6 +216,10 @@
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .weekend-day {
     -fx-background-color: transparent;
+}
+
+.toolbar-controls-box {
+    -fx-spacing: 5px;
 }
 
 /*
@@ -596,6 +602,20 @@
     -fx-alignment: center-right;
 }
 
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles needed by the week day separators.
+ */
+.week-view .weekday-separator,
+.weekday-header-view .weekday-separator,
+.all-day-view .weekday-separator {
+    -size: 0px;
+    -fx-pref-width: -size;
+    -fx-min-width: -size;
+    -fx-max-width: -size;
+    -fx-background-color: lightgrey;
+}
+
 /* 
  * --------------------------------------------------------------------------------------------------------------
  * Styles needed by the day view.
@@ -949,16 +969,26 @@
 /* Small entries */
 .default-style-entry-small {
     -fx-padding: 0.15em 0.5em 0.15em 0.5em;
+    -fx-font-size: 0.9em;
 }
 
 .default-style-entry-small-only, .default-style-entry-small-last {
     -fx-background-insets: 0.0 2.0 0.0 0.0;
 }
 
-.default-style-entry-small:selected > .default-style-entry-small-title-label {
-    -fx-font-size: 0.9em;
-    -fx-text-fill: white;
+.default-style-entry-small > .default-style-entry-small-title-label {
+}
+
+.all-day-view .default-style-entry-small > .default-style-entry-small-title-label {
     -fx-font-weight: bold;
+}
+
+.default-style-entry-small > .default-style-entry-small-time-label {
+}
+
+.default-style-entry-small:selected > .default-style-entry-small-title-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
 }
 
 .default-style-entry-small:selected > .default-style-entry-small-time-label {
@@ -975,7 +1005,6 @@
 .default-style-entry-small-time-label {
     -fx-font-size: 0.8em;
     -fx-text-fill: gray;
-    -fx-font-weight: bold;
 }
 
 .default-style-entry-small-time-label-full-day {
@@ -1501,6 +1530,10 @@
     -fx-padding: 20.0;
 }
 
+.popover-accordion > .titled-pane.no-padding > .content {
+    -fx-padding: 0.0;
+}
+
 .popover-accordion > .titled-pane > .title > .arrow-button > .arrow {
     -fx-pref-width: 0.0;
     -fx-pref-height: 0.0;
@@ -2009,6 +2042,11 @@
 .resource-calendar-view {
 }
 
+.resource-calendar-view .time-scale {
+    -fx-border-color: lightgrey;
+    -fx-border-width: 0px 1px 0px 0px;
+}
+
 .resource-calendar-view .header-background {
     -fx-background-color: grey, white;
     -fx-background-insets: 0, 0 0 1 0;
@@ -2025,4 +2063,157 @@
  */
 .time-field > .box {
     -fx-spacing: 2px;
+}
+
+/*
+ * --------------------------------------------------------------------------------------------------------------
+ * Styles for the ResourcesView.
+ */
+.resources-view {
+    -fx-border-width: 1px;
+    -fx-border-color: lightgrey;
+}
+
+.resources-view .week-number-label {
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+}
+
+.resources-view .header-box .day-box .weekday-header-view {
+    -fx-border-color: lightgrey;
+}
+
+.resources-view .header-box .day-box .weekday-header-view {
+    -fx-border-width: 0px 0px 0px 0px;
+}
+
+.resources-view .header-box .day-box .resource-header {
+    -fx-padding: 5px;
+    -fx-border-color: lightgrey;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.resources-view .header-box .day-box .resource-header.first {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .header-box .day-box .resource-header.only,
+.resources-view .header-box .day-box .resource-header.middle {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .header-box .day-box .resource-header.last {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+
+.resources-view .header-box .resource-header-view .resource-header {
+    -fx-padding: 5px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.resources-view .header-box .resource-header-view .resource-header,
+.resources-view .header-box .resource-header-view .all-day-view,
+.resources-view .header-box .resource-header-view .weekday-header-view {
+    -fx-border-color: lightgrey;
+}
+
+.resources-view .header-box .resource-header-view.first .resource-header {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .header-box .resource-header-view.first .weekday-header-view {
+    -fx-border-width: 0px 0px 0px 0px;
+}
+
+.resources-view .header-box .resource-header-view.first .all-day-view {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .header-box .resource-header-view.last .resource-header {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .header-box .resource-header-view.last .all-day-view {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .header-box .resource-header-view.last .weekday-header-view {
+    -fx-border-width: 0px 0px 0px 0px;
+}
+
+.resources-view .header-box .resource-header-view.only .resource-header,
+.resources-view .header-box .resource-header-view.middle .resource-header {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .header-box .resource-header-view.only .weekday-header-view,
+.resources-view .header-box .resource-header-view.middle .weekday-header-view {
+    -fx-border-width: 0px 0px 0px 0px;
+}
+
+.resources-view .header-box .resource-header-view.only .all-day-view,
+.resources-view .header-box .resource-header-view.middle .all-day-view {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .resources-view-container .week-view {
+    -fx-border-color: lightgrey;
+}
+
+.resources-view .resources-view-container .week-view.first {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .resources-view-container .week-view.only {
+    -fx-border-width: 1px;
+}
+
+.resources-view .resources-view-container .week-view.middle {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.resources-view .resources-view-container .week-view.last {
+    -fx-border-width: 0px 1px 1px 0px;
+}
+
+.resources-view .upper-left-corner {
+    -fx-border-color: lightgrey;
+    -fx-border-width: 0px 1px 1px 0px;
+}
+
+.resources-view .upper-right-corner {
+    -fx-border-color: lightgrey;
+    -fx-border-width: 0px 0px 1px 1px;
+}
+
+.resources-view .time-scale {
+    -fx-border-color: lightgrey;
+    -fx-border-width: 0px 1px 1px 0px;
+}
+
+.resources-view .weekday-separator {
+    -size: 1px;
+    -fx-pref-width: -size;
+    -fx-min-width: -size;
+    -fx-max-width: -size;
+    -fx-background-color: lightgrey;
+}
+
+.resources-view .large-separator {
+    -size: 4px;
+    -fx-pref-width: -size;
+    -fx-min-width: -size;
+    -fx-max-width: -size;
+    -fx-background-color: lightgrey;
+}
+
+.resources-view .small-separator {
+    -size: 1px;
+    -fx-pref-width: -size;
+    -fx-min-width: -size;
+    -fx-max-width: -size;
+    -fx-background-color: lightgrey;
 }

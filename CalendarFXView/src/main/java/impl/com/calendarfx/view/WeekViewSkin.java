@@ -18,12 +18,12 @@ package impl.com.calendarfx.view;
 
 import com.calendarfx.view.WeekDayView;
 import com.calendarfx.view.WeekView;
+import com.calendarfx.view.WeekView.WeekDayParameter;
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
 import javafx.scene.control.SkinBase;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 
@@ -35,10 +35,11 @@ import static java.time.temporal.ChronoField.DAY_OF_WEEK;
 
 public class WeekViewSkin extends SkinBase<WeekView> {
 
-    private final GridPane dayGridPane = new GridPane();
+    private final HBox container = new HBox();
 
     public WeekViewSkin(WeekView view) {
         super(view);
+
 
         final InvalidationListener rebuildListener = it -> buildDays();
         view.numberOfDaysProperty().addListener(rebuildListener);
@@ -54,13 +55,13 @@ public class WeekViewSkin extends SkinBase<WeekView> {
 
         new DayViewEditController(view);
 
-        getChildren().add(dayGridPane);
+        getChildren().add(container);
     }
 
     @Override
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-        final double height = dayGridPane.prefHeight(-1);
-        dayGridPane.resizeRelocate(contentX, contentY, contentWidth, height);
+        final double height = container.prefHeight(-1);
+        container.resizeRelocate(contentX, contentY, contentWidth, height);
     }
 
     private void buildDays() {
@@ -70,35 +71,34 @@ public class WeekViewSkin extends SkinBase<WeekView> {
         // before rebuilding make sure to unbind previous day view children
         weekDayViews.forEach(view -> getSkinnable().unbind(view));
 
-        dayGridPane.getChildren().clear();
-        dayGridPane.getColumnConstraints().clear();
+        container.getChildren().clear();
 
         weekDayViews.clear();
 
-        Callback<WeekView.WeekDayParameter, WeekDayView> weekDayViewFactory = weekView.getWeekDayViewFactory();
+        Callback<WeekDayParameter, WeekDayView> weekDayViewFactory = weekView.getWeekDayViewFactory();
 
         int numberOfDays = weekView.getNumberOfDays();
 
-        for (int i = 0; i < numberOfDays; i++) {
-            ColumnConstraints con = new ColumnConstraints();
-            con.setPercentWidth((double) 100 / (double) numberOfDays);
-            dayGridPane.getColumnConstraints().add(con);
+        Callback<WeekView, Region> separatorFactory = weekView.getSeparatorFactory();
 
-            WeekView.WeekDayParameter param = new WeekView.WeekDayParameter(weekView);
+        for (int i = 0; i < numberOfDays; i++) {
+            WeekDayParameter param = new WeekDayParameter(weekView);
+
             WeekDayView weekDayView = weekDayViewFactory.call(param);
+            weekDayView.setPrefWidth(1); // equal width distribution
             weekDayView.getProperties().put("week.view", weekView);
 
-            weekDayView.earliestTimeUsedProperty().addListener(it -> updateUsedTimes());
-            weekDayView.latestTimeUsedProperty().addListener(it -> updateUsedTimes());
+            InvalidationListener updateUsedTimesListener = it -> updateUsedTimes();
+            weekDayView.earliestTimeUsedProperty().addListener(updateUsedTimesListener);
+            weekDayView.latestTimeUsedProperty().addListener(updateUsedTimesListener);
+
+            weekDayView.showTodayProperty().bindBidirectional(weekView.showTodayProperty());
 
             if (i == 0) {
                 weekDayView.getStyleClass().add("first-day");
             } else if (i == numberOfDays - 1) {
                 weekDayView.getStyleClass().add("last-day");
             }
-
-            GridPane.setHgrow(weekDayView, Priority.ALWAYS);
-            GridPane.setVgrow(weekDayView, Priority.ALWAYS);
 
             final int dayCount = i;
 
@@ -110,10 +110,15 @@ public class WeekViewSkin extends SkinBase<WeekView> {
 
             getSkinnable().bind(weekDayView, false);
 
-            Bindings.bindBidirectional(weekDayView.startTimeProperty(), weekView.startTimeProperty());
-            Bindings.bindBidirectional(weekDayView.endTimeProperty(), weekView.endTimeProperty());
+            HBox.setHgrow(weekDayView, Priority.ALWAYS);
+            container.getChildren().add(weekDayView);
 
-            dayGridPane.add(weekDayView, i, 0);
+            if (separatorFactory != null && i < numberOfDays - 1) {
+                Region separator = separatorFactory.call(weekView);
+                if (separator != null) {
+                    container.getChildren().add(separator);
+                }
+            }
 
             weekDayViews.add(weekDayView);
         }

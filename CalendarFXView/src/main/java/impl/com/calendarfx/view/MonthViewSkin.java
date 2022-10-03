@@ -21,14 +21,15 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.util.Util;
 import com.calendarfx.view.EntryViewBase.Position;
 import com.calendarfx.view.Messages;
 import com.calendarfx.view.MonthEntryView;
 import com.calendarfx.view.MonthView;
 import com.calendarfx.view.RequestEvent;
-import javafx.beans.InvalidationListener;
+import impl.com.calendarfx.view.util.Util;
+import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
@@ -120,7 +121,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
         gridPane.getStyleClass().add("container");
 
-        InvalidationListener updateViewListener = evt -> updateView();
+        ChangeListener updateViewListener = (obs, oldV, newV) -> {
+            System.out.println("property: " + obs.toString());
+            updateView();
+        };
 
         view.yearMonthProperty().addListener(it -> {
             if (displayedYearMonth == null || !(displayedYearMonth.equals(view.getYearMonth()))) {
@@ -149,7 +153,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
         view.getSelectedDates().addListener((Observable observable) -> updateDaySelection());
 
-        view.getCalendars().addListener((javafx.beans.Observable obs) -> updateEntries("list of calendars changed"));
+        view.getCalendars().addListener((Observable obs) -> updateEntries("list of calendars changed"));
         view.suspendUpdatesProperty().addListener(it -> updateEntries("suspend updates set to false"));
     }
 
@@ -624,7 +628,8 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
             this.week = week;
             this.day = day;
 
-            entries.addListener((Observable evt) -> update());
+            // since JavaFX 19 this needs to be run later
+            entries.addListener((Observable evt) -> Platform.runLater(() -> update()));
 
             setMinSize(0, 0);
             setPrefSize(0, 0);
@@ -654,7 +659,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         }
 
         private void update() {
-            getChildren().removeIf(node -> node instanceof MonthEntryView);
+            Util.removeChildren(this, node -> node instanceof MonthEntryView);
 
             if (!entries.isEmpty()) {
 

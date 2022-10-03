@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.calendarfx.util.LoggingDomain.MODEL;
 import static java.util.Objects.requireNonNull;
@@ -74,7 +75,7 @@ import static java.util.logging.Level.FINE;
  *
  *
  * <h2>Recurrence</h2>
- *
+ * <p>
  * This class supports the industry standard for defining recurring events (RFC
  * 2445). For recurring events the method {@link #setRecurrenceRule(String)}
  * must be fed with a valid RRULE string, for example "RRULE:FREQ=DAILY" for an
@@ -103,29 +104,46 @@ public class Entry<T> implements Comparable<Entry<?>> {
 
     private static final Duration DEFAULT_MINIMUM_DURATION = Duration.ofMinutes(15);
 
-    private static long idCounter;
-
-    // needs to be thread-safe
-    private static synchronized String createId() {
-        return Long.toString(idCounter++);
-    }
-
-    private String id = createId();
+    private String id;
 
     /**
-     * Constructs a new untitled entry.
+     * Constructs a new entry with a default time interval. The ID will be generated
+     * via {@link UUID#randomUUID()}.
      */
     public Entry() {
-        this("Untitled", new Interval());
+        this(UUID.randomUUID().toString());
     }
 
     /**
      * Constructs a new entry with the given title and a default time interval.
+     * The ID will be generated via {@link UUID#randomUUID()}.
      *
      * @param title the title shown to the user
      */
     public Entry(String title) {
-        this(title, new Interval());
+        this(title, new Interval(), UUID.randomUUID().toString());
+    }
+
+    /**
+     * Constructs a new entry with the given title, a default time interval, and
+     * the given ID.
+     *
+     * @param title the title shown to the user
+     * @param id the unique id of the entry
+     */
+    public Entry(String title, String id) {
+        this(title, new Interval(), id);
+    }
+
+    /**
+     * Constructs a new entry with the given title. The ID will be generated
+     * via {@link UUID#randomUUID()}.
+     *
+     * @param title    the title shown to the user
+     * @param interval the time interval where the entry is located
+     */
+    public Entry(String title, Interval interval) {
+        this(title, interval, UUID.randomUUID().toString());
     }
 
     /**
@@ -133,13 +151,16 @@ public class Entry<T> implements Comparable<Entry<?>> {
      *
      * @param title    the title shown to the user
      * @param interval the time interval where the entry is located
+     * @param id       a unique ID, e.g. UUID.randomUUID();
      */
-    public Entry(String title, Interval interval) {
+    public Entry(String title, Interval interval, String id) {
         requireNonNull(title);
         requireNonNull(interval);
+        requireNonNull(id);
 
         setTitle(title);
         setInterval(interval);
+        this.id = id;
     }
 
     // A map containing a set of properties for this entry
@@ -227,7 +248,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
 
             Interval oldInterval = getValue();
 
-            if (!Util.equals(newInterval, oldInterval)) {
+            if (!Objects.equals(newInterval, oldInterval)) {
 
                 Calendar calendar = getCalendar();
 
@@ -672,7 +693,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 public void set(String newRecurrence) {
                     String oldRecurrence = get();
 
-                    if (!Util.equals(oldRecurrence, newRecurrence)) {
+                    if (!Objects.equals(oldRecurrence, newRecurrence)) {
 
                         Calendar calendar = getCalendar();
 
@@ -698,7 +719,8 @@ public class Entry<T> implements Comparable<Entry<?>> {
                         try {
                             Recur<LocalDate> recur = new Recur<>(newRecurrence.replaceFirst("^RRULE:", ""));
                             setRecurrenceEnd(Objects.requireNonNullElse(recur.getUntil(), LocalDate.MAX));
-                        } catch (IllegalArgumentException | DateTimeParseException e) {
+                        } catch (IllegalArgumentException |
+                                 DateTimeParseException e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -838,7 +860,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         public void set(Calendar newCalendar) {
             Calendar oldCalendar = get();
 
-            if (!Util.equals(oldCalendar, newCalendar)) {
+            if (!Objects.equals(oldCalendar, newCalendar)) {
 
                 if (oldCalendar != null) {
                     if (!isRecurrence()) {
@@ -1003,7 +1025,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         public void set(String newTitle) {
             String oldTitle = get();
 
-            if (!Util.equals(oldTitle, newTitle)) {
+            if (!Objects.equals(oldTitle, newTitle)) {
                 super.set(newTitle);
 
                 Calendar calendar = getCalendar();
@@ -1061,7 +1083,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
                 public void set(String newLocation) {
                     String oldLocation = get();
 
-                    if (!Util.equals(oldLocation, newLocation)) {
+                    if (!Objects.equals(oldLocation, newLocation)) {
 
                         super.set(newLocation);
 
@@ -1214,7 +1236,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         public void set(boolean newFullDay) {
             boolean oldFullDay = get();
 
-            if (!Util.equals(oldFullDay, newFullDay)) {
+            if (!Objects.equals(oldFullDay, newFullDay)) {
 
                 super.set(newFullDay);
 
@@ -1496,6 +1518,25 @@ public class Entry<T> implements Comparable<Entry<?>> {
         return Util.intersect(interval.getStartZonedDateTime(), interval.getEndZonedDateTime(), st, et);
     }
 
+    private final BooleanProperty hidden = new SimpleBooleanProperty(this, "hidden", false);
+
+    public final boolean isHidden() {
+        return hidden.get();
+    }
+
+    public final BooleanProperty hiddenProperty() {
+        return hidden;
+    }
+
+    /**
+     * An entry can be made explicitly hidden.
+     *
+     * @param hidden true if the entry should not be visible in the calendar
+     */
+    public final void setHidden(boolean hidden) {
+        this.hidden.set(hidden);
+    }
+
     private boolean isRecurrenceShowing(Entry<?> entry, ZonedDateTime st, ZonedDateTime et, ZoneId zoneId) {
         String recurrenceRule = entry.getRecurrenceRule().replaceFirst("^RRULE:", "");
 
@@ -1580,25 +1621,32 @@ public class Entry<T> implements Comparable<Entry<?>> {
     @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Entry other = (Entry) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
 
         String recId = getRecurrenceId();
         String otherRecId = other.getRecurrenceId();
 
         if (recId == null) {
             return otherRecId == null;
-        } else return recId.equals(otherRecId);
+        }
+
+        return recId.equals(otherRecId);
     }
 
     private static final String ENTRY_CATEGORY = "Entry";

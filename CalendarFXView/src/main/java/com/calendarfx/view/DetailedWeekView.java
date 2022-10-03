@@ -73,18 +73,22 @@ public class DetailedWeekView extends DayViewBase {
     public DetailedWeekView(int numberOfDays) {
         setNumberOfDays(numberOfDays);
 
+
         getStyleClass().add(DEFAULT_STYLE_CLASS);
 
         calendarHeaderView = new CalendarHeaderView();
-        calendarHeaderView.numberOfDaysProperty().bind(numberOfDaysProperty());
+        calendarHeaderView.numberOfDaysProperty().bindBidirectional(numberOfDaysProperty());
         calendarHeaderView.bind(this);
 
         weekDayHeaderView = new WeekDayHeaderView();
+        weekDayHeaderView.showTodayProperty().bindBidirectional(showTodayProperty());
+
         bind(weekDayHeaderView, true);
         Bindings.bindBidirectional(weekDayHeaderView.numberOfDaysProperty(), numberOfDaysProperty());
         Bindings.bindBidirectional(weekDayHeaderView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());
 
         allDayView = new AllDayView(getNumberOfDays());
+
         bind(allDayView, true);
         Bindings.bindBidirectional(allDayView.numberOfDaysProperty(), numberOfDaysProperty());
         Bindings.bindBidirectional(allDayView.adjustToFirstDayOfWeekProperty(), adjustToFirstDayOfWeekProperty());
@@ -251,19 +255,19 @@ public class DetailedWeekView extends DayViewBase {
     /**
      * Sets the value of {@link #showAllDayViewProperty()}.
      *
-     * @param show if true the the all day view will be visible
+     * @param show if true the all day view will be visible
      */
     public final void setShowAllDayView(boolean show) {
         showAllDayViewProperty().set(show);
     }
 
-    // time scale support
+    // timescale support
 
     private final BooleanProperty showTimeScaleView = new SimpleBooleanProperty(this, "showTimeScaleView", true);
 
     /**
      * A property used to control the visibility of the time scale on the left-hand side.
-     * The time scale displays the time of day.
+     * The timescale displays the time of day.
      *
      * @return true if the scale will be visible
      */

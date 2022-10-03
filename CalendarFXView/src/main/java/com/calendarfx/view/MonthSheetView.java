@@ -138,15 +138,10 @@ public class MonthSheetView extends DateControl {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem newEntry = new MenuItem(Messages.getString("MonthSheetView.ADD_NEW_EVENT"));
         newEntry.setOnAction(evt -> {
-
             LocalDate date = getDateSelectionModel().getLastSelected();
-            Entry<?> entry = createEntryAt(ZonedDateTime.of(date, LocalTime.of(12, 0), getZoneId()));
-
-            Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
-            EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, dateCell, ctxMenuScreenX, ctxMenuScreenY);
-            callback.call(param);
-
+            createEntryAt(ZonedDateTime.of(date, LocalTime.of(12, 0), getZoneId()));
         });
+
         contextMenu.getItems().add(newEntry);
 
         contextMenu.getItems().add(new SeparatorMenuItem());

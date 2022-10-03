@@ -57,8 +57,7 @@ public abstract class CalendarFXDateControlSample extends CalendarFXSample {
         outerPane.setStyle("-fx-padding: 20px;");
 
         StackPane stackPane = new StackPane();
-        stackPane.setStyle(
-                "-fx-background-color: white; -fx-border-color: gray; -fx-border-width: .25px; -fx-padding: 20px;");
+        stackPane.setStyle("-fx-background-color: white; -fx-border-color: gray; -fx-border-width: .25px; -fx-padding: 20px;");
         outerPane.getChildren().add(stackPane);
 
         StackPane.setAlignment(node, Pos.CENTER);

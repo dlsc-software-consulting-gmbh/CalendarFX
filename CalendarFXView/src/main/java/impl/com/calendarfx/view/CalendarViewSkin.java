@@ -23,6 +23,7 @@ import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.CalendarView.Page;
 import com.calendarfx.view.DeveloperConsole;
 import com.calendarfx.view.Messages;
+import com.calendarfx.view.RequestEvent;
 import com.calendarfx.view.SearchResultView;
 import com.calendarfx.view.SourceView;
 import com.calendarfx.view.YearMonthView;
@@ -34,6 +35,7 @@ import com.calendarfx.view.print.ViewType;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.HPos;
@@ -65,6 +67,7 @@ import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.ZoneId;
+import java.util.function.Consumer;
 
 import static com.calendarfx.view.CalendarView.Page.DAY;
 import static com.calendarfx.view.CalendarView.Page.MONTH;
@@ -99,7 +102,10 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
     private SourceView sourceView;
 
     private final InvalidationListener entriesVisibilityListener = obs -> updateCalendarVisibility();
+    private final InvalidationListener weakEntriesVisibilityListener = new WeakInvalidationListener(entriesVisibilityListener);
+
     private final InvalidationListener printEntriesVisibilityListener = obs -> updatePrintVisibility();
+    private final InvalidationListener weakPrintEntriesVisibilityListener = new WeakInvalidationListener(printEntriesVisibilityListener);
 
     public CalendarViewSkin(CalendarView view) {
         super(view);
@@ -113,12 +119,12 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             });
         }
 
-        view.addEventHandler(REQUEST_DATE, evt -> view.showDate(evt.getDate()));
-        view.addEventHandler(REQUEST_DATE_TIME, evt -> view.showDateTime(evt.getDateTime()));
-        view.addEventHandler(REQUEST_WEEK, evt -> view.showWeek(evt.getYear(), evt.getWeekOfYear()));
-        view.addEventHandler(REQUEST_YEAR_MONTH, evt -> view.showYearMonth(evt.getYearMonth()));
-        view.addEventHandler(REQUEST_YEAR, evt -> view.showYear(evt.getYear()));
-        view.addEventHandler(REQUEST_ENTRY, evt -> view.getSelectedPageView().editEntry(evt.getEntry()));
+        view.addEventHandler(REQUEST_DATE, evt -> maybeRunAndConsume(evt, e -> view.showDate(evt.getDate())));
+        view.addEventHandler(REQUEST_DATE_TIME, evt -> maybeRunAndConsume(evt, e -> view.showDateTime(evt.getDateTime())));
+        view.addEventHandler(REQUEST_WEEK, evt -> maybeRunAndConsume(evt, e -> view.showWeek(evt.getYear(), evt.getWeekOfYear())));
+        view.addEventHandler(REQUEST_YEAR_MONTH, evt -> maybeRunAndConsume(evt, e -> view.showYearMonth(evt.getYearMonth())));
+        view.addEventHandler(REQUEST_YEAR, evt -> maybeRunAndConsume(evt, e -> view.showYear(evt.getYear())));
+        view.addEventHandler(REQUEST_ENTRY, evt -> maybeRunAndConsume(evt, e -> view.getSelectedPageView().editEntry(evt.getEntry())));
 
         view.getAvailablePages().addListener((Observable it) -> buildSwitcher());
 
@@ -165,9 +171,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             }
         });
 
-        Platform.runLater(() -> sourceView.getCalendarVisibilityMap().keySet().forEach(calendar -> sourceView.getCalendarVisibilityProperty(calendar).addListener(entriesVisibilityListener)));
+        Platform.runLater(() -> sourceView.getCalendarVisibilityMap().keySet().forEach(calendar -> sourceView.getCalendarVisibilityProperty(calendar).addListener(weakEntriesVisibilityListener)));
 
-        view.selectedPageProperty().addListener(entriesVisibilityListener);
+        view.selectedPageProperty().addListener(weakEntriesVisibilityListener);
 
         ColumnConstraints leftColumn = new ColumnConstraints();
         ColumnConstraints centerColumn = new ColumnConstraints();
@@ -342,6 +348,13 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         selectedPage.toFront();
 
         updateToggleButtons();
+    }
+
+    private void maybeRunAndConsume(RequestEvent evt, Consumer<RequestEvent> consumer) {
+        if (!evt.isConsumed()) {
+            consumer.accept(evt);
+            evt.consume();
+        }
     }
 
     private void openTray() {
@@ -531,8 +544,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             SourceView printSource = printView.getSettingsView().getSourceView();
 
             for (Calendar calendar : printSource.getCalendarVisibilityMap().keySet()) {
-                printSource.getCalendarVisibilityProperty(calendar).removeListener(printEntriesVisibilityListener);
-                printSource.getCalendarVisibilityProperty(calendar).addListener(printEntriesVisibilityListener);
+                printSource.getCalendarVisibilityProperty(calendar).removeListener(weakPrintEntriesVisibilityListener);
+                printSource.getCalendarVisibilityProperty(calendar).addListener(weakPrintEntriesVisibilityListener);
             }
 
         });

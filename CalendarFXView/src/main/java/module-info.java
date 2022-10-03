@@ -4,11 +4,10 @@ module com.calendarfx.view {
 
     requires transitive javafx.controls;
     requires transitive org.controlsfx.controls;
-
     requires transitive org.kordamp.ikonli.javafx;
     requires transitive org.kordamp.ikonli.fontawesome;
+    requires java.desktop;
     requires org.mnode.ical4j.core;
-
     exports com.calendarfx.model;
     exports com.calendarfx.util;
     exports com.calendarfx.view;
@@ -23,4 +22,6 @@ module com.calendarfx.view {
     exports impl.com.calendarfx.view.util;
 
     opens com.calendarfx.view;
+    opens com.calendarfx.model;
+    opens impl.com.calendarfx.view;
 }

@@ -44,14 +44,11 @@ public class SettingsViewSkin extends SkinBase<SettingsView> {
                 .addAll(new SectionTitle(
                         Messages.getString("PrintViewType.PAPER_TITLE_LABEL")),
                         control.getPaperView(),
-                        new SectionTitle(Messages.getString(
-                                "PrintViewType.TIME_RANGE_TITLE_LABEL")),
+                        new SectionTitle(Messages.getString("PrintViewType.TIME_RANGE_TITLE_LABEL")),
                         control.getTimeRangeView(),
-                        new SectionTitle(Messages.getString(
-                                "PrintViewType.SOURCE_VIEW_TITLE_LABEL")),
+                        new SectionTitle(Messages.getString("PrintViewType.SOURCE_VIEW_TITLE_LABEL")),
                         scrollPane,
-                        new SectionTitle(Messages.getString(
-                                "PrintViewType.OPTIONS_TITLE_LABEL")),
+                        new SectionTitle(Messages.getString("PrintViewType.OPTIONS_TITLE_LABEL")),
                         control.getOptionsView());
 
         container.getChildren().removeIf(x -> {

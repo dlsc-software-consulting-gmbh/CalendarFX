@@ -59,7 +59,7 @@ public class DetailedDayView extends DayViewBase {
 
         agendaView = new AgendaView();
         agendaView.setLookBackPeriodInDays(0);
-        agendaView.setLookAheadPeriodInDays(0);
+        agendaView.setLookAheadPeriodInDays(30);
         agendaView.setShowStatusLabel(false);
         agendaView.setCellFactory(view -> new AgendaEntryCell(view, false));
 

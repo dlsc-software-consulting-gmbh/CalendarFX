@@ -180,7 +180,9 @@ public class DayPageSkin extends PageBaseSkin<DayPage> {
         header.getStyleClass().add("header");
 
         AgendaView agendaView = dayPage.getAgendaView();
-        getSkinnable().bind(agendaView, true);
+        getSkinnable().bind(agendaView, false);
+        agendaView.dateProperty().bind(dayPage.todayProperty());
+
         HBox.setMargin(agendaView, new Insets(10, 0, 0, 0));
 
         BorderPane leftHandSide = new BorderPane();
@@ -200,7 +202,7 @@ public class DayPageSkin extends PageBaseSkin<DayPage> {
         getSkinnable().bind(dayView, true);
 
         AllDayView allDayView = dayView.getAllDayView();
-        allDayView.showTodayProperty().unbind(); // we need control over this
+        allDayView.showTodayProperty().unbindBidirectional(dayView.showTodayProperty()); // we need control over this
 
         return dayView;
     }

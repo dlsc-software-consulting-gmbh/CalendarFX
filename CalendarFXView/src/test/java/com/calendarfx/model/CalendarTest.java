@@ -28,11 +28,11 @@ import java.util.Map;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CalendarTest {
 
-    private Calendar calendar = new Calendar();
+    private final Calendar calendar = new Calendar();
     private Entry<String> recurrenceSourceEntry;
     private Entry<String> recurrence;
 

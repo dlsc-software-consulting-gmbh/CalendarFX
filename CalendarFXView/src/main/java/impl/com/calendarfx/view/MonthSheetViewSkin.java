@@ -21,12 +21,14 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
-import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DateControl.DateDetailsParameter;
 import com.calendarfx.view.DateSelectionModel;
 import com.calendarfx.view.MonthSheetView;
 import com.calendarfx.view.MonthSheetView.DateCell;
 import com.calendarfx.view.MonthSheetView.WeekDayLayoutStrategy;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.event.WeakEventHandler;
 import javafx.geometry.Bounds;
@@ -82,14 +84,12 @@ public class MonthSheetViewSkin extends DateControlSkin<MonthSheetView> implemen
         control.cellFactoryProperty().addListener(builder);
         control.headerCellFactoryProperty().addListener(builder);
         control.enableHyperlinksProperty().addListener(builder);
-        control.getCalendars().addListener((javafx.beans.Observable obs) -> updateEntries("list of calendars changed"));
-
+        control.getCalendars().addListener((Observable obs) -> updateEntries("list of calendars changed"));
         control.clickBehaviourProperty().addListener(it -> control.getDateSelectionModel().clear());
+        control.getDateSelectionModel().getSelectedDates().addListener((Observable obs) -> updateSelected());
 
-        InvalidationListener selectedUpdater = obs -> updateSelected();
-        control.getDateSelectionModel().getSelectedDates().addListener(selectedUpdater);
-
-        InvalidationListener todayUpdater = obs -> updateToday();
+        // important to use change listener
+        ChangeListener todayUpdater = (obs, oldValue, newValue) -> updateToday();
         control.todayProperty().addListener(todayUpdater);
         control.showTodayProperty().addListener(todayUpdater);
 
@@ -411,9 +411,10 @@ public class MonthSheetViewSkin extends DateControlSkin<MonthSheetView> implemen
     private void showDateDetails(LocalDate date) {
         DateCell cell = cellMap.get(date);
         Bounds bounds = cell.localToScreen(cell.getLayoutBounds());
-        Callback<DateControl.DateDetailsParameter, Boolean> callback = getSkinnable().getDateDetailsCallback();
-        DateControl.DateDetailsParameter param = new DateControl.DateDetailsParameter(null, getSkinnable(), cell, date, bounds.getMinX(), bounds.getMinY());
-        callback.call(param);
+        Callback<DateDetailsParameter, Boolean> callback = getSkinnable().getDateDetailsCallback();
+        if (callback != null) {
+            callback.call(new DateDetailsParameter(null, getSkinnable(), cell, cell.getScene().getRoot(), date, bounds.getMinX(), bounds.getMinY()));
+        }
     }
 
     private final WeakEventHandler<MouseEvent> weakCellClickedHandler = new WeakEventHandler<>(cellClickedHandler);

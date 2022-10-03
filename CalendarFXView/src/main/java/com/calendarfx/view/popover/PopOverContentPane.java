@@ -38,8 +38,7 @@ public class PopOverContentPane extends BorderPane {
         setCenter(accordion);
 
         Bindings.bindContentBidirectional(getPanes(), accordion.getPanes());
-        Bindings.bindBidirectional(expandedPaneProperty(),
-                accordion.expandedPaneProperty());
+        Bindings.bindBidirectional(expandedPaneProperty(), accordion.expandedPaneProperty());
 
         bottomProperty().bind(footerProperty());
 
@@ -64,8 +63,7 @@ public class PopOverContentPane extends BorderPane {
 
     // header support
 
-    private final ObjectProperty<Node> header = new SimpleObjectProperty<>(
-            this, "header");
+    private final ObjectProperty<Node> header = new SimpleObjectProperty<>(this, "header");
 
     public final ObjectProperty<Node> headerProperty() {
         return header;
@@ -81,8 +79,7 @@ public class PopOverContentPane extends BorderPane {
 
     // footer support
 
-    private final ObjectProperty<Node> footer = new SimpleObjectProperty<>(
-            this, "footer");
+    private final ObjectProperty<Node> footer = new SimpleObjectProperty<>(this, "footer");
 
     public final ObjectProperty<Node> footerProperty() {
         return footer;
@@ -98,8 +95,7 @@ public class PopOverContentPane extends BorderPane {
 
     // panes
 
-    private final ObservableList<TitledPane> panes = FXCollections
-            .observableArrayList();
+    private final ObservableList<TitledPane> panes = FXCollections.observableArrayList();
 
     public final ObservableList<TitledPane> getPanes() {
         return panes;
@@ -107,8 +103,7 @@ public class PopOverContentPane extends BorderPane {
 
     // Expanded pane support
 
-    private final ObjectProperty<TitledPane> expandedPane = new SimpleObjectProperty<>(
-            this, "expandedPane");
+    private final ObjectProperty<TitledPane> expandedPane = new SimpleObjectProperty<>(this, "expandedPane");
 
     public final ObjectProperty<TitledPane> expandedPaneProperty() {
         return expandedPane;

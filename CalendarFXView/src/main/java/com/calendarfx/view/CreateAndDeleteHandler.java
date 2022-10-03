@@ -19,30 +19,38 @@ package com.calendarfx.view;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+class CreateAndDeleteHandler extends DeleteHandler {
 
-class CreateDeleteHandler {
 
-    private final DateControl dateControl;
-
-    public CreateDeleteHandler(DateControl control) {
-        this.dateControl = requireNonNull(control);
-
+    public CreateAndDeleteHandler(DateControl control) {
+        super(control);
         dateControl.addEventHandler(MouseEvent.MOUSE_CLICKED, this::createEntry);
-        dateControl.addEventHandler(KeyEvent.KEY_PRESSED, this::deleteEntries);
     }
 
     private void createEntry(MouseEvent evt) {
-        if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
+        if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == dateControl.getCreateEntryClickCount()) {
+
+            if (!evt.isStillSincePress()) {
+                return;
+            }
+
+            if (dateControl instanceof DayViewBase) {
+                DayViewBase dayViewBase = (DayViewBase) dateControl;
+                if (dayViewBase.isEditAvailability()) {
+                    LoggingDomain.VIEW.fine("no new entry created because day view is currently editing availability");
+                    return;
+                }
+            }
+
             LoggingDomain.VIEW.fine("create entry mouse event received inside control: " + dateControl.getClass().getSimpleName());
 
             ZonedDateTime time = ZonedDateTime.now().withZoneSameInstant(dateControl.getZoneId());
@@ -63,38 +71,14 @@ class CreateDeleteHandler {
 
                 Optional<Calendar> calendar = dateControl.getCalendarAt(evt.getX(), evt.getY());
                 if (time != null) {
-                    dateControl.createEntryAt(time, calendar.orElse(null));
+                    Entry<?> entry = dateControl.createEntryAt(time, calendar.orElse(null));
+                    if (dateControl.isShowDetailsUponEntryCreation()) {
+                        Platform.runLater(() -> dateControl.fireEvent(new RequestEvent(dateControl, dateControl, entry)));
+                    }
                 }
             }
-        }
-    }
 
-    private void deleteEntries(KeyEvent evt) {
-        switch (evt.getCode()) {
-            case DELETE:
-            case BACK_SPACE:
-                for (Entry<?> entry : dateControl.getSelections()) {
-                    if (!dateControl.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
-                        continue;
-                    }
-                    if (entry.isRecurrence()) {
-                        entry = entry.getRecurrenceSourceEntry();
-                    }
-                    if (!dateControl.getEntryEditPolicy().call(new DateControl.EntryEditParameter(dateControl, entry, DateControl.EditOperation.DELETE))) {
-                        continue;
-                    }
-
-                    Calendar calendar = entry.getCalendar();
-                    if (calendar != null && !calendar.isReadOnly()) {
-                        entry.removeFromCalendar();
-                    }
-                }
-                dateControl.clearSelection();
-                break;
-            case F5:
-                dateControl.refreshData();
-            default:
-                break;
+            evt.consume();
         }
     }
 }

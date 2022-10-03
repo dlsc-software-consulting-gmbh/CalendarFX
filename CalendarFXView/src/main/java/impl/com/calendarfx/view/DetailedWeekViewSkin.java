@@ -82,6 +82,7 @@ public class DetailedWeekViewSkin extends DateControlSkin<DetailedWeekView> {
 
         timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
         timeScaleScrollPane.getStyleClass().addAll("timescale-scroll-pane");
+        timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
 
         // synchronous scrolling
         Bindings.bindBidirectional(timeScale.translateYProperty(), weekView.translateYProperty());

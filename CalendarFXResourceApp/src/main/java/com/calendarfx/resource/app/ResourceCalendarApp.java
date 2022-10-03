@@ -64,7 +64,6 @@ public class ResourceCalendarApp extends Application {
             newMarkerItem.setOnAction(evt -> {
                 Marker marker = new Marker();
                 marker.setStyle("-fx-background-color: red;");
-                marker.timeProperty().addListener(it -> System.out.println("Marker " + marker.getTitle() + ": new time = " + marker.getTime()));
                 marker.setTitle("New Marker");
                 marker.setTime(param.getZonedDateTime());
                 resourceCalendarView.getMarkers().add(marker);

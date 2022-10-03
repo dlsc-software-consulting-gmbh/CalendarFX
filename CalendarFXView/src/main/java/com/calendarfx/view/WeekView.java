@@ -31,6 +31,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Skin;
+import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import org.controlsfx.control.PropertySheet;
 
@@ -76,6 +77,7 @@ public class WeekView extends DayViewBase {
 
         setWeekDayViewFactory(param -> new WeekDayView());
         setNumberOfDays(numberOfDays);
+        setShowToday(true);
 
         dateProperty().addListener(it -> updateStartAndEndDates());
 
@@ -307,6 +309,30 @@ public class WeekView extends DayViewBase {
      */
     public final LocalDate getEndDate() {
         return endDate.get();
+    }
+
+    private final ObjectProperty<Callback<WeekView, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
+        Region region = new Region();
+        region.getStyleClass().add("weekday-separator");
+        return region;
+    });
+
+
+    public final Callback<WeekView, Region> getSeparatorFactory() {
+        return separatorFactory.get();
+    }
+
+    /**
+     * A factory used for creating (optional) vertical separators between the week days.
+     *
+     * @return the separator factory
+     */
+    public final ObjectProperty<Callback<WeekView, Region>> separatorFactoryProperty() {
+        return separatorFactory;
+    }
+
+    public final void setSeparatorFactory(Callback<WeekView, Region> separatorFactory) {
+        this.separatorFactory.set(separatorFactory);
     }
 
     private static final String WEEK_VIEW_CATEGORY = "Week View";

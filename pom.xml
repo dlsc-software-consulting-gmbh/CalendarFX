@@ -16,7 +16,7 @@
     <parent>
         <groupId>com.dlsc</groupId>
         <artifactId>dlsc-maven-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.2.0</version>
     </parent>
 
     <url>https://github.com/dlsc-software-consulting-gmbh/CalendarFX</url>
@@ -27,7 +27,7 @@
         </project.github.repository>
         <local.repository.path>/tmp/repository</local.repository.path>
         <java.version>11</java.version>
-        <javafx.version>18.0.1</javafx.version>
+        <javafx.version>19</javafx.version>
         <ikonli.version>12.3.1</ikonli.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
@@ -75,6 +75,7 @@
                 <module>CalendarFXSampler</module>
                 <module>CalendarFXGoogle</module>
                 <module>CalendarFXApp</module>
+                <module>CalendarFXSchedulerApp</module>
                 <module>CalendarFXResourceApp</module>
                 <module>CalendarFXiCal</module>
                 <module>CalendarFXWeather</module>
@@ -84,6 +85,18 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
+                <version>1.4.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-common</artifactId>
+                <version>1.4.10</version>
+            </dependency>
 
             <dependency>
                 <groupId>fr.brouillard.oss</groupId>
@@ -148,6 +161,12 @@
             <dependency>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-web</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-swing</artifactId>
                 <version>${javafx.version}</version>
             </dependency>
 
@@ -249,9 +268,27 @@
             </dependency>
 
             <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.9</version>
+            </dependency>
+
+            <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>1.15</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.opencensus</groupId>
+                <artifactId>opencensus-api</artifactId>
+                <version>0.30.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.maps</groupId>
+                <artifactId>google-maps-services</artifactId>
+                <version>2.0.0</version>
             </dependency>
 
             <dependency>
@@ -286,11 +323,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
                 <configuration>
-                    <systemPropertyVariables>
-                        <net.fortuna.ical4j.timezone.cache.impl>
-                            net.fortuna.ical4j.util.MapTimeZoneCache
-                        </net.fortuna.ical4j.timezone.cache.impl>
-                    </systemPropertyVariables>
+                    <!-- Activate the use of TCP to transmit events to the plugin -->
+                    <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                 </configuration>
             </plugin>
         </plugins>
@@ -318,20 +352,4 @@
         </dependency>
 
     </dependencies>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.1</version>
-                <configuration>
-                    <windowtitle>CalendarFX API</windowtitle>
-                    <show>protected</show>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
 </project>

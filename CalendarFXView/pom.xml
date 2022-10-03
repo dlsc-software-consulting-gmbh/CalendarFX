@@ -13,7 +13,6 @@
   ~  See the License for the specific language governing permissions and
   ~  limitations under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -57,13 +56,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.asciidoctor</groupId>
@@ -168,32 +160,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>calendar.css</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.sun.javafx.css.parser.Css2Bin
-                            </mainClass>
-                            <arguments>
-                                <argument>
-                                    ${project.basedir}/src/main/resources/com/calendarfx/view/calendar.css
-                                </argument>
-                                <argument>
-                                    ${project.basedir}/target/classes/com/calendarfx/view/calendar.bss
-                                </argument>
-                            </arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

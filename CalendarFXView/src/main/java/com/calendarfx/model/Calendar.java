@@ -77,8 +77,10 @@ import static java.util.logging.Level.FINER;
  *     view.getCalendarSources().add(source);
  *     }
  * </pre>
+ *
+ * @param <T> the type of the (optional) user object
  */
-public class Calendar implements EventTarget {
+public class Calendar<T> implements EventTarget {
 
     /**
      * Predefined visual styles for calendars. The actual CSS settings for these
@@ -133,7 +135,7 @@ public class Calendar implements EventTarget {
          * ordinal value modulo the number of elements in this enum.
          *
          * @param ordinal the ordinal value for which to return a style
-         * @return a style, guaranteed to be non null
+         * @return a style, guaranteed to be non-null
          */
         public static Style getStyle(int ordinal) {
             return Style.values()[ordinal % Style.values().length];
@@ -154,19 +156,31 @@ public class Calendar implements EventTarget {
         });
     }
 
+
+    /**
+     * Constructs a new calendar with the given name.
+     *
+     * @param name the name of the calendar
+     * @param userObject an optional user object
+     */
+    public Calendar(String name, T userObject) {
+        this();
+
+        setName(name);
+        if (name != null) {
+            setShortName(!name.isEmpty() ? name.substring(0, 1) : "");
+        }
+
+        setUserObject(userObject);
+    }
+
     /**
      * Constructs a new calendar with the given name.
      *
      * @param name the name of the calendar
      */
     public Calendar(String name) {
-        this();
-
-        setName(name);
-
-        if (name != null) {
-            setShortName(!name.isEmpty() ? name.substring(0, 1) : "");
-        }
+        this(name, null);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -875,6 +889,26 @@ public class Calendar implements EventTarget {
 
             return event;
         });
+    }
+
+    private final ObjectProperty<T> userObject = new SimpleObjectProperty<>(this, "userObject");
+
+    public final T getUserObject() {
+        return userObject.get();
+    }
+
+    /**
+     * An (optional) user object that can be used to link this calendar to the source
+     * of its data or the business object that it represents.
+     *
+     * @return a user object
+     */
+    public final ObjectProperty<T> userObjectProperty() {
+        return userObject;
+    }
+
+    public final void setUserObject(T userObject) {
+        this.userObject.set(userObject);
     }
 
     @Override

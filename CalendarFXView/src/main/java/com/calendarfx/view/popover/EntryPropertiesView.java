@@ -26,9 +26,9 @@ import org.controlsfx.property.BeanPropertyUtils;
 public class EntryPropertiesView extends EntryPopOverPane {
 
     public EntryPropertiesView(Entry<?> entry) {
+        getStyleClass().add("no-padding");
         PropertySheet propertySheet = new PropertySheet();
         propertySheet.getItems().setAll(BeanPropertyUtils.getProperties(entry));
         getChildren().add(propertySheet);
-        setMaxHeight(400);
     }
 }

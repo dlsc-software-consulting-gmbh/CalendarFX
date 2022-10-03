@@ -21,6 +21,7 @@ import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.util.ViewHelper;
+import com.calendarfx.util.WeakList;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
 import com.calendarfx.view.popover.EntryPopOverContentPane;
@@ -30,12 +31,12 @@ import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -53,12 +54,14 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.effect.Light.Point;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
@@ -104,7 +107,7 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  * properties will be bound to each other. This not only includes date and time
  * zone properties but also all the factory and detail callbacks. This allows an
  * application to create a complex calendar control and to configure only that
- * control without worrying about the date controls that are nested inside of
+ * control without worrying about the date controls that are nested inside
  * it. The children will all "inherit" their settings from the parent control.
  *
  * <h2>Current Date, Today, First Day of Week</h2> The {@link #dateProperty()}
@@ -172,7 +175,6 @@ public abstract class DateControl extends CalendarFXControl {
                 throw new IllegalArgumentException("usage count can not be smaller than zero, but was " + count);
             }
 
-
             switch (count) {
                 case 0:
                     return Usage.NONE;
@@ -215,14 +217,12 @@ public abstract class DateControl extends CalendarFXControl {
          */
         setDefaultCalendarProvider(control -> {
             List<CalendarSource> sources = getCalendarSources();
-            if (sources != null) {
-                for (CalendarSource s : sources) {
-                    List<? extends Calendar> calendars = s.getCalendars();
-                    if (calendars != null && !calendars.isEmpty()) {
-                        for (Calendar c : calendars) {
-                            if (!c.isReadOnly() && isCalendarVisible(c)) {
-                                return c;
-                            }
+            for (CalendarSource s : sources) {
+                List<? extends Calendar> calendars = s.getCalendars();
+                if (calendars != null && !calendars.isEmpty()) {
+                    for (Calendar c : calendars) {
+                        if (!c.isReadOnly() && isCalendarVisible(c)) {
+                            return c;
                         }
                     }
                 }
@@ -262,11 +262,11 @@ public abstract class DateControl extends CalendarFXControl {
             if (evt instanceof MouseEvent) {
                 MouseEvent mouseEvent = (MouseEvent) evt;
                 if (mouseEvent.getClickCount() == 2) {
-                    showEntryDetails(param.getEntry(), param.getOwner(), param.getScreenY());
+                    showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
                     return true;
                 }
             } else {
-                showEntryDetails(param.getEntry(), param.getOwner(), param.getScreenY());
+                showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
                 return true;
             }
 
@@ -305,7 +305,7 @@ public abstract class DateControl extends CalendarFXControl {
                 Callback<EntryDetailsParameter, Boolean> detailsCallback = getEntryDetailsCallback();
                 if (detailsCallback != null) {
                     ContextMenuEvent ctxEvent = param.getContextMenuEvent();
-                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, ctxEvent.getScreenX(), ctxEvent.getScreenY());
+                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, entryView, ctxEvent.getScreenX(), ctxEvent.getScreenY());
                     detailsCallback.call(entryDetailsParam);
                 }
             });
@@ -354,7 +354,10 @@ public abstract class DateControl extends CalendarFXControl {
                     Calendar calendar = entry.getCalendar();
                     if (!calendar.isReadOnly()) {
                         if (entry.isRecurrence()) {
-                            entry.getRecurrenceSourceEntry().removeFromCalendar();
+                            Entry<?> recurrenceSourceEntry = entry.getRecurrenceSourceEntry();
+                            if (recurrenceSourceEntry != null) {
+                                recurrenceSourceEntry.removeFromCalendar();
+                            }
                         } else {
                             entry.removeFromCalendar();
                         }
@@ -384,7 +387,6 @@ public abstract class DateControl extends CalendarFXControl {
             }
 
             if (!usesOwnContextMenu) {
-                evt.consume();
                 Callback<ContextMenuParameter, ContextMenu> callback = getContextMenuCallback();
                 if (callback != null) {
                     Callback<DateControl, Calendar> calendarProvider = getDefaultCalendarProvider();
@@ -397,9 +399,10 @@ public abstract class DateControl extends CalendarFXControl {
                     ContextMenuParameter param = new ContextMenuParameter(evt, DateControl.this, calendar, time);
                     ContextMenu menu = callback.call(param);
                     if (menu != null) {
-                        setContextMenu(menu);
-                        menu.show(DateControl.this, evt.getScreenX(), evt.getScreenY());
+                        menu.show(getScene().getWindow(), evt.getScreenX(), evt.getScreenY());
                     }
+
+                    evt.consume();
                 }
             }
         });
@@ -410,6 +413,13 @@ public abstract class DateControl extends CalendarFXControl {
         getAvailableZoneIds().add(ZoneId.of("US/Eastern"));
         getAvailableZoneIds().add(ZoneId.of("US/Central"));
         getAvailableZoneIds().add(ZoneId.of("US/Pacific"));
+
+        createEntryClickCountProperty().addListener(it -> {
+            int createEntryClickCount = getCreateEntryClickCount();
+            if (createEntryClickCount <= 0 || createEntryClickCount > 3) {
+                throw new IllegalArgumentException("the click count for creating new entries must be between 1 and 3 but was " + createEntryClickCount);
+            }
+        });
     }
 
     private final ObservableMap<Calendar, BooleanProperty> calendarVisibilityMap = FXCollections.observableHashMap();
@@ -533,14 +543,14 @@ public abstract class DateControl extends CalendarFXControl {
      * note that the time passed to the factory will be adjusted based on the
      * current virtual grid settings (see {@link #virtualGridProperty()}).
      *
-     * @param time the time where the entry will be created (the entry start
+     * @param time the time point where the entry will be created (the entry start
      *             time)
      * @return the new calendar entry or null if no entry could be created
      * @see #setEntryFactory(Callback)
      * @see #setVirtualGrid(VirtualGrid)
      */
     public final Entry<?> createEntryAt(ZonedDateTime time) {
-        return createEntryAt(time, null);
+        return createEntryAt(time, null, false);
     }
 
     /**
@@ -552,7 +562,7 @@ public abstract class DateControl extends CalendarFXControl {
      * that the time passed to the factory will be adjusted based on the current
      * virtual grid settings (see {@link #virtualGridProperty()}).
      *
-     * @param time     the time where the entry will be created (the entry start
+     * @param time     the time point where the entry will be created (the entry start
      *                 time)
      * @param calendar the calendar to which the new entry will be added (if null the
      *                 default calendar provider will be invoked)
@@ -561,6 +571,28 @@ public abstract class DateControl extends CalendarFXControl {
      * @see #setVirtualGrid(VirtualGrid)
      */
     public final Entry<?> createEntryAt(ZonedDateTime time, Calendar calendar) {
+        return createEntryAt(time, calendar, false);
+    }
+
+    /**
+     * Creates a new entry at the given time. The method delegates the actual
+     * instance creation to the entry factory (see
+     * {@link #entryFactoryProperty()}). The factory receives a parameter object
+     * that contains the calendar where the entry can be added, however the
+     * factory can choose to add the entry to any calendar it likes. Please note
+     * that the time passed to the factory will be adjusted based on the current
+     * virtual grid settings (see {@link #virtualGridProperty()}).
+     *
+     * @param time            the time point where the entry will be created (the entry start
+     *                        time)
+     * @param calendar        the calendar to which the new entry will be added (if null the
+     *                        default calendar provider will be invoked)
+     * @param initiallyHidden entry will be invisible until the application calls {@link Entry#setHidden(boolean)}.
+     * @return the new calendar entry or null if no entry could be created
+     * @see #setEntryFactory(Callback)
+     * @see #setVirtualGrid(VirtualGrid)
+     */
+    public final Entry<?> createEntryAt(ZonedDateTime time, Calendar calendar, boolean initiallyHidden) {
         requireNonNull(time);
         VirtualGrid grid = getVirtualGrid();
         if (grid != null) {
@@ -588,15 +620,18 @@ public abstract class DateControl extends CalendarFXControl {
              * entry would not be shown to the user.
              */
             setCalendarVisibility(calendar, true);
+
             CreateEntryParameter param = new CreateEntryParameter(this, calendar, time);
             Callback<CreateEntryParameter, Entry<?>> factory = getEntryFactory();
             Entry<?> entry = factory.call(param);
+
+            /*
+             * This is OK. The factory can return NULL. In this case we
+             * assume that the application does not allow to create an entry
+             * at the given location.
+             */
             if (entry != null) {
-                /*
-                 * This is OK. The factory can return NULL. In this case we
-                 * assume that the application does not allow to create an entry
-                 * at the given location.
-                 */
+                entry.setHidden(initiallyHidden);
                 entry.setCalendar(calendar);
             }
 
@@ -605,6 +640,8 @@ public abstract class DateControl extends CalendarFXControl {
         } else {
 
             Alert alert = new Alert(AlertType.WARNING);
+            alert.initOwner(this.getScene().getWindow());
+            alert.initModality(Modality.WINDOW_MODAL);
             alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
             alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"));
             String newLine = System.getProperty("line.separator");
@@ -638,52 +675,79 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void showEntry(Entry<?> entry) {
         requireNonNull(entry);
-        doShowEntry(entry, false);
+        doShowEntry(entry, false, true);
     }
 
     /**
      * Adjusts the current view / page in such a way that the given entry
-     * becomes visible and brings up the details editor / UI for the entry
+     * becomes visible and brings up the detail editor / UI for the entry
      * (default is a popover).
      *
      * @param entry the entry to show
      */
     public final void editEntry(Entry<?> entry) {
         requireNonNull(entry);
-        doShowEntry(entry, true);
+        doShowEntry(entry, true, true);
     }
 
-    private void doShowEntry(Entry<?> entry, boolean startEditing) {
-        setDate(entry.getStartDate());
+    /**
+     * Adjusts the current view / page in such a way that the given entry
+     * becomes visible and brings up the detail editor / UI for the entry
+     * (default is a popover).
+     *
+     * @param entry      the entry to show
+     * @param changeDate change the date of the control to the entry's start date
+     */
+    public final void editEntry(Entry<?> entry, boolean changeDate) {
+        requireNonNull(entry);
+        doShowEntry(entry, true, changeDate);
+    }
 
-        if (!entry.isFullDay()) {
-            setRequestedTime(entry.getStartTime());
+    private void doShowEntry(Entry<?> entry, boolean startEditing, boolean changeDate) {
+        layout(); // important so that entry view bounds can be found
+
+        if (changeDate) {
+            setDate(entry.getStartDate());
         }
 
-        if (startEditing) {
+        Platform.runLater(() -> {
+            // do not scroll time when a location is already given
+            // a location is usually given when the user created a new entry via dragging
+            if (!entry.isFullDay()) {
+                // wiggle the requested time property
+                setRequestedTime(null);
+                setRequestedTime(entry.getStartTime());
+            }
 
-            /*
-             * The UI first needs to update itself so that the matching entry
-             * view can be found.
-             */
-            Platform.runLater(() -> doEditEntry(entry));
-        } else {
-            Platform.runLater(() -> doBounceEntry(entry));
-        }
+            Platform.runLater(() -> {
+                if (startEditing) {
+
+                    /*
+                     * The UI first needs to update itself so that the matching entry
+                     * view can be found.
+                     */
+                    Platform.runLater(() -> doEditEntry(entry));
+                } else {
+                    Platform.runLater(() -> doBounceEntry(entry));
+                }
+            });
+        });
     }
 
     private void doEditEntry(Entry<?> entry) {
         EntryViewBase<?> entryView = findEntryView(entry);
 
-        if (entryView != null) {
-            entryView.bounce();
+        Platform.runLater(() -> {
+            if (entryView != null) {
+                entryView.bounce();
 
-            Point2D localToScreen = entryView.localToScreen(0, 0);
+                Point2D location = entryView.localToScreen(0, 0);
 
-            Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
-            EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, localToScreen.getX(), localToScreen.getY());
-            callback.call(param);
-        }
+                Callback<EntryDetailsParameter, Boolean> callback = getEntryDetailsCallback();
+                EntryDetailsParameter param = new EntryDetailsParameter(null, this, entry, entryView, entryView, location.getX(), location.getY());
+                callback.call(param);
+            }
+        });
     }
 
     private void doBounceEntry(Entry<?> entry) {
@@ -694,13 +758,18 @@ public abstract class DateControl extends CalendarFXControl {
         }
     }
 
-    private void showEntryDetails(Entry<?> entry, Node owner, double screenY) {
+    private PopOver entryPopOver;
+
+    private void showEntryDetails(Entry<?> entry, Node node, Node owner, double screenY) {
         Callback<EntryDetailsPopOverContentParameter, Node> contentCallback = getEntryDetailsPopOverContentCallback();
         if (contentCallback == null) {
             throw new IllegalStateException("No content callback found for entry popover");
         }
 
-        PopOver entryPopOver = new PopOver();
+        if (entryPopOver == null || entryPopOver.isDetached()) {
+            entryPopOver = new PopOver();
+            entryPopOver.setAnimated(false); // important, otherwise too many side effects
+        }
 
         EntryDetailsPopOverContentParameter param = new EntryDetailsPopOverContentParameter(entryPopOver, this, owner, entry);
         Node content = contentCallback.call(param);
@@ -711,9 +780,15 @@ public abstract class DateControl extends CalendarFXControl {
 
         entryPopOver.setContentNode(content);
 
-        ArrowLocation location = ViewHelper.findPopOverArrowLocation(owner);
+        ArrowLocation location = ViewHelper.findPopOverArrowLocation(node);
+        if (location == null) {
+            location = ArrowLocation.TOP_LEFT;
+        }
+
         entryPopOver.setArrowLocation(location);
-        Point position = ViewHelper.findPopOverArrowPosition(owner, screenY, entryPopOver.getArrowSize(), location);
+
+        Point2D position = ViewHelper.findPopOverArrowPosition(node, screenY, entryPopOver.getArrowSize(), location);
+
         entryPopOver.show(owner, position.getX(), position.getY());
     }
 
@@ -751,7 +826,7 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * The parameter object passed to the entry factory. It contains the most
      * important parameters for creating a new entry: the requesting date
-     * control, the time where the user performed a double click and the default
+     * control, the time point where the user performed a double click and the default
      * calendar.
      *
      * @see DateControl#entryFactoryProperty()
@@ -779,13 +854,12 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * Returns the default calendar. Applications can add the new entry to
-         * this calendar by calling {@link Entry#setCalendar(Calendar)} or the
-         * can choose any other calendar.
+         * Returns the calendar to which the entry will be added. Applications can add the new entry to
+         * this calendar by calling {@link Entry#setCalendar(Calendar)} or they can choose any other calendar.
          *
-         * @return the default calendar
+         * @return the calendar
          */
-        public Calendar getDefaultCalendar() {
+        public Calendar getCalendar() {
             return calendar;
         }
 
@@ -826,8 +900,6 @@ public abstract class DateControl extends CalendarFXControl {
      * <p>
      * The code below shows the default entry factory that is set on every date
      * control.
-     *
-     *
      * <pre>
      * setEntryFactory(param -&gt; {
      * 	DateControl control = param.getControl();
@@ -922,7 +994,7 @@ public abstract class DateControl extends CalendarFXControl {
      * account.
      *
      * <h2>Code Example</h2> The code below shows the default implementation of
-     * this factory. Applications can choose to bring up a full featured user
+     * this factory. Applications can choose to bring up a full-featured user
      * interface / dialog to specify the exact location of the source (either
      * locally or over a network). A local calendar source might read its data
      * from an XML file while a remote source could load data from a web
@@ -999,7 +1071,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * Convenience method to easily lookup the entry for which the view was
+         * Convenience method to easily look up the entry for which the view was
          * created.
          *
          * @return the calendar entry
@@ -1009,7 +1081,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * Convenience method to easily lookup the calendar of the entry for
+         * Convenience method to easily look up the calendar of the entry for
          * which the view was created.
          *
          * @return the calendar
@@ -1125,7 +1197,7 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * A property that stores a callback used for editing entries. If an edit operation will be executed
-     * on an entry then the callback will be invoked to determine if the operation is allowed. By default
+     * on an entry then the callback will be invoked to determine if the operation is allowed. By default,
      * all operations listed inside {@link EditOperation} are allowed.
      *
      * @return the property
@@ -1164,8 +1236,6 @@ public abstract class DateControl extends CalendarFXControl {
      *
      * <h2>Code Example</h2> The code below shows the default implementation of
      * this callback.
-     *
-     *
      * <pre>
      * setEntryContextMenuCallback(param -&gt; {
      * 	EntryViewBase&lt;?&gt; entryView = param.getEntryView();
@@ -1243,7 +1313,7 @@ public abstract class DateControl extends CalendarFXControl {
          * @param dateControl the date control where the event occurred
          * @param calendar    the (default) calendar where newly created entries should
          *                    be added (can be null if no editable calendar was found)
-         * @param time        the time where the mouse click occurred
+         * @param time        the time point where the mouse click occurred
          */
         public ContextMenuParameter(ContextMenuEvent evt, DateControl dateControl, Calendar calendar, ZonedDateTime time) {
             super(evt, dateControl);
@@ -1263,7 +1333,7 @@ public abstract class DateControl extends CalendarFXControl {
         }
 
         /**
-         * The time where the mouse click occurred.
+         * The time point where the mouse click occurred.
          *
          * @return the time shown at the mouse click location
          */
@@ -1289,8 +1359,6 @@ public abstract class DateControl extends CalendarFXControl {
      * <h2>Code Example</h2>
      * <p>
      * The code below shows a part of the default implementation:
-     *
-     *
      * <pre>
      * setContextMenuCallback(param -&gt; {
      * 	ContextMenu menu = new ContextMenu();
@@ -1335,7 +1403,7 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * The default calendar provider is responsible for returning a calendar
      * that can be used to add a new entry. This way the user can add new
-     * entries by simply double clicking inside the view without the need of
+     * entries by simply double-clicking inside the view without the need of
      * first showing a calendar selection UI. This can be changed by setting a
      * callback that prompts the user with a dialog.
      *
@@ -1344,8 +1412,6 @@ public abstract class DateControl extends CalendarFXControl {
      * The code shown below is the default implementation of this provider. It
      * returns the first calendar of the first source. If no source is available
      * it will return null.
-     *
-     *
      * <pre>
      * setDefaultCalendarProvider(control -&gt; {
      * 	List&lt;CalendarSource&gt; sources = getCalendarSources();
@@ -1412,6 +1478,7 @@ public abstract class DateControl extends CalendarFXControl {
         private final Node owner;
         private final double screenX;
         private final double screenY;
+        private final Node node;
 
         /**
          * Constructs a new parameter object.
@@ -1425,9 +1492,10 @@ public abstract class DateControl extends CalendarFXControl {
          * @param screenX    the screen location where the event occurred
          * @param screenY    the screen location where the event occurred
          */
-        public DetailsParameter(InputEvent inputEvent, DateControl control, Node owner, double screenX, double screenY) {
+        public DetailsParameter(InputEvent inputEvent, DateControl control, Node node, Node owner, double screenX, double screenY) {
             this.inputEvent = inputEvent;
             this.dateControl = requireNonNull(control);
+            this.node = requireNonNull(node);
             this.owner = requireNonNull(owner);
             this.screenX = screenX;
             this.screenY = screenY;
@@ -1437,12 +1505,23 @@ public abstract class DateControl extends CalendarFXControl {
          * Returns the node that should be used as the owner of a dialog /
          * popover. We should not use the entry view as the owner of a dialog /
          * popover because views come and go. We need something that lives
-         * longer.
+         * longer. A good candidate will be the root node of the scene.
          *
-         * @return an owner node for the details dialog / popover
+         * @return an owner node for the detail dialog / popover
          */
         public Node getOwner() {
             return owner;
+        }
+
+        /**
+         * Returns the node that will be used for calculating the position
+         * of the detail dialog / popover. Popovers will point an arrow at the
+         * given node.
+         *
+         * @return the annotated node
+         */
+        public Node getNode() {
+            return node;
         }
 
         /**
@@ -1500,13 +1579,14 @@ public abstract class DateControl extends CalendarFXControl {
          *                   selection)
          * @param control    the control where the event occurred
          * @param entry      the entry for which details are requested
+         * @param node       the node to which the popover will be placed relative too (when using popovers)
          * @param owner      a node that can be used as an owner for the dialog or
          *                   popover
          * @param screenX    the screen location where the event occurred
          * @param screenY    the screen location where the event occurred
          */
-        public EntryDetailsParameter(InputEvent inputEvent, DateControl control, Entry<?> entry, Node owner, double screenX, double screenY) {
-            super(inputEvent, control, owner, screenX, screenY);
+        public EntryDetailsParameter(InputEvent inputEvent, DateControl control, Entry<?> entry, Node node, Node owner, double screenX, double screenY) {
+            super(inputEvent, control, node, owner, screenX, screenY);
             this.entry = entry;
         }
 
@@ -1537,13 +1617,13 @@ public abstract class DateControl extends CalendarFXControl {
          *                   selection)
          * @param control    the control where the event occurred
          * @param date       the date for which details are required
-         * @param owner      a node that can be used as an owner for the dialog or
-         *                   popover
+         * @param node       the annotated node (popover will point at it with an arrow)
+         * @param owner      a node that can be used as an owner for the dialog or popover
          * @param screenX    the screen location where the event occurred
          * @param screenY    the screen location where the event occurred
          */
-        public DateDetailsParameter(InputEvent inputEvent, DateControl control, Node owner, LocalDate date, double screenX, double screenY) {
-            super(inputEvent, control, owner, screenX, screenY);
+        public DateDetailsParameter(InputEvent inputEvent, DateControl control, Node node, Node owner, LocalDate date, double screenX, double screenY) {
+            super(inputEvent, control, node, owner, screenX, screenY);
             this.localDate = requireNonNull(date);
         }
 
@@ -1685,7 +1765,7 @@ public abstract class DateControl extends CalendarFXControl {
         /**
          * Constructs a new parameter object.
          *
-         * @param popOver the pop over for which details will be created
+         * @param popOver the popover for which details will be created
          * @param control the control where the event occurred
          * @param node    the node where the event occurred
          * @param entry   the entry for which details will be shown
@@ -1802,9 +1882,8 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * A flag used to indicate that the view will mark the area that represents
-     * the value of {@link #todayProperty()}. By default this area will be
+     * the value of {@link #todayProperty()}. By default, this area will be
      * filled with a different color (red) than the rest (white).
-     *
      * <img src="doc-files/all-day-view-today.png" alt="All Day View Today">
      *
      * @return true if today will be shown differently
@@ -1829,6 +1908,26 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void setShowToday(boolean show) {
         showTodayProperty().set(show);
+    }
+
+    private final BooleanProperty showNoonMarker = new SimpleBooleanProperty(this, "showNoonMarker", true);
+
+    public final boolean isShowNoonMarker() {
+        return showNoonMarker.get();
+    }
+
+    /**
+     * A property used to indicate whether the day view should mark noon with a special
+     * marker.
+     *
+     * @return true if noon will be marked in a special way
+     */
+    public final BooleanProperty showNoonMarkerProperty() {
+        return showNoonMarker;
+    }
+
+    public final void setShowNoonMarker(boolean showNoonMarker) {
+        this.showNoonMarker.set(showNoonMarker);
     }
 
     private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now());
@@ -1872,11 +1971,10 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * Enables or disables user options to work with different time zones.
      *
+     * @return true if time zone support is enabled
      * @see DateControl#zoneIdProperty()
      * @see Entry#zoneIdProperty()
      * @see Interval#getZoneId()
-     *
-     * @return true if time zone support is enabled
      */
     public final BooleanProperty enableTimeZoneSupportProperty() {
         return enableTimeZoneSupport;
@@ -1954,8 +2052,8 @@ public abstract class DateControl extends CalendarFXControl {
     /**
      * Returns the zoned date time version of the current time.
      *
-     * @see #getTime()
      * @return the zoned date time version of the current time property
+     * @see #getTime()
      */
     public final ZonedDateTime getZonedDateTime() {
         return ZonedDateTime.of(getDate(), getTime(), getZoneId());
@@ -2059,7 +2157,7 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     /**
-     * A convenience method to lookup the first day of the week ("Monday" in
+     * A convenience method to look up the first day of the week ("Monday" in
      * Germany, "Sunday" in the US). This method delegates to
      * {@link WeekFields#getFirstDayOfWeek()}.
      *
@@ -2077,7 +2175,7 @@ public abstract class DateControl extends CalendarFXControl {
      * currently attached to this date control. This is a convenience list that
      * "flattens" the two level structure of sources and their calendars. It is
      * a read-only list because calendars can not be added directly to a date
-     * control. Instead they are added to calendar sources and those sources are
+     * control. Instead, they are added to calendar sources and those sources are
      * then added to the control.
      *
      * @return the list of all calendars shown by this control
@@ -2186,8 +2284,7 @@ public abstract class DateControl extends CalendarFXControl {
         getSelections().clear();
     }
 
-    private final ObjectProperty<VirtualGrid> virtualGrid = new SimpleObjectProperty<>(this, "virtualGrid",
-            new VirtualGrid(Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_NAME"), Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_SHORT_NAME"), ChronoUnit.MINUTES, 15));
+    private final ObjectProperty<VirtualGrid> virtualGrid = new SimpleObjectProperty<>(this, "virtualGrid", new VirtualGrid(Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_NAME"), Messages.getString("DateControl.DEFAULT_VIRTUAL_GRID_SHORT_NAME"), ChronoUnit.MINUTES, 15));
 
     /**
      * A virtual grid used for snapping to invisible grid lines while editing
@@ -2276,7 +2373,7 @@ public abstract class DateControl extends CalendarFXControl {
     private final ObjectProperty<Layout> layout = new SimpleObjectProperty<>(this, "layout", Layout.STANDARD);
 
     /**
-     * Stores the strategy used by the view to layout the entries of several
+     * Stores the strategy used by the view to lay out the entries of several
      * calendars at once. The standard layout ignores the source calendar of an
      * entry and finds the next available place in the UI that satisfies the
      * time bounds of the entry. The {@link Layout#SWIMLANE} strategy allocates
@@ -2387,15 +2484,28 @@ public abstract class DateControl extends CalendarFXControl {
         return result;
     }
 
-    private final List<DateControl> boundDateControls = FXCollections.observableArrayList();
+    private final WeakList<DateControl> boundDateControls = new WeakList<>();
 
     /**
      * Returns all data controls that are bound to this control.
      *
      * @return the bound date controls / sub controls / children controls
      */
-    public final List<DateControl> getBoundDateControls() {
+    public final WeakList<DateControl> getBoundDateControls() {
         return boundDateControls;
+    }
+
+    /**
+     * Unbinds all bound date controls.
+     *
+     * @see #bind(DateControl, boolean)
+     * @see #unbind(DateControl)
+     */
+    public final void unbindAll() {
+        WeakList<DateControl> controls = getBoundDateControls();
+        for (DateControl next : controls) {
+            unbind(next);
+        }
     }
 
     // hyperlink support
@@ -2403,7 +2513,7 @@ public abstract class DateControl extends CalendarFXControl {
 
     /**
      * A property used to control whether the control allows the user to click on it or an element
-     * inside of it in order to "jump" to another screen with more detail. Example: in the {@link CalendarView}
+     * inside it in order to "jump" to another screen with more detail. Example: in the {@link CalendarView}
      * the user can click on the "day of month" label of a cell inside the {@link MonthSheetView} in
      * order to switch to the {@link DayPage} where the user will see all entries scheduled for that day.
      *
@@ -2431,6 +2541,105 @@ public abstract class DateControl extends CalendarFXControl {
         return enableHyperlinks.get();
     }
 
+    private final BooleanProperty editAvailability = new SimpleBooleanProperty(this, "editAvailability");
+
+    public boolean isEditAvailability() {
+        return editAvailability.get();
+    }
+
+    /**
+     * A flag used to signal whether the user is allowed to modify the availability calendar. If he is
+     * allowed then the user can click on "time slots" based on the {@link #availabilityGridProperty()}.
+     *
+     * @return true if the user can edit availability
+     */
+    public BooleanProperty editAvailabilityProperty() {
+        return editAvailability;
+    }
+
+    public void setEditAvailability(boolean editAvailability) {
+        this.editAvailability.set(editAvailability);
+    }
+
+    private final ObjectProperty<Calendar> availabilityCalendar = new SimpleObjectProperty<>(this, "availabilityCalendar", new Calendar());
+
+    public final Calendar getAvailabilityCalendar() {
+        return availabilityCalendar.get();
+    }
+
+    /**
+     * A background calendar used to display "availability" of a resource.
+     *
+     * @return the background calendar used for this view
+     */
+    public final ObjectProperty<Calendar> availabilityCalendarProperty() {
+        return availabilityCalendar;
+    }
+
+    public final void setAvailabilityCalendar(Calendar calendar) {
+        this.availabilityCalendar.set(calendar);
+    }
+
+    private final ObjectProperty<VirtualGrid> availabilityGrid = new SimpleObjectProperty<>(this, "availabilityGrid", new VirtualGrid("30 Minutes", "30 Minutes", ChronoUnit.MINUTES, 30));
+
+    public final VirtualGrid getAvailabilityGrid() {
+        return availabilityGrid.get();
+    }
+
+    /**
+     * Defines a virtual grid to be used for working with the availability calendar.
+     *
+     * @return the availability calendar grid size
+     * @see #availabilityCalendarProperty()
+     */
+    public final ObjectProperty<VirtualGrid> availabilityGridProperty() {
+        return availabilityGrid;
+    }
+
+    public final void setAvailabilityGrid(VirtualGrid availabilityGrid) {
+        this.availabilityGrid.set(availabilityGrid);
+    }
+
+    private final ObjectProperty<Paint> availabilityFill = new SimpleObjectProperty<>(this, "availabilityFill", Color.rgb(0, 0, 0, .1));
+
+    public final Paint getAvailabilityFill() {
+        return availabilityFill.get();
+    }
+
+    /**
+     * The color used for drawing the availability background information behind the calendar
+     * entries.
+     *
+     * @return the color used for filling "unavailable" time slots
+     */
+    public final ObjectProperty<Paint> availabilityFillProperty() {
+        return availabilityFill;
+    }
+
+    public final void setAvailabilityFill(Paint availabilityFill) {
+        this.availabilityFill.set(availabilityFill);
+    }
+
+    private final BooleanProperty showDetailsUponEntryCreation = new SimpleBooleanProperty(this, "showDetailsUponEntryCreation", true);
+
+    public final boolean isShowDetailsUponEntryCreation() {
+        return showDetailsUponEntryCreation.get();
+    }
+
+    /**
+     * Determines if the {@link #entryDetailsCallbackProperty()} will be used to display
+     * a dialog for a newly added calendar entry.
+     *
+     * @return true if the date control shows a dialog immediately after a new entry was added by the user
+     */
+    public final BooleanProperty showDetailsUponEntryCreationProperty() {
+        return showDetailsUponEntryCreation;
+    }
+
+    public final void setShowDetailsUponEntryCreation(boolean showDetailsUponEntryCreation) {
+        this.showDetailsUponEntryCreation.set(showDetailsUponEntryCreation);
+    }
+
     /**
      * Binds several properties of the given date control to the same properties
      * of this control. This kind of binding is needed to create UIs with nested
@@ -2447,16 +2656,14 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void bind(DateControl otherControl, boolean bindDate) {
         requireNonNull(otherControl);
-
         boundDateControls.add(otherControl);
 
-        // bind maps
+        // bind collections
         Bindings.bindContentBidirectional(otherControl.getCalendarVisibilityMap(), getCalendarVisibilityMap());
-
-        // bind lists and sets
         Bindings.bindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
         Bindings.bindContentBidirectional(otherControl.getSelections(), getSelections());
         Bindings.bindContentBidirectional(otherControl.getWeekendDays(), getWeekendDays());
+        Bindings.bindContentBidirectional(otherControl.getAvailableZoneIds(), getAvailableZoneIds());
 
         // bind properties
         Bindings.bindBidirectional(otherControl.suspendUpdatesProperty(), suspendUpdatesProperty());
@@ -2467,17 +2674,8 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.requestedTimeProperty(), requestedTimeProperty());
 
         Bindings.bindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
-        Bindings.bindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
         Bindings.bindBidirectional(otherControl.weekFieldsProperty(), weekFieldsProperty());
         Bindings.bindBidirectional(otherControl.layoutProperty(), layoutProperty());
-
-        Bindings.bindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
-        Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
-        Bindings.bindBidirectional(otherControl.timeProperty(), timeProperty());
-        Bindings.bindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
-        Bindings.bindBidirectional(otherControl.availableZoneIdsProperty(), availableZoneIdsProperty());
-        Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
-
         if (bindDate) {
             Bindings.bindBidirectional(otherControl.dateProperty(), dateProperty());
         }
@@ -2485,7 +2683,22 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.todayProperty(), todayProperty());
         Bindings.bindBidirectional(otherControl.zoneIdProperty(), zoneIdProperty());
 
-        // edit callbacks
+        Bindings.bindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
+        Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
+        Bindings.bindBidirectional(otherControl.timeProperty(), timeProperty());
+        Bindings.bindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
+        Bindings.bindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
+        Bindings.bindBidirectional(otherControl.showDetailsUponEntryCreationProperty(), showDetailsUponEntryCreationProperty());
+        Bindings.bindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
+        Bindings.bindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
+
+        Bindings.bindBidirectional(otherControl.editAvailabilityProperty(), editAvailabilityProperty());
+        Bindings.bindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
+        Bindings.bindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
+        Bindings.bindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
+        Bindings.bindBidirectional(otherControl.createEntryClickCountProperty(), createEntryClickCountProperty());
+
+        // bind callbacks
         Bindings.bindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
         Bindings.bindBidirectional(otherControl.dateDetailsCallbackProperty(), dateDetailsCallbackProperty());
         Bindings.bindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
@@ -2504,14 +2717,13 @@ public abstract class DateControl extends CalendarFXControl {
      */
     public final void unbind(DateControl otherControl) {
         requireNonNull(otherControl);
-        boundDateControls.remove(otherControl);
 
-        // unbind maps
+        // unbind collections
         Bindings.unbindContentBidirectional(otherControl.getCalendarVisibilityMap(), getCalendarVisibilityMap());
-
-        // unbind lists
         Bindings.unbindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
         Bindings.unbindContentBidirectional(otherControl.getSelections(), getSelections());
+        Bindings.unbindContentBidirectional(otherControl.getWeekendDays(), getWeekendDays());
+        Bindings.unbindContentBidirectional(otherControl.getAvailableZoneIds(), getAvailableZoneIds());
 
         // unbind properties
         Bindings.unbindBidirectional(otherControl.suspendUpdatesProperty(), suspendUpdatesProperty());
@@ -2522,19 +2734,27 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.requestedTimeProperty(), requestedTimeProperty());
 
         Bindings.unbindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
-        Bindings.unbindBidirectional(otherControl.selectionModeProperty(), selectionModeProperty());
         Bindings.unbindBidirectional(otherControl.weekFieldsProperty(), weekFieldsProperty());
+        Bindings.unbindBidirectional(otherControl.layoutProperty(), layoutProperty());
         Bindings.unbindBidirectional(otherControl.dateProperty(), dateProperty());
 
         Bindings.unbindBidirectional(otherControl.todayProperty(), todayProperty());
         Bindings.unbindBidirectional(otherControl.zoneIdProperty(), zoneIdProperty());
 
-        Bindings.unbindBidirectional(otherControl.layoutProperty(), layoutProperty());
-
         Bindings.unbindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
         Bindings.unbindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.unbindBidirectional(otherControl.timeProperty(), timeProperty());
         Bindings.unbindBidirectional(otherControl.usagePolicyProperty(), usagePolicyProperty());
+        Bindings.unbindBidirectional(otherControl.enableTimeZoneSupportProperty(), enableTimeZoneSupportProperty());
+        Bindings.unbindBidirectional(otherControl.showDetailsUponEntryCreationProperty(), showDetailsUponEntryCreationProperty());
+        Bindings.unbindBidirectional(otherControl.showNoonMarkerProperty(), showNoonMarkerProperty());
+        Bindings.unbindBidirectional(otherControl.showTodayProperty(), showTodayProperty());
+
+        Bindings.unbindBidirectional(otherControl.editAvailabilityProperty(), editAvailabilityProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityCalendarProperty(), availabilityCalendarProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityGridProperty(), availabilityGridProperty());
+        Bindings.unbindBidirectional(otherControl.availabilityFillProperty(), availabilityFillProperty());
+        Bindings.unbindBidirectional(otherControl.createEntryClickCountProperty(), createEntryClickCountProperty());
 
         // unbind callbacks
         Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
@@ -2542,6 +2762,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
+        Bindings.unbindBidirectional(otherControl.entryDetailsPopOverContentCallbackProperty(), entryDetailsPopOverContentCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryEditPolicyProperty(), entryEditPolicyProperty());
     }
 
@@ -2622,11 +2843,7 @@ public abstract class DateControl extends CalendarFXControl {
         return usagePolicy.get();
     }
 
-    private final ListProperty<ZoneId> availableZoneIds = new SimpleListProperty<>(this, "availableZoneIds", FXCollections.observableArrayList());
-
-    public final ObservableList<ZoneId> getAvailableZoneIds() {
-        return availableZoneIds.get();
-    }
+    private final ObservableList<ZoneId> availableZoneIds = FXCollections.observableArrayList();
 
     /**
      * A list of time zones / time zone IDs that will be available to the user
@@ -2635,12 +2852,28 @@ public abstract class DateControl extends CalendarFXControl {
      *
      * @return the list of available time zone IDs
      */
-    public final ListProperty<ZoneId> availableZoneIdsProperty() {
+    public final ObservableList<ZoneId> getAvailableZoneIds() {
         return availableZoneIds;
     }
 
-    public final void setAvailableZoneIds(ObservableList<ZoneId> availableZoneIds) {
-        this.availableZoneIds.set(availableZoneIds);
+    private final IntegerProperty createEntryClickCount = new SimpleIntegerProperty(this, "createEntryClickCount", 2);
+
+    public int getCreateEntryClickCount() {
+        return createEntryClickCount.get();
+    }
+
+    /**
+     * An integer that determines how many times the user has to perform a primary
+     * mouse button click in order to create a new entry.
+     *
+     * @return the number of mouse clicks required for creating a new entry
+     */
+    public IntegerProperty createEntryClickCountProperty() {
+        return createEntryClickCount;
+    }
+
+    public void setCreateEntryClickCount(int createEntryClickCount) {
+        this.createEntryClickCount.set(createEntryClickCount);
     }
 
     private static final String DATE_CONTROL_CATEGORY = "Date Control";
@@ -3069,7 +3302,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         items.add(new Item() {
             @Override
-            public Optional<ObservableValue<? extends Object>> getObservableValue() {
+            public Optional<ObservableValue<?>> getObservableValue() {
                 return Optional.empty();
             }
 
@@ -3110,7 +3343,7 @@ public abstract class DateControl extends CalendarFXControl {
 
         items.add(new Item() {
             @Override
-            public Optional<ObservableValue<? extends Object>> getObservableValue() {
+            public Optional<ObservableValue<?>> getObservableValue() {
                 return Optional.empty();
             }
 
@@ -3141,6 +3374,234 @@ public abstract class DateControl extends CalendarFXControl {
             @Override
             public String getDescription() {
                 return "Top Layer visible / hidden";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(showNoonMarkerProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setShowNoonMarker((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isShowNoonMarker();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Show Noon Marker";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Show / hide markers for noon.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(editAvailabilityProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setEditAvailability((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isEditAvailability();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Edit Availability";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Allow editing of the availability calendar";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(enableTimeZoneSupportProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setEnableTimeZoneSupport((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isEnableTimeZoneSupport();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Enable Timezone Support";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Provide UI controls to work with timezones.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(showDetailsUponEntryCreationProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setShowDetailsUponEntryCreation((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isShowDetailsUponEntryCreation();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Show Details upon Creation";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Show the details dialog immediately after creating a new entry";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(createEntryClickCountProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setCreateEntryClickCount((Integer) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getCreateEntryClickCount();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return Integer.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Create Entry Click Count";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Set the number of clicks needed to create a new entry.";
+            }
+
+            @Override
+            public String getCategory() {
+                return DATE_CONTROL_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(availabilityFillProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setAvailabilityFill((Paint) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return getAvailabilityFill();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return Paint.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Availability Fill Color";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Availability Fill Color";
             }
 
             @Override

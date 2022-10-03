@@ -46,6 +46,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
         registerLayoutListener(view.entryWidthPercentageProperty());
         registerLayoutListener(view.showTodayProperty());
         registerLayoutListener(view.zoneIdProperty());
+        registerLayoutListener(view.editAvailabilityProperty());
 
         view.setOnScroll(evt -> {
             final double oldLocation = evt.getY();
@@ -73,6 +74,7 @@ public class DayViewBaseSkin<T extends DayViewBase> extends DateControlSkin<T> {
     private void registerLayoutListener(Observable obs) {
         obs.addListener(layoutListener);
     }
+
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 

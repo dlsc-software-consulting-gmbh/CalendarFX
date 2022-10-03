@@ -68,7 +68,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         view.dayViewMapProperty().addListener(updateGridPaneListener);
         view.showScrollBarProperty().addListener(updateGridPaneListener);
-        view.markersProperty().addListener(updateGridPaneListener);
+        view.getMarkers().addListener(updateGridPaneListener);
 
         view.showScrollBarProperty().addListener(it -> updateColumnConstraints());
 
@@ -229,7 +229,7 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
                 }
             };
 
-            getSkinnable().markersProperty().addListener(l);
+            getSkinnable().getMarkers().addListener(l);
 
             final ObservableList<Marker> markers = getSkinnable().getMarkers();
             markers.forEach(marker -> addMarkerLine(marker));
@@ -330,11 +330,15 @@ public class ResourceCalendarViewSkin<T> extends DayViewBaseSkin<ResourceCalenda
 
         private final Marker marker;
 
+        private final InvalidationListener updateStyleListener = (Observable it) -> updateStyleClass();
+
+        private final WeakInvalidationListener weakUpdateStyleListener = new WeakInvalidationListener(updateStyleListener);
+
         public MarkerLine(Marker marker) {
             this.marker = marker;
 
             styleProperty().bind(marker.styleProperty());
-            marker.styleClassProperty().addListener((Observable it) -> updateStyleClass());
+            marker.getStyleClass().addListener(weakUpdateStyleListener);
             updateStyleClass();
 
             Tooltip tooltip = new Tooltip();

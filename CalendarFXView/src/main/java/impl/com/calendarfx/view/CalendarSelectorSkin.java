@@ -49,8 +49,7 @@ public class CalendarSelectorSkin extends SkinBase<CalendarSelector> {
 
         selector.calendarProperty().addListener(it -> updateButton());
 
-        selector.getCalendars().addListener(
-                (Observable evt) -> updateMenuItems());
+        selector.getCalendars().addListener((Observable evt) -> updateMenuItems());
 
         updateMenuItems();
         updateButton();
