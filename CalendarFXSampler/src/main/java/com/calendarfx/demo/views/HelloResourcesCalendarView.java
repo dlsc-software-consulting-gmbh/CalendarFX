@@ -29,9 +29,9 @@ import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
 import com.calendarfx.view.resources.ResourceCalendarView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,17 +39,18 @@ import java.time.ZonedDateTime;
 
 public class HelloResourcesCalendarView extends CalendarFXSample {
 
+    private final ResourceCalendarView<String> view = new ResourceCalendarView<>();
+
     @Override
     public String getSampleName() {
         return "Resources Calendar View";
     }
 
     @Override
-    public Node getPanel(Stage stage) {
-        ResourceCalendarView<String> resourceCalendarView = new ResourceCalendarView<>();
-        resourceCalendarView.setShowNoonMarker(false);
-        resourceCalendarView.setOverlapResolutionStrategy(OverlapResolutionStrategy.VISUAL_BOUNDS);
-        resourceCalendarView.setHeaderFactory(resource -> {
+    public Node createControl() {
+        view.setShowNoonMarker(false);
+        view.setOverlapResolutionStrategy(OverlapResolutionStrategy.VISUAL_BOUNDS);
+        view.setHeaderFactory(resource -> {
             Label label1 = new Label("IG-TR");
             Label label2 = new Label("29.000");
             Label label3 = new Label("13.200");
@@ -91,16 +92,16 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
             source.getCalendars().add(calendar3);
 
             String resource = "Resource " + (i + 1);
-            resourceCalendarView.getResources().add(resource);
+            view.getResources().add(resource);
 
-            DayView dayView = resourceCalendarView.getDayView(resource);
+            DayView dayView = view.getDayView(resource);
             dayView.setEnableCurrentTimeMarker(true);
             dayView.setEnableCurrentTimeCircle(i == 0);
             dayView.getCalendarSources().setAll(source);
             dayView.setEntryViewFactory(entry -> new DayEntryView(entry) {
                 {
                     setPrefHeight(25);
-                    setHeightLayoutStrategy(HeightLayoutStrategy.COMPUTE_PREF_SIZE);
+//                    setHeightLayoutStrategy(HeightLayoutStrategy.COMPUTE_PREF_SIZE);
                 }
             });
 
@@ -112,20 +113,24 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
         Marker marker1 = new Marker();
         marker1.setTitle("My Marker 1");
         marker1.setTime(ZonedDateTime.now().minusHours(1));
-        resourceCalendarView.getMarkers().add(marker1);
+        view.getMarkers().add(marker1);
 
         Marker marker2 = new Marker();
         marker2.setTitle("My Marker 2");
         marker2.setTime(ZonedDateTime.now().plusHours(1));
         marker2.getStyleClass().add("marker2");
-        resourceCalendarView.getMarkers().add(marker2);
+        view.getMarkers().add(marker2);
 
-        return resourceCalendarView;
+        view.setPrefHeight(800);
+
+        return view;
     }
 
     @Override
-    protected Node createControl() {
-        return null;
+    public Node getControlPanel() {
+        CheckBox editSchedule = new CheckBox("Edit Schedule");
+        editSchedule.selectedProperty().bindBidirectional(view.editAvailabilityProperty());
+        return editSchedule;
     }
 
     @Override
