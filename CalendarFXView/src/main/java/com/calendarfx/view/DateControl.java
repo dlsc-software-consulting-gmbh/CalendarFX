@@ -168,6 +168,8 @@ public abstract class DateControl extends CalendarFXControl {
      * with default implementations.
      */
     protected DateControl() {
+        setOnMouseClicked(evt -> requestFocus());
+
         setUsagePolicy(count -> {
             if (count < 0) {
                 throw new IllegalArgumentException("usage count can not be smaller than zero, but was " + count);
