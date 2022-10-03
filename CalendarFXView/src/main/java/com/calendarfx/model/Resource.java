@@ -1,9 +1,23 @@
-package com.calendarfx.view.resources;
+package com.calendarfx.model;
 
-import com.calendarfx.model.Calendar;
+import com.calendarfx.view.DateControl;
+import com.calendarfx.view.ResourcesView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+/**
+ * A resource represents a person or a machine. Resources can be edited via
+ * the {@link ResourcesView}. A typical use case would be the allocation of
+ * personnel in a hairdresser salon. A resource might be available or not.
+ * This can be expressed via the {@link #availabilityCalendarProperty()}.
+ *
+ * @param <T> the type of the wrapped / referenced business object (person or machine).
+ *
+ * @see ResourcesView#getResources()
+ * @see DateControl#editAvailabilityProperty()
+ * @see DateControl#availabilityGridProperty()
+ * @see DateControl#availabilityFillProperty()
+ */
 public class Resource<T> {
 
     public Resource() {
@@ -19,6 +33,11 @@ public class Resource<T> {
         return userObject.get();
     }
 
+    /**
+     * An (optional) user object.
+     *
+     * @return the user object (e.g. the person or the calendar data source).
+     */
     public final ObjectProperty<T> userObjectProperty() {
         return userObject;
     }
@@ -33,6 +52,12 @@ public class Resource<T> {
         return calendar.get();
     }
 
+    /**
+     * A resource can be "booked" or "allocated to tasks". Those bookings / allocations are stored
+     * in this calendar.
+     *
+     * @return the resource calendar with the resource's bookings
+     */
     public final ObjectProperty<Calendar> calendarProperty() {
         return calendar;
     }
@@ -47,6 +72,16 @@ public class Resource<T> {
         return availabilityCalendar.get();
     }
 
+    /**
+     * A resource might be available or not. This can be determined via the "availability"
+     * calendar.
+     *
+     * @return the resource's availability calendar
+     *
+     * @see DateControl#editAvailabilityProperty()
+     * @see DateControl#availabilityGridProperty()
+     * @see DateControl#availabilityFillProperty()
+     */
     public ObjectProperty<Calendar> availabilityCalendarProperty() {
         return availabilityCalendar;
     }

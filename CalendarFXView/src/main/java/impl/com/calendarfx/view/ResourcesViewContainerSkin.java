@@ -1,12 +1,11 @@
-package impl.com.calendarfx.view.resources;
+package impl.com.calendarfx.view;
 
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.WeekView;
-import com.calendarfx.view.resources.Resource;
-import com.calendarfx.view.resources.ResourcesView;
-import com.calendarfx.view.resources.ResourcesView.Type;
-import impl.com.calendarfx.view.DayViewBaseSkin;
+import com.calendarfx.model.Resource;
+import com.calendarfx.view.ResourcesView;
+import com.calendarfx.view.ResourcesView.Type;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;

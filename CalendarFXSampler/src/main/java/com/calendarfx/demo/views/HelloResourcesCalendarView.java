@@ -26,7 +26,7 @@ import com.calendarfx.model.Marker;
 import com.calendarfx.view.DayEntryView;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase.OverlapResolutionStrategy;
-import com.calendarfx.view.resources.ResourceCalendarView;
+import com.calendarfx.view.ResourceCalendarView;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;

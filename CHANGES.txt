@@ -1,0 +1,60 @@
+-------------------------------------------------------------------------------
+RELEASE NOTES, VERSION 11.12.x (October 2022)
+-------------------------------------------------------------------------------
+
+*** NEW FEATURES
+
+ResourcesView
+-------------
+
+A new view called "ResourcesView" was added. It can be used to add allocations
+to one or more resources / people. A typical use case would be a personal that
+is working at a barber / hairdresser. The calendar entries would represent
+customer appointments. This view can either display "dates over resources" or
+"resources over dates". As part of the development of we added the "Resource"
+model class. This class stores a regular calendar and a special one called the
+"availability calendar". The availability of a resource can be edited when the
+view's "editAvailability" property is set to true.
+
+BackgroundCanvas
+----------------
+
+To visualize the availability of a Resource we decided to use a canvas instead
+of scene graph nodes. The performance is just much better and availability is
+usually expressed by greying out the background of a resource. For controlling
+the availability granularity and color please see DateControl#availabilityGrid
+and DateControl#availabilityColor.
+
+The background canvas also renders new light-weight grid lines. This is needed
+as the availability grid could lead to the creation of many more grid lines
+compared to the previous full- and half-hour grid lines. However, these light-
+weight grid lines can not be styled via CSS. See the DateControl#gridLineColor
+property.
+
+DayEntryView
+------------
+
+It is now possible to set a "click count" number for showing the details of an
+entry view. In the past the user always had to double click on the entry. Now
+a single or a tripple click can also be configured.
+
+*** ENHANCEMENTS
+
+DayViewEditController
+---------------------
+
+With the addition of the availability feature we had to revisit the logic for
+editing day entry views. The code became too messy and had to be refactored.
+When comparing the before and after of this class one will notice that the new
+code is much more structured.
+
+Calendar
+--------
+
+A new "user object" property was added to the calendar so that a link can be
+created between the calendar and its data source or its business object.
+
+*** FIXES
+
+Recurrence entries were not updated correctly in certain circumstances. This
+has been fixed.

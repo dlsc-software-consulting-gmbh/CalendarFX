@@ -14,18 +14,10 @@
  *  limitations under the License.
  */
 
-package com.calendarfx.view.resources;
+package com.calendarfx.view;
 
-import com.calendarfx.view.AllDayView;
-import com.calendarfx.view.CalendarHeaderView;
-import com.calendarfx.view.DayView;
-import com.calendarfx.view.DayViewBase;
-import com.calendarfx.view.RequestEvent;
-import com.calendarfx.view.TimeScaleView;
-import com.calendarfx.view.VirtualGrid;
-import com.calendarfx.view.WeekDayHeaderView;
-import com.calendarfx.view.WeekView;
-import impl.com.calendarfx.view.resources.ResourcesViewSkin;
+import com.calendarfx.model.Resource;
+import impl.com.calendarfx.view.ResourcesViewSkin;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;

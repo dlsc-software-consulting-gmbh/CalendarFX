@@ -1,8 +1,8 @@
-package impl.com.calendarfx.view.resources;
+package impl.com.calendarfx.view;
 
 import com.calendarfx.view.DayViewBase;
-import com.calendarfx.view.resources.Resource;
-import com.calendarfx.view.resources.ResourcesView;
+import com.calendarfx.model.Resource;
+import com.calendarfx.view.ResourcesView;
 import javafx.scene.control.Skin;
 
 public class ResourcesViewContainer<T extends Resource<?>> extends DayViewBase {
