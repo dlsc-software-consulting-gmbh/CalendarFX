@@ -46,6 +46,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.event.WeakEventHandler;
 import javafx.scene.Group;
@@ -72,6 +73,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -92,8 +94,6 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     private final Circle currentTimeCircle;
 
     private final Line currentTimeLine;
-
-    private DayViewEditController controller;
 
     private DayEntryView draggedEntryView;
 
@@ -170,7 +170,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
              * Dragging inside week day views will be handled by a drag controller
              * installed on the week view, not on the individual days.
              */
-            controller = new DayViewEditController(view);
+            new DayViewEditController(view);
         }
 
         setupCurrentTimeMarkerSupport();
@@ -297,7 +297,9 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     private void setupCurrentTimeMarkerSupport() {
         T view = getSkinnable();
-        InvalidationListener listener = evt -> updateShowMarkers();
+
+        // do not use an invalidation listener as that will also fire for same dates
+        ChangeListener listener = (obs, oldValue, newValue) -> updateShowMarkers();
         view.dateProperty().addListener(listener);
         view.todayProperty().addListener(listener);
     }
@@ -331,7 +333,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             draggedEntry.intervalProperty().addListener(weakLayoutListener);
         } else {
             if (draggedEntryView != null) {
-                removeEntryView(draggedEntryView.getEntry());
+                removeEntryView(draggedEntryView.getEntry(), null);
                 draggedEntryView = null;
             }
         }
@@ -803,6 +805,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     @Override
     protected void calendarChanged(Calendar calendar) {
+        LoggingDomain.VIEW.fine("handle calendar changed, date = " + getSkinnable().getDate());
         if (!getSkinnable().isSuspendUpdates()) {
             loadData("changes in calendar " + calendar.getName());
         }
@@ -810,77 +813,99 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     @Override
     protected void entryCalendarChanged(CalendarEvent evt) {
+        LoggingDomain.VIEW.fine("handle entry calendar changed, date = " + getSkinnable().getDate());
         Entry<?> entry = evt.getEntry();
-
-        /*
-         * We do not care about full day entries in this view.
-         */
-        if (entry.isFullDay()) {
-            return;
-        }
-
-        if (evt.isEntryRemoved()) {
-            removeEntryView(entry);
-            getSkinnable().requestLayout();
-        }
-
-        if (evt.isEntryAdded() && isRelevant(entry)) {
-            addEntryView(entry);
-        }
-
-        if (isRelevant(entry)) {
-            getSkinnable().requestLayout();
+        if (evt.getCalendar() == null && findEntryView(entry).isPresent()) {
+            removeEntryView(entry, "entry was deleted");
         }
     }
 
     @Override
     protected void entryFullDayChanged(CalendarEvent evt) {
+        LoggingDomain.VIEW.fine("handle entry full day flag changed, date = " + getSkinnable().getDate());
         Entry<?> entry = evt.getEntry();
         if (isRelevant(entry)) {
-            if (entry.isFullDay()) {
-                removeEntryView(entry);
+            Optional<EntryViewBase> entryView = findEntryView(entry);
+            if (entry.isFullDay() && entryView.isPresent()) {
+                removeEntryView(entry, "full day flag changed to true");
             } else {
-                addEntryView(entry);
+                addEntryView(entry, "full day flag changed to false, no entry view can be present");
             }
-
-            getSkinnable().requestLayout();
         }
+        getSkinnable().requestLayout();
     }
 
     @Override
     protected void entryRecurrenceRuleChanged(CalendarEvent evt) {
+        LoggingDomain.VIEW.fine("handle entry recurrence rule changed, date = " + getSkinnable().getDate());
         Entry<?> entry = evt.getEntry();
 
         /*
          * We do not care about full day entries in this view.
          */
-        if (entry.isFullDay()) {
-            return;
+        if (!entry.isFullDay() && !entry.getStartDate().equals(getSkinnable().getDate())) {
+            Optional<Entry<?>> recurrenceEntry = findRecurrenceEntry(entry);
+
+            if (recurrenceEntry.isPresent()) {
+                Optional<EntryViewBase> entryView = findEntryView(entry);
+                if (entryView.isPresent()) {
+                    entryView.get().setEntry(recurrenceEntry.get());
+                } else {
+                    addEntryView(entry, "recurrence rule changed, no view was present");
+                }
+            } else {
+                removeEntryView(entry, "recurrence rule changed, no recurrence found");
+            }
         }
 
-        removeEntryView(entry);
-        addEntryView(entry);
+        getSkinnable().requestLayout();
     }
 
     @Override
     protected void entryIntervalChanged(CalendarEvent evt) {
+        LoggingDomain.VIEW.fine("handle entry interval changed, date = " + getSkinnable().getDate());
+
         Entry<?> entry = evt.getEntry();
 
         /*
          * We do not care about full day entries in this view.
          */
-        if (entry.isFullDay()) {
-            return;
+        if (!entry.isFullDay()) {
+            Optional<EntryViewBase> entryView = findEntryView(entry);
+            if (isRelevant(entry)) {
+                if (entryView.isPresent()) {
+                    if (entry.isRecurring() && !entry.getStartDate().equals(getSkinnable().getDate())) {
+                        Optional<Entry<?>> recurrenceEntry = findRecurrenceEntry(entry);
+                        if (recurrenceEntry.isPresent()) {
+                            entryView.get().setEntry(recurrenceEntry.get());
+                        }
+                    } else {
+                        entryView.get().setEntry(entry);
+                    }
+                } else {
+                    addEntryView(entry, "interval changed, no view was present");
+                }
+            } else {
+                removeEntryView(entry, "interval changed, entry is not relevant");
+            }
         }
 
-        removeEntryView(entry);
-
-        if (isRelevant(entry)) {
-            addEntryView(entry);
-        }
+        getSkinnable().requestLayout();
     }
 
-    private boolean removeEntryView(Entry<?> entry) {
+    private Optional<EntryViewBase> findEntryView(Entry<?> entry) {
+        List<EntryViewBase> collect = entryViewGroup.getChildren().stream().map(node -> (EntryViewBase) node).filter(e -> e.getEntry().getId().equals(entry.getId())).collect(Collectors.toList());
+        if (collect.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(collect.get(0));
+    }
+
+    private boolean removeEntryView(Entry<?> entry, String reason) {
+        if (reason != null) {
+            LoggingDomain.VIEW.fine("removing entry, reason = " + reason + ", date = " + getSkinnable().getDate());
+        }
         boolean removed = Util.removeChildren(entryViewGroup, node -> {
             DayEntryView view = (DayEntryView) node;
 
@@ -904,18 +929,30 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         return removed;
     }
 
-    private void addEntryView(Entry<?> entry) {
+    private void addEntryView(Entry<?> entry, String reason) {
+        LoggingDomain.VIEW.fine("adding entry, reason = " + reason + ", date = " + getSkinnable().getDate());
         if (entry.isRecurring()) {
-            Calendar calendar = entry.getCalendar();
-            LocalDate date = getSkinnable().getDate();
-            final Map<LocalDate, List<Entry<?>>> entries = calendar.findEntries(date, date, getZoneId());
-            List<Entry<?>> entriesOnDate = entries.get(date);
-            if (entriesOnDate != null && !entriesOnDate.isEmpty()) {
-                doAddEntryView(entriesOnDate.get(0));
+            Optional<Entry<?>> recurrenceEntry = findRecurrenceEntry(entry);
+            if (recurrenceEntry.isPresent()) {
+                doAddEntryView(recurrenceEntry.get());
             }
         } else {
             doAddEntryView(entry);
         }
+
+        getSkinnable().requestLayout();
+    }
+
+    private Optional<Entry<?>> findRecurrenceEntry(Entry<?> entry) {
+        Calendar calendar = entry.getCalendar();
+        LocalDate date = getSkinnable().getDate();
+        final Map<LocalDate, List<Entry<?>>> entries = calendar.findEntries(date, date, getZoneId());
+        List<Entry<?>> entriesOnDate = entries.get(date);
+        if (entriesOnDate != null && !entriesOnDate.isEmpty()) {
+            return entriesOnDate.stream().filter(e -> e.getId().equals(entry.getId())).findFirst();
+        }
+
+        return Optional.empty();
     }
 
     private DayEntryView doAddEntryView(Entry<?> entry) {

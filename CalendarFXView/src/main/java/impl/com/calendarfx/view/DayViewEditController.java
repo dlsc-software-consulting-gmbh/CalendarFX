@@ -18,6 +18,7 @@ package impl.com.calendarfx.view;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
+import com.calendarfx.model.Interval;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.DateControl.EditOperation;
 import com.calendarfx.view.DateControl.EntryEditParameter;
@@ -113,7 +114,7 @@ public class DayViewEditController {
         entry = dayEntryView.getEntry();
 
         Calendar calendar = entry.getCalendar();
-        if (calendar.isReadOnly()) {
+        if (calendar != null && calendar.isReadOnly()) {
             return false;
         }
 
@@ -495,7 +496,20 @@ public class DayViewEditController {
 
         if (draggedEntry != null) {
             view.setDraggedEntry(null);
-            entry.setInterval(draggedEntry.getInterval());
+
+            Interval newInterval = draggedEntry.getInterval();
+
+//            if (entry.isRecurrence()) {
+//                Entry sourceEntry = entry.getRecurrenceSourceEntry();
+//                Interval sourceInterval = sourceEntry.getInterval();
+//
+//                sourceInterval = sourceInterval.withStartTime(newInterval.getStartTime());
+//                sourceInterval = sourceInterval.withDuration(newInterval.getDuration());
+//
+//                sourceEntry.setInterval(sourceInterval);
+//            } else {
+                entry.setInterval(newInterval);
+//            }
 
             if (view.isShowDetailsUponEntryCreation() && operation.equals(Operation.CREATE_ENTRY)) {
                 view.fireEvent(new RequestEvent(view, view, entry));

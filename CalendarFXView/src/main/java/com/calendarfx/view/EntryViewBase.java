@@ -102,7 +102,7 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
 
     private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
 
-    private final Entry<?> entry;
+    private Entry<?> entry;
 
     private final ListChangeListener<? super String> styleListener = change -> {
         while (change.next()) {
@@ -126,9 +126,8 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
      * @param entry the calendar entry
      */
     protected EntryViewBase(Entry<?> entry) {
-        this.entry = requireNonNull(entry);
+        setEntry(entry);
 
-        entry.getStyleClass().addListener(weakStyleListener);
         getStyleClass().addAll(entry.getStyleClass());
 
         setFocusTraversable(true);
@@ -236,6 +235,14 @@ public abstract class EntryViewBase<T extends DateControl> extends CalendarFXCon
         bindVisibility();
 
         layerProperty().addListener(weakBindVisibilityListener);
+    }
+
+    public void setEntry(Entry<?> entry) {
+        this.entry = requireNonNull(entry);
+        this.entry.getStyleClass().addListener(weakStyleListener);
+        this.entry = entry;
+        bindEntry();
+        bindVisibility();
     }
 
     private final IntegerProperty detailsClickCount = new SimpleIntegerProperty(this, "detailsClickCount", 2);

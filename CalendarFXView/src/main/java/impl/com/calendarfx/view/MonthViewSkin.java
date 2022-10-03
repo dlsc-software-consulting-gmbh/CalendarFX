@@ -28,8 +28,8 @@ import com.calendarfx.view.MonthView;
 import com.calendarfx.view.RequestEvent;
 import impl.com.calendarfx.view.util.Util;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
@@ -121,7 +121,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
         gridPane.getStyleClass().add("container");
 
-        InvalidationListener updateViewListener = evt -> updateView();
+        ChangeListener updateViewListener = (obs, oldV, newV) -> {
+            System.out.println("property: " + obs.toString());
+            updateView();
+        };
 
         view.yearMonthProperty().addListener(it -> {
             if (displayedYearMonth == null || !(displayedYearMonth.equals(view.getYearMonth()))) {

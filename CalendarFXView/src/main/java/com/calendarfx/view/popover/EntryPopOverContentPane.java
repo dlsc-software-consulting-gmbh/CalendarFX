@@ -66,6 +66,7 @@ public class EntryPopOverContentPane extends PopOverContentPane {
         if (Boolean.getBoolean("calendarfx.developer")) {
             EntryPropertiesView properties = new EntryPropertiesView(entry);
             PopOverTitledPane propertiesPane = new PopOverTitledPane("Properties", properties);
+            propertiesPane.getStyleClass().add("no-padding");
             getPanes().addAll(detailsPane, propertiesPane);
         } else {
             getPanes().addAll(detailsPane);

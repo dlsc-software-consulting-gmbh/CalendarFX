@@ -1530,6 +1530,10 @@
     -fx-padding: 20.0;
 }
 
+.popover-accordion > .titled-pane.no-padding > .content {
+    -fx-padding: 0.0;
+}
+
 .popover-accordion > .titled-pane > .title > .arrow-button > .arrow {
     -fx-pref-width: 0.0;
     -fx-pref-height: 0.0;

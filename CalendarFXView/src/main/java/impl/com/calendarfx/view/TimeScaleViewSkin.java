@@ -19,7 +19,7 @@ package impl.com.calendarfx.view;
 import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.TimeScaleView;
 import javafx.animation.FadeTransition;
-import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
@@ -102,7 +102,8 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
 
     protected void setupCurrentTimeMarkerSupport() {
         T view = getSkinnable();
-        InvalidationListener listener = evt -> updateShowMarkers();
+        // do not use an invalidation listener as that will also fire for same dates
+        ChangeListener listener = (obs, oldValue, newValue) -> updateShowMarkers();
         view.dateProperty().addListener(listener);
         view.todayProperty().addListener(listener);
     }

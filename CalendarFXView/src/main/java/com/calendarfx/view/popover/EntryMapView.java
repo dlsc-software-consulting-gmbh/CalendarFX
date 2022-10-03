@@ -93,8 +93,8 @@ public class EntryMapView extends EntryPopOverPane {
 
         entry.locationProperty().addListener(weakInvalidationListener);
 
-        visibleProperty().bind(imageLoader.valueProperty().isNotNull());
-        managedProperty().bind(imageLoader.valueProperty().isNotNull());
+        visibleProperty().bind(entry.locationProperty().isNotNull().and(googleApiKeyProperty().isNotNull()));
+        managedProperty().bind(entry.locationProperty().isNotNull().and(googleApiKeyProperty().isNotNull()));
 
         imageLoader.restart();
     }

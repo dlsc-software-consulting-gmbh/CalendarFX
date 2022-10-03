@@ -28,6 +28,7 @@ import com.calendarfx.view.MonthSheetView.DateCell;
 import com.calendarfx.view.MonthSheetView.WeekDayLayoutStrategy;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.event.WeakEventHandler;
 import javafx.geometry.Bounds;
@@ -87,7 +88,8 @@ public class MonthSheetViewSkin extends DateControlSkin<MonthSheetView> implemen
         control.clickBehaviourProperty().addListener(it -> control.getDateSelectionModel().clear());
         control.getDateSelectionModel().getSelectedDates().addListener((Observable obs) -> updateSelected());
 
-        InvalidationListener todayUpdater = obs -> updateToday();
+        // important to use change listener
+        ChangeListener todayUpdater = (obs, oldValue, newValue) -> updateToday();
         control.todayProperty().addListener(todayUpdater);
         control.showTodayProperty().addListener(todayUpdater);
 

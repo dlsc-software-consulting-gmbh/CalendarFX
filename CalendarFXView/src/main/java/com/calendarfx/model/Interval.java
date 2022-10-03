@@ -406,6 +406,19 @@ public final class Interval {
     }
 
     /**
+     * Returns a new interval based on this interval but with a different duration. The duration
+     * will change the end time and / or the end date.
+     *
+     * @param duration the new duration
+     * @return a new interval
+     */
+    public Interval withDuration(Duration duration) {
+        requireNonNull(duration);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(getStartDate(), getStartTime(), getZoneId()).plus(duration);
+        return new Interval(startDate, startTime, zonedDateTime.toLocalDate(), zonedDateTime.toLocalTime(), getZoneId());
+    }
+
+    /**
      * Utility method to get the local start date time. This method combines the
      * start date and the start time to create a date time object.
      *

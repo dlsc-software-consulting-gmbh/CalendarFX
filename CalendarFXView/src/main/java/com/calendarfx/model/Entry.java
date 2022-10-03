@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.calendarfx.util.LoggingDomain.MODEL;
 import static java.util.Objects.requireNonNull;
@@ -103,29 +104,46 @@ public class Entry<T> implements Comparable<Entry<?>> {
 
     private static final Duration DEFAULT_MINIMUM_DURATION = Duration.ofMinutes(15);
 
-    private static long idCounter;
-
-    // needs to be thread-safe
-    private static synchronized String createId() {
-        return Long.toString(idCounter++);
-    }
-
-    private String id = createId();
+    private String id;
 
     /**
-     * Constructs a new untitled entry.
+     * Constructs a new entry with a default time interval. The ID will be generated
+     * via {@link UUID#randomUUID()}.
      */
     public Entry() {
-        this("Untitled", new Interval());
+        this(UUID.randomUUID().toString());
     }
 
     /**
      * Constructs a new entry with the given title and a default time interval.
+     * The ID will be generated via {@link UUID#randomUUID()}.
      *
      * @param title the title shown to the user
      */
     public Entry(String title) {
-        this(title, new Interval());
+        this(title, new Interval(), UUID.randomUUID().toString());
+    }
+
+    /**
+     * Constructs a new entry with the given title, a default time interval, and
+     * the given ID.
+     *
+     * @param title the title shown to the user
+     * @param id the unique id of the entry
+     */
+    public Entry(String title, String id) {
+        this(title, new Interval(), id);
+    }
+
+    /**
+     * Constructs a new entry with the given title. The ID will be generated
+     * via {@link UUID#randomUUID()}.
+     *
+     * @param title    the title shown to the user
+     * @param interval the time interval where the entry is located
+     */
+    public Entry(String title, Interval interval) {
+        this(title, interval, UUID.randomUUID().toString());
     }
 
     /**
@@ -133,13 +151,16 @@ public class Entry<T> implements Comparable<Entry<?>> {
      *
      * @param title    the title shown to the user
      * @param interval the time interval where the entry is located
+     * @param id       a unique ID, e.g. UUID.randomUUID();
      */
-    public Entry(String title, Interval interval) {
+    public Entry(String title, Interval interval, String id) {
         requireNonNull(title);
         requireNonNull(interval);
+        requireNonNull(id);
 
         setTitle(title);
         setInterval(interval);
+        this.id = id;
     }
 
     // A map containing a set of properties for this entry
