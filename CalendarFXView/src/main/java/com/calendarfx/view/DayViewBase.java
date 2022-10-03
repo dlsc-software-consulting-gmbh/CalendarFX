@@ -103,8 +103,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         trimTimeBoundsProperty().addListener(trimListener);
 
         installDefaultLassoFinishedBehaviour();
-
-        setMinWidth(0); // important, so that multi day views apply same width for all day views
     }
 
     /**

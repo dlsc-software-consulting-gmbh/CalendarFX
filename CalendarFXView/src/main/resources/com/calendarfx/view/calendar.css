@@ -2042,6 +2042,11 @@
 .resource-calendar-view {
 }
 
+.resource-calendar-view .time-scale {
+    -fx-border-color: lightgrey;
+    -fx-border-width: 0px 1px 0px 0px;
+}
+
 .resource-calendar-view .header-background {
     -fx-background-color: grey, white;
     -fx-background-insets: 0, 0 0 1 0;

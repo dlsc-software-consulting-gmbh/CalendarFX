@@ -69,6 +69,7 @@ public class DayView extends DayViewBase {
 		updateStyleClasses();
 
 		setEntryViewFactory(DayEntryView::new);
+		setMinWidth(0); // important, so that multi day views apply same width for all day views
 
 		new DeleteHandler(this);
 	}
