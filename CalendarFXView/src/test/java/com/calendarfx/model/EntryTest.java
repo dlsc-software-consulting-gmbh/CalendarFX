@@ -35,13 +35,13 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class EntryTest {
 
-    private Entry<String> entry = new Entry<>();
+    private final Entry<String> entry = new Entry<>();
 
-    private Calendar calendar = new Calendar();
+    private final Calendar calendar = new Calendar();
 
     @Before
     public void setup() {

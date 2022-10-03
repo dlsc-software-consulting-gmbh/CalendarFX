@@ -22,8 +22,6 @@ module com.calendarfx.view {
     exports impl.com.calendarfx.view.util;
 
     opens com.calendarfx.view;
-    opens com.calendarfx.view.resources;
-    opens impl.com.calendarfx.view.resources;
     opens com.calendarfx.model;
     opens impl.com.calendarfx.view;
 }
