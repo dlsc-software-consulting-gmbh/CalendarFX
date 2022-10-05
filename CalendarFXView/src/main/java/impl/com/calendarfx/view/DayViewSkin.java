@@ -207,7 +207,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             }
         });
 
-        view.suspendUpdatesProperty().addListener(evt -> loadData("suspend updates was set to false"));
+        view.suspendUpdatesProperty().addListener(evt -> loadData("suspend updates was changed to " + view.isSuspendUpdates()));
         view.getCalendars().addListener((Observable obs) -> loadData("list of calendars changed"));
 
         final InvalidationListener styleLinesListener = it -> updateLineStyling();
