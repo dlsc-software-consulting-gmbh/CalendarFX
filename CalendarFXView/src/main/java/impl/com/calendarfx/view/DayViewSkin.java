@@ -814,9 +814,16 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     @Override
     protected void entryCalendarChanged(CalendarEvent evt) {
         LoggingDomain.VIEW.fine("handle entry calendar changed, date = " + getSkinnable().getDate());
+
         Entry<?> entry = evt.getEntry();
-        if (evt.getCalendar() == null && findEntryView(entry).isPresent()) {
-            removeEntryView(entry, "entry was deleted");
+        if (evt.getCalendar() == null) {
+            if (findEntryView(entry).isPresent()) {
+                removeEntryView(entry, "entry was deleted");
+            }
+        } else {
+            if (evt.getOldCalendar() == null && isRelevant(entry)) {
+                addEntryView(entry, "entry calendar changed");
+            }
         }
     }
 

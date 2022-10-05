@@ -23,6 +23,7 @@ import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DetailedDayView;
+import javafx.application.Platform;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -51,6 +52,8 @@ public class HelloDetailedDayView extends CalendarFXDateControlSample {
         dayView = new DetailedDayView();
 
         CalendarSource calendarSource = new CalendarSource();
+        dayView.getCalendarSources().setAll(calendarSource);
+
         HelloCalendar calendar1 = new HelloCalendar();
         HelloCalendar calendar2 = new HelloCalendar();
         HelloCalendar calendar3 = new HelloCalendar();
@@ -72,7 +75,12 @@ public class HelloDetailedDayView extends CalendarFXDateControlSample {
 
         calendarSource.getCalendars().setAll(calendar1, calendar2, calendar3, calendar4);
 
-        dayView.getCalendarSources().setAll(calendarSource);
+        Platform.runLater(() -> {
+            calendar1.createData();
+            calendar2.createData();
+            calendar3.createData();
+            calendar4.createData();
+        });
 
         return dayView;
     }
@@ -80,6 +88,9 @@ public class HelloDetailedDayView extends CalendarFXDateControlSample {
     class HelloCalendar extends Calendar {
 
         public HelloCalendar() {
+        }
+
+        public void createData() {
             LocalDate date = LocalDate.now();
 
             for (int i = 1; i < 3; i++) {
@@ -91,8 +102,7 @@ public class HelloDetailedDayView extends CalendarFXDateControlSample {
                 entry.setTitle("Entry " + i);
 
                 int hour = (int) (Math.random() * 23);
-                int durationInHours = Math.min(24 - hour,
-                        (int) (Math.random() * 4));
+                int durationInHours = Math.min(24 - hour, (int) (Math.random() * 4));
 
                 LocalTime startTime = LocalTime.of(hour, 0);
                 LocalTime endTime = startTime.plusHours(durationInHours);
