@@ -57,7 +57,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
 
     @Override
     public String getSampleDescription() {
-        return "The detailed day view aggregates a day view, an all day view, a calendar header (for swimlane layout), and a time scale.";
+        return "The resources view is used to display allocations of resources, e.g. people working at a hairdresser and their customer appointments.";
     }
 
     @Override
