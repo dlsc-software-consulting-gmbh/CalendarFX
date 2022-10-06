@@ -102,16 +102,16 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
          * Display the resources at the very top and then one or more days below each
          * resource.
          */
-        RESOURCES_OVER_DATE,
+        RESOURCES_OVER_DATES,
 
         /**
          * Display the dates at the very top and then one or more resources below each
          * date.
          */
-        DATE_OVER_RESOURCES
+        DATES_OVER_RESOURCES
     }
 
-    private final ObjectProperty<Type> type = new SimpleObjectProperty<>(this, "type", Type.RESOURCES_OVER_DATE);
+    private final ObjectProperty<Type> type = new SimpleObjectProperty<>(this, "type", Type.RESOURCES_OVER_DATES);
 
     public final Type getType() {
         return type.get();

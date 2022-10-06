@@ -45,7 +45,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
         ResourcesViewContainer<T> resourcesContainer = getSkinnable();
         resourcesContainer.unbindAll();
 
-        if (resourcesView.getType().equals(Type.RESOURCES_OVER_DATE)) {
+        if (resourcesView.getType().equals(Type.RESOURCES_OVER_DATES)) {
             updateViewResourcesOverDates();
         } else {
             updateViewDatesOverResources();

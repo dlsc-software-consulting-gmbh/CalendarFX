@@ -104,9 +104,9 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
             @Override
             public String toString(Type object) {
                 if (object != null) {
-                    if (object.equals(Type.RESOURCES_OVER_DATE)) {
+                    if (object.equals(Type.RESOURCES_OVER_DATES)) {
                         return "Resources over date";
-                    } else if (object.equals(Type.DATE_OVER_RESOURCES)) {
+                    } else if (object.equals(Type.DATES_OVER_RESOURCES)) {
                         return "Date over resources";
                     } else {
                         return "unknown view type: " + object.name();
@@ -155,7 +155,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
-        resourcesView.setType(Type.DATE_OVER_RESOURCES);
+        resourcesView.setType(Type.DATES_OVER_RESOURCES);
         resourcesView.setNumberOfDays(5);
         resourcesView.setCreateEntryClickCount(1);
         resourcesView.setGridType(GridType.CUSTOM);

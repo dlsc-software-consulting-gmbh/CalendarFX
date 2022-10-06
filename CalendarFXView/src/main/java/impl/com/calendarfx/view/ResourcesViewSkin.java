@@ -115,7 +115,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         gridPane.getColumnConstraints().clear();
 
         ResourcesView<T> view = getSkinnable();
-        if (view.getType().equals(Type.RESOURCES_OVER_DATE)) {
+        if (view.getType().equals(Type.RESOURCES_OVER_DATES)) {
             updateViewResourcesOverDates();
         } else {
             updateViewDatesOverResources();
