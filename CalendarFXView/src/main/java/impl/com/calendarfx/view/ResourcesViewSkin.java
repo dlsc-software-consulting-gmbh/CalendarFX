@@ -17,13 +17,12 @@
 package impl.com.calendarfx.view;
 
 import com.calendarfx.model.CalendarSource;
-import com.calendarfx.view.AllDayView;
-import com.calendarfx.view.TimeScaleView;
-import com.calendarfx.view.WeekDayHeaderView;
 import com.calendarfx.model.Resource;
+import com.calendarfx.view.AllDayView;
 import com.calendarfx.view.ResourcesView;
 import com.calendarfx.view.ResourcesView.Type;
-import javafx.application.Platform;
+import com.calendarfx.view.TimeScaleView;
+import com.calendarfx.view.WeekDayHeaderView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -40,32 +39,34 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.controlsfx.control.PlusMinusSlider;
 
 import java.time.LocalDate;
-
-import static com.calendarfx.util.ViewHelper.scrollToRequestedTime;
 
 public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<ResourcesView<T>> {
 
     private final GridPane gridPane;
-    private final ResourcesViewContainer<T> resourcesContainer;
-    private final DayViewScrollPane timeScaleScrollPane;
-    private final DayViewScrollPane dayViewsScrollPane;
     private final ScrollBar scrollBar;
+    private final PlusMinusSlider plusMinusSlider;
 
     public ResourcesViewSkin(ResourcesView<T> view) {
         super(view);
 
         scrollBar = new ScrollBar();
         scrollBar.setOrientation(Orientation.VERTICAL);
+        scrollBar.visibleProperty().bind(view.scrollingEnabledProperty().not());
 
-        TimeScaleView timeScale = new TimeScaleView();
-        view.bind(timeScale, true);
+        plusMinusSlider = new PlusMinusSlider();
+        plusMinusSlider.setOrientation(Orientation.VERTICAL);
+        plusMinusSlider.visibleProperty().bind(view.scrollingEnabledProperty());
 
-        // time scale scroll pane
-        timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
-        timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
-        timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
+        plusMinusSlider.setOnValueChanged(evt -> {
+            // exponential function to increase scrolling speed when reaching ends of slider
+            final double base = plusMinusSlider.getValue();
+            final double pow = Math.signum(plusMinusSlider.getValue()) * Math.pow(base, 2);
+            final double pixel = pow * -100;
+            view.setScrollTime(view.getZonedDateTimeAt(0, pixel, view.getZoneId()));
+        });
 
         InvalidationListener updateViewListener = it -> updateView();
         view.showAllDayViewProperty().addListener(updateViewListener);
@@ -76,6 +77,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         view.numberOfDaysProperty().addListener(updateViewListener);
         view.typeProperty().addListener(updateViewListener);
         view.getResources().addListener(updateViewListener);
+        view.scrollingEnabledProperty().addListener(updateViewListener);
 
         RowConstraints row0 = new RowConstraints();
         row0.setFillHeight(true);
@@ -91,20 +93,15 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         gridPane.getRowConstraints().setAll(row0, row1);
         gridPane.getStyleClass().add("container");
 
-        resourcesContainer = new ResourcesViewContainer<>(view);
-
-        view.bind(resourcesContainer, true);
-
         getChildren().add(gridPane);
 
-        dayViewsScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
 
-        /*
-         * Run later when the control has become visible.
-         */
-        Platform.runLater(() -> scrollToRequestedTime(view, dayViewsScrollPane));
-
-        view.requestedTimeProperty().addListener(it -> scrollToRequestedTime(view, dayViewsScrollPane));
+//        /*
+//         * Run later when the control has become visible.
+//         */
+//        Platform.runLater(() -> scrollToRequestedTime(view, dayViewsScrollPane));
+//
+//        view.requestedTimeProperty().addListener(it -> scrollToRequestedTime(view, dayViewsScrollPane));
 
         updateView();
     }
@@ -130,7 +127,17 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             timeScaleColumn.setFillWidth(true);
             timeScaleColumn.setHgrow(Priority.NEVER);
             gridPane.getColumnConstraints().add(timeScaleColumn);
-            gridPane.add(timeScaleScrollPane, 0, 1);
+
+            TimeScaleView timeScale = createTimeScale();
+
+            if (view.isScrollingEnabled()) {
+                gridPane.add(timeScale, 0, 1);
+            } else {
+                DayViewScrollPane timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
+                timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
+                timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
+                gridPane.add(timeScaleScrollPane, 0, 1);
+            }
 
             Node upperLeftCorner = view.getUpperLeftCorner();
             upperLeftCorner.getStyleClass().add("upper-left-corner");
@@ -285,21 +292,69 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             }
         }
 
-        ColumnConstraints dayViewsConstraints = new ColumnConstraints();
-        dayViewsConstraints.setFillWidth(true);
-        dayViewsConstraints.setHgrow(Priority.ALWAYS);
-        gridPane.getColumnConstraints().add(dayViewsConstraints);
-        gridPane.add(dayViewsScrollPane, 1, 1);
+        ColumnConstraints containerOrScrollPaneConstraints = new ColumnConstraints();
+        containerOrScrollPaneConstraints.setFillWidth(true);
+        containerOrScrollPaneConstraints.setHgrow(Priority.ALWAYS);
+        gridPane.getColumnConstraints().add(containerOrScrollPaneConstraints);
+
+        ResourcesViewContainer<T> resourcesContainer = createContainer();
+        if (view.isScrollingEnabled()) {
+            gridPane.add(resourcesContainer, 1, 1);
+        } else {
+            gridPane.add(new DayViewScrollPane(resourcesContainer, scrollBar), 1, 1);
+        }
 
         if (view.isShowScrollBar()) {
             ColumnConstraints scrollbarConstraint = new ColumnConstraints();
             scrollbarConstraint.setFillWidth(true);
             scrollbarConstraint.setHgrow(Priority.NEVER);
             scrollbarConstraint.setPrefWidth(Region.USE_COMPUTED_SIZE);
+
             gridPane.getColumnConstraints().add(scrollbarConstraint);
 
-            gridPane.add(scrollBar, 2, 1);
+            if (view.isScrollingEnabled()) {
+                gridPane.add(plusMinusSlider, 2, 1);
+            } else {
+                gridPane.add(scrollBar, 2, 1);
+            }
         }
+    }
+
+    private ResourcesViewContainer<T> resourcesContainer;
+
+    private ResourcesViewContainer<T> createContainer() {
+        ResourcesView<T> view = getSkinnable();
+
+        // first tear down the existing one
+        if (resourcesContainer != null) {
+            view.unbind(resourcesContainer);
+        }
+
+        // then create the new one
+        resourcesContainer = new ResourcesViewContainer<>(view);
+        resourcesContainer.setMinHeight(0);
+        view.bind(resourcesContainer, true);
+
+        // return it
+        return resourcesContainer;
+    }
+
+    private TimeScaleView timeScaleView;
+
+    private TimeScaleView createTimeScale(){
+        ResourcesView<T> view = getSkinnable();
+
+        // first tear down the existing one
+        if (timeScaleView != null) {
+            view.unbind(timeScaleView);
+        }
+
+        // then create the new one
+        timeScaleView = new TimeScaleView();
+        view.bind(timeScaleView, true);
+
+        // return it
+        return timeScaleView;
     }
 
     private void updateViewResourcesOverDates() {
@@ -311,7 +366,17 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             timeScaleColumn.setHgrow(Priority.NEVER);
             gridPane.getColumnConstraints().add(timeScaleColumn);
 
-            gridPane.add(timeScaleScrollPane, 0, 1);
+            TimeScaleView timeScale = createTimeScale();
+
+            if (view.isScrollingEnabled()) {
+                gridPane.add(timeScale, 0, 1);
+            } else {
+                // time scale scroll pane
+                DayViewScrollPane timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
+                timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
+                timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
+                gridPane.add(timeScaleScrollPane, 0, 1);
+            }
 
             Node upperLeftCorner = view.getUpperLeftCorner();
             upperLeftCorner.getStyleClass().add("upper-left-corner");
@@ -404,7 +469,16 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         dayViewsConstraints.setFillWidth(true);
         dayViewsConstraints.setHgrow(Priority.ALWAYS);
         gridPane.getColumnConstraints().add(dayViewsConstraints);
-        gridPane.add(dayViewsScrollPane, 1, 1);
+
+        ResourcesViewContainer<T> resourcesContainer = createContainer();
+        if (view.isScrollingEnabled()) {
+            resourcesContainer.setTranslateY(0);
+            resourcesContainer.setManaged(true);
+            gridPane.add(resourcesContainer, 1, 1);
+        } else {
+            DayViewScrollPane dayViewsScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
+            gridPane.add(dayViewsScrollPane, 1, 1);
+        }
 
         if (view.isShowScrollBar()) {
             ColumnConstraints scrollbarConstraint = new ColumnConstraints();

@@ -125,6 +125,9 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         gridTypeBox.getItems().setAll(GridType.values());
         gridTypeBox.valueProperty().bindBidirectional(resourcesView.gridTypeProperty());
 
+        CheckBox infiniteScrolling = new CheckBox("Infinite scrolling");
+        infiniteScrolling.selectedProperty().bindBidirectional(resourcesView.scrollingEnabledProperty());
+
         CheckBox adjustBox = new CheckBox("Adjust first day of week");
         adjustBox.selectedProperty().bindBidirectional(resourcesView.adjustToFirstDayOfWeekProperty());
 
@@ -148,13 +151,14 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, new Label("View type"), typeBox, datePicker, adjustBox, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
+        return new VBox(10, availabilityButton, new Label("View type"), typeBox, datePicker, infiniteScrolling, adjustBox, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
                 new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, timescaleBox, allDayBox, detailsBox, flipBox);
     }
 
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
+        resourcesView.setScrollingEnabled(true);
         resourcesView.setType(Type.DATES_OVER_RESOURCES);
         resourcesView.setNumberOfDays(5);
         resourcesView.setCreateEntryClickCount(1);

@@ -63,9 +63,15 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         setupCurrentTimeMarkerSupport();
         updateShowMarkers();
 
+        view.scrollingEnabledProperty().addListener(it -> {
+            timeLabels.clear();
+            getChildren().clear();
+            view.requestLayout();
+        });
+
         view.scrollTimeProperty().addListener(it -> {
             if (view.isScrollingEnabled()) {
-                getSkinnable().requestLayout();
+                view.requestLayout();
             }
         });
 

@@ -109,6 +109,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
                 dayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
 
                 dayView.setPrefWidth(0); // so they all end up with the same percentage width
+                dayView.setMinHeight(0);
                 HBox.setHgrow(dayView, Priority.ALWAYS);
                 resourcesBox.getChildren().add(dayView);
 
