@@ -856,7 +856,7 @@ public class Calendar<T> implements EventTarget {
     public final void fireEvent(CalendarEvent evt) {
         if (fireEvents && !batchUpdates) {
             if (MODEL.isLoggable(FINER)) {
-                MODEL.finer(getName() + ": fireing event: " + evt);
+                MODEL.finer(getName() + ": firing event: " + evt);
             }
 
             requireNonNull(evt);
