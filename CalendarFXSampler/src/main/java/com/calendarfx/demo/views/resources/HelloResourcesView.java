@@ -152,6 +152,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
 
         CheckBox infiniteScrolling = new CheckBox("Infinite scrolling");
         infiniteScrolling.selectedProperty().bindBidirectional(resourcesView.scrollingEnabledProperty());
+        infiniteScrolling.setDisable(true);
 
         CheckBox adjustBox = new CheckBox("Adjust first day of week");
         adjustBox.selectedProperty().bindBidirectional(resourcesView.adjustToFirstDayOfWeekProperty());
@@ -183,7 +184,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
-        resourcesView.setScrollingEnabled(true);
+        resourcesView.setScrollingEnabled(false);
         resourcesView.setType(Type.DATES_OVER_RESOURCES);
         resourcesView.setNumberOfDays(5);
         resourcesView.setCreateEntryClickCount(1);
