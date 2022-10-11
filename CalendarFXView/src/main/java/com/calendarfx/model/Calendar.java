@@ -218,7 +218,7 @@ public class Calendar<T> implements EventTarget {
         sourceStart = sourceStart.plus(startDelta);
         sourceEnd = sourceEnd.plus(endDelta);
 
-        return new Interval(sourceStart.toLocalDate(), sourceStart.toLocalTime(), sourceEnd.toLocalDate(), sourceEnd.toLocalTime(), source.getZoneId());
+        return new Interval(sourceStart.toLocalDate(), sourceStart.toLocalTime(), sourceEnd.toLocalDate(), sourceEnd.toLocalTime(), recurrence.getZoneId());
     }
 
     /**
@@ -297,8 +297,7 @@ public class Calendar<T> implements EventTarget {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Map<LocalDate, List<Entry<?>>> doGetEntries(LocalDate startDate, LocalDate endDate, ZoneId zoneId) {
         if (MODEL.isLoggable(FINE)) {
-            MODEL.fine(getName() + ": getting entries from " + startDate
-                    + " until " + endDate + ", zone = " + zoneId);
+            MODEL.fine(getName() + ": getting entries from " + startDate + " until " + endDate + ", zone = " + zoneId);
         }
 
         ZonedDateTime st = ZonedDateTime.of(startDate, LocalTime.MIN, zoneId);
@@ -314,8 +313,7 @@ public class Calendar<T> implements EventTarget {
         }
 
         if (MODEL.isLoggable(FINE)) {
-            MODEL.fine(getName() + ": found " + intersectingEntries.size()
-                    + " entries");
+            MODEL.fine(getName() + ": found " + intersectingEntries.size() + " entries");
         }
 
         Map<LocalDate, List<Entry<?>>> result = new HashMap<>();
@@ -329,17 +327,6 @@ public class Calendar<T> implements EventTarget {
                 try {
                     LocalDate utilEndDate = et.toLocalDate();
 
-                    /*
-                     * TODO: for performance reasons we should definitely
-                     * use the advanceTo() call, but unfortunately this
-                     * collides with the fact that e.g. the DetailedWeekView loads
-                     * data day by day. So a given day would not show
-                     * entries that start on the day before but intersect
-                     * with the given day. We have to find a solution for
-                     * this.
-                     */
-                    // iterator.advanceTo(st.toLocalDate());
-
                     List<LocalDate> dateList = new Recur(recurrenceRule).getDates(utilStartDate, utilEndDate);
 
                     for (LocalDate repeatingDate : dateList) {
@@ -351,12 +338,11 @@ public class Calendar<T> implements EventTarget {
                         recurrence.getProperties().put("com.calendarfx.recurrence.id", zonedDateTime.toString());
                         recurrence.setRecurrenceRule(entry.getRecurrenceRule());
 
+                        // update the recurrence interval
                         LocalDate recurrenceStartDate = zonedDateTime.toLocalDate();
                         LocalDate recurrenceEndDate = recurrenceStartDate.plus(entry.getStartDate().until(entry.getEndDate()));
+                        recurrence.setInterval(entry.getInterval().withDates(recurrenceStartDate, recurrenceEndDate));
 
-                        Interval recurrenceInterval = entry.getInterval().withDates(recurrenceStartDate, recurrenceEndDate);
-
-                        recurrence.setInterval(recurrenceInterval);
                         recurrence.setUserObject(entry.getUserObject());
                         recurrence.setTitle(entry.getTitle());
                         recurrence.setMinimumDuration(entry.getMinimumDuration());
@@ -913,7 +899,6 @@ public class Calendar<T> implements EventTarget {
 
     @Override
     public String toString() {
-        return "Calendar [name=" + getName() + ", style=" + getStyle()
-                + ", readOnly=" + isReadOnly() + "]";
+        return "Calendar [name=" + getName() + ", style=" + getStyle() + ", readOnly=" + isReadOnly() + ", " + (getUserObject() != null ? getUserObject().toString() : "null") + "]";
     }
 }

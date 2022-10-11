@@ -645,7 +645,7 @@ public class YearMonthViewSkin extends DateControlSkin<YearMonthView> implements
 
     @Override
     public ZoneId getZoneId() {
-        return ZoneId.systemDefault();
+        return getSkinnable().getZoneId();
     }
 
     @Override

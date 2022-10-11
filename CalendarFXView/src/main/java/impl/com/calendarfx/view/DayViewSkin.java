@@ -826,7 +826,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 removeEntryView(entry, "entry was deleted");
             }
         } else {
-            if (evt.getOldCalendar() == null && isRelevant(entry)) {
+            if (!entry.isFullDay() && evt.getOldCalendar() == null && isRelevant(entry)) {
                 addEntryView(entry, "entry calendar changed");
             }
         }
@@ -1089,7 +1089,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     @Override
     public ZoneId getZoneId() {
-        return ZoneId.systemDefault();
+        return getSkinnable().getZoneId();
     }
 
     @Override

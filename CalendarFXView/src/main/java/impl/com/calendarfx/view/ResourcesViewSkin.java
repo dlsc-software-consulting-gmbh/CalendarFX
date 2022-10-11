@@ -16,13 +16,14 @@
 
 package impl.com.calendarfx.view;
 
-import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Resource;
+import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.AllDayView;
 import com.calendarfx.view.ResourcesView;
 import com.calendarfx.view.ResourcesView.Type;
 import com.calendarfx.view.TimeScaleView;
 import com.calendarfx.view.WeekDayHeaderView;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -48,6 +49,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
     private final GridPane gridPane;
     private final ScrollBar scrollBar;
     private final PlusMinusSlider plusMinusSlider;
+    private DayViewScrollPane dayViewScrollPane;
 
     public ResourcesViewSkin(ResourcesView<T> view) {
         super(view);
@@ -95,21 +97,29 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
         getChildren().add(gridPane);
 
-
-//        /*
-//         * Run later when the control has become visible.
-//         */
-//        Platform.runLater(() -> scrollToRequestedTime(view, dayViewsScrollPane));
-//
-//        view.requestedTimeProperty().addListener(it -> scrollToRequestedTime(view, dayViewsScrollPane));
-
         updateView();
-    }
 
+        /*
+         * Run later when the control has become visible.
+         */
+        Platform.runLater(() -> {
+            if (dayViewScrollPane != null) {
+                ViewHelper.scrollToRequestedTime(view, dayViewScrollPane);
+            }
+        });
+
+        view.requestedTimeProperty().addListener(it -> {
+            if (dayViewScrollPane != null) {
+                ViewHelper.scrollToRequestedTime(view, dayViewScrollPane);
+            }
+        });
+    }
 
     private void updateView() {
         gridPane.getChildren().clear();
         gridPane.getColumnConstraints().clear();
+
+        dayViewScrollPane = null;
 
         ResourcesView<T> view = getSkinnable();
         if (view.getType().equals(Type.RESOURCES_OVER_DATES)) {
@@ -262,14 +272,12 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                     allDayView.setAdjustToFirstDayOfWeek(false);
                     allDayView.setNumberOfDays(1);
 
-                    // some unbindings for AllDayView
+                    // some un-bindings for AllDayView
                     Bindings.unbindBidirectional(view.defaultCalendarProviderProperty(), allDayView.defaultCalendarProviderProperty());
                     Bindings.unbindBidirectional(view.draggedEntryProperty(), allDayView.draggedEntryProperty());
                     Bindings.unbindContentBidirectional(view.getCalendarSources(), allDayView.getCalendarSources());
 
-                    CalendarSource calendarSource = createCalendarSource(resource);
-                    allDayView.getCalendarSources().setAll(calendarSource);
-                    allDayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
+                    Bindings.bindContent(allDayView.getCalendarSources(), resource.getCalendarSources());
 
                     VBox.setVgrow(allDayView, Priority.ALWAYS);
                     singleResourceBox.getChildren().add(allDayView);
@@ -301,7 +309,8 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         if (view.isScrollingEnabled()) {
             gridPane.add(resourcesContainer, 1, 1);
         } else {
-            gridPane.add(new DayViewScrollPane(resourcesContainer, scrollBar), 1, 1);
+            dayViewScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
+            gridPane.add(dayViewScrollPane, 1, 1);
         }
 
         if (view.isShowScrollBar()) {
@@ -433,10 +442,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                 Bindings.unbindBidirectional(view.draggedEntryProperty(), allDayView.draggedEntryProperty());
                 Bindings.unbindContentBidirectional(view.getCalendarSources(), allDayView.getCalendarSources());
 
-                CalendarSource calendarSource = createCalendarSource(resource);
-                allDayView.getCalendarSources().setAll(calendarSource);
-                allDayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
-
+                Bindings.bindContent(allDayView.getCalendarSources(), resource.getCalendarSources());
                 resourceHeader.getChildren().add(allDayView);
             }
 
@@ -476,8 +482,8 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             resourcesContainer.setManaged(true);
             gridPane.add(resourcesContainer, 1, 1);
         } else {
-            DayViewScrollPane dayViewsScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
-            gridPane.add(dayViewsScrollPane, 1, 1);
+            dayViewScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
+            gridPane.add(dayViewScrollPane, 1, 1);
         }
 
         if (view.isShowScrollBar()) {
@@ -489,11 +495,5 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
             gridPane.add(scrollBar, 2, 1);
         }
-    }
-
-    private CalendarSource createCalendarSource(T resource) {
-        CalendarSource source = new CalendarSource(resource.getUserObject().toString());
-        source.getCalendars().add(resource.getCalendar());
-        return source;
     }
 }

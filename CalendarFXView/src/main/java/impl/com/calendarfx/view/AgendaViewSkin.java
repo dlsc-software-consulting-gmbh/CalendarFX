@@ -198,7 +198,7 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
     @Override
     public ZoneId getZoneId() {
-        return ZoneId.systemDefault();
+        return getSkinnable().getZoneId();
     }
 
     @Override

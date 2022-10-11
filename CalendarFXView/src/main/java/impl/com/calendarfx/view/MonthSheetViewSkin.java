@@ -486,7 +486,7 @@ public class MonthSheetViewSkin extends DateControlSkin<MonthSheetView> implemen
 
     @Override
     public ZoneId getZoneId() {
-        return ZoneId.systemDefault();
+        return getSkinnable().getZoneId();
     }
 
     @Override
