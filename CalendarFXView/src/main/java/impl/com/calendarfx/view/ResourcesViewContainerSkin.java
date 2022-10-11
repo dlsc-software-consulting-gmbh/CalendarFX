@@ -1,11 +1,10 @@
 package impl.com.calendarfx.view;
 
-import com.calendarfx.model.CalendarSource;
-import com.calendarfx.view.DayView;
-import com.calendarfx.view.WeekView;
 import com.calendarfx.model.Resource;
+import com.calendarfx.view.DayView;
 import com.calendarfx.view.ResourcesView;
 import com.calendarfx.view.ResourcesView.Type;
+import com.calendarfx.view.WeekView;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -104,11 +103,11 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
                 dayView.setAvailabilityCalendar(resource.getAvailabilityCalendar());
                 dayView.installDefaultLassoFinishedBehaviour();
 
-                CalendarSource calendarSource = createCalendarSource(resource);
-                dayView.getCalendarSources().setAll(calendarSource);
-                dayView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
+                Bindings.bindContent(dayView.getCalendarSources(), resource.getCalendarSources());
+                dayView.setDefaultCalendarProvider(dateControl -> resource.getCalendars().get(0));
 
                 dayView.setPrefWidth(0); // so they all end up with the same percentage width
+                dayView.setMinHeight(0);
                 HBox.setHgrow(dayView, Priority.ALWAYS);
                 resourcesBox.getChildren().add(dayView);
 
@@ -186,9 +185,8 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
 
             weekView.numberOfDaysProperty().bindBidirectional(resourcesView.numberOfDaysProperty());
 
-            CalendarSource calendarSource = createCalendarSource(resource);
-            weekView.getCalendarSources().setAll(calendarSource);
-            weekView.setDefaultCalendarProvider(control -> calendarSource.getCalendars().get(0));
+            Bindings.bindContent(weekView.getCalendarSources(), resource.getCalendarSources());
+            weekView.setDefaultCalendarProvider(dateControl -> resource.getCalendars().get(0));
 
             this.box.getChildren().add(weekView);
 
@@ -204,12 +202,5 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
             }
             HBox.setHgrow(weekView, Priority.ALWAYS);
         }
-    }
-
-    private CalendarSource createCalendarSource(T resource) {
-        CalendarSource source = new CalendarSource(resource.getUserObject().toString());
-        source.setName(resource.getUserObject().toString());
-        source.getCalendars().setAll(resource.getCalendar());
-        return source;
     }
 }

@@ -1,9 +1,20 @@
 package com.calendarfx.model;
 
 import com.calendarfx.view.DateControl;
+import com.calendarfx.view.Messages;
 import com.calendarfx.view.ResourcesView;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A resource represents a person or a machine. Resources can be edited via
@@ -20,10 +31,27 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class Resource<T> {
 
+    private final InvalidationListener updateCalendarListListener = (Observable it) -> updateCalendarList();
+
+    private final WeakInvalidationListener weakUpdateCalendarListListener = new WeakInvalidationListener(updateCalendarListListener);
+
     public Resource() {
+        getCalendarSources().addListener(weakUpdateCalendarListListener);
+
+        /*
+         * Every resource is initially populated with a default source and calendar.
+         * We borrow the i18n strings from DateControl.
+         */
+        Calendar defaultCalendar = new Calendar(Messages.getString("DateControl.DEFAULT_CALENDAR_NAME"));
+        defaultCalendar.setUserObject(this);
+
+        CalendarSource defaultCalendarSource = new CalendarSource(Messages.getString("DateControl.DEFAULT_CALENDAR_SOURCE_NAME"));
+        defaultCalendarSource.getCalendars().add(defaultCalendar);
+        getCalendarSources().add(defaultCalendarSource);
     }
 
     public Resource(T userObject) {
+        this();
         setUserObject(userObject);
     }
 
@@ -46,24 +74,44 @@ public class Resource<T> {
         this.userObject.set(userObject);
     }
 
-    public final ObjectProperty<Calendar> calendar = new SimpleObjectProperty<>(this, "calendar", new Calendar());
-
-    public final Calendar getCalendar() {
-        return calendar.get();
-    }
+    private final ObservableList<CalendarSource> calendarSources = FXCollections.observableArrayList();
 
     /**
-     * A resource can be "booked" or "allocated to tasks". Those bookings / allocations are stored
-     * in this calendar.
+     * The list of all calendar sources attached to this resource.
      *
-     * @return the resource calendar with the resource's bookings
+     * @return the calendar sources
+     * @see DateControl#getCalendarSources()
      */
-    public final ObjectProperty<Calendar> calendarProperty() {
-        return calendar;
+    public final ObservableList<CalendarSource> getCalendarSources() {
+        return calendarSources;
     }
 
-    public final void setCalendar(Calendar calendar) {
-        this.calendar.set(calendar);
+    private final ReadOnlyListWrapper<Calendar> calendars = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
+
+    /**
+     * A list that contains all calendars found in all calendar sources
+     * currently attached to this resource. This is a convenience list that
+     * "flattens" the two level structure of sources and their calendars. It is
+     * a read-only list because calendars can not be added directly to a resource.
+     * Instead, they are added to calendar sources and those sources are
+     * then added to the control.
+     *
+     * @return the list of all calendars available for this resource
+     * @see #getCalendarSources()
+     */
+    public final ReadOnlyListProperty<Calendar> calendarsProperty() {
+        return calendars.getReadOnlyProperty();
+    }
+
+    private final ObservableList<Calendar> unmodifiableCalendars = FXCollections.unmodifiableObservableList(calendars.get());
+
+    /**
+     * Returns the value of {@link #calendarsProperty()}.
+     *
+     * @return the list of all calendars available for this control
+     */
+    public final ObservableList<Calendar> getCalendars() {
+        return unmodifiableCalendars;
     }
 
     public final ObjectProperty<Calendar> availabilityCalendar = new SimpleObjectProperty<>(this, "availabilityCalendar", new Calendar());
@@ -88,6 +136,25 @@ public class Resource<T> {
 
     public void setAvailabilityCalendar(Calendar availabilityCalendar) {
         this.availabilityCalendar.set(availabilityCalendar);
+    }
+
+    private void updateCalendarList() {
+        List<Calendar> removedCalendars = new ArrayList<>(calendars);
+        List<Calendar> newCalendars = new ArrayList<>();
+        for (CalendarSource source : getCalendarSources()) {
+            for (Calendar calendar : source.getCalendars()) {
+                if (calendars.contains(calendar)) {
+                    removedCalendars.remove(calendar);
+                } else {
+                    newCalendars.add(calendar);
+                }
+            }
+            source.getCalendars().removeListener(weakUpdateCalendarListListener);
+            source.getCalendars().addListener(weakUpdateCalendarListListener);
+        }
+
+        calendars.addAll(newCalendars);
+        calendars.removeAll(removedCalendars);
     }
 
     @Override

@@ -180,7 +180,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
         }
 
         private void increment() {
-            Integer value = 0;
+            int value = 0;
             try {
                 value = Integer.parseInt(field.getText());
             } catch (NumberFormatException ex) {
@@ -199,7 +199,7 @@ public class TimeFieldSkin extends SkinBase<TimeField> {
         }
 
         private void decrement() {
-            Integer value = 0;
+            int value = 0;
             try {
                 value = Integer.parseInt(field.getText());
             } catch (NumberFormatException ex) {

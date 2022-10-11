@@ -88,6 +88,11 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         maybeAdjustToFirstDayOfWeek();
     }
 
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new ResourcesViewSkin(this);
+    }
+
     private void maybeAdjustToFirstDayOfWeek() {
         if (isAdjustToFirstDayOfWeek()) {
             setDate(getDate().with(TemporalAdjusters.previousOrSame(getFirstDayOfWeek())));
@@ -135,11 +140,6 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
             consumer.accept(evt);
             evt.consume();
         }
-    }
-
-    @Override
-    protected Skin<?> createDefaultSkin() {
-        return new ResourcesViewSkin(this);
     }
 
     private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);

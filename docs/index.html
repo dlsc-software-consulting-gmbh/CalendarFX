@@ -2,29 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.8">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <meta name="author" content="Dirk Lemmermann">
 <title>CalendarFX Developer Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
-/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
-/* Uncomment @import statement below to use as custom stylesheet */
-/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
-article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
-audio,canvas,video{display:inline-block}
-audio:not([controls]){display:none;height:0}
-script{display:none!important}
-html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-a{background:transparent}
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
 h1{font-size:2em;margin:.67em 0}
-abbr[title]{border-bottom:1px dotted}
 b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
 dfn{font-style:italic}
-hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+hr{height:0}
 mark{background:#ff0;color:#000}
 code,kbd,pre,samp{font-family:monospace;font-size:1em}
 pre{white-space:pre-wrap}
@@ -36,20 +33,22 @@ sub{bottom:-.25em}
 img{border:0}
 svg:not(:root){overflow:hidden}
 figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
 fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
 legend{border:0;padding:0}
 button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
 button,input{line-height:normal}
 button,select{text-transform:none}
-button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
 button[disabled],html input[disabled]{cursor:default}
-input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+input[type=checkbox],input[type=radio]{padding:0}
 button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
 textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
-*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+*,::before,::after{box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -64,14 +63,12 @@ img{-ms-interpolation-mode:bicubic}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
-.center{margin-left:auto;margin-right:auto}
-.stretch{width:100%}
 .subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
-div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
 a{color:#2156a5;text-decoration:underline;line-height:inherit}
 a:hover,a:focus{color:#1d4b8f}
-a img{border:none}
-p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
 p aside{font-size:.875em;line-height:1.35;font-style:italic}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
 h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
@@ -80,14 +77,14 @@ h2{font-size:1.6875em}
 h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
 h4,h5{font-size:1.125em}
 h6{font-size:1em}
-hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
 em,i{font-style:italic;line-height:inherit}
 strong,b{font-weight:bold;line-height:inherit}
 small{font-size:60%;line-height:inherit}
 code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
-ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
 ul,ol{margin-left:1.5em}
-ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
 ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
 ul.square{list-style-type:square}
 ul.circle{list-style-type:circle}
@@ -95,36 +92,37 @@ ul.disc{list-style-type:disc}
 ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
 dl dt{margin-bottom:.3125em;font-weight:bold}
 dl dd{margin-bottom:1.25em}
-abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
-abbr{text-transform:none}
 blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
-blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
-blockquote cite::before{content:"\2014 \0020"}
-blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
 blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
 @media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
 h1{font-size:2.75em}
 h2{font-size:2.3125em}
 h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
 h4{font-size:1.4375em}}
-table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
 table thead,table tfoot{background:#f7f8f7}
 table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
-table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
-table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
 .clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
 .clearfix::after,.float-group::after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
-*:not(pre)>code.nobreak{word-wrap:normal}
-*:not(pre)>code.nowrap{white-space:nowrap}
-pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
 em em{font-style:normal}
 strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
-kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
 .menuseq,.menuref{color:#000}
@@ -136,7 +134,7 @@ b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
 b.button::before{content:"[";padding:0 3px 0 2px}
 b.button::after{content:"]";padding:0 2px 0 3px}
 p a>code:hover{color:rgba(0,0,0,.9)}
-#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
 #header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
 #header::after,#content::after,#footnotes::after,#footer::after{clear:both}
 #content{margin-top:1.25em}
@@ -144,7 +142,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
 #header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
-#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
 #header .details br{display:none}
@@ -165,7 +163,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
-#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
 #toc.toc2 ul ul{margin-left:0;padding-left:1em}
@@ -178,11 +176,11 @@ body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9
 #toc.toc2>ul{font-size:.95em}
 #toc.toc2 ul ul{padding-left:1.25em}
 body.toc2.toc-right{padding-left:0;padding-right:20em}}
-#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
 #content #toc>:first-child{margin-top:0}
 #content #toc>:last-child{margin-bottom:0}
-#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
-#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
 #content{margin-bottom:.625em}
 .sect1{padding-bottom:.625em}
 @media screen and (min-width:768px){#content{margin-bottom:1.25em}
@@ -194,55 +192,62 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
 #content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
 #content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
-.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
 .admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
 table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
-.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
-table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
 .admonitionblock>table td.icon img{max-width:none}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
-.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
-.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
 .exampleblock>.content>:first-child{margin-top:0}
 .exampleblock>.content>:last-child{margin-bottom:0}
-.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
 .sidebarblock>:first-child{margin-top:0}
 .sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
 .exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
-.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
-.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
-.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
-@media screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
-@media screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
-.literalblock pre.nowrap,.literalblock pre.nowrap pre,.listingblock pre.nowrap,.listingblock pre.nowrap pre{white-space:pre;word-wrap:normal}
-.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
-.listingblock pre.highlightjs{padding:0}
-.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
-.listingblock pre.prettyprint{border-width:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
 .listingblock>.content{position:relative}
-.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
-.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
 .listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
-table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
-table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
-table.pyhltable td.code{padding-left:.75em;padding-right:0}
-pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #dddddf}
-pre.pygments .lineno{display:inline-block;margin-right:.25em}
-table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
 .quoteblock{margin:0 1em 1.25em 1.5em;display:table}
-.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
 .quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
 .quoteblock blockquote{margin:0;padding:0;border:0}
 .quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
 .quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
 .quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
 .verseblock{margin:0 1em 1.25em}
-.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
 .verseblock pre strong{font-weight:400}
 .verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
 .quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
@@ -252,25 +257,25 @@ table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
 .quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
 .quoteblock.abstract{margin:0 1em 1.25em;display:block}
 .quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
-.quoteblock.excerpt,.quoteblock .quoteblock{margin:0 0 1.25em;padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
 .quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
-.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
-table.tableblock{max-width:100%;border-collapse:separate}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content{margin-bottom:-1.25em}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
-table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
-table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
-table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
-table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
-table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
-table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
 table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
 table.frame-sides{border-width:0 1px}
-table.frame-topbot,table.frame-ends{border-width:1px 0}
-table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd){background:#f8f8f7}
-table.stripes-none tr,table.stripes-odd tr:nth-of-type(even){background:none}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
 th.halign-left,td.halign-left{text-align:left}
 th.halign-right,td.halign-right{text-align:right}
 th.halign-center,td.halign-center{text-align:center}
@@ -278,23 +283,23 @@ th.valign-top,td.valign-top{vertical-align:top}
 th.valign-bottom,td.valign-bottom{vertical-align:bottom}
 th.valign-middle,td.valign-middle{vertical-align:middle}
 table thead th,table tfoot th{font-weight:bold}
-tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th{background:#f7f8f7}
 tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
 p.tableblock>code:only-child{background:none;padding:0}
 p.tableblock{font-size:1em}
-td>div.verse{white-space:pre}
 ol{margin-left:1.75em}
 ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
 dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
-ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
 ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
 ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
 ul.unstyled,ol.unstyled{margin-left:0}
-ul.checklist{margin-left:.625em}
-ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
-ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
-ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
 ul.inline>li{margin-left:1.25em}
 .unstyled dl dt{font-weight:400;font-style:normal}
 ol.arabic{list-style-type:decimal}
@@ -308,11 +313,12 @@ ol.lowergreek{list-style-type:lower-greek}
 .hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
 .colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
 .colist td:not([class]):first-child img{max-width:none}
 .colist td:not([class]):last-child{padding:.25em 0}
-.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
 .imageblock.left{margin:.25em .625em 1.25em 0}
 .imageblock.right{margin:.25em 0 1.25em .625em}
 .imageblock>.title{margin-bottom:0}
@@ -332,8 +338,6 @@ sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
 #footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
 #footnotes .footnote:last-of-type{margin-bottom:0}
 #content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
-.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
-.gist .file-data>table td.line-data{width:99%}
 div.unbreakable{page-break-inside:avoid}
 .big{font-size:larger}
 .small{font-size:smaller}
@@ -341,37 +345,37 @@ div.unbreakable{page-break-inside:avoid}
 .overline{text-decoration:overline}
 .line-through{text-decoration:line-through}
 .aqua{color:#00bfbf}
-.aqua-background{background-color:#00fafa}
+.aqua-background{background:#00fafa}
 .black{color:#000}
-.black-background{background-color:#000}
+.black-background{background:#000}
 .blue{color:#0000bf}
-.blue-background{background-color:#0000fa}
+.blue-background{background:#0000fa}
 .fuchsia{color:#bf00bf}
-.fuchsia-background{background-color:#fa00fa}
+.fuchsia-background{background:#fa00fa}
 .gray{color:#606060}
-.gray-background{background-color:#7d7d7d}
+.gray-background{background:#7d7d7d}
 .green{color:#006000}
-.green-background{background-color:#007d00}
+.green-background{background:#007d00}
 .lime{color:#00bf00}
-.lime-background{background-color:#00fa00}
+.lime-background{background:#00fa00}
 .maroon{color:#600000}
-.maroon-background{background-color:#7d0000}
+.maroon-background{background:#7d0000}
 .navy{color:#000060}
-.navy-background{background-color:#00007d}
+.navy-background{background:#00007d}
 .olive{color:#606000}
-.olive-background{background-color:#7d7d00}
+.olive-background{background:#7d7d00}
 .purple{color:#600060}
-.purple-background{background-color:#7d007d}
+.purple-background{background:#7d007d}
 .red{color:#bf0000}
-.red-background{background-color:#fa0000}
+.red-background{background:#fa0000}
 .silver{color:#909090}
-.silver-background{background-color:#bcbcbc}
+.silver-background{background:#bcbcbc}
 .teal{color:#006060}
-.teal-background{background-color:#007d7d}
+.teal-background{background:#007d7d}
 .white{color:#bfbfbf}
-.white-background{background-color:#fafafa}
+.white-background{background:#fafafa}
 .yellow{color:#bfbf00}
-.yellow-background{background-color:#fafa00}
+.yellow-background{background:#fafa00}
 span.icon>.fa{cursor:default}
 a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
@@ -380,7 +384,7 @@ a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
 .admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
 .admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
-.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
 .conum[data-value] *{color:#fff!important}
 .conum[data-value]+b{display:none}
 .conum[data-value]::after{content:attr(data-value)}
@@ -388,25 +392,27 @@ pre .conum[data-value]{position:relative;top:-.125em}
 b.conum *{color:inherit!important}
 .conum:not([data-value]):empty{display:none}
 dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
-h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
 p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
-p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
-.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
 .print-only{display:none!important}
 @page{margin:1.25cm .75cm}
-@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
 html{font-size:80%}
 a{color:inherit!important;text-decoration:underline!important}
 a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
 a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
 abbr[title]::after{content:" (" attr(title) ")"}
 pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
 thead{display:table-header-group}
 svg{max-width:100%}
 p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
 h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
 #toc,.sidebarblock,.exampleblock>.content{background:none!important}
 #toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
 body.book #header{text-align:center}
@@ -423,7 +429,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .print-only{display:block!important}
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
-@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
 .sect1{padding:0!important}
 .sect1+.sect1{border:0}
 #footer{background:none}
@@ -431,20 +437,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <style>
-/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
-/*pre.CodeRay {background-color:#f7f7f8;}*/
-.CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
-.CodeRay span.line-numbers{display:inline-block;margin-right:.5em;color:rgba(0,0,0,.3)}
-.CodeRay .line-numbers strong{color:rgba(0,0,0,.4)}
-table.CodeRay{border-collapse:separate;border-spacing:0;margin-bottom:0;border:0;background:none}
-table.CodeRay td{vertical-align: top;line-height:1.45}
+/*! Stylesheet for CodeRay to loosely match GitHub themes | MIT License */
+pre.CodeRay{background:#f7f7f8}
+.CodeRay .line-numbers{border-right:1px solid;opacity:.35;padding:0 .5em 0 0;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+.CodeRay span.line-numbers{display:inline-block;margin-right:.75em}
+.CodeRay .line-numbers strong{color:#000}
+table.CodeRay{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.CodeRay td{vertical-align:top;line-height:inherit}
 table.CodeRay td.line-numbers{text-align:right}
-table.CodeRay td.line-numbers>pre{padding:0;color:rgba(0,0,0,.3)}
-table.CodeRay td.code{padding:0 0 0 .5em}
-table.CodeRay td.code>pre{padding:0}
-.CodeRay .debug{color:#fff !important;background:#000080 !important}
+table.CodeRay td.code{padding:0 0 0 .75em}
+.CodeRay .debug{color:#fff!important;background:navy!important}
 .CodeRay .annotation{color:#007}
-.CodeRay .attribute-name{color:#000080}
+.CodeRay .attribute-name{color:navy}
 .CodeRay .attribute-value{color:#700}
 .CodeRay .binary{color:#509}
 .CodeRay .comment{color:#998;font-style:italic}
@@ -453,7 +457,7 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .char .delimiter{color:#039}
 .CodeRay .class{color:#458;font-weight:bold}
 .CodeRay .complex{color:#a08}
-.CodeRay .constant,.CodeRay .predefined-constant{color:#008080}
+.CodeRay .constant,.CodeRay .predefined-constant{color:teal}
 .CodeRay .color{color:#099}
 .CodeRay .class-variable{color:#369}
 .CodeRay .decorator{color:#b0b}
@@ -468,7 +472,7 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .exception{color:inherit}
 .CodeRay .filename{color:#099}
 .CodeRay .function{color:#900;font-weight:bold}
-.CodeRay .global-variable{color:#008080}
+.CodeRay .global-variable{color:teal}
 .CodeRay .hex{color:#058}
 .CodeRay .integer,.CodeRay .float{color:#099}
 .CodeRay .include{color:#555}
@@ -479,7 +483,7 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .inline-delimiter{color:#d14}
 .CodeRay .important{color:#555;font-weight:bold}
 .CodeRay .interpreted{color:#b2b}
-.CodeRay .instance-variable{color:#008080}
+.CodeRay .instance-variable{color:teal}
 .CodeRay .label{color:#970}
 .CodeRay .local-variable{color:#963}
 .CodeRay .octal{color:#40e}
@@ -489,7 +493,7 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .directive{font-weight:bold}
 .CodeRay .type{font-weight:bold}
 .CodeRay .predefined-type{color:inherit}
-.CodeRay .reserved,.CodeRay .keyword {color:#000;font-weight:bold}
+.CodeRay .reserved,.CodeRay .keyword{color:#000;font-weight:bold}
 .CodeRay .key{color:#808}
 .CodeRay .key .delimiter{color:#606}
 .CodeRay .key .char{color:#80f}
@@ -509,7 +513,7 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .symbol{color:#990073}
 .CodeRay .symbol .content{color:#a60}
 .CodeRay .symbol .delimiter{color:#630}
-.CodeRay .tag{color:#008080}
+.CodeRay .tag{color:teal}
 .CodeRay .tag-special{color:#d70}
 .CodeRay .variable{color:#036}
 .CodeRay .insert{background:#afa}
@@ -538,6 +542,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_entry">Entry</a></li>
 <li><a href="#_calendar">Calendar</a></li>
 <li><a href="#_calendar_source">Calendar Source</a></li>
+<li><a href="#_resource">Resource</a></li>
 </ul>
 </li>
 <li><a href="#_events">Events</a>
@@ -559,8 +564,13 @@ table.CodeRay td.code>pre{padding:0}
 </ul>
 </li>
 <li><a href="#_entry_views">Entry Views</a></li>
-<li><a href="#_calendar_views">Calendar Views</a></li>
+<li><a href="#_standard_calendar_views">Standard Calendar Views</a></li>
 <li><a href="#_calendar_pages">Calendar Pages</a></li>
+<li><a href="#_resource_scheduling_views">Resource Scheduling Views</a>
+<ul class="sectlevel2">
+<li><a href="#_resourcesview">ResourcesView</a></li>
+</ul>
+</li>
 <li><a href="#_developer_console">Developer Console</a></li>
 <li><a href="#_logging">Logging</a></li>
 <li><a href="#_internationalization_i18n">Internationalization (i18n)</a></li>
@@ -572,7 +582,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the CalendarFX developer manual. It aims to contain all the information required to quickly get a calendar UI into your application. If you notice any mistakes or if you are missing vital information then please let us know.</p>
+<p>This is the <em>CalendarFX</em> developer manual. It aims to contain all the information required to quickly get a calendar UI into your application. If you notice any mistakes or if you are missing vital information then please let us know.</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -585,7 +595,7 @@ table.CodeRay td.code>pre{padding:0}
 <h2 id="_quick_start">Quick Start</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following section shows you how to quickly setup a JavaFX application that will show a complete calendar user interface. It includes a day view, a week view, a month view, a year view, an agenda view, a calendar selection view, and a search UI.</p>
+<p>The following section shows you how to quickly set up a JavaFX application that will show a complete calendar user interface. It includes a day view, a week view, a month view, a year view, an agenda view, a calendar selection view, and a search UI.</p>
 </div>
 <div class="listingblock">
 <div class="title">CalendarApp.java</div>
@@ -764,12 +774,12 @@ table.CodeRay td.code>pre{padding:0}
 <h2 id="_model">Model</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The primary model classes in CalendarFX are "CalendarSource", "Calendar" and "Entry". A calendar source often represents a calendar account, for example an account with "Google Calendar" (<a href="http://calendar.google.com" class="bare">http://calendar.google.com</a>). A group consists of a list of calendars and each calendar manages any number of entries. An entry represents an event with a start date / time and an end date / time.</p>
+<p>The primary model classes in <em>CalendarFX</em> are <code>CalendarSource</code>, <code>Calendar</code> and <code>Entry</code>. A calendar source often represents a calendar account, for example an account with "Google Calendar" (<a href="http://calendar.google.com" class="bare">http://calendar.google.com</a>). A calendar source consists of a list of calendars and each calendar manages any number of entries. An entry represents an event with a start date / time, an end date / time, and a time zone.</p>
 </div>
 <div class="sect2">
 <h3 id="_entry">Entry</h3>
 <div class="paragraph">
-<p>The "Entry" class encapsulates all information that is required to display an event or an appointment in any of the calendar views included in CalendarFX.</p>
+<p>The <code>Entry</code> class encapsulates all information that is required to display an event or an appointment in any of the calendar views included in <em>CalendarFX</em>.</p>
 </div>
 <div class="imageblock text-center thumb">
 <div class="content">
@@ -792,6 +802,10 @@ table.CodeRay td.code>pre{padding:0}
 <dt class="hdlist1">Calendar</dt>
 <dd>
 <p>The calendar to which the entry belongs.</p>
+</dd>
+<dt class="hdlist1">Hidden</dt>
+<dd>
+<p>A flag that can be used to explicitly / manually hide an entry.</p>
 </dd>
 <dt class="hdlist1">Interval</dt>
 <dd>
@@ -836,7 +850,7 @@ table.CodeRay td.code>pre{padding:0}
 </td>
 <td class="content">
 <div class="paragraph">
-<p>This last property is very interesting. It allows the entry to express that it defines a recurence. The entry can specify that it will be repeated over and over again following a given pattern. For example: "every Monday, Tuesday and Wednesday of every week until December 31st". If an entry is indeed a recurring entry then it produces one or more "recurrences". These recurrences are created by the framework by invoking the <strong>Entry.createRecurrence()</strong> method. The result of this method is another Entry that will be configured with the same values as the source entry.</p>
+<p>This last property is very interesting. It allows the entry to express that it defines a recurrence. The entry can specify that it will be repeated over and over again following a given pattern. For example: "every Monday, Tuesday and Wednesday of every week until December 31st". If an entry is indeed a recurring entry then it produces one or more "recurrences". These recurrences are created by the framework by invoking the <code>Entry.createRecurrence()</code> method. The result of this method is another Entry that will be configured with the same values as the source entry.</p>
 </div>
 </td>
 </tr>
@@ -902,7 +916,7 @@ table.CodeRay td.code>pre{padding:0}
 </dd>
 <dt class="hdlist1">Short Name</dt>
 <dd>
-<p>A short version of the calendar name. By default it is set to be equal to the regular name, but if the application is using the swimlane layout then it might make sense to also define a short name due to limited space.</p>
+<p>A short version of the calendar name. By default, it is set to be equal to the regular name, but if the application is using the swimlane layout then it might make sense to also define a short name due to limited space.</p>
 </dd>
 <dt class="hdlist1">Read-Only</dt>
 <dd>
@@ -910,18 +924,18 @@ table.CodeRay td.code>pre{padding:0}
 </dd>
 <dt class="hdlist1">Style</dt>
 <dd>
-<p>Basically a name prefix for looking up different styles from the CSS file (calendar.css): "style1-", "style2-". The "Calendar" class defines a "Style" enumerator that can be used to easily set the value of this property with one of the predefined styles.</p>
+<p>Basically a name prefix for looking up different styles from the CSS file (calendar.css): <em>"style1-"</em>, <em>"style2-"</em>. The <code>Calendar</code> class defines an enumerator called <code>Style</code> that can be used to easily set the value of this property with one of the predefined styles.</p>
 </dd>
 <dt class="hdlist1">Look Ahead / Back Duration</dt>
 <dd>
-<p>Two properties of type "java.time.Duration" that are used in combination with the current system time in order to create a time interval. The calendar class uses this time interval inside of its findEntries(String searchTerm) method.</p>
+<p>Two properties of type <code>java.time.Duration</code> that are used in combination with the current system time in order to create a time interval. The calendar class uses this time interval inside its <code>findEntries(String searchTerm)</code> method.</p>
 </dd>
 </dl>
 </div>
 <div class="sect3">
 <h4 id="_adding_and_removing_entries">Adding and Removing Entries</h4>
 <div class="paragraph">
-<p>To add an entry simply call the addEntry() method on calendar.
+<p>To add an entry simply call the <code>addEntry()</code> method on calendar.
 Example:</p>
 </div>
 <div class="listingblock">
@@ -938,7 +952,7 @@ calendar.addEntry(dentistAppointment);</pre></td>
 </div>
 </div>
 <div class="paragraph">
-<p>To remove an entry call the removeEntry() method on calendar.</p>
+<p>To remove an entry call the <code>removeEntry()</code> method on calendar.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -970,7 +984,7 @@ dentistAppointment.setCalendar(calendar);</pre></td>
 </div>
 </div>
 <div class="paragraph">
-<p>To remove the entry from its calendar simply set the calendar to null.</p>
+<p>To remove the entry from its calendar simply set the calendar to <em>null</em>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -987,7 +1001,7 @@ dentistAppointment.setCalendar(<span class="predefined-constant">null</span>);</
 <div class="sect3">
 <h4 id="_finding_entries_for_a_time_interval">Finding Entries for a Time Interval</h4>
 <div class="paragraph">
-<p>The calendar class provides a findEntries() method which receives a start date, an end date, and a time zone. The result of invoking this method is a map where the keys are the dates for which entries were found and the values are lists of entries on that day.</p>
+<p>The calendar class provides a <code>findEntries()</code> method which receives a start date, an end date, and a time zone. The result of invoking this method is a map where the keys are the dates for which entries were found and the values are lists of entries on that day.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -997,7 +1011,7 @@ dentistAppointment.setCalendar(<span class="predefined-constant">null</span>);</
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The result does not only contain entries that were previously added by calling the addEntry() method but also recurrence entries that were generated on-the-fly for those entries that define a recurrence rule.</p>
+<p>The result does not only contain entries that were previously added by calling the <code>addEntry()</code> method but also recurrence entries that were generated on-the-fly for those entries that define a recurrence rule.</p>
 </div>
 </td>
 </tr>
@@ -1020,7 +1034,7 @@ Map&lt;LocalDate, <span class="predefined-type">List</span>&lt;Entry&lt;?&gt;&gt
 <div class="sect3">
 <h4 id="_finding_entries_for_a_search_string">Finding Entries for a Search String</h4>
 <div class="paragraph">
-<p>The second findEntries() method accepts a search term as a parameter and is used to find entries that were previously added to the calendar and that match the term.</p>
+<p>The second <code>findEntries()</code> method accepts a search term as a parameter and is used to find entries that were previously added to the calendar and that match the term.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1034,14 +1048,27 @@ List&lt;Entry&lt;?&gt;&gt; result = calendar.findEntries(<span class="predefined
 </div>
 </div>
 <div class="paragraph">
-<p>To find actual matches the method invokes the Entry.matches(String) method on all entries that are found within the time interval defined by the current date, the look back duration, and the look ahead duration.</p>
+<p>To find actual matches the method invokes the <code>Entry.matches(String)</code> method on all entries that are found within the time interval defined by the current date, the look back duration, and the look ahead duration.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_calendar_source">Calendar Source</h3>
 <div class="paragraph">
-<p>A calendar source is used for creating a group of calendars. A very typical scenario would be that a calendar source represents an online calendar account (e.g. Google calendar). Calendars can be added to a source by simply calling mySource.getCalendars().add(myCalendar).</p>
+<p>A calendar source is used for creating a group of calendars. A very typical scenario would be that a calendar source represents an online calendar account (e.g. Google calendar). Calendars can be added to a source by simply calling <code>mySource.getCalendars().add(myCalendar)</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resource">Resource</h3>
+<div class="paragraph">
+<p>An instance of <code>Resource</code> represents a business object that can be scheduled. Hence, the resource model class contains a calendar for scheduled entries / events / allocations and also a calendar that represents the resource&#8217;s availability. The availability can be edited interactively in the <code>DayView</code> by setting the <code>editAvailability</code> property to true. It is important to note that it is the application&#8217;s responsibility to make sense out of the created entries inside the availability calendar. While editing is in progress each newly created time interval will be directly added to the availability calendar.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>The <code>Resource</code> class is currently only used by the <code>ResourcesView</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1050,47 +1077,47 @@ List&lt;Entry&lt;?&gt;&gt; result = calendar.findEntries(<span class="predefined
 <h2 id="_events">Events</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>CalendarFX utilizes the JavaFX event model to inform the application about changes made in a calendar, about user interaction that might require loading of new data, and about user interaction that might require showing different views.</p>
+<p><em>CalendarFX</em> utilizes the JavaFX event model to inform the application about changes made in a calendar, about user interaction that might require loading of new data, and about user interaction that might require showing different views.</p>
 </div>
 <div class="sect2">
 <h3 id="_calendar_events">Calendar Events</h3>
 <div class="paragraph">
-<p>An event type that indicates that a change was made to the data is probably the most obvious type that anyone would expect from a UI framework. In CalendarFX this event type is called CalendarEvent.</p>
+<p>An event type that indicates that a change was made to the data is probably the most obvious type that anyone would expect from a UI framework. In <em>CalendarFX</em> this event type is called <code>CalendarEvent</code>.</p>
 </div>
 <div class="ulist">
 <div class="title">Calendar Event Type Hierarchy</div>
 <ul>
 <li>
-<p>ANY : the super event type</p>
+<p><code>ANY</code> : the super event type</p>
 <div class="ulist">
 <ul>
 <li>
-<p>CALENDAR_CHANGED : "something" inside the calendar changed, usually causing rebuild of views (example: calendar batch updates finished)</p>
+<p><code>CALENDAR_CHANGED</code> : "something" inside the calendar changed, usually causing rebuild of views (example: calendar batch updates finished)</p>
 </li>
 <li>
-<p>ENTRY_CHANGED : the super type for changes made to an entry</p>
+<p><code>ENTRY_CHANGED</code> : the super type for changes made to an entry</p>
 <div class="ulist">
 <ul>
 <li>
-<p>ENTRY_CALENDAR_CHANGED : the entry was assigned to a different calendar</p>
+<p><code>ENTRY_CALENDAR_CHANGED</code> : the entry was assigned to a different calendar</p>
 </li>
 <li>
-<p>ENTRY_FULL_DAY_CHANGED : the full day flag was changed (from true to false or vice versa)</p>
+<p><code>ENTRY_FULL_DAY_CHANGED</code> : the full day flag was changed (from true to false or vice versa)</p>
 </li>
 <li>
-<p>ENTRY_INTERVAL_CHANGED : the time interval of the entry was changed (start date / time, end date / time)</p>
+<p><code>ENTRY_INTERVAL_CHANGED</code> : the time interval of the entry was changed (start date / time, end date / time)</p>
 </li>
 <li>
-<p>ENTRY_LOCATION_CHANGED : the location of the entry has changed</p>
+<p><code>ENTRY_LOCATION_CHANGED</code> : the location of the entry has changed</p>
 </li>
 <li>
-<p>ENTRY_RECURRENCE_RULE_CHANGED : the recurrence rule was modified</p>
+<p><code>ENTRY_RECURRENCE_RULE_CHANGED</code> : the recurrence rule was modified</p>
 </li>
 <li>
-<p>ENTRY_TITLE_CHANGED : the entry title has changed</p>
+<p><code>ENTRY_TITLE_CHANGED</code> : the entry title has changed</p>
 </li>
 <li>
-<p>ENTRY_USER_OBJECT_CHANGED : a new user object was set on the entry</p>
+<p><code>ENTRY_USER_OBJECT_CHANGED</code> : a new user object was set on the entry</p>
 </li>
 </ul>
 </div>
@@ -1122,11 +1149,11 @@ calendar.addEventHandler(handler);</pre></td>
 <div class="paragraph">
 <p>Load events are used by the framework to signal to the application that the UI requires data for a specific time interval. This
 can be very useful for implementing a lazy loading strategy. If the user switches from one month to another then an event of this
-type will be fired and the time bounds on this event will be the first and the last day of that month. The LoadEvent type only
-supports a single event type called LOAD.</p>
+type will be fired and the time bounds on this event will be the first and the last day of that month. The <code>LoadEvent</code> type only
+supports a single event type called <code>LOAD</code>.</p>
 </div>
 <div class="paragraph">
-<p>Listeners for this event type can be registerd on any date control:</p>
+<p>Listeners for this event type can be registered on any date control:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1143,9 +1170,8 @@ view.addEventHandler(LoadEvent.LOAD, evt -&gt; foo(evt));</pre></td>
 <div class="sect2">
 <h3 id="_request_events">Request Events</h3>
 <div class="paragraph">
-<p>A somewhat unique event class is RequestEvent. It is used by the controls of the framework to signal to other framework controls that
-the user wants to "jump" to another view. For example: the user clicks on the date shown for a day in the MonthView then the month view will fire a request
-event that informs the framework that the user wants to switch to the DayView to see more detail for that day.</p>
+<p>A unique event class is <code>RequestEvent</code>. It is used by the controls of the framework to signal to other framework controls that
+the user wants to "jump" to another view. For example: the user clicks on the date shown for a day in the <code>MonthView</code> then the month view will fire a request event that informs the framework that the user wants to switch to the <code>DayView</code> to see more detail for that day.</p>
 </div>
 </div>
 </div>
@@ -1155,8 +1181,7 @@ event that informs the framework that the user wants to switch to the DayView to
 <div class="sectionbody">
 <div class="paragraph">
 <p>A calendar user interface hardly ever consists of just a single control. They are composed of several views, some showing a single day or a week or
-a month. In CalendarFX the CalendarView control consists of dedicated "pages" for a day, a week, a month, or a full year. Each one of these pages consists
-of one or more subtypes of DateControl. The following image shows a simplified view of the scene graph / the containment hierarchy.</p>
+a month. In <em>CalendarFX</em> the <code>CalendarView</code> control consists of dedicated "pages" for a day, a week, a month, or a full year. Each one of these pages consists of one or more subtypes of DateControl. The following image shows a simplified view of the scene graph / the containment hierarchy.</p>
 </div>
 <div class="imageblock text-center thumb">
 <div class="content">
@@ -1164,12 +1189,10 @@ of one or more subtypes of DateControl. The following image shows a simplified v
 </div>
 </div>
 <div class="paragraph">
-<p>To make all of these controls work together in harmony it is important that they share many properties. This is accomplished by JavaFX property binding.
-The class DateControl features a method called "bind" that ensures the dates and times shown by the controls are synchronized. But also that
-many of the customization featuers (e.g. node factories) are shared.</p>
+<p>To make all of these controls work together in harmony it is important that they share many properties. This is accomplished by JavaFX property binding. The class <code>DateControl</code> features a method called "bind" that ensures the dates and times shown by the controls are synchronized. But also that  many of the customization features (e.g. node factories) are shared.</p>
 </div>
 <div class="paragraph">
-<p>The following listing shows the implementation of the DateControl.bind() method to give you an idea how much is bound within CalendarFX.</p>
+<p>The following listing shows the implementation of the <code>DateControl.bind()</code> method to give you an idea how much is bound within <em>CalendarFX</em>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1301,7 +1324,7 @@ many of the customization featuers (e.g. node factories) are shared.</p>
 <div class="sect2">
 <h3 id="_class_hierarchy">Class Hierarchy</h3>
 <div class="paragraph">
-<p>CalendarFX ships with many built-in views for displaying calendar information. All of these views inherit from DateControl. The class
+<p><em>CalendarFX</em> ships with many built-in views for displaying calendar information. All of these views inherit from <code>DateControl</code>. The class
 hierarchy can be seen in the following image:</p>
 </div>
 <div class="imageblock text-center">
@@ -1313,8 +1336,8 @@ hierarchy can be seen in the following image:</p>
 <div class="sect2">
 <h3 id="_current_date_time_and_today">Current Date, Time, and Today</h3>
 <div class="paragraph">
-<p>Each DateControl keeps track of the "current date" and "today". The current date is the date that the control is supposed to display to the user.
-"Today" is the date that the control assumes to be the actual date. "Today" defaults to the current system date (provided by the operating system) but
+<p>Each <code>DateControl</code> keeps track of the "current date" and "today". The current date is the date that the control is supposed to display to the user.
+"Today" is the date that the control assumes to be the actual date. "Today" defaults to the current system date (provided by the operating system), but
 it can be any date.</p>
 </div>
 <div class="admonitionblock important">
@@ -1326,15 +1349,14 @@ it can be any date.</p>
 <td class="content">
 <div class="title">Updating today and current time</div>
 <div class="paragraph">
-<p>The "today" and "time" properties do not get updated by themselves. See the daemon thread created in the listing shown in the
-"Quick Start" section.</p>
+<p>The "today" and "time" properties do not get updated by themselves. See the daemon thread created in the listing shown in the "Quick Start" section.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>DateControl defines utility methods that allow for easy modification of the "current" date.</p>
+<p><code>DateControl</code> defines utility methods that allow for easy modification of the "current" date.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1353,7 +1375,7 @@ it can be any date.</p>
 <div class="sect2">
 <h3 id="_adding_calendars_sources">Adding Calendars / Sources</h3>
 <div class="paragraph">
-<p>Even though the DateControl class provides a getCalendars() method this is not the place where calendars are being added. Instead
+<p>Even though the <code>DateControl</code> class provides a <code>getCalendars()</code> method this is not the place where calendars are being added. Instead,
 always create calendar sources, add calendars to them, and then add the sources to the control. The "calendars" list is a read-only
 flat list representation of all calendars in all calendar sources. The "calendars" list gets updated by the framework.</p>
 </div>
@@ -1385,10 +1407,7 @@ calendarView.getCalendarSources().setAll(familyCalendarSource);</pre></td>
 <div class="sect2">
 <h3 id="_customizing_or_replacing_the_popover">Customizing or Replacing the PopOver</h3>
 <div class="paragraph">
-<p>The DateControl class has built-in support for displaying a PopOver control when the user double clicks on a calendar entry. The
-content node of this PopOver can be replaced. It is normally used to show some basic entry details (e.g. start / end date, title, event location) but
-applications might have defined specialized entries with custom properties that require additional UI elements. This can be accomplished
-by the help of the PopOver content node factory.</p>
+<p>The <code>DateControl</code> class has built-in support for displaying a <code>PopOver</code> control when the user double-clicks on a calendar entry. The content node of this <code>PopOver</code> can be replaced. It is normally used to show some basic entry details (e.g. start / end date, title, event location) but applications might have defined specialized entries with custom properties that require additional UI elements. This can be accomplished by the help of the <code>PopOver</code> content node factory.</p>
 </div>
 <div class="listingblock">
 <div class="title">PopOver Content Node Factory</div>
@@ -1403,7 +1422,7 @@ calendarView.setEntryDetailsPopOverContentCallback(param -&gt; <span class="keyw
 </div>
 </div>
 <div class="paragraph">
-<p>If an application does not want to use the PopOver at all but instead display a standard dialog then there is a way of doing that, too. Simply
+<p>If an application does not want to use the <code>PopOver</code> at all but instead display a standard dialog then there is a way of doing that, too. Simply
 register an entry details callback.</p>
 </div>
 <div class="listingblock">
@@ -1419,16 +1438,16 @@ calendarView.setEntryDetailsCallback(param -&gt; <span class="keyword">new</span
 </div>
 </div>
 <div class="paragraph">
-<p>These two callbacks normally work hand in hand. The default implementation of the entry details callback is producing a PopOver and sets the content
+<p>These two callbacks normally work hand in hand. The default implementation of the entry details callback is producing a <code>PopOver</code> and sets the content
 node on the PopOver via the help of the content node callback.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_context_menu_support">Context Menu Support</h3>
 <div class="paragraph">
-<p>A common place for customization are context menus. The DateControl class produces a context menu via specialized callbacks. One callback is used
+<p>A common place for customization are context menus. The <code>DateControl</code> class produces a context menu via specialized callbacks. One callback is used
 to produce a menu for a given calendar entry, the second callback is used when the user triggers the context menu by clicking in the background
-of a DateControl.</p>
+of a <code>DateControl</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">PopOver Content Node Factory</div>
@@ -1454,7 +1473,7 @@ calendarView.setContextMenuCallback(param -&gt; <span class="keyword">new</span>
 <div class="title">Context Menus</div>
 <div class="paragraph">
 <p>The context menu callbacks are automatically shared among all date controls that are bound to each other. The same context menu code will execute for
-different views, the DayView, the MonthView, and so on. This means that the code that builds the context menu will need to check the parameter object
+different views, the <code>DayView</code>, the <code>MonthView</code>, and so on. This means that the code that builds the context menu will need to check the parameter object
 that was passed to the callback to configure itself appropriately.</p>
 </div>
 <div class="paragraph">
@@ -1468,8 +1487,7 @@ that was passed to the callback to configure itself appropriately.</p>
 <div class="sect2">
 <h3 id="_creating_entries">Creating Entries</h3>
 <div class="paragraph">
-<p>The user can create new entries by double clicking anywhere inside a DateControl. The actual work of creating a new entry instance is then delegated
-to a specialized entry factory that can be set on DateControl.</p>
+<p>The user can create new entries by double-clicking anywhere inside a <code>DateControl</code>. The actual work of creating a new entry instance is then delegated to a specialized entry factory that can be set on <code>DateControl</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Entry Factory</div>
@@ -1484,8 +1502,7 @@ calendarView.setEntryFactory(param -&gt; <span class="keyword">new</span> MyEntr
 </div>
 </div>
 <div class="paragraph">
-<p>Once the entry factory has returned the new entry it will be added to the calendar that is being returned by the "default calendar" provider. This provider
-is also customizable via a callback.</p>
+<p>Once the entry factory has returned the new entry it will be added to the calendar that is being returned by the "default calendar" provider. This provider is also customizable via a callback.</p>
 </div>
 <div class="listingblock">
 <div class="title">Default Calendar Provider</div>
@@ -1500,17 +1517,13 @@ calendarView.setDefaultCalendarProvider(param -&gt; <span class="keyword">new</s
 </div>
 </div>
 <div class="paragraph">
-<p>Besides the double click creation the application can also programmatically request the DateControl to create a new entry at a given point in time. Two
-methods are available for this: createEntryAt(ZonedDateTime) and createEntryAt(ZonedDateTime, Calendar). The second method will ensure that the entry
-will be added to the given calendar while the first method will invoke the default calendar provider.</p>
+<p>Besides the double click creation the application can also programmatically request the DateControl to create a new entry at a given point in time. Two methods are available for this: createEntryAt(ZonedDateTime) and createEntryAt(ZonedDateTime, Calendar). The second method will ensure that the entry will be added to the given calendar while the first method will invoke the default calendar provider.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_creating_calendar_sources">Creating Calendar Sources</h3>
 <div class="paragraph">
-<p>The user might also wish to add another calendar source to the application. In this case the DateControl will invoke the calendar source factory. The default
-implementation of this factory does nothing more than to create a new instance of the standard CalendarSource class. Applications are free to return a specialization
-of CalendarSource instead (e.g. GoogleCalendarAccount). A custom factory might even prompt the user first with a dialog, e.g. to request user credentials.</p>
+<p>The user might also wish to add another calendar source to the application. In this case the DateControl will invoke the calendar source factory. The default implementation of this factory does nothing more than to create a new instance of the standard CalendarSource class. Applications are free to return a specialization of CalendarSource instead (e.g. GoogleCalendarAccount). A custom factory might even prompt the user first with a dialog, e.g. to request user credentials.</p>
 </div>
 <div class="listingblock">
 <div class="title">Default Calendar Provider</div>
@@ -1525,7 +1538,7 @@ calendarView.setCalendarSourceFactory(param -&gt; <span class="keyword">new</spa
 </div>
 </div>
 <div class="paragraph">
-<p>The calendar source factory gets invoked when the method DateControl.createCalendarSource() gets invoked. The CalendarView class already provides a button
+<p>The calendar source factory gets invoked when the method <code>DateControl.createCalendarSource()</code> gets invoked. The <code>CalendarView</code> class already provides a button
 in its toolbar that will call this method.</p>
 </div>
 </div>
@@ -1535,39 +1548,37 @@ in its toolbar that will call this method.</p>
 <h2 id="_entry_views">Entry Views</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Entry views are JavaFX nodes that are representing calendar entries. There are several different types, all extending EntryViewBase:</p>
+<p>Entry views are JavaFX nodes that are representing calendar entries. There are several types, all extending <code>EntryViewBase</code>:</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Day Entry View</dt>
 <dd>
-<p>Shown inside a DayView or WeekDayView control. These views can be customized by subclassing DayEntryViewSkin and overriding the createContent() method.</p>
+<p>Shown inside a <code>DayView</code> or <code>WeekDayView</code> control. These views can be customized by subclassing <code>DayEntryViewSkin</code> and overriding the <code>createContent()</code> method.</p>
 </dd>
 <dt class="hdlist1">All Day Entry View</dt>
 <dd>
-<p>Shown inside the AllDayView control.</p>
+<p>Shown inside the <code>AllDayView</code> control.</p>
 </dd>
 <dt class="hdlist1">Month Entry View</dt>
 <dd>
-<p>Shown inside the MonthView control.</p>
+<p>Shown inside the <code>MonthView</code> control.</p>
 </dd>
 </dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_calendar_views">Calendar Views</h2>
+<h2 id="_standard_calendar_views">Standard Calendar Views</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The most fundamental views inside CalendarFX are of course the views used to display a day (24 hours), an entire week, a month, and a year.</p>
+<p>The most fundamental views inside <em>CalendarFX</em> are of course the views used to display a day (24 hours), an entire week, a month, and a year.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">DayView</dt>
 <dd>
-<p>Shows a 24 hour time period vertically. The control has several options that can be used to influence the layout of the hours. E.g.: it is possible
-to define hour ranges where the time will be compressed in order to save space on the screen (early and late hours are often not relevant). The view can also
-specify whether it wants to always show a fixed number of hours or a fixed height for each hour.</p>
+<p>Shows a 24-hour time period vertically. The control has several options that can be used to influence the layout of the hours. E.g.: it is possible to define hour ranges where the time will be compressed in order to save space on the screen (early and late hours are often not relevant). The view can also specify whether it wants to always show a fixed number of hours or a fixed height for each hour.</p>
 </dd>
 </dl>
 </div>
@@ -1580,8 +1591,8 @@ specify whether it wants to always show a fixed number of hours or a fixed heigh
 <dl>
 <dt class="hdlist1">DetailedDayView</dt>
 <dd>
-<p>wraps the DayView control with several additional controls: an AllDayView, a TimeScaleView, a CalendarHeaderView, a ScrollBar and and (optional)
-AgendaView.</p>
+<p>wraps the <code>DayView</code> control with several additional controls: an <code>AllDayView</code>, a <code>TimeScaleView</code>, a <code>CalendarHeaderView</code>, a <code>ScrollBar</code> and an (optional)
+<code>AgendaView</code>.</p>
 </dd>
 </dl>
 </div>
@@ -1594,8 +1605,7 @@ AgendaView.</p>
 <dl>
 <dt class="hdlist1">WeekView</dt>
 <dd>
-<p>The name of this control is somewhat misleading, because it can show any number of WeekDayView instances, not just 5 or 7 but also 14 (two weeks) or 21 (three weeks).
-In this view entries can be easily edited to span multiple days.</p>
+<p>The name of this control is somewhat misleading, because it can show any number of <code>WeekDayView</code> instances, not just 5 or 7 but also 14 (two weeks) or 21 (three weeks). In this view entries can be easily edited to span multiple days.</p>
 </dd>
 </dl>
 </div>
@@ -1608,7 +1618,7 @@ In this view entries can be easily edited to span multiple days.</p>
 <dl>
 <dt class="hdlist1">DetailedWeekView</dt>
 <dd>
-<p>same concept as the DetailedDayView. This view wraps the WeekView and adds several other controls.</p>
+<p>same concept as the <code>DetailedDayView</code>. This view wraps the <code>WeekView</code> and adds several other controls.</p>
 </dd>
 </dl>
 </div>
@@ -1635,7 +1645,7 @@ In this view entries can be easily edited to span multiple days.</p>
 <dt class="hdlist1">MonthSheetView</dt>
 <dd>
 <p>Shows several months in a column layout. Weekdays can be aligned so that the same weekdays are always next to each other. A customizable
-cell factory is used to create the date cells. Several default implementations are included in CalendarFX: simple date cell, usage date cell, badge date cell,
+cell factory is used to create the date cells. Several default implementations are included in <em>CalendarFX</em>: simple date cell, usage date cell, badge date cell,
 detail date cell.</p>
 </dd>
 </dl>
@@ -1654,7 +1664,7 @@ detail date cell.</p>
 <dl>
 <dt class="hdlist1">YearView</dt>
 <dd>
-<p>Shows twelve YearMonthView instances.</p>
+<p>Shows twelve <code>YearMonthView</code> instances.</p>
 </dd>
 </dl>
 </div>
@@ -1667,7 +1677,7 @@ detail date cell.</p>
 <dl>
 <dt class="hdlist1">YearMonthView</dt>
 <dd>
-<p>Sort of a date picker control. 12 instances of this control are used to build up the YearPage control. This control provides many properties for easy
+<p>Sort of a date picker control. 12 instances of this control are used to build up the <code>YearPage</code> control. This control provides many properties for easy
 customization. The month label, the year label, and the arrow buttons can be hidden. A cell factory can be set to customize the appearance of each day, and so on.</p>
 </dd>
 </dl>
@@ -1681,8 +1691,7 @@ customization. The month label, the year label, and the arrow buttons can be hid
 <dl>
 <dt class="hdlist1">AllDayView</dt>
 <dd>
-<p>Just like the WeekView this control can also span multiple days. It is being used as a header for the DayView inside the DayPage and also for the WeekView inside
-the WeekPage. The control displays calendar entries that have their "full day" property set to true.</p>
+<p>Just like the <code>WeekView</code> this control can also span multiple days. It is being used as a header for the <code>DayView</code> inside the <code>DayPage</code> and also for the <code>WeekView</code> inside the <code>WeekPage</code>. The control displays calendar entries that have their "full day" property set to true.</p>
 </dd>
 </dl>
 </div>
@@ -1695,7 +1704,7 @@ the WeekPage. The control displays calendar entries that have their "full day" p
 <dl>
 <dt class="hdlist1">CalendarHeaderView</dt>
 <dd>
-<p>Displays the names of all currently visible calendars, but only when the DateControl has its layout set to SWIMLANE and not to STANDARD.</p>
+<p>Displays the names of all currently visible calendars, but only when the <code>DateControl</code> has its layout set to <code>SWIMLANE</code> and not to <code>STANDARD</code>.</p>
 </dd>
 </dl>
 </div>
@@ -1710,15 +1719,15 @@ the WeekPage. The control displays calendar entries that have their "full day" p
 <h2 id="_calendar_pages">Calendar Pages</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Calendar pages are complex controls that are composed of several controls, many of them DateControl instances. All pages provide controls to navigate to different
-dates or to quickly jump to "Today". Each page also shows a title with the current date shown. The CalendarView class manages one instance of each page type to let the
+<p>Calendar pages are complex controls that are composed of several controls, many of them <code>DateControl</code> instances. All pages provide controls to navigate to different
+dates or to quickly jump to "Today". Each page also shows a title with the current date shown. The <code>CalendarView</code> class manages one instance of each page type to let the
 user switch from a day, to a week, to a month, to a year.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">DayPage</dt>
 <dd>
-<p>Shows an AgendaView, a DetailedDayView, and a YearMonthView. This page is designed to give the user a quick overview of what is going on today and
+<p>Shows an <code>AgendaView</code>, a <code>DetailedDayView</code>, and a <code>YearMonthView</code>. This page is designed to give the user a quick overview of what is going on today and
 in the near future (agenda).</p>
 </dd>
 </dl>
@@ -1732,7 +1741,7 @@ in the near future (agenda).</p>
 <dl>
 <dt class="hdlist1">WeekPage</dt>
 <dd>
-<p>Composed of a DetailedWeekView.</p>
+<p>Composed of a <code>DetailedWeekView</code>.</p>
 </dd>
 </dl>
 </div>
@@ -1745,7 +1754,7 @@ in the near future (agenda).</p>
 <dl>
 <dt class="hdlist1">MonthPage</dt>
 <dd>
-<p>Shows a single MonthView control.</p>
+<p>Shows a single <code>MonthView</code> control.</p>
 </dd>
 </dl>
 </div>
@@ -1758,7 +1767,7 @@ in the near future (agenda).</p>
 <dl>
 <dt class="hdlist1">YearPage</dt>
 <dd>
-<p>Shows a YearView with twelve YearMonthView sub-controls. Alternatively can switch to a MonthSheetView.</p>
+<p>Shows a <code>YearView</code> with twelve <code>YearMonthView</code> sub-controls. Alternatively can switch to a <code>MonthSheetView</code>.</p>
 </dd>
 </dl>
 </div>
@@ -1775,12 +1784,50 @@ in the near future (agenda).</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_resource_scheduling_views">Resource Scheduling Views</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another category of views is used for scheduling resource allocations. These are commonly used by scheduling software, e.g. a customer appointment application for a garage, a hairdresser, and so on. The</p>
+</div>
+<div class="sect2">
+<h3 id="_resourcesview">ResourcesView</h3>
+<div class="paragraph">
+<p>The class <code>ResourcesView</code> displays one or more days for one or more resources. The view can either display one or more resources for a given
+day (<code>ResourceView.Type.RESOURCES_OVER_DATES</code>) or one or more days for a given resource (<code>ResourceView.Type.DATES_OVER_RESOURCE</code>). Each one of
+these options can be configured to show one or more dates and one or more resources.</p>
+</div>
+<div class="paragraph">
+<p>This screenshot shows the resources view when the type of the view has been set to "resources over dates".</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="manual-images/resources-view-resources-over-dates.png" alt="ResourcesView - Resources over Dates">
+</div>
+</div>
+<div class="paragraph">
+<p>The next screenshot shows the resources view when the type of the view has been set to "dates over resources".</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="manual-images/resources-view-dates-over-resources.png" alt="esourcesView - Dates over Resources">
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the calendar entries will become semi-transparent when the user switches to the "edit availability" mode. This behaviour can be configured so that either the entries stay completely visible or they are completely hidden. The following screenshot shows the situation where the user is editing the resources' availability and the already existing calendar entries become semi-transparent.</p>
+</div>
+<div class="imageblock text-center thumb">
+<div class="content">
+<img src="manual-images/resources-view-availability.png" alt="esourcesView - Availability Editing">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_developer_console">Developer Console</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>CalendarFX supports a special system property called "calendarfx.developer". If this property is set to "true" then a developer console is being added
-to the skin of CalendarView. The console can be made visible by pressing META-D. The console is a standard CalendarFX
-control and you can also add it directly to your application for development purposes.</p>
+<p><em>CalendarFX</em> supports a special system property called <code>calendarfx.developer</code>. If this property is set to <code>true</code> then a developer console is being added to the skin of <code>CalendarView</code>. The console can be made visible by pressing <code>SHORTCUT-D</code>. The console is a standard <em>CalendarFX</em> control and you can also add it directly to your application for development purposes.</p>
 </div>
 <div class="imageblock text-center thumb">
 <div class="content">
@@ -1793,9 +1840,7 @@ control and you can also add it directly to your application for development pur
 <h2 id="_logging">Logging</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>CalendarFX uses the standard java logging api for its logging. The logging settings and the available loggers
-can be found inside the distribution (misc/logging.properties). CalendarFX uses domains for logging and not
-packages or classes. Several domains are available: view, model, editing, recurrence, etc&#8230;&#8203;</p>
+<p><em>CalendarFX</em> uses the standard java logging api for its logging. The logging settings and the available loggers can be found inside the file <code>logging.properties</code>. <em>CalendarFX</em> uses domains for logging and not packages or classes. Several domains are available: view, model, editing, recurrence, etc&#8230;&#8203;</p>
 </div>
 </div>
 </div>
@@ -1803,9 +1848,9 @@ packages or classes. Several domains are available: view, model, editing, recurr
 <h2 id="_internationalization_i18n">Internationalization (i18n)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The default resource bundle of CalendarFX is English. A German bundle is also included. Both can be found
-in the distribution (misc/messages.properties, misc/messages_de.properties). To add another language to
-CalendarFX simply create a package called com.calendarfx.view and place your own bundle inside of it.</p>
+<p>The default resource bundle of <em>CalendarFX</em> is English. Additional bundles include German, Spanish, French, Italian, Portuguese (Brazil), and Czech.
+All can be found in the distribution (misc/messages.properties, misc/messages_de.properties, etc&#8230;&#8203;). Please submit a pull request to add another
+language to <em>CalendarFX</em>.</p>
 </div>
 </div>
 </div>
@@ -1815,12 +1860,10 @@ CalendarFX simply create a package called com.calendarfx.view and place your own
 <div class="ulist">
 <ul>
 <li>
-<p>There is currently no support for defining exceptions for recurrence rules. In most calendar applications, when the user edits a recurrent entry, the user will be asked whether
-he wants to change just this one recurrence or the whole series. This feature is currently not supported but will be in one of the next releases.</p>
+<p>There is currently no support for defining exceptions for recurrence rules. In most calendar applications, when the user edits a recurrent entry, the user will be asked whether he wants to change just this one recurrence or the whole series. This feature is currently not supported but will be in one of the next releases.</p>
 </li>
 <li>
-<p>In SwimLane layout it would be nice if the user could drag an entry horizontally from one column / calendar to another. This is currently not supported. We will
-investigate if this can be added in one of the next releases.</p>
+<p>In <code>SwimLane</code> layout it would be nice if the user could drag an entry horizontally from one column / calendar to another. This is currently not supported. We will investigate if this can be added in one of the next releases.</p>
 </li>
 </ul>
 </div>
@@ -1829,7 +1872,7 @@ investigate if this can be added in one of the next releases.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-09-09 11:20:11 +0200
+Last updated 2022-10-06 15:21:21 +0200
 </div>
 </div>
 </body>

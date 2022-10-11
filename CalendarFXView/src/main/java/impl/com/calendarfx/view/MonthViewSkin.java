@@ -448,7 +448,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
 
     @Override
     public ZoneId getZoneId() {
-        return ZoneId.systemDefault();
+        return getSkinnable().getZoneId();
     }
 
     @Override

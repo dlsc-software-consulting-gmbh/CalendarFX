@@ -195,34 +195,38 @@ public class EntryDetailsView extends EntryPopOverPane {
         endTimeField.visibleProperty().bind(Bindings.not(entry.fullDayProperty()));
 
         // start date and time
-        startDatePicker.valueProperty().addListener(evt -> {
+        startDatePicker.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (!updatingFields) {
-                entry.changeStartDate(startDatePicker.getValue(), true);
+                // Work-Around for DatePicker bug introduced with 18+9 ("commit on focus lost").
+                startDatePicker.getEditor().setText(startDatePicker.getConverter().toString(newValue));
+                entry.changeStartDate(newValue, true);
             }
         });
 
-        startTimeField.valueProperty().addListener(evt -> {
+        startTimeField.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (!updatingFields) {
-                entry.changeStartTime(startTimeField.getValue(), true);
+                entry.changeStartTime(newValue, true);
             }
         });
 
         // end date and time
-        endDatePicker.valueProperty().addListener(evt -> {
+        endDatePicker.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (!updatingFields) {
-                entry.changeEndDate(endDatePicker.getValue(), false);
+                // Work-Around for DatePicker bug introduced with 18+9 ("commit on focus lost").
+                endDatePicker.getEditor().setText(endDatePicker.getConverter().toString(newValue));
+                entry.changeEndDate(newValue, false);
             }
         });
 
-        endTimeField.valueProperty().addListener(evt -> {
+        endTimeField.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (!updatingFields) {
-                entry.changeEndTime(endTimeField.getValue(), false);
+                entry.changeEndTime(newValue, false);
             }
         });
 
-        zoneBox.valueProperty().addListener(evt -> {
+        zoneBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (!updatingFields && zoneBox.getValue() != null) {
-                entry.changeZoneId(zoneBox.getValue());
+                entry.changeZoneId(newValue);
             }
         });
 

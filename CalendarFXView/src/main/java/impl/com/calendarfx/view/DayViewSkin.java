@@ -158,6 +158,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         currentTimeLine.visibleProperty().bind(view.enableCurrentTimeMarkerProperty().and(view.editAvailabilityProperty().not()));
         getChildren().add(currentTimeLine);
 
+        view.scrollTimeProperty().addListener(drawBackgroundCanvasListener);
         view.lassoStartProperty().addListener(drawBackgroundCanvasListener);
         view.lassoEndProperty().addListener(drawBackgroundCanvasListener);
         view.editAvailabilityProperty().addListener(drawBackgroundCanvasListener);
@@ -263,6 +264,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     }
 
     private void createStaticLines() {
+        lines.clear();
+
         for (int i = 1; i < 24; i++) {
             createLine(HALF_HOUR_LINE_STYLE_CLASS);
             createLine(FULL_HOUR_LINE_STYLE_CLASS);
@@ -448,63 +451,65 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     protected void layoutChildrenInfiniteScrolling(double contentX, double contentY, double contentWidth, double contentHeight) {
         final T view = getSkinnable();
-        final ZonedDateTime scrollTime = view.getScrollTime();
-        Instant time = scrollTime.toInstant().truncatedTo(ChronoUnit.HOURS);
+        if (view.getGridType().equals(GridType.STANDARD)) {
+            final ZonedDateTime scrollTime = view.getScrollTime();
+            Instant time = scrollTime.toInstant().truncatedTo(ChronoUnit.HOURS);
 
-        double y = view.getLocation(time);
+            double y = view.getLocation(time);
 
-        int lineIndex = 0;
+            int lineIndex = 0;
 
-        do {
+            do {
 
-            LocalTime localTime = LocalTime.ofInstant(time, view.getZoneId());
+                LocalTime localTime = LocalTime.ofInstant(time, view.getZoneId());
 
-            if (lineIndex >= lines.size()) {
-                createLine();
+                if (lineIndex >= lines.size()) {
+                    createLine();
+                    Line line = lines.get(lineIndex);
+                    line.toBack();
+                }
+
                 Line line = lines.get(lineIndex);
                 line.toBack();
-            }
+                line.setVisible(true);
 
-            Line line = lines.get(lineIndex);
-            line.toBack();
-            line.setVisible(true);
+                line.getStyleClass().removeAll(HALF_HOUR_LINE_STYLE_CLASS, FULL_HOUR_LINE_STYLE_CLASS, MIDNIGHT_LINE_STYLE_CLASS, NOON_LINE_STYLE_CLASS);
 
-            line.getStyleClass().removeAll(HALF_HOUR_LINE_STYLE_CLASS, FULL_HOUR_LINE_STYLE_CLASS, MIDNIGHT_LINE_STYLE_CLASS, NOON_LINE_STYLE_CLASS);
-
-            if (localTime.getMinute() == 30) {
-                line.getStyleClass().add(HALF_HOUR_LINE_STYLE_CLASS);
-            } else {
-                line.getStyleClass().add(FULL_HOUR_LINE_STYLE_CLASS);
-            }
-
-            if (localTime.equals(LocalTime.MIDNIGHT)) {
-                line.getStyleClass().add(MIDNIGHT_LINE_STYLE_CLASS);
-                line.setStartX(snapPositionX(contentX));
-                line.setEndX(snapPositionX(contentX + contentWidth));
-            } else if (localTime.equals(LocalTime.NOON)) {
-                line.setStartX(snapPositionX(contentX));
-                line.setEndX(snapPositionX(contentX + contentWidth));
-                if (view.isShowNoonMarker()) {
-                    line.getStyleClass().add(NOON_LINE_STYLE_CLASS);
+                if (localTime.getMinute() == 30) {
+                    line.getStyleClass().add(HALF_HOUR_LINE_STYLE_CLASS);
+                } else {
+                    line.getStyleClass().add(FULL_HOUR_LINE_STYLE_CLASS);
                 }
-            } else {
-                line.setStartX(snapPositionX(contentX + 4));
-                line.setEndX(snapPositionX(contentX + contentWidth - 4));
+
+                if (localTime.equals(LocalTime.MIDNIGHT)) {
+                    line.getStyleClass().add(MIDNIGHT_LINE_STYLE_CLASS);
+                    line.setStartX(snapPositionX(contentX));
+                    line.setEndX(snapPositionX(contentX + contentWidth));
+                } else if (localTime.equals(LocalTime.NOON)) {
+                    line.setStartX(snapPositionX(contentX));
+                    line.setEndX(snapPositionX(contentX + contentWidth));
+                    if (view.isShowNoonMarker()) {
+                        line.getStyleClass().add(NOON_LINE_STYLE_CLASS);
+                    }
+                } else {
+                    line.setStartX(snapPositionX(contentX + 4));
+                    line.setEndX(snapPositionX(contentX + contentWidth - 4));
+                }
+
+                line.setStartY(snapPositionY(y));
+                line.setEndY(snapPositionY(y));
+
+                lineIndex++;
+
+                time = time.plus(30, ChronoUnit.MINUTES);
+                y = view.getLocation(time);
+
+            } while (y < contentY + contentHeight);
+
+            for (int i = lineIndex; i < lines.size(); i++) {
+                Line line = lines.get(i);
+                line.setVisible(false);
             }
-
-            line.setStartY(snapPositionY(y));
-            line.setEndY(snapPositionY(y));
-
-            lineIndex++;
-
-            time = time.plus(30, ChronoUnit.MINUTES);
-            y = view.getLocation(time);
-
-        } while (y < contentY + contentHeight);
-
-        for (int i = lineIndex; i < lines.size(); i++) {
-            Line line = lines.get(i);
-            line.setVisible(false);
         }
 
         layoutEntries(contentX, contentY, contentWidth, contentHeight);
@@ -821,7 +826,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 removeEntryView(entry, "entry was deleted");
             }
         } else {
-            if (evt.getOldCalendar() == null && isRelevant(entry)) {
+            if (!entry.isFullDay() && evt.getOldCalendar() == null && isRelevant(entry)) {
                 addEntryView(entry, "entry calendar changed");
             }
         }
@@ -1084,7 +1089,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     @Override
     public ZoneId getZoneId() {
-        return ZoneId.systemDefault();
+        return getSkinnable().getZoneId();
     }
 
     @Override
@@ -1120,67 +1125,85 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
 
-            T dayView = getSkinnable();
-            Calendar availabilityCalendar = dayView.getAvailabilityCalendar();
+            T view = getSkinnable();
+            Calendar availabilityCalendar = view.getAvailabilityCalendar();
 
             if (availabilityCalendar != null) {
-                gc.setFill(dayView.getAvailabilityFill());
-                LocalDate date = dayView.getDate();
-                Map<LocalDate, List<Entry<?>>> entries = availabilityCalendar.findEntries(date, date, dayView.getZoneId());
+                gc.setFill(view.getAvailabilityFill());
+                LocalDate date = view.getDate();
+                Map<LocalDate, List<Entry<?>>> entries = availabilityCalendar.findEntries(date, date, view.getZoneId());
                 List<Entry<?>> entriesOnDate = entries.get(date);
                 if (entriesOnDate != null) {
                     entriesOnDate.forEach(entry -> {
                         ZonedDateTime startAsZonedDateTime = entry.getStartAsZonedDateTime();
                         ZonedDateTime endAsZonedDateTime = entry.getEndAsZonedDateTime();
-                        double y1 = ViewHelper.getTimeLocation(dayView, startAsZonedDateTime);
-                        double y2 = ViewHelper.getTimeLocation(dayView, endAsZonedDateTime);
+                        double y1 = ViewHelper.getTimeLocation(view, startAsZonedDateTime);
+                        double y2 = ViewHelper.getTimeLocation(view, endAsZonedDateTime);
                         gc.fillRect(0, y1, getWidth(), y2 - y1);
                     });
                 }
             }
 
-            if (dayView.isEditAvailability()) {
-                Instant start = dayView.getLassoStart();
-                Instant end = dayView.getLassoEnd();
+            if (view.isEditAvailability()) {
+                Instant start = view.getLassoStart();
+                Instant end = view.getLassoEnd();
 
                 if (start != null && end != null) {
-                    double y1 = ViewHelper.getTimeLocation(dayView, start);
-                    double y2 = ViewHelper.getTimeLocation(dayView, end);
+                    double y1 = ViewHelper.getTimeLocation(view, start);
+                    double y2 = ViewHelper.getTimeLocation(view, end);
 
                     double minY = Math.min(y1, y2);
                     double maxY = Math.max(y1, y2);
 
-                    gc.setFill(dayView.getLassoColor());
+                    gc.setFill(view.getLassoColor());
                     gc.fillRect(0, minY, getWidth(), maxY - minY);
                 }
             }
 
-            if (dayView.getGridType().equals(GridType.CUSTOM)) {
-                gc.setStroke(dayView.getGridLineColor());
+            VirtualGrid virtualGrid = view.getGridLines();
 
-                ZonedDateTime startTime = dayView.getZonedDateTimeMin();
-                ZonedDateTime endTime = dayView.getZonedDateTimeMax();
+            if (view.getGridType().equals(GridType.CUSTOM)) {
+                gc.setStroke(view.getGridLineColor());
 
-                if (dayView.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE)) {
-                    startTime = dayView.getZonedDateTimeStart();
-                    endTime = dayView.getZonedDateTimeEnd();
-                }
+                if (view.isScrollingEnabled()) {
+                    ZonedDateTime time = view.getScrollTime();
+                    time = virtualGrid.adjustTime(time, false, view.getFirstDayOfWeek());
 
-                VirtualGrid virtualGrid = dayView.getGridLines();
+                    double y = view.getLocation(time);
 
-                do {
-                    double y = ViewHelper.getTimeLocation(dayView, startTime);
-                    if (startTime.toLocalTime().getMinute() == 0) {
-                        gc.setLineDashes(null);
-                    } else {
-                        gc.setLineDashes(2, 2);
+                    do {
+                        if (time.toLocalTime().getMinute() == 0) {
+                            gc.setLineDashes(null);
+                        } else {
+                            gc.setLineDashes(2, 2);
+                        }
+                        gc.strokeLine(0, y, getWidth(), y);
+                        time = time.plus(virtualGrid.getAmount(), virtualGrid.getUnit());
+                        y = view.getLocation(time);
+                    } while (y < getHeight());
+
+                    gc.setLineDashes(null);
+                } else {
+                    ZonedDateTime startTime = view.getZonedDateTimeMin();
+                    ZonedDateTime endTime = view.getZonedDateTimeMax();
+
+                    if (view.getEarlyLateHoursStrategy().equals(EarlyLateHoursStrategy.HIDE)) {
+                        startTime = view.getZonedDateTimeStart();
+                        endTime = view.getZonedDateTimeEnd();
                     }
-                    gc.strokeLine(0, y, getWidth(), y);
-                    startTime = startTime.plus(virtualGrid.getAmount(), virtualGrid.getUnit());
-                } while (startTime.isBefore(endTime));
-            }
 
-            gc.setLineDashes(null);
+                    do {
+                        double y = ViewHelper.getTimeLocation(view, startTime);
+                        if (startTime.toLocalTime().getMinute() == 0) {
+                            gc.setLineDashes(null);
+                        } else {
+                            gc.setLineDashes(2, 2);
+                        }
+                        gc.strokeLine(0, y, getWidth(), y);
+                        startTime = startTime.plus(virtualGrid.getAmount(), virtualGrid.getUnit());
+                    } while (startTime.isBefore(endTime));
+                }
+            }
         }
     }
 }

@@ -74,14 +74,24 @@ public final class Util {
     public static boolean removeChildren(Pane parent, Predicate<Node> predicate) {
         List<Node> list = new ArrayList<>(parent.getChildrenUnmodifiable().stream().filter(predicate.negate()).collect(Collectors.toList()));
         boolean childrenWereRemoved = list.removeIf(predicate);
-        parent.getChildren().setAll(list);
+        if (list.isEmpty()) {
+            parent.getChildren().clear();
+        } else {
+            parent.getChildren().setAll(list);
+        }
         return childrenWereRemoved;
     }
 
     public static boolean removeChildren(Group group, Predicate<Node> predicate) {
-        List<Node> list = new ArrayList<>(group.getChildrenUnmodifiable());
+        List<Node> list = new ArrayList<>(group.getChildren());
         boolean childrenWereRemoved = list.removeIf(predicate);
-        group.getChildren().setAll(list);
+        if (list.isEmpty()) {
+            if (!group.getChildren().isEmpty()) {
+                group.getChildren().clear();
+            }
+        } else {
+            group.getChildren().setAll(list);
+        }
         return childrenWereRemoved;
     }
 

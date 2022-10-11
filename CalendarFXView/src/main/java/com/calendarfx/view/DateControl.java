@@ -625,6 +625,8 @@ public abstract class DateControl extends CalendarFXControl {
             Callback<CreateEntryParameter, Entry<?>> factory = getEntryFactory();
             Entry<?> entry = factory.call(param);
 
+            System.out.println(calendar);
+
             /*
              * This is OK. The factory can return NULL. In this case we
              * assume that the application does not allow to create an entry

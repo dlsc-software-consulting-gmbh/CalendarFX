@@ -144,8 +144,7 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of {@link #todayProperty()}.
      *
-     * @param date
-     *            the date representing "today"
+     * @param date the date representing "today"
      */
     public final void setToday(LocalDate date) {
         requireNonNull(date);
@@ -161,27 +160,27 @@ public class PrintView extends ViewTypeControl {
         return todayProperty().get();
     }
 
-    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now()); 
-    
+    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(this, "date", LocalDate.now());
+
     /**
      * Stores the Calendar selected date. It's needed for some process in TimeRangeView.
      * Initialized with {@link LocalDate#now()} but It wil be binded to {@link CalendarView #dateProperty()}.
      *
      * @return The Calendar date
      */
-    public final ObjectProperty<LocalDate> dateProperty(){
+    public final ObjectProperty<LocalDate> dateProperty() {
         return date;
     }
-    
+
     /**
      * Returns the value of {@link #dateProperty()}.
      *
      * @return the date representing "Calendar date"
      */
-    public final LocalDate getDate(){
-       return dateProperty().get();
+    public final LocalDate getDate() {
+        return dateProperty().get();
     }
-    
+
     private final ObjectProperty<DateControl.Layout> layout = new SimpleObjectProperty<>(this, "layout", DateControl.Layout.STANDARD);
 
     /**
@@ -202,8 +201,7 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of {@link #layoutProperty()}.
      *
-     * @param layout
-     *            the layout
+     * @param layout the layout
      */
     public final void setLayout(DateControl.Layout layout) {
         requireNonNull(layout);
@@ -236,8 +234,7 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of {@link #weekFieldsProperty()}.
      *
-     * @param weekFields
-     *            the new week fields
+     * @param weekFields the new week fields
      */
     public final void setWeekFields(WeekFields weekFields) {
         requireNonNull(weekFields);
@@ -317,8 +314,7 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of the {@link #onContinueProperty()}.
      *
-     * @param handler
-     *            the event handler invoked by the "continue" button.
+     * @param handler the event handler invoked by the "continue" button.
      */
     public final void setOnContinue(EventHandler<ActionEvent> handler) {
         onContinueProperty().set(handler);
@@ -349,8 +345,7 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of the {@link #onCancelProperty()}.
      *
-     * @param handler
-     *            the event handler invoked by the "cancel" button.
+     * @param handler the event handler invoked by the "cancel" button.
      */
     public final void setOnCancel(EventHandler<ActionEvent> handler) {
         onCancelProperty().set(handler);
@@ -373,8 +368,7 @@ public class PrintView extends ViewTypeControl {
     /**
      * Sets the value of the {@link #printIconProperty()}.
      *
-     * @param image
-     *            will be the icon of window/dialog.
+     * @param image will be the icon of window/dialog.
      */
     public final void setPrintIcon(Image image) {
         requireNonNull(image);
@@ -398,7 +392,7 @@ public class PrintView extends ViewTypeControl {
      */
     public void show(Window owner) {
         InvalidationListener viewTypeListener = obs -> loadDropDownValues(getDate());
-        
+
         if (dialog != null) {
             dialog.show();
         } else {
@@ -423,10 +417,10 @@ public class PrintView extends ViewTypeControl {
             dialog.setOnHidden(obs -> {
                 timeRange.cleanOldValues();
                 timeRange.viewTypeProperty().removeListener(viewTypeListener);
-            }); 
-            
+            });
+
             dialog.setOnShown(obs -> timeRange.viewTypeProperty().addListener(viewTypeListener));
-            
+
             dialog.show();
         }
     }
@@ -478,23 +472,25 @@ public class PrintView extends ViewTypeControl {
             LoggingDomain.PRINTING.fine("pageOrientation = " + pageOrientation);
             LoggingDomain.PRINTING.fine("marginType = " + marginType);
             LoggingDomain.PRINTING.fine("custom margins = left: " + pageInView.getLeftMargin()
-                            + ", right: " + pageInView.getRightMargin()
-                            + ", top: " + pageInView.getTopMargin()
-                            + ", bottom: " + pageInView.getBottomMargin());
+                    + ", right: " + pageInView.getRightMargin()
+                    + ", top: " + pageInView.getTopMargin()
+                    + ", bottom: " + pageInView.getBottomMargin());
 
             switch (marginType) {
-            case DEFAULT:
-                layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.DEFAULT);
-                break;
-            case MINIMUM:
-                layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.HARDWARE_MINIMUM);
-                break;
-            case CUSTOM:
-                layout = printer.createPageLayout(paper, pageOrientation,
-                        pageInView.getLeftMargin(), pageInView.getRightMargin(),
-                        pageInView.getTopMargin(),
-                        pageInView.getBottomMargin());
-                break;
+                case DEFAULT:
+                    layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.DEFAULT);
+                    break;
+                case MINIMUM:
+                    layout = printer.createPageLayout(paper, pageOrientation, Printer.MarginType.HARDWARE_MINIMUM);
+                    break;
+                case CUSTOM:
+                    layout = printer.createPageLayout(paper, pageOrientation,
+                            pageInView.getLeftMargin(), pageInView.getRightMargin(),
+                            pageInView.getTopMargin(),
+                            pageInView.getBottomMargin());
+                    break;
+                default:
+                    throw new IllegalArgumentException("unknown margin type " + marginType);
             }
 
             // sizes of print page and physical page

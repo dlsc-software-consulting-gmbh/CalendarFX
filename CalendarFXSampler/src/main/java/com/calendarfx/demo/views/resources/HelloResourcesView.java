@@ -21,11 +21,12 @@ import com.calendarfx.demo.CalendarFXDateControlSample;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.Entry;
+import com.calendarfx.model.Resource;
 import com.calendarfx.view.DateControl;
+import com.calendarfx.view.DateControl.Layout;
 import com.calendarfx.view.DayViewBase.AvailabilityEditingEntryBehaviour;
 import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.DayViewBase.GridType;
-import com.calendarfx.model.Resource;
 import com.calendarfx.view.ResourcesView;
 import com.calendarfx.view.ResourcesView.Type;
 import javafx.collections.FXCollections;
@@ -100,7 +101,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         ChoiceBox<Type> typeBox = new ChoiceBox<>();
         typeBox.getItems().setAll(Type.values());
         typeBox.valueProperty().bindBidirectional(resourcesView.typeProperty());
-        typeBox.setConverter(new StringConverter<Type>() {
+        typeBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Type object) {
                 if (object != null) {
@@ -121,9 +122,37 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
             }
         });
 
+        ChoiceBox<Layout> layoutBox = new ChoiceBox<>();
+        layoutBox.getItems().setAll(Layout.values());
+        layoutBox.valueProperty().bindBidirectional(resourcesView.layoutProperty());
+        layoutBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Layout object) {
+                if (object != null) {
+                    if (object.equals(Layout.SWIMLANE)) {
+                        return "Swim Lanes";
+                    } else if (object.equals(Layout.STANDARD)) {
+                        return "Standard";
+                    } else {
+                        return "unknown layout type: " + object.name();
+                    }
+                }
+                return "";
+            }
+
+            @Override
+            public Layout fromString(String string) {
+                return null;
+            }
+        });
+
         ChoiceBox<GridType> gridTypeBox = new ChoiceBox<>();
         gridTypeBox.getItems().setAll(GridType.values());
         gridTypeBox.valueProperty().bindBidirectional(resourcesView.gridTypeProperty());
+
+        CheckBox infiniteScrolling = new CheckBox("Infinite scrolling");
+        infiniteScrolling.selectedProperty().bindBidirectional(resourcesView.scrollingEnabledProperty());
+        infiniteScrolling.setDisable(true);
 
         CheckBox adjustBox = new CheckBox("Adjust first day of week");
         adjustBox.selectedProperty().bindBidirectional(resourcesView.adjustToFirstDayOfWeekProperty());
@@ -148,13 +177,14 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, new Label("View type"), typeBox, datePicker, adjustBox, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
+        return new VBox(10, availabilityButton, new Label("View type"), typeBox, layoutBox, datePicker, infiniteScrolling, adjustBox, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
                 new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, timescaleBox, allDayBox, detailsBox, flipBox);
     }
 
     @Override
     protected DateControl createControl() {
         resourcesView = new ResourcesView();
+        resourcesView.setScrollingEnabled(false);
         resourcesView.setType(Type.DATES_OVER_RESOURCES);
         resourcesView.setNumberOfDays(5);
         resourcesView.setCreateEntryClickCount(1);
@@ -192,7 +222,9 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
     private Resource<String> create(String name, Style style) {
         Resource<String> resource = new Resource(name);
         resource.getAvailabilityCalendar().setName("Availability of " + name);
-        resource.getCalendar().setStyle(style);
+        resource.getCalendars().get(0).setStyle(style);
+        resource.getCalendars().get(0).setUserObject(resource);
+        resource.getCalendarSources().get(0).getCalendars().add(new Calendar("Second", resource));
         fillAvailabilities(resource.getAvailabilityCalendar());
         return resource;
     }
