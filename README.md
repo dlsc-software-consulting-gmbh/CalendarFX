@@ -2,15 +2,15 @@
 A Java framework for creating sophisticated calendar views based on JavaFX. A detailed developer manual can be found online: [CalendarFX Developer Manual](https://dlsc-software-consulting-gmbh.github.io/CalendarFX/)
 
 [![Apache-2 license](https://img.shields.io/badge/license-Apache--2-%230778B9.svg)](https://opensource.org/licenses/Apache-2.0) 
-[![Build Status](https://travis-ci.com/dlsc-software-consulting-gmbh/CalendarFX.svg?branch=master-11)](https://travis-ci.com/dlsc-software-consulting-gmbh/CalendarFX)
 [![Maven Central](https://img.shields.io/maven-central/v/com.calendarfx/view)](https://search.maven.org/search?q=g:com.calendarfx+AND+a:view) 
 [![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/dlsc-software-consulting-gmbh/CalendarFX)](https://lgtm.com/projects/g/dlsc-software-consulting-gmbh/CalendarFX/alerts)
-[![LGTM Grade](https://img.shields.io/lgtm/grade/java/github/dlsc-software-consulting-gmbh/CalendarFX)](https://lgtm.com/projects/g/dlsc-software-consulting-gmbh/CalendrFX/context:java)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=code_smells)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_afterburner.fx)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=ncloc)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_afterburner.fx)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_afterburner.fx)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=security_rating)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_afterburner.fx)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_afterburner.fx)
+[![LGTM Grade](https://img.shields.io/lgtm/grade/java/github/dlsc-software-consulting-gmbh/CalendarFX)](https://lgtm.com/projects/g/dlsc-software-consulting-gmbh/CalendarFX/context:java)
+
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=code_smells)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_CalendarFX2.fx)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=ncloc)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_CalendarFX2.fx)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_CalendarFX2.fx)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=security_rating)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_CalendarFX2.fx)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dlsc-software-consulting-gmbh_CalendarFX2&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=dlsc-software-consulting-gmbh_CalendarFX2.fx)
 
 For a quick online demo please checkout [JPro](https://jpro.one) and their [CalendarFX demo](https://demos.jpro.one/calendar.html).
 
