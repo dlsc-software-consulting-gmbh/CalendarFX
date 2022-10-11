@@ -73,9 +73,8 @@
                 </executions>
 
                 <configuration>
-                    <sourceHighlighter>coderay</sourceHighlighter>
                     <backend>html</backend>
-                    <imagesDir>manual-images</imagesDir>
+                    <outputFile>index.html</outputFile>
                 </configuration>
             </plugin>
 
