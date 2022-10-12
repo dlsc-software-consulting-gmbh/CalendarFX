@@ -149,6 +149,10 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
                 entryCalendarChanged(evt);
             } else if (eventType.equals(CalendarEvent.ENTRY_TITLE_CHANGED)) {
                 entryTitleChanged(evt);
+            } else if (eventType.equals(CalendarEvent.ENTRY_LOCATION_CHANGED)) {
+                entryLocationChanged(evt);
+            } else if (eventType.equals(CalendarEvent.ENTRY_USER_OBJECT_CHANGED)) {
+                entryUserObjectChanged(evt);
             } else if (eventType.equals(CALENDAR_CHANGED)) {
                 calendarChanged(evt.getCalendar());
             }
@@ -168,6 +172,12 @@ public abstract class DateControlSkin<C extends DateControl> extends SkinBase<C>
     }
 
     protected void entryTitleChanged(CalendarEvent evt) {
+    }
+
+    protected void entryLocationChanged(CalendarEvent evt) {
+    }
+
+    protected void entryUserObjectChanged(CalendarEvent evt) {
     }
 
     protected void calendarChanged(Calendar calendar) {

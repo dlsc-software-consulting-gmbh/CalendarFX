@@ -138,20 +138,6 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
                 .collect(Collectors.toList());
     }
 
-    private Optional<EntryViewBase> findRecurrenceEntryView(Entry<?> entry) {
-        List<EntryViewBase> collect = entryViewGroup.getChildren().stream()
-                .map(node -> (EntryViewBase) node)
-                .filter(e -> e.getEntry().isRecurrence())
-                .filter(e -> e.getEntry().getRecurrenceId().equals(entry.getRecurrenceId()))
-                .collect(Collectors.toList());
-
-        if (collect.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(collect.get(0));
-    }
-
     private boolean removeEntryViews(Entry<?> entry, String reason) {
         if (reason != null) {
             LoggingDomain.VIEW.fine("removing entry, reason = " + reason + ", date = " + getSkinnable().getDate());
@@ -186,12 +172,16 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         Calendar calendar = entry.getCalendar();
         LocalDate startDate = getLoadStartDate();
         LocalDate endDate = getLoadEndDate();
+
         Map<LocalDate, List<Entry<?>>> entries = calendar.findEntries(startDate, endDate, getZoneId());
         Map<LocalDate, Entry<?>> result = new HashMap<>();
 
         entries.forEach((date, list) -> {
             if (!list.isEmpty()) {
-                Optional<Entry<?>> first = list.stream().filter(e -> e.getStartDate().equals(date)).findFirst();
+                Optional<Entry<?>> first = list.stream()
+                        .filter(e -> e.getId().equals(entry.getId()))
+                        .filter(e -> e.getStartDate().equals(date))
+                        .findFirst();
                 if (first.isPresent()) {
                     result.put(date, first.get());
                 }
@@ -239,6 +229,36 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
     @Override
     protected void calendarChanged(Calendar calendar) {
         updateEntries("calendar changed");
+    }
+
+    @Override
+    protected void entryTitleChanged(CalendarEvent evt) {
+        LoggingDomain.VIEW.fine("handle entry title changed, date = " + getSkinnable().getDate());
+        Entry<?> entry = evt.getEntry();
+        if (entry.isFullDay()) {
+            // no need to check for relevance, probably faster to just look for entry views
+            findEntryViews(entry).forEach(entryView -> entryView.getEntry().setTitle(evt.getEntry().getTitle()));
+        }
+    }
+
+    @Override
+    protected void entryLocationChanged(CalendarEvent evt) {
+        LoggingDomain.VIEW.fine("handle entry location changed, date = " + getSkinnable().getDate());
+        Entry<?> entry = evt.getEntry();
+        if (entry.isFullDay()) {
+            // no need to check for relevance, probably faster to just look for entry views
+            findEntryViews(entry).forEach(entryView -> entryView.getEntry().setLocation(evt.getEntry().getLocation()));
+        }
+    }
+
+    @Override
+    protected void entryUserObjectChanged(CalendarEvent evt) {
+        LoggingDomain.VIEW.fine("handle entry user object changed, date = " + getSkinnable().getDate());
+        Entry<?> entry = evt.getEntry();
+        if (entry.isFullDay()) {
+            // no need to check for relevance, probably faster to just look for entry views
+            findEntryViews(entry).forEach(entryView -> entryView.getEntry().setUserObject(evt.getEntry().getUserObject()));
+        }
     }
 
     @Override
