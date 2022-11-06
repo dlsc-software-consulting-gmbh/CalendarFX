@@ -78,7 +78,7 @@ class EntriesPane extends VBox {
                 borderPane.getStyleClass().add("entry");
 
                 Label titleLabel = new Label(entry.getTitle());
-                BorderPane.setAlignment(titleLabel, Pos.CENTER_LEFT);
+                borderPane.setAlignment(titleLabel, Pos.CENTER_LEFT);
                 titleLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 titleLabel.getStyleClass().add("title");
                 borderPane.setCenter(titleLabel);

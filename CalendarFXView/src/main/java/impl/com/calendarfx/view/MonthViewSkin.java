@@ -49,7 +49,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Polygon;
 import javafx.util.Callback;
 
 import java.text.MessageFormat;
@@ -272,6 +274,7 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
             }
         }
 
+
         LocalDate date = view.getDate().with(TemporalAdjusters.firstDayOfMonth());
 
         date = Util.adjustToFirstDayOfWeek(date, getSkinnable().getFirstDayOfWeek());
@@ -300,11 +303,12 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
                 } else {
                     dayOfMonthLabel.getStyleClass().add("middle-day");
                 }
-
+                Circle flag = new Circle();
                 controlsMap.put(date, dayOfMonthLabel);
                 GridPane.setHgrow(dayOfMonthLabel, ALWAYS);
                 GridPane.setVgrow(dayOfMonthLabel, ALWAYS);
                 gridPane.add(dayOfMonthLabel, day, week + 1);
+                gridPane.add(flag, day, week);
                 date = date.plusDays(1);
             }
         }
@@ -564,7 +568,11 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
             }
 
             getStyleClass().add(dayOfWeek.toString().toLowerCase());
-
+            BorderPane flagPane = new BorderPane();
+            Rectangle flag = new Rectangle(25, 25);
+            flagPane.setLeft(flag);
+            VBox.setVgrow(flagPane, Priority.NEVER);
+            getChildren().add(flagPane);
             BorderPane headerPane = new BorderPane();
             headerPane.getStyleClass().add(MONTH_DAY_HEADER);
             if (monthView.isShowWeekNumbers()) {
@@ -572,9 +580,9 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
             }
             headerPane.setRight(dateLabel);
 
+
             VBox.setVgrow(headerPane, Priority.NEVER);
             getChildren().add(headerPane);
-
             entriesPane = new MonthDayEntriesPane(date, week, day);
             entriesPane.getStyleClass().add(MONTH_DAY_ENTRIES_PANE);
             VBox.setVgrow(entriesPane, Priority.ALWAYS);
@@ -621,7 +629,13 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         private final int week;
         private final int day;
 
+        private final double flagPoints[] = {0.0d, 0.0d,
+                50.0d, 0.0d,
+                0.0d, 50.0d};
+        private final Polygon flag = new Polygon();
+
         MonthDayEntriesPane(LocalDate date, int week, int day) {
+
             getStyleClass().add("entries-pane");
 
             this.date = date;
@@ -659,9 +673,13 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         }
 
         private void update() {
+            flag.setVisible(true);
             Util.removeChildren(this, node -> node instanceof MonthEntryView);
 
             if (!entries.isEmpty()) {
+                if(flag.isVisible() == true){
+                    //flag.setVisible(false);
+                }
 
                 List<Entry<?>> otherEntries = new ArrayList<>();
 
@@ -724,6 +742,10 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
             view.getProperties().put("endDate", date);
 
             Position position = Position.ONLY;
+
+            if (!flag.isVisible()){
+                flag.setVisible(true);
+            }
 
             if (entry.isFullDay()) {
                 if (date.isBefore(entry.getEndDate()) && (day == 0 || (date.equals(entry.getStartDate())))) {
