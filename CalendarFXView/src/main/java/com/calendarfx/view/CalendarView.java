@@ -597,7 +597,8 @@ public class CalendarView extends DateControl {
      * @return true if the "add calendar" button will be accessible by the user
      */
     public final boolean isShowAddCalendarButton() {
-        return showAddCalendarButton.get();
+        //return showAddCalendarButton.get();
+        return false; //TD: We don't need this
     }
 
     /**

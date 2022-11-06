@@ -56,7 +56,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
         Calendar calendar = entry.getCalendar();
 
         colorDot = new Circle();
-        colorDot.setRadius(2.5);
+        colorDot.setRadius(10);
         colorDot.setMouseTransparent(true);
 
         titleLabel = new Label();
@@ -178,7 +178,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
         switch (view.getPosition()) {
         case FIRST:
         case ONLY:
-            titleLabel.setText(entry.getTitle());
+            //titleLabel.setText(entry.getTitle());
             if (!(entry.isFullDay() || entry.isMultiDay())) {
                 titleLabel.setGraphic(colorDot);
             }
@@ -199,6 +199,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
             MonthView dateControl = getSkinnable().getDateControl();
             ZoneId entryZoneId = entry.getZoneId();
             ZoneId dateControlZoneId = dateControl.getZoneId();
+            /*
             if (entry.isMultiDay()) {
                 switch (view.getPosition()) {
                 case LAST:
@@ -208,7 +209,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                         timeLabel.setText(MessageFormat.format(Messages.getString("MonthEntryViewSkin.ENDS_AT"), dateTimeFormatter.format(entry.getEndTime())));
                     }
                     break;
-                case FIRST:
+                case FIRST:*/
                     /*
                      * Only show it if the view is the first and represents the
                      * start date of the entry. Views can be on first but
@@ -216,7 +217,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                      * (e.g. when not shown in the first week of the entry time
                      * interval).
                      */
-                    if (view.getStartDate().equals(entry.getStartDate())) {
+               /*     if (view.getStartDate().equals(entry.getStartDate())) {
                         if (!Objects.equals(entryZoneId, dateControlZoneId)) {
                             timeLabel.setText(dateTimeFormatter.format(entry.getStartAsZonedDateTime().withZoneSameInstant(dateControlZoneId).toLocalTime()) + " (" + entryZoneId.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")");
                         } else {
@@ -234,7 +235,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
                 } else {
                     timeLabel.setText(dateTimeFormatter.format(entry.getStartTime()));
                 }
-            }
+            }*/
         }
 
         styleClass.addAll(entry.getStyleClass());

@@ -77,8 +77,8 @@ public class AppStart extends Application{
 
         primaryStage.setTitle("WellTracked");
         primaryStage.setScene(initialScene);
-        primaryStage.setWidth(800);
-        primaryStage.setHeight(500);
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(800);
         primaryStage.show();
 
     }

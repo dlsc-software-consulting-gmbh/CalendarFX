@@ -92,7 +92,8 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  * class is responsible for:
  *
  * <ul>
- * <li>Binding to other date controls</li>
+ * <li>Binding to other d
+ * ate controls</li>
  * <li>Providing the current date, "today", first day of week</li>
  * <li>Creating sources, calendars, entries</li>
  * <li>Context menu</li>

@@ -27,11 +27,14 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -41,6 +44,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 import java.time.ZoneId;
 
@@ -53,6 +58,8 @@ public class EntryDetailsView extends EntryPopOverPane {
     private final DatePicker startDatePicker = new DatePicker();
     private final DatePicker endDatePicker = new DatePicker();
     private final ComboBox<ZoneId> zoneBox = new ComboBox<>();
+    private final TextArea noteField = new TextArea();
+    private final Button submitNote = new Button();
     private final Entry<?> entry;
 
     private boolean updatingFields;
@@ -66,11 +73,13 @@ public class EntryDetailsView extends EntryPopOverPane {
             startDatePicker.setValue(entry.getStartDate());
             endDatePicker.setValue(entry.getEndDate());
             zoneBox.setValue(entry.getZoneId());
+            //noteField.setText(entry.getEntryNotes());
+            noteField.setText("MEMES");
         } finally {
             updatingFields = false;
         }
     };
-
+// search
     private final WeakInvalidationListener weakEntryIntervalListener = new WeakInvalidationListener(entryIntervalListener);
 
     private final InvalidationListener recurrenceRuleListener = it -> updateRecurrenceRuleButton(getEntry());
@@ -162,21 +171,26 @@ public class EntryDetailsView extends EntryPopOverPane {
         recurrenceButton.disableProperty().bind(entry.getCalendar().readOnlyProperty());
 
         EntryMapView mapView = new EntryMapView(entry);
+        noteField.setText(entry.getEntryNotes());
+
+        submitNote.setText("Save Note");
 
         GridPane box = new GridPane();
         box.getStyleClass().add("content");
-        box.add(fullDayLabel, 0, 0);
-        box.add(fullDay, 1, 0);
+        //.add(fullDayLabel, 0, 0);
+        //box.add(fullDay, 1, 0);
         box.add(startDateLabel, 0, 1);
         box.add(startDateBox, 1, 1);
         box.add(endDateLabel, 0, 2);
         box.add(endDateBox, 1, 2);
         box.add(zoneLabel, 0, 3);
         box.add(zoneBox, 1, 3);
-        box.add(recurrentLabel, 0, 4);
-        box.add(recurrenceButton, 1, 4);
-        box.add(summaryLabel, 1, 5);
-        box.add(mapView, 1, 6);
+        box.add(noteField, 1, 5);
+        box.add(submitNote,1,6);
+        //box.add(recurrentLabel, 0, 4);
+        //box.add(recurrenceButton, 1, 4);
+        //box.add(summaryLabel, 1, 5);
+        //box.add(mapView, 1, 6);
 
         GridPane.setFillWidth(zoneBox, true);
         GridPane.setHgrow(zoneBox, Priority.ALWAYS);
@@ -193,6 +207,16 @@ public class EntryDetailsView extends EntryPopOverPane {
 
         startTimeField.visibleProperty().bind(Bindings.not(entry.fullDayProperty()));
         endTimeField.visibleProperty().bind(Bindings.not(entry.fullDayProperty()));
+
+        EventHandler<ActionEvent> submission = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                entry.setNotes(noteField.getText());
+                System.out.println(entry.getEntryNotes());
+            }
+        };
+
+        submitNote.setOnAction(submission);
 
         // start date and time
         startDatePicker.valueProperty().addListener((obs, oldValue, newValue) -> {
@@ -239,6 +263,9 @@ public class EntryDetailsView extends EntryPopOverPane {
         updateSummaryLabel(entry);
 
         entry.recurrenceRuleProperty().addListener(weakUpdateSummaryLabelListener);
+
+        //entry.setNotes(noteField.getText().replaceAll("\n", System.getProperty("line.separator")));
+
     }
 
     public final Entry<?> getEntry() {
