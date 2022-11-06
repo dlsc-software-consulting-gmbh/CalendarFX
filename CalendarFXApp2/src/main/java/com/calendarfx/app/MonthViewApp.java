@@ -16,7 +16,6 @@
 
 package com.calendarfx.app;
 
-import com.calendarfx.model.Calendar;
 import com.calendarfx.view.MonthView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -31,23 +30,6 @@ public class MonthViewApp extends Application {
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(monthView); // introPane);
-
-        Calendar positive = new Calendar("Positive");
-        Calendar mildNegative = new Calendar("Mild Negative");
-        Calendar negative = new Calendar("Negative");
-        Calendar trigger = new Calendar("Trigger Event");
-
-        positive.setShortName("pos");
-        mildNegative.setShortName("mng");
-        negative.setShortName("neg");
-        trigger.setShortName("trg");
-
-        positive.setStyle(Calendar.Style.STYLE1);
-        mildNegative.setStyle(Calendar.Style.STYLE2);
-        negative.setStyle(Calendar.Style.STYLE3);
-        trigger.setStyle(Calendar.Style.STYLE4);
-
-        monthView.getCalendars().addAll(positive, mildNegative, negative, trigger);
 
         Scene scene = new Scene(stackPane);
         primaryStage.setTitle("Month View");

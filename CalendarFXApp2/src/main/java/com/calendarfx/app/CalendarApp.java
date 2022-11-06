@@ -14,74 +14,55 @@
  *  limitations under the License.
  */
 
-package com.calendarfx.scheduler;
+package com.calendarfx.app;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
-import com.calendarfx.view.CalendarView.Page;
-import com.calendarfx.view.DayView;
-import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
-import com.calendarfx.view.DetailedWeekView;
-import com.calendarfx.view.WeekView;
 import fr.brouillard.oss.cssfx.CSSFX;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class SchedulerApp extends Application {
+public class CalendarApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        CalendarView calendarView = new CalendarView(Page.DAY, Page.WEEK);
-        calendarView.showWeekPage();
-        calendarView.setEnableTimeZoneSupport(false);
-        calendarView.setCreateEntryClickCount(1);
-
-        DetailedWeekView detailedWeekView = calendarView.getWeekPage().getDetailedWeekView();
-        WeekView weekView = detailedWeekView.getWeekView();
-        DayView dayView = calendarView.getDayPage().getDetailedDayView().getDayView();
-
-        detailedWeekView.setShowToday(false);
-        detailedWeekView.setEarlyLateHoursStrategy(EarlyLateHoursStrategy.HIDE);
-
-        // extra button for week page
-        ToggleButton editScheduleButton1 = new ToggleButton("Edit Schedule");
-        editScheduleButton1.selectedProperty().bindBidirectional(weekView.editAvailabilityProperty());
-        ((Pane) calendarView.getWeekPage().getToolBarControls()).getChildren().add(editScheduleButton1);
-        // extra button for day page
-        ToggleButton editScheduleButton2 = new ToggleButton("Edit Schedule");
-        editScheduleButton2.selectedProperty().bindBidirectional(dayView.editAvailabilityProperty());
-        ((Pane) calendarView.getDayPage().getToolBarControls()).getChildren().add(editScheduleButton2);
+        CalendarView calendarView = new CalendarView();
+        calendarView.setEnableTimeZoneSupport(true);
 
         Calendar katja = new Calendar("Katja");
         Calendar dirk = new Calendar("Dirk");
         Calendar philip = new Calendar("Philip");
         Calendar jule = new Calendar("Jule");
         Calendar armin = new Calendar("Armin");
+        Calendar birthdays = new Calendar("Birthdays");
+        Calendar holidays = new Calendar("Holidays");
 
         katja.setShortName("K");
         dirk.setShortName("D");
         philip.setShortName("P");
         jule.setShortName("J");
         armin.setShortName("A");
+        birthdays.setShortName("B");
+        holidays.setShortName("H");
 
         katja.setStyle(Style.STYLE1);
         dirk.setStyle(Style.STYLE2);
         philip.setStyle(Style.STYLE3);
         jule.setStyle(Style.STYLE4);
         armin.setStyle(Style.STYLE5);
+        birthdays.setStyle(Style.STYLE6);
+        holidays.setStyle(Style.STYLE7);
 
         CalendarSource familyCalendarSource = new CalendarSource("Family");
-        familyCalendarSource.getCalendars().addAll(katja, dirk, philip, jule, armin);
+        familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
 
         calendarView.getCalendarSources().setAll(familyCalendarSource);
         calendarView.setRequestedTime(LocalTime.now());
@@ -114,6 +95,7 @@ public class SchedulerApp extends Application {
         updateTimeThread.start();
 
         Scene scene = new Scene(stackPane);
+        scene.focusOwnerProperty().addListener(it -> System.out.println("focus owner: " + scene.getFocusOwner()));
         CSSFX.start(scene);
 
         primaryStage.setTitle("Calendar");
