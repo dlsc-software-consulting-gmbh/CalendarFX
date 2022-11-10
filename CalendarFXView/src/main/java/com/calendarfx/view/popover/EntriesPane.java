@@ -87,6 +87,8 @@ class EntriesPane extends VBox {
                 colorDot.setRadius(2.5);
                 colorDot.getStyleClass().add(calendar.getStyle() + "-icon-small");
                 titleLabel.setGraphic(colorDot);
+
+
                 /*
                 Label timeLabel = new Label();
                 if (entry.isFullDay()) {

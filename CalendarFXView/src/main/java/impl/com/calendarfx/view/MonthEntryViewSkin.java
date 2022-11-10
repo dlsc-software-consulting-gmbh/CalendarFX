@@ -113,6 +113,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
     private final WeakInvalidationListener weakUpdateViewListener = new WeakInvalidationListener(updateViewListener);
 
     protected void updateView() {
+        System.out.println("UPDATE VIEW");
         final MonthEntryView view = getSkinnable();
         Entry<?> entry = view.getEntry();
         final Calendar calendar = entry.getCalendar();
@@ -238,7 +239,9 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
             }*/
         }
 
+        ((MonthViewSkin.MonthDayEntriesPane)(getNode().getParent())).updateFlag();
         styleClass.addAll(entry.getStyleClass());
+
     }
 
     /**

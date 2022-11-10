@@ -129,7 +129,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         view.getAvailablePages().addListener((Observable it) -> buildSwitcher());
 
         TrayPane trayPane = new TrayPane();
-        this.trayButton = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY"));
+        //this.trayButton = new ToggleButton(Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY"));
+        this.trayButton = new ToggleButton("Menu");
         this.trayButton.setId("show-tray-button");
         this.trayButton.setMaxHeight(Double.MAX_VALUE);
 
@@ -401,15 +402,15 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         if (view.getAvailablePages().contains(DAY)) {
             switcher.getButtons().add(showDay);
         }
-        if (view.getAvailablePages().contains(WEEK)) {
-            switcher.getButtons().add(showWeek);
-        }
+       // if (view.getAvailablePages().contains(WEEK)) {
+      //      switcher.getButtons().add(showWeek);
+      //  }
         if (view.getAvailablePages().contains(MONTH)) {
             switcher.getButtons().add(showMonth);
         }
-        if (view.getAvailablePages().contains(YEAR)) {
-            switcher.getButtons().add(showYear);
-        }
+      //  if (view.getAvailablePages().contains(YEAR)) {
+       //     switcher.getButtons().add(showYear);
+       // }
 
         // no need to show anything if there is only one page left
         if (switcher.getButtons().size() == 1) {
@@ -432,9 +433,9 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             leftToolBarBox.getChildren().add(new Separator(Orientation.VERTICAL));
         }
 
-        if (getSkinnable().isShowPrintButton()) {
-            leftToolBarBox.getChildren().add(printButton);
-        }
+        //if (getSkinnable().isShowPrintButton()) {
+          //  leftToolBarBox.getChildren().add(printButton);
+        //}
 
         if (getSkinnable().isShowPageToolBarControls()) {
             Page page = getSkinnable().getSelectedPage();

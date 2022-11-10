@@ -72,6 +72,8 @@ public class MonthView extends MonthViewBase implements ZonedDateTimeProvider {
         return new MonthViewSkin(this);
     }
 
+    public MonthViewSkin skin;
+
     @Override
     public final ZonedDateTime getZonedDateTimeAt(double x, double y, ZoneId zoneId) {
         MonthViewSkin skin = (MonthViewSkin) getSkin();
