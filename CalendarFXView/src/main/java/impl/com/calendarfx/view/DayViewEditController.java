@@ -319,8 +319,10 @@ public class DayViewEditController {
         }
 
         ZonedDateTime time = ZonedDateTime.ofInstant(instantAt, view.getZoneId());
+        //Entry<?> newEntry = view.createEntryAt(time, calendar.orElse(null), false);
         Entry<?> newEntry = view.createEntryAt(time, calendar.orElse(null), false);
-
+        newEntry.changeStartTime(LocalTime.MIDNIGHT);
+        view.getParent();
         Duration duration = newEntry.getMinimumDuration();
 
         LOGGER.fine("minimum duration for the entry is " + duration);
@@ -335,7 +337,7 @@ public class DayViewEditController {
         }
 
         newEntry.setInterval(newEntry.getInterval().withEndTime(newEntry.getInterval().getStartTime().plus(duration)));
-
+        System.out.println("ENTRIES:" + view.getSelections());
         view.getSelections().clear();
         view.getSelections().add(newEntry);
 

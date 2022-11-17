@@ -56,7 +56,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         currentTimeLabel.setTextOverrun(OverrunStyle.CLIP);
         currentTimeLabel.visibleProperty().bind(view.enableCurrentTimeMarkerProperty());
 
-        getChildren().add(currentTimeLabel);
+        //().add(currentTimeLabel);
 
         updateCurrentTimeMarkerVisibility();
         view.showCurrentTimeMarkerProperty().addListener(it -> updateCurrentTimeMarkerVisibility());
@@ -88,7 +88,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         label.setAlignment(Pos.CENTER_RIGHT);
         label.setTextOverrun(OverrunStyle.CLIP);
         timeLabels.add(label);
-        getChildren().add(label);
+        //getChildren().add(label);
         return label;
     }
 
@@ -273,7 +273,7 @@ public class TimeScaleViewSkin<T extends TimeScaleView> extends DayViewBaseSkin<
         double y = contentY + ViewHelper.getTimeLocation(getSkinnable(), time, true);
 
         /*
-         * Min and max calculations to ensure text is completely visible at the
+         * Min and max calculations to ensure text is completetextAlignment = nullly visible at the
          * top and the bottom.
          */
         y = Math.min(contentHeight - label.getFont().getSize(), Math.max(0, ((int) (y - prefHeight / 2)) + .5));

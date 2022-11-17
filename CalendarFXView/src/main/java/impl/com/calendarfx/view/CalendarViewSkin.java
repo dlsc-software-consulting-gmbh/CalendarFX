@@ -279,7 +279,8 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         GridPane.setFillWidth(searchField, false);
         GridPane.setHalignment(searchField, HPos.RIGHT);
 
-        HBox rightToolbarContainer = new HBox(zoneIdBox, searchField);
+        //HBox rightToolbarContainer = new HBox(zoneIdBox, searchField);
+        HBox rightToolbarContainer = new HBox(zoneIdBox);
         rightToolbarContainer.setAlignment(Pos.CENTER_RIGHT);
         rightToolbarContainer.getStyleClass().add("right-toolbar-container");
         toolBarGridPane.add(rightToolbarContainer, 2, 0);

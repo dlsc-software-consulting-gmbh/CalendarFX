@@ -31,6 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
 import java.time.LocalTime;
@@ -46,6 +47,8 @@ public class DayViewScrollPane extends Pane {
 
     private LocalTime cachedStartTime;
 
+    protected VBox entryBox;
+
     /**
      * Constructs a new scrollpane for the given day view.
      *
@@ -58,6 +61,8 @@ public class DayViewScrollPane extends Pane {
         this.dayView = Objects.requireNonNull(dayView);
         this.dayView.setManaged(false);
         this.dayView.layoutBoundsProperty().addListener(it -> requestLayout());
+
+
 
         scrollBar.setOrientation(Orientation.VERTICAL);
         scrollBar.maxProperty().bind(dayView.heightProperty().subtract(heightProperty()));
@@ -77,6 +82,10 @@ public class DayViewScrollPane extends Pane {
         });
 
         getChildren().add(dayView);
+
+        entryBox = new VBox();
+
+        getChildren().add(entryBox);
 
         heightProperty().addListener(it -> updateVisibleTimeRange("height of scrollpane changed"));
 

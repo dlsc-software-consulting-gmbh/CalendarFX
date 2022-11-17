@@ -20,6 +20,7 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
+import com.calendarfx.model.Articles;
 import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.view.AgendaView;
 import com.calendarfx.view.AgendaView.AgendaEntry;
@@ -54,8 +55,12 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
     private final Label statusLabel;
 
+    private final Articles articleStore;
+
     public AgendaViewSkin(AgendaView view) {
         super(view);
+
+        articleStore = new Articles();
 
         listView = view.getListView();
         listView.setMinWidth(1);
@@ -158,8 +163,14 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
 
         Map<LocalDate, List<Entry<?>>> dataMap = new HashMap<>();
         dataLoader.loadEntries(dataMap);
+        Entry entryBase = new Entry();
+        List<String> articles;
+        //for(String test : articleStore.getList1()) {
+        //    System.out.println(test);
+        //}
 
         List<AgendaEntry> listEntries = new ArrayList<>();
+        /*
         for (LocalDate date : dataMap.keySet()) {
             AgendaEntry listViewEntry = new AgendaEntry(date);
             for (Entry<?> entry : dataMap.get(date)) {
@@ -172,13 +183,96 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
             }
         }
 
+         */
+        int moodScore = 0;
+        for (LocalDate date : dataMap.keySet()) {
+            AgendaEntry listViewEntry = new AgendaEntry(date);
+            AgendaEntry articleEntry = new AgendaEntry(date);
+            for (Entry<?> entry : dataMap.get(date)) {
+                if (!entry.isHidden()) {
+                    if (entry.getCalendar().getName() == "Positive"){
+                     moodScore += 2;
+                    }
+                    if (entry.getCalendar().getName() == "Mild Negative"){
+                        moodScore -= 1;
+                    }
+                    if (entry.getCalendar().getName() == "Negative"){
+                        moodScore -= 3;
+                    }
+                    if (entry.getCalendar().getName() == "Trigger Event"){
+                        moodScore -= 7;
+                    }
+                    listViewEntry.getEntries().add(entry);
+                }
+            }
+            if (!listViewEntry.getEntries().isEmpty()) {
+
+                if(moodScore >= 0){
+                    statusLabel.setText("Looks like your day is going well! Here are som articles for you:");
+                    articles = articleStore.getList1();
+                    for(String article : articles){
+                        Entry articleOverlay = new Entry();
+
+                        articleOverlay.setTitle(article);
+                        articleEntry.getEntries().add(articleOverlay);
+                        listEntries.add(articleEntry);
+                    }
+                }
+                else if(moodScore < 0 && moodScore >= -3){
+                    statusLabel.setText("Seems like today could be better, but you've got this. Here are some articles for you:");
+                    articles = articleStore.getList2();
+                    for(String article : articles){
+                        Entry articleOverlay = new Entry();
+
+                        articleOverlay.setTitle(article);
+                        articleEntry.getEntries().add(articleOverlay);
+                        listEntries.add(articleEntry);
+                    }
+                }
+                else if(moodScore < -3 && moodScore >= -5){
+                    statusLabel.setText("Today might be tough, but you're getting through it. Here are some articles for you:");
+                    articles = articleStore.getList3();
+                    for(String article : articles){
+                        Entry articleOverlay = new Entry();
+
+                        articleOverlay.setTitle(article);
+                        articleEntry.getEntries().add(articleOverlay);
+                        listEntries.add(articleEntry);
+                    }
+                }
+                else if(moodScore < -6){
+                    statusLabel.setText("Today may have been hard. It's Ok. You're Ok. Here are some articles for you:");
+                    articles = articleStore.getList3();
+                    for(String article : articles){
+                        Entry articleOverlay = new Entry();
+
+                        articleOverlay.setTitle(article);
+                        articleEntry.getEntries().add(articleOverlay);
+                        listEntries.add(articleEntry);
+                    }
+                }
+            }
+        }
+
+        System.out.println("SCORE:" + moodScore);
+
         Collections.sort(listEntries);
-        listView.getItems().setAll(listEntries);
+        if(!listEntries.isEmpty()) {
+            listView.getItems().removeAll(listEntries);
+            listView.getItems().setAll(listEntries.get(0));
+        }
+        else{
+            listView.getItems().setAll(listEntries);
+        }
 
         String startTime = getSkinnable().getDateTimeFormatter().format(getLoadStartDate());
         String endTime = getSkinnable().getDateTimeFormatter().format(getLoadEndDate());
 
-        statusLabel.setText(MessageFormat.format(Messages.getString("AgendaViewSkin.AGENDA_TIME_RANGE"), startTime, endTime));
+
+
+        //statusLabel.setText(MessageFormat.format(Messages.getString("AgendaViewSkin.AGENDA_TIME_RANGE"), startTime, endTime));
+
+       //statusLabel.setText("Articles for you:");
     }
 
     @Override

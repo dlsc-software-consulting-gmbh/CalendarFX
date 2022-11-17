@@ -32,11 +32,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 
 import static com.calendarfx.util.ViewHelper.scrollToRequestedTime;
 
@@ -58,15 +54,20 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
     private final ColumnConstraints col3;
     private final ColumnConstraints col4;
 
+    private VBox entryBox;
+
     public DetailedDayViewSkin(DetailedDayView view) {
         super(view);
 
         scrollBar = new ScrollBar();
 
+
         // the day view (scroll pane)
         DayView dayView = view.getDayView();
         dayViewScrollPane = new DayViewScrollPane(dayView, scrollBar);
+
         dayViewScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-scroll-pane");
+
 
         // the timescale
         TimeScaleView timeScale = view.getTimeScaleView();
@@ -178,13 +179,13 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         if (view.isShowTimeScaleView()) {
             gridPane.add(timeScaleScrollPane, 0, 2);
             if (view.isShowAllDayView()) {
-                gridPane.add(allDayLabel, 0, 0);
+                //gridPane.add(allDayLabel, 0, 0);
             }
         }
 
         if (view.isShowAllDayView()) {
             gridPane.add(allDayView, 1, 0);
-            gridPane.add(allDayFiller, 2, 0);
+            //gridPane.add(allDayFiller, 2, 0);
         }
 
         if (view.getLayout().equals(DateControl.Layout.SWIMLANE)) {

@@ -57,6 +57,8 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
     protected Label startTimeLabel;
     protected Label titleLabel;
 
+    protected Label descLabel;
+
     private final InvalidationListener updateStylesListener = it -> updateStyles();
     private final WeakInvalidationListener weakUpdateStylesListener = new WeakInvalidationListener(updateStylesListener);
 
@@ -74,7 +76,11 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         titleLabel.setManaged(false);
         titleLabel.setMouseTransparent(true);
 
-        getChildren().addAll(startTimeLabel, titleLabel);
+        getEntry().getEntryNotes();
+
+        //descLabel = (getEntry().getEntryNotes()).substring(0, 100));
+        //getChildren().addAll(startTimeLabel, titleLabel);
+        getChildren().addAll(titleLabel);
 
         Entry<?> entry = getEntry();
 

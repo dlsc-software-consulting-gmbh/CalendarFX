@@ -842,9 +842,11 @@ public class MonthViewSkin extends DateControlSkin<MonthView> implements LoadDat
         @Override
         protected void layoutChildren() {
             Insets insets = getInsets();
-            double w = getWidth();
+            //double w = getWidth();
+
             double h = getHeight();
             double y = insets.getTop();
+            double w = 35;
 
             moreLabel.setVisible(false);
 

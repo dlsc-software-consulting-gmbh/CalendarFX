@@ -484,6 +484,7 @@ public class AgendaView extends DateControl {
                 timeLabel.setOnMouseClicked(evt -> fireEvent(new RequestEvent(this, this, entry)));
                 timeLabel.getStyleClass().add("date-hyperlink");
             }
+
             return timeLabel;
         }
 
@@ -518,7 +519,7 @@ public class AgendaView extends DateControl {
          */
         protected Node createEntryGraphic(Entry<?> entry) {
             Circle circle = new Circle(4);
-            circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon");
+            //circle.getStyleClass().add(entry.getCalendar().getStyle() + "-icon");
             return circle;
         }
 

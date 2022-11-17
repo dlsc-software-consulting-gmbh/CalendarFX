@@ -54,6 +54,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -109,6 +110,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
 
     private final Group entryViewGroup = new Group();
 
+    private Label endLabel = new Label("Double click to add entry...");
+
     public DayViewSkin(T view) {
         super(view);
 
@@ -121,18 +124,18 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         earlyHoursRegion.setMouseTransparent(true);
         earlyHoursRegion.getStyleClass().add("early-hours-region");
         earlyHoursRegion.setManaged(false);
-        getChildren().add(earlyHoursRegion);
+        //getChildren().add(earlyHoursRegion);
 
         lateHoursRegion = new Region();
         lateHoursRegion.setMouseTransparent(true);
         lateHoursRegion.getStyleClass().add("late-hours-region");
         lateHoursRegion.setManaged(false);
-        getChildren().add(lateHoursRegion);
+        //getChildren().add(lateHoursRegion);
 
         InvalidationListener drawBackgroundCanvasListener = it -> backgroundCanvas.draw();
         view.editAvailabilityProperty().addListener(drawBackgroundCanvasListener);
 
-        getChildren().add(backgroundCanvas);
+        //getChildren().add(backgroundCanvas);
 
         if (!view.isScrollingEnabled()) {
             // Static lines use different styling for early / late hours, we do not want that
@@ -148,7 +151,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         currentTimeCircle.setMouseTransparent(true);
         currentTimeCircle.setOpacity(0);
         currentTimeCircle.visibleProperty().bind(view.enableCurrentTimeCircleProperty().and(view.editAvailabilityProperty().not()));
-        getChildren().add(currentTimeCircle);
+        //getChildren().add(currentTimeCircle);
 
         currentTimeLine = new Line();
         currentTimeLine.getStyleClass().add("current-time-line");
@@ -156,7 +159,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         currentTimeLine.setMouseTransparent(true);
         currentTimeLine.setOpacity(0);
         currentTimeLine.visibleProperty().bind(view.enableCurrentTimeMarkerProperty().and(view.editAvailabilityProperty().not()));
-        getChildren().add(currentTimeLine);
+        //getChildren().add(currentTimeLine);
 
         view.scrollTimeProperty().addListener(drawBackgroundCanvasListener);
         view.lassoStartProperty().addListener(drawBackgroundCanvasListener);
@@ -363,7 +366,7 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
             line.getStyleClass().add(styleClass);
         }
         lines.add(line);
-        getChildren().add(line);
+        //getChildren().add(line);
     }
 
     private void updateLineStyling() {
@@ -669,6 +672,8 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
     protected void layoutBaseEntryViews(List<DayEntryView> entryViews, DayView dayView, double contentX, double contentY, double contentWidth, double contentHeight) {
         List<Placement> placements;
 
+        System.out.println("SIZE: " + entryViews.size());
+
         if (dayView.getOverlapResolutionStrategy().equals(OverlapResolutionStrategy.VISUAL_BOUNDS)) {
             placements = VisualBoundsResolver.resolve(entryViews, dayView, contentWidth);
         } else {
@@ -676,10 +681,12 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
         }
 
         if (placements != null) {
-            contentWidth = contentWidth * dayView.getEntryWidthPercentage() / 100d;
+            //contentWidth = contentWidth * dayView.getEntryWidthPercentage() / 100d;
 
             Instant dayViewStart = dayView.getZonedDateTime().with(LocalTime.MIN).toInstant();
             Instant dayViewEnd = dayView.getZonedDateTimeEnd().with(LocalTime.MAX).toInstant();
+
+            int addCount = 0;
 
             for (Placement placement : placements) {
                 EntryViewBase<?> entryView = placement.getEntryView();
@@ -726,10 +733,12 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                     entryView.getProperties().put("position", position);
                 }
 
-                entryView.getProperties().put("startDate", viewDate);
-                entryView.getProperties().put("endDate", viewDate);
-                entryView.getProperties().put("startTime", viewStartTime);
-                entryView.getProperties().put("endTime", viewEndTime);
+                //entryView.getProperties().put("startDate", viewDate);
+                //entryView.getProperties().put("endDate", viewDate);
+                //entryView.getProperties().put("startTime", viewStartTime);
+                //entryView.getProperties().put("endTime", viewEndTime);
+
+
 
                 double minHeight = entryView.minHeight(contentWidth);
 
@@ -743,11 +752,25 @@ public class DayViewSkin<T extends DayView> extends DayViewBaseSkin<T> implement
                 double entryWidth = computeEntryWidth(entryView, columnWidth);
                 double entryLeftOffset = computeEntryLeftOffset(entryView, entryWidth, columnWidth);
 
+                entryView.getEntry().getStartTime().of(0, addCount, 0);
+
+                System.out.println("Time: " + entryView.getEntry().getStartTime());
+
                 /*
                  * -2 on height to always have a gap between entries
                  */
-                entryView.resizeRelocate(snapPositionX(x + entryLeftOffset), snapPositionY(y1), snapSizeX(entryWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
+
+                //entry
+                //entryView.resizeRelocate(snapPositionX(x + entryLeftOffset), snapPositionY(y1), snapSizeX(entryWidth), snapSizeY(Math.max(minHeight, y2 - y1 - 2)));
+
+                entryView.resizeRelocate(snapPositionX(0), snapPositionY(addCount * 60), snapSizeX(contentWidth), snapSizeY(Math.max(minHeight, 60)));
+                addCount++;
+                System.out.println("Count: " + addCount);
+                endLabel.setText("TEST");
+                endLabel.resizeRelocate(snapPositionX(0), snapPositionY(addCount * 60), snapSizeX(contentWidth), 20);
             }
+            //endLabel.setText("TEST");
+            //endLabel.resizeRelocate(snapPositionX(0), snapPositionY(addCount * 60), snapSizeX(contentWidth), 20);
         }
     }
 

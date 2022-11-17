@@ -56,7 +56,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
         Calendar calendar = entry.getCalendar();
 
         colorDot = new Circle();
-        colorDot.setRadius(10);
+        colorDot.setRadius(5);
         colorDot.setMouseTransparent(true);
 
         titleLabel = new Label();
@@ -200,6 +200,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
             MonthView dateControl = getSkinnable().getDateControl();
             ZoneId entryZoneId = entry.getZoneId();
             ZoneId dateControlZoneId = dateControl.getZoneId();
+
             /*
             if (entry.isMultiDay()) {
                 switch (view.getPosition()) {
