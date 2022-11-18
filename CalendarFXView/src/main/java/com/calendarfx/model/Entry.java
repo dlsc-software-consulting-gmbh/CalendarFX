@@ -163,7 +163,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         setTitle(title);
         setInterval(interval);
         this.id = id;
-        this.entryNotes = "Enter Text...";
+        //this.entryNotes = "Enter Text...";
     }
     //TD: Constructor that now includes notes field
     public Entry(String title, Interval interval, String id, String notes) {
@@ -174,7 +174,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
         setTitle(title);
         setInterval(interval);
         this.id = id;
-        this.entryNotes = "Enter Text...";
+        //this.entryNotes = "Enter Text...";
     }
 
     // A map containing a set of properties for this entry

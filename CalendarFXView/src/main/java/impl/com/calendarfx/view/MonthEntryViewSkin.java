@@ -61,6 +61,7 @@ public class MonthEntryViewSkin extends SkinBase<MonthEntryView> {
 
         titleLabel = new Label();
         titleLabel.setGraphic(colorDot);
+
         titleLabel.setMinSize(0, 0);
         titleLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         titleLabel.setMouseTransparent(true);

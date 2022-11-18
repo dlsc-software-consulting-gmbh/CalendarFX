@@ -32,6 +32,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 import java.time.ZoneId;
@@ -59,11 +60,15 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
 
     protected Label descLabel;
 
+    protected String descText;
+
     private final InvalidationListener updateStylesListener = it -> updateStyles();
     private final WeakInvalidationListener weakUpdateStylesListener = new WeakInvalidationListener(updateStylesListener);
 
     private final InvalidationListener updateLabelsListener = it -> updateLabels();
     private final WeakInvalidationListener weakUpdateLabelsListener = new WeakInvalidationListener(updateLabelsListener);
+
+    private Circle colorDot;
 
     public DayEntryViewSkin(DayEntryView view) {
         super(view);
@@ -76,11 +81,27 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         titleLabel.setManaged(false);
         titleLabel.setMouseTransparent(true);
 
-        getEntry().getEntryNotes();
 
-        //descLabel = (getEntry().getEntryNotes()).substring(0, 100));
+
+        getEntry().getEntryNotes();
+        descText = (getEntry().getEntryNotes());
+        if(descText != null){
+            if(descText.length() > 100){
+                descText = (descText.substring(0,97) + "...");
+            }
+            descLabel = new Label(descText);
+            //getChildren().add(descLabel);
+            view.addNode(Pos.BOTTOM_CENTER, descLabel);
+        }
+        //if(descText.length() > 100){
+           // descText = (descText.substring(0,97) + "...");
+        //}
+        //descLabel = new Label(descText);
         //getChildren().addAll(startTimeLabel, titleLabel);
-        getChildren().addAll(titleLabel);
+        //getChildren().addAll(titleLabel);
+        view.addNode(Pos.TOP_CENTER, titleLabel);
+
+        //getChildren().add(descLabel);
 
         Entry<?> entry = getEntry();
 
@@ -91,10 +112,22 @@ public class DayEntryViewSkin extends SkinBase<DayEntryView> {
         getSkinnable().positionProperty().addListener(weakUpdateLabelsListener);
         updateLabels();
 
+        colorDot = new Circle();
+
+        colorDot.setRadius(10);
+
+        colorDot.setVisible(!entry.isFullDay() && !entry.isMultiDay());
+
+        colorDot.getStyleClass().setAll("default-style-icon-small", getEntry().getCalendar().getStyle() + "-icon-small");
+
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(view.widthProperty());
         clip.heightProperty().bind(view.heightProperty());
         view.setClip(clip);
+
+
+
+        view.addNode(Pos.BOTTOM_LEFT, colorDot);
 
         view.nodesProperty().addListener((Observable it) -> updateNodes());
         updateStyles();

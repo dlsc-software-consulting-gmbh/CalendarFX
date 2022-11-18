@@ -83,7 +83,7 @@ public class EntryHeaderView extends GridPane {
 
         add(titleField, 0, 0);
         add(calendarSelector, 1, 0, 1, 2);
-        add(locationField, 0, 1);
+        //add(locationField, 0, 1);
 
         RowConstraints row1 = new RowConstraints();
         row1.setValignment(VPos.TOP);

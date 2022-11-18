@@ -74,7 +74,7 @@ public class EntryDetailsView extends EntryPopOverPane {
             endDatePicker.setValue(entry.getEndDate());
             zoneBox.setValue(entry.getZoneId());
             //noteField.setText(entry.getEntryNotes());
-            noteField.setText("MEMES");
+            //noteField.setText("MEMES");
         } finally {
             updatingFields = false;
         }
@@ -94,6 +94,8 @@ public class EntryDetailsView extends EntryPopOverPane {
         super();
 
         this.entry = entry;
+
+
 
         getStyleClass().add("entry-details-view");
 
@@ -172,6 +174,11 @@ public class EntryDetailsView extends EntryPopOverPane {
 
         EntryMapView mapView = new EntryMapView(entry);
         noteField.setText(entry.getEntryNotes());
+
+        if(noteField.getText() == null){
+            noteField.setPromptText("Enter notes...");
+        }
+
 
         submitNote.setText("Save Note");
 

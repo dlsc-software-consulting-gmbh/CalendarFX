@@ -159,7 +159,7 @@ public class DayPage extends PageBase {
         toolbarControls = new HBox();
         toolbarControls.setSpacing(10);
 
-        updateToolBarControls(segmentedButton, layoutButton);
+        //updateToolBarControls(segmentedButton, layoutButton);
 
         showLayoutButtonProperty().addListener(it -> updateToolBarControls(segmentedButton, layoutButton));
 
