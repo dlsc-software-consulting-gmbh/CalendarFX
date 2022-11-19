@@ -265,8 +265,10 @@ public class AgendaViewSkin extends DateControlSkin<AgendaView> implements LoadD
             listView.getItems().setAll(listEntries);
         }
 
-        String startTime = getSkinnable().getDateTimeFormatter().format(getLoadStartDate());
-        String endTime = getSkinnable().getDateTimeFormatter().format(getLoadEndDate());
+        //String startTime = getSkinnable().getDateTimeFormatter().format(getLoadStartDate());
+        //String endTime = getSkinnable().getDateTimeFormatter().format(getLoadEndDate());
+        String startTime = "";
+        String endTime = "";
 
 
 

@@ -769,7 +769,7 @@
 
 .agenda-view > .container > .list-view > .placeholder-label {
     -fx-text-fill: gray;
-    -fx-font-size: 2.5em;
+    -fx-font-size: 5.5em;
 }
 
 .agenda-view > .container {
@@ -872,13 +872,13 @@
 
 .search-result-cell > .container > .title-label {
     -fx-font-weight: bold;
-    -fx-font-size: 0.9em;
+    -fx-font-size: 1.9em;
     -fx-text-fill: black;
 }
 
 .search-result-cell > .container > .date-time-pane > .date-label,
 .search-result-cell > .container > .date-time-pane > .time-label {
-    -fx-font-size: 0.8em;
+    -fx-font-size: 1.8em;
     -fx-text-fill: gray;
 }
 
@@ -922,18 +922,18 @@
 }
 
 .default-style-entry-time-label {
-    -fx-font-size: 0.9em;
+    -fx-font-size: 1.5em;
     -fx-padding: 4.0 4.0 2.0 4.0;
 }
 
 .default-style-entry-title-label {
-    -fx-font-size: 0.9em;
+    -fx-font-size: 1.5em;
     -fx-font-weight: bold;
     -fx-padding: 0.0 4.0 0.0 4.0;
 }
 
 .default-style-entry-title-label-full-day {
-    -fx-font-size: 0.9em;
+    -fx-font-size: 1.6em;
     -fx-font-weight: bold;
     -fx-padding: 0.0 4.0 0.0 4.0;
 }

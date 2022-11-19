@@ -451,7 +451,7 @@ public class AgendaView extends DateControl {
 
                     Label timeLabel = createEntryTimeLabel(entry);
                     timeLabel.setMinWidth(0);
-                    gridPane.add(timeLabel, 2, row);
+                    //gridPane.add(timeLabel, 2, row);
 
                     if (count > 1 && i < count - 1) {
                         Region separator = new Region();

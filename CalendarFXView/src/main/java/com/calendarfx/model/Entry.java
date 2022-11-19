@@ -106,7 +106,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
 
     private String id;
 
-    private String entryNotes;
+    private ObjectProperty<String> entryNotes = new SimpleObjectProperty<>();
 
     /**
      * Constructs a new entry with a default time interval. The ID will be generated
@@ -336,7 +336,12 @@ public class Entry<T> implements Comparable<Entry<?>> {
      */
 
     public final String getEntryNotes(){
-        return entryNotes;
+        if(entryNotes == null) {
+            return null;
+        }
+        else{
+            return entryNotes.get();
+        }
     }
     public final void setInterval(Interval interval) {
         requireNonNull(interval);
@@ -346,7 +351,7 @@ public class Entry<T> implements Comparable<Entry<?>> {
     //TD: Set Notes
     public final void setNotes(String notes) {
         requireNonNull(notes);
-        entryNotes = notes;
+        entryNotes.set(notes);
     }
 
     // Set Interval: LocalDate support
@@ -830,6 +835,10 @@ public class Entry<T> implements Comparable<Entry<?>> {
         }
 
         return recurrenceEnd.getReadOnlyProperty();
+    }
+
+    public final ObjectProperty<String> notesProperty(){
+        return entryNotes;
     }
 
     /**

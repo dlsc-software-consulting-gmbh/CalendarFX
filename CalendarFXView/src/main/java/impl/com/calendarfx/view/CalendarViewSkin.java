@@ -283,7 +283,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         HBox rightToolbarContainer = new HBox(zoneIdBox);
         rightToolbarContainer.setAlignment(Pos.CENTER_RIGHT);
         rightToolbarContainer.getStyleClass().add("right-toolbar-container");
-        toolBarGridPane.add(rightToolbarContainer, 2, 0);
+        //toolBarGridPane.add(rightToolbarContainer, 2, 0);
 
         BorderPane borderPane1 = new BorderPane();
         borderPane1.topProperty().bind(view.headerProperty());

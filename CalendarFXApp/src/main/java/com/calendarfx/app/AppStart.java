@@ -21,7 +21,7 @@ public class AppStart extends Application{
     public void start(Stage primaryStage) {
         CalendarView calCore = new CalendarView();
         calCore.setEnableTimeZoneSupport(true);
-        calCore.setShowDeveloperConsole(true);//size
+        calCore.setShowDeveloperConsole(true);
         Canvas testCanvas = new Canvas(150, 150);
 
         Calendar positive = new Calendar("Positive");
