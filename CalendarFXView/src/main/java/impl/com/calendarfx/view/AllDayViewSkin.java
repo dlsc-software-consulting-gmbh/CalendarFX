@@ -33,6 +33,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -96,6 +97,10 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         updateBackgrounds();
 
         dataLoader = new DataLoader(this);
+        Label text = new Label();
+        text.setText("TEST");
+
+
 
         updateEntries("initial load");
     }
@@ -127,6 +132,7 @@ public class AllDayViewSkin extends DateControlSkin<AllDayView> implements LoadD
         }
 
         getSkinnable().autosize();
+
 
         getSkinnable().requestLayout();
     }

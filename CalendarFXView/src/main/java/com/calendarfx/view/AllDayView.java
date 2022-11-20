@@ -79,6 +79,8 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
         setNumberOfDays(numberOfDays);
 
         new CreateAndDeleteHandler(this);
+
+
     }
 
     /**
@@ -138,6 +140,8 @@ public class AllDayView extends DateControl implements ZonedDateTimeProvider {
                 }
             };
         }
+
+
 
         return extraPadding;
     }

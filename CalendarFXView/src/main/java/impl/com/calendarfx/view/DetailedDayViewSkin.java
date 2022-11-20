@@ -179,13 +179,13 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         if (view.isShowTimeScaleView()) {
             gridPane.add(timeScaleScrollPane, 0, 2);
             if (view.isShowAllDayView()) {
-                //gridPane.add(allDayLabel, 0, 0);
+                gridPane.add(allDayLabel, 0, 0);
             }
         }
 
         if (view.isShowAllDayView()) {
             gridPane.add(allDayView, 1, 0);
-            //gridPane.add(allDayFiller, 2, 0);
+            gridPane.add(allDayFiller, 2, 0);
         }
 
         if (view.getLayout().equals(DateControl.Layout.SWIMLANE)) {
@@ -195,6 +195,8 @@ public class DetailedDayViewSkin extends DateControlSkin<DetailedDayView> {
         gridPane.add(dayViewScrollPane, 1, 2);
 
         if (view.isShowScrollBar()) {
+            Label promptLabel = new Label("Double-click area to add entry...");
+            gridPane.add(promptLabel, 1,0);
             gridPane.add(scrollBar, 2, 2);
         }
 

@@ -142,8 +142,11 @@ public class DetailedDayView extends DayViewBase {
      *
      * @return true if the all day view will be visible
      */
+   // public final boolean isShowAllDayView() {
+       // return showAllDayViewProperty().get();
+    //}
     public final boolean isShowAllDayView() {
-        return showAllDayViewProperty().get();
+        return false;
     }
 
     /**

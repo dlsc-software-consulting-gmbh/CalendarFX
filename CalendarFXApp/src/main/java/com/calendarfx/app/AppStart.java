@@ -19,7 +19,7 @@ import java.time.LocalTime;
 public class AppStart extends Application{
     @Override
     public void start(Stage primaryStage) {
-        CalendarView calCore = new CalendarView();
+        CalendarView calCore = new CalendarView();//alldayview
         calCore.setEnableTimeZoneSupport(true);
         calCore.setShowDeveloperConsole(true);
         Canvas testCanvas = new Canvas(150, 150);
