@@ -25,6 +25,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.geometry.VPos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -40,6 +41,8 @@ public class EntryHeaderView extends GridPane {
     private final CalendarSelector calendarSelector;
 
     private final Entry<?> entry;
+
+    private Label moodTitle;
 
     private final TextField titleField = new TextField();
 
@@ -81,8 +84,19 @@ public class EntryHeaderView extends GridPane {
 
         titleField.getStyleClass().add("default-style-entry-popover-title");
 
+        moodTitle = new Label("Mood:");
+
+        moodTitle.getStyleClass().add("location");
+
+        moodTitle.setTranslateY(3);
+        moodTitle.setTranslateX(-15);
+        moodTitle.setScaleX(1.5);
+        moodTitle.setScaleY(1.5);
+
         add(titleField, 0, 0);
-        add(calendarSelector, 1, 0, 1, 2);
+
+        add(calendarSelector, 2, 0, 1, 2);
+        add(moodTitle, 1, 0);
         //add(locationField, 0, 1);
 
         RowConstraints row1 = new RowConstraints();
