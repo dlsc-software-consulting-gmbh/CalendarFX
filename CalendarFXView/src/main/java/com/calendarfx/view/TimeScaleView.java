@@ -120,8 +120,6 @@ public class TimeScaleView extends DayViewBase {
 
     private final ObjectProperty<Function<LocalDateTime, String>> timeStyleProvider = new SimpleObjectProperty<>(this, "timeStyleProvider", DEFAULT_STYLE_PROVIDER);
 
-    private final ObjectProperty<Function<LocalDateTime, String>> dateStyleProvider = new SimpleObjectProperty<>(this, "dateStyleProvider", DEFAULT_STYLE_PROVIDER);
-
     /**
      * Gets the function, which is used to provide additional style properties for the labels
      * that will display the times of a day (01:00, 02:00, ...).
@@ -149,6 +147,8 @@ public class TimeScaleView extends DayViewBase {
     public void setTimeStyleProvider(Function<LocalDateTime, String> styleProvider) {
         this.timeStyleProvider.set(styleProvider);
     }
+
+    private final ObjectProperty<Function<LocalDateTime, String>> dateStyleProvider = new SimpleObjectProperty<>(this, "dateStyleProvider", DEFAULT_STYLE_PROVIDER);
 
     /**
      * Gets the function, which is used to provide additional styling for the labels
