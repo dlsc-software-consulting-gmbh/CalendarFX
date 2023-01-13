@@ -51,7 +51,6 @@ import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
  *
  * <img src="doc-files/detailed-day-view.png" alt="Detailed Day View">
  * <img src="doc-files/detailed-day-view-agenda.png" alt="Detailed Day View Agenda">
- *
  */
 public class ResourcesView<T extends Resource<?>> extends DayViewBase {
 
@@ -173,7 +172,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         adjustToFirstDayOfWeekProperty().set(adjust);
     }
 
-    private final ObjectProperty<Callback<T, AllDayView>> allDayViewFactory = new SimpleObjectProperty<>(this, "allDayViewFactory", it-> new AllDayView());
+    private final ObjectProperty<Callback<T, AllDayView>> allDayViewFactory = new SimpleObjectProperty<>(this, "allDayViewFactory", it -> new AllDayView(getNumberOfDays()));
 
     public final Callback<T, AllDayView> getAllDayViewFactory() {
         return allDayViewFactory.get();
@@ -193,7 +192,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.allDayViewFactory.set(allDayViewFactory);
     }
 
-    private final ObjectProperty<Callback<T, WeekDayHeaderView>> weekDayHeaderViewFactory = new SimpleObjectProperty<>(this, "weekDayHeaderViewFactory", it-> new WeekDayHeaderView());
+    private final ObjectProperty<Callback<T, WeekDayHeaderView>> weekDayHeaderViewFactory = new SimpleObjectProperty<>(this, "weekDayHeaderViewFactory", it -> new WeekDayHeaderView(getNumberOfDays()));
 
     public final Callback<T, WeekDayHeaderView> getWeekDayHeaderViewFactory() {
         return weekDayHeaderViewFactory.get();
@@ -246,7 +245,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         numberOfDaysProperty().set(number);
     }
 
-    private final ObjectProperty<Callback<T, Node>> resourceHeaderFactory = new SimpleObjectProperty<>(this,"headerFactory", resource -> {
+    private final ObjectProperty<Callback<T, Node>> resourceHeaderFactory = new SimpleObjectProperty<>(this, "headerFactory", resource -> {
         Label label = new Label(resource.toString());
         label.setAlignment(Pos.CENTER);
         label.getStyleClass().add("resource-header");
@@ -258,6 +257,11 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         return resourceHeaderFactory.get();
     }
 
+    /**
+     * A factory callback for creating a header for each resource
+     *
+     * @return the resource header factory callback
+     */
     public final ObjectProperty<Callback<T, Node>> resourceHeaderFactoryProperty() {
         return resourceHeaderFactory;
     }
@@ -302,8 +306,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     /**
      * Sets the value of {@link #showAllDayViewProperty()}.
      *
-     * @param show
-     *            true if the all day view will be visible
+     * @param show true if the all day view will be visible
      */
     public final void setShowAllDayView(boolean show) {
         showAllDayViewProperty().set(show);
@@ -334,8 +337,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     /**
      * Sets the value of {@link #showTimeScaleViewProperty()}.
      *
-     * @param show
-     *            if true the timescale view will be visible
+     * @param show if true the timescale view will be visible
      */
     public final void setShowTimeScaleView(boolean show) {
         showTimeScaleViewProperty().set(show);
@@ -357,8 +359,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     /**
      * Sets the value of {@link #showScrollBarProperty()}.
      *
-     * @param showScrollBar
-     *            if true the scrollbar will be visible
+     * @param showScrollBar if true the scrollbar will be visible
      */
     public final void setShowScrollBar(boolean showScrollBar) {
         this.showScrollBar.set(showScrollBar);
@@ -373,7 +374,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         return showScrollBar.get();
     }
 
-    private final ObjectProperty<Callback<T, WeekView>> weekViewFactory = new SimpleObjectProperty<>(this, "weekViewFactory", resource -> new WeekView());
+    private final ObjectProperty<Callback<T, WeekView>> weekViewFactory = new SimpleObjectProperty<>(this, "weekViewFactory", resource -> new WeekView(getNumberOfDays()));
 
     public final Callback<T, WeekView> getWeekViewFactory() {
         return weekViewFactory.get();
@@ -451,7 +452,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.upperRightCorner.set(upperRightCorner);
     }
 
-    private final ObjectProperty<Callback<ResourcesView<T>, Region>> smallSeparatorFactory = new SimpleObjectProperty<>(this, "smallSeparatorFactory", it-> {
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> smallSeparatorFactory = new SimpleObjectProperty<>(this, "smallSeparatorFactory", it -> {
         Region region = new Region();
         region.getStyleClass().add("small-separator");
         return region;
@@ -469,7 +470,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         this.smallSeparatorFactory.set(smallSeparatorFactory);
     }
 
-    private final ObjectProperty<Callback<ResourcesView<T>, Region>> largeSeparatorFactory = new SimpleObjectProperty<>(this, "largeSeparatorFactory", it-> {
+    private final ObjectProperty<Callback<ResourcesView<T>, Region>> largeSeparatorFactory = new SimpleObjectProperty<>(this, "largeSeparatorFactory", it -> {
         Region region = new Region();
         region.getStyleClass().add("large-separator");
         return region;

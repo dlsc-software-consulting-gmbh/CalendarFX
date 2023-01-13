@@ -47,17 +47,20 @@ import static java.util.Objects.requireNonNull;
  * control. A cell factory can be used to customize the appearance of the names.
  *
  * <img src="doc-files/week-weekdays.png" alt="Week Weekdays">
- *
  */
 public class WeekDayHeaderView extends DateControl {
 
     private static final String DEFAULT_STYLE_CLASS = "weekday-header-view";
 
     /**
-     * Constructs a new week day header view.
+     * Constructs a new week day header view with the given number of days.
+     *
+     * @param numberOfDays the number of days to show
      */
-    public WeekDayHeaderView() {
+    public WeekDayHeaderView(int numberOfDays) {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
+
+        setNumberOfDays(numberOfDays);
 
         dateProperty().addListener(it -> {
             LocalDate date = getDate();
@@ -73,6 +76,13 @@ public class WeekDayHeaderView extends DateControl {
         endDate.set(getDate().plusDays(getNumberOfDays() - 1));
 
         setCellFactory(date -> new WeekDayHeaderCell(this));
+    }
+
+    /**
+     * Constructs a new week day header view.
+     */
+    public WeekDayHeaderView() {
+        this(7);
     }
 
     @Override
@@ -104,15 +114,14 @@ public class WeekDayHeaderView extends DateControl {
     /**
      * Sets the value of {@link #cellFactoryProperty()}.
      *
-     * @param factory
-     *            the cell factory
+     * @param factory the cell factory
      */
     public final void setCellFactory(Callback<WeekDayHeaderView, WeekDayHeaderCell> factory) {
         requireNonNull(factory);
         cellFactoryProperty().set(factory);
     }
 
-    private final ObjectProperty<Callback<WeekDayHeaderView, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it-> {
+    private final ObjectProperty<Callback<WeekDayHeaderView, Region>> separatorFactory = new SimpleObjectProperty<>(this, "separatorFactory", it -> {
         Region region = new Region();
         region.getStyleClass().add("weekday-separator");
         return region;
@@ -161,21 +170,17 @@ public class WeekDayHeaderView extends DateControl {
     /**
      * Sets the value of {@link #numberOfDaysProperty()}.
      *
-     * @param number
-     *            the new number of days shown by the view
+     * @param number the new number of days shown by the view
      */
     public final void setNumberOfDays(int number) {
         if (number < 1) {
-            throw new IllegalArgumentException(
-                    "invalid number of days, must be larger than 0 but was "
-                            + number);
+            throw new IllegalArgumentException("invalid number of days, must be larger than 0 but was " + number);
         }
 
         numberOfDaysProperty().set(number);
     }
 
-    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(
-            this, "adjustToFirstDayOfWeek", true);
+    private final BooleanProperty adjustToFirstDayOfWeek = new SimpleBooleanProperty(this, "adjustToFirstDayOfWeek", true);
 
     /**
      * A flag used to indicate that the view should always show the first day of
@@ -200,15 +205,13 @@ public class WeekDayHeaderView extends DateControl {
     /**
      * Sets the value of {@link #adjustToFirstDayOfWeekProperty()}.
      *
-     * @param adjust
-     *            if true the view will always show the first day of the week
+     * @param adjust if true the view will always show the first day of the week
      */
     public final void setAdjustToFirstDayOfWeek(boolean adjust) {
         adjustToFirstDayOfWeekProperty().set(adjust);
     }
 
-    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(
-            this, "startDate");
+    private final ReadOnlyObjectWrapper<LocalDate> startDate = new ReadOnlyObjectWrapper<>(this, "startDate");
 
     /**
      * The first date shown by the view.
@@ -228,8 +231,7 @@ public class WeekDayHeaderView extends DateControl {
         return startDate.get();
     }
 
-    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(
-            this, "endDate");
+    private final ReadOnlyObjectWrapper<LocalDate> endDate = new ReadOnlyObjectWrapper<>(this, "endDate");
 
     /**
      * The last date shown by the view.
@@ -256,8 +258,10 @@ public class WeekDayHeaderView extends DateControl {
         public WeekDayHeaderCell(WeekDayHeaderView view) {
             Objects.requireNonNull(view);
             getStyleClass().add("cell");
+
             setMaxWidth(Double.MAX_VALUE);
             dateProperty().addListener(it -> setText(getFormatter().format(getDate())));
+
             if (view.isEnableHyperlinks()) {
                 getStyleClass().add("date-hyperlink");
                 setOnMouseClicked(evt -> {
@@ -301,8 +305,7 @@ public class WeekDayHeaderView extends DateControl {
         /**
          * Sets the value of {@link #dateProperty()}.
          *
-         * @param date
-         *            the new date to show
+         * @param date the new date to show
          */
         public final void setDate(LocalDate date) {
             dateProperty().set(date);

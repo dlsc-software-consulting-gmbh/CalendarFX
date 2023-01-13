@@ -37,6 +37,9 @@ public class SourceGridView extends CalendarFXControl {
 
     private static final int DEFAULT_MAXIMUM_ROWS_PER_COLUMN = 5;
 
+    public SourceGridView() {
+    }
+
     @Override
     protected Skin<?> createDefaultSkin() {
         return new SourceGridViewSkin(this);
@@ -50,6 +53,9 @@ public class SourceGridView extends CalendarFXControl {
     public final void unbind(DateControl dateControl) {
         Bindings.unbindContentBidirectional(calendarSources, dateControl.getCalendarSources());
         Bindings.unbindContentBidirectional(calendarVisibilityMap, dateControl.getCalendarVisibilityMap());
+
+        // important, otherwise we end up with a memory leak
+        dateControl.getCalendarVisibilityMap().clear();
     }
 
     private final ObservableList<CalendarSource> calendarSources = FXCollections.observableArrayList();

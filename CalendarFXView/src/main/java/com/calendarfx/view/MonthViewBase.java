@@ -44,8 +44,7 @@ public abstract class MonthViewBase extends DateControl {
         selectionModeProperty().addListener(evt -> getSelectedDates().clear());
     }
 
-    private final ReadOnlyObjectWrapper<YearMonth> yearMonth = new ReadOnlyObjectWrapper<>(
-            this, "yearMonth", YearMonth.from(getToday()));
+    private final ReadOnlyObjectWrapper<YearMonth> yearMonth = new ReadOnlyObjectWrapper<>(this, "yearMonth", YearMonth.from(getToday()));
 
     /**
      * Stores the year and month shown by the control.

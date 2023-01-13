@@ -34,7 +34,6 @@ import javafx.scene.control.Skin;
  * This list can be used to toggle the visibility of calendars.
  *
  * <img src="doc-files/source-view.png" alt="Source View">
- *
  */
 public class SourceView extends CalendarFXControl {
 
@@ -61,10 +60,12 @@ public class SourceView extends CalendarFXControl {
     public final void unbind(DateControl dateControl) {
         Bindings.unbindContentBidirectional(calendarSources, dateControl.getCalendarSources());
         Bindings.unbindContentBidirectional(calendarVisibilityMap, dateControl.getCalendarVisibilityMap());
+
+        // important, otherwise we end up with a memory leak
+        dateControl.getCalendarVisibilityMap().clear();
     }
 
-    private final ObservableList<CalendarSource> calendarSources = FXCollections
-            .observableArrayList();
+    private final ObservableList<CalendarSource> calendarSources = FXCollections.observableArrayList();
 
     /**
      * The list of calendar sources shown by the view.
@@ -86,13 +87,11 @@ public class SourceView extends CalendarFXControl {
     }
 
     public final boolean isCalendarVisible(Calendar calendar) {
-        BooleanProperty prop = getCalendarVisibilityProperty(calendar);
-        return prop.get();
+        return getCalendarVisibilityProperty(calendar).get();
     }
 
     public final void setCalendarVisibility(Calendar calendar, boolean visible) {
-        BooleanProperty prop = getCalendarVisibilityProperty(calendar);
-        prop.set(visible);
+        getCalendarVisibilityProperty(calendar).set(visible);
     }
 
     private void createContextMenu() {

@@ -19,7 +19,7 @@ package com.calendarfx.view;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import impl.com.calendarfx.view.DayViewSkin;
-import javafx.beans.Observable;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Skin;
@@ -61,12 +61,15 @@ public class DayView extends DayViewBase {
 	public DayView() {
 		getStyleClass().add(DAY_VIEW);
 
-		showTodayProperty().addListener(it -> updateStyleClasses());
-		todayProperty().addListener(evt -> updateStyleClasses());
-		dateProperty().addListener(evt -> updateStyleClasses());
-		selectionModeProperty().addListener(evt -> getSelections().clear());
-		getWeekendDays().addListener((Observable it) -> updateStyleClasses());
+		InvalidationListener updateStyleClassListener = it -> updateStyleClasses();
+
+		showTodayProperty().addListener(updateStyleClassListener);
+		todayProperty().addListener(updateStyleClassListener);
+		dateProperty().addListener(updateStyleClassListener);
+		getWeekendDays().addListener(updateStyleClassListener);
 		updateStyleClasses();
+
+		selectionModeProperty().addListener(evt -> getSelections().clear());
 
 		setEntryViewFactory(DayEntryView::new);
 		setMinWidth(0); // important, so that multi day views apply same width for all day views

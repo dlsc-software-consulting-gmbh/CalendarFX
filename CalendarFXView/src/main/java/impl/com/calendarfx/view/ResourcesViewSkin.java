@@ -50,6 +50,8 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
     private final ScrollBar scrollBar;
     private final PlusMinusSlider plusMinusSlider;
     private DayViewScrollPane dayViewScrollPane;
+    private final ResourcesViewContainer<T> resourcesViewContainer;
+    private final TimeScaleView timeScaleView;
 
     public ResourcesViewSkin(ResourcesView<T> view) {
         super(view);
@@ -69,6 +71,13 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             final double pixel = pow * -100;
             view.setScrollTime(view.getZonedDateTimeAt(0, pixel, view.getZoneId()));
         });
+
+        resourcesViewContainer = new ResourcesViewContainer<>(view);
+        resourcesViewContainer.setMinHeight(0);
+        view.bind(resourcesViewContainer, true);
+
+        timeScaleView = new TimeScaleView();
+        view.bind(timeScaleView, true);
 
         InvalidationListener updateViewListener = it -> updateView();
         view.showAllDayViewProperty().addListener(updateViewListener);
@@ -121,8 +130,8 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
         dayViewScrollPane = null;
 
-        ResourcesView<T> view = getSkinnable();
-        if (view.getType().equals(Type.RESOURCES_OVER_DATES)) {
+        ResourcesView<T> resourcesView = getSkinnable();
+        if (resourcesView.getType().equals(Type.RESOURCES_OVER_DATES)) {
             updateViewResourcesOverDates();
         } else {
             updateViewDatesOverResources();
@@ -130,68 +139,67 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
     }
 
     private void updateViewDatesOverResources() {
-        final ResourcesView<T> view = getSkinnable();
+        final ResourcesView<T> resourcesView = getSkinnable();
 
-        if (view.isShowTimeScaleView()) {
+        if (resourcesView.isShowTimeScaleView()) {
             ColumnConstraints timeScaleColumn = new ColumnConstraints();
             timeScaleColumn.setFillWidth(true);
             timeScaleColumn.setHgrow(Priority.NEVER);
             gridPane.getColumnConstraints().add(timeScaleColumn);
 
-            TimeScaleView timeScale = createTimeScale();
-
-            if (view.isScrollingEnabled()) {
-                gridPane.add(timeScale, 0, 1);
+            if (resourcesView.isScrollingEnabled()) {
+                gridPane.add(timeScaleView, 0, 1);
             } else {
-                DayViewScrollPane timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
+                DayViewScrollPane timeScaleScrollPane = new DayViewScrollPane(timeScaleView, scrollBar);
                 timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
                 timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
                 gridPane.add(timeScaleScrollPane, 0, 1);
             }
 
-            Node upperLeftCorner = view.getUpperLeftCorner();
+            Node upperLeftCorner = resourcesView.getUpperLeftCorner();
             upperLeftCorner.getStyleClass().add("upper-left-corner");
             gridPane.add(upperLeftCorner, 0, 0);
         }
 
-        if (view.isShowScrollBar()) {
-            Node upperRightCorner = view.getUpperRightCorner();
+        if (resourcesView.isShowScrollBar()) {
+            Node upperRightCorner = resourcesView.getUpperRightCorner();
             upperRightCorner.getStyleClass().add("upper-right-corner");
             gridPane.add(upperRightCorner, 2, 0);
         }
 
-        Callback<T, Node> resourceHeaderFactory = view.getResourceHeaderFactory();
+        Callback<T, Node> resourceHeaderFactory = resourcesView.getResourceHeaderFactory();
 
-        ObservableList<T> resources = view.getResources();
+        ObservableList<T> resources = resourcesView.getResources();
 
         HBox headerBox = new HBox();
         headerBox.getStyleClass().add("header-box");
 
         gridPane.add(headerBox, 1, 0);
 
-        for (int dayIndex = 0; dayIndex < view.getNumberOfDays(); dayIndex++) {
+        for (int dayIndex = 0; dayIndex < resourcesView.getNumberOfDays(); dayIndex++) {
             ObjectProperty<LocalDate> dateProperty = new SimpleObjectProperty<>(this, "date");
             final int additionalDays = dayIndex;
-            dateProperty.bind(Bindings.createObjectBinding(() -> view.getDate().plusDays(additionalDays), view.dateProperty()));
+            dateProperty.bind(Bindings.createObjectBinding(() -> resourcesView.getDate().plusDays(additionalDays), resourcesView.dateProperty()));
 
             VBox dayBox = new VBox();
             dayBox.getStyleClass().add("day-box");
             HBox.setHgrow(dayBox, Priority.ALWAYS);
 
-            WeekDayHeaderView weekDayHeaderView = new WeekDayHeaderView();
-            view.bind(weekDayHeaderView, false);
+            WeekDayHeaderView weekDayHeaderView = new WeekDayHeaderView(resourcesView.getNumberOfDays());
+            resourcesView.bind(weekDayHeaderView, false);
+
             weekDayHeaderView.dateProperty().bind(dateProperty);
             weekDayHeaderView.setNumberOfDays(1);
             weekDayHeaderView.setAdjustToFirstDayOfWeek(false);
 
             weekDayHeaderView.getStyleClass().removeAll("only", "first", "middle", "last");
 
-            if (view.getNumberOfDays() == 1) {
+            if (resourcesView.getNumberOfDays() == 1) {
                 weekDayHeaderView.getStyleClass().add("only");
             } else {
                 if (dayIndex == 0) {
                     weekDayHeaderView.getStyleClass().add("first");
-                } else if (dayIndex == view.getNumberOfDays() - 1) {
+                } else if (dayIndex == resourcesView.getNumberOfDays() - 1) {
                     weekDayHeaderView.getStyleClass().add("last");
                 } else {
                     weekDayHeaderView.getStyleClass().add("middle");
@@ -208,10 +216,10 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             headerBox.getChildren().add(dayBox);
 
             // separator between dates
-            if (dayIndex < view.getNumberOfDays() - 1) {
-                Callback<ResourcesView<T>, Region> separatorFactory = view.getLargeSeparatorFactory();
+            if (dayIndex < resourcesView.getNumberOfDays() - 1) {
+                Callback<ResourcesView<T>, Region> separatorFactory = resourcesView.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
-                    Region separator = separatorFactory.call(view);
+                    Region separator = separatorFactory.call(resourcesView);
                     if (separator != null) {
                         headerBox.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);
@@ -243,9 +251,9 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                     }
                 }
 
-                if (view.isShowAllDayView()) {
+                if (resourcesView.isShowAllDayView()) {
 
-                    Callback<T, AllDayView> allDayViewFactory = view.getAllDayViewFactory();
+                    Callback<T, AllDayView> allDayViewFactory = resourcesView.getAllDayViewFactory();
                     AllDayView allDayView = allDayViewFactory.call(resource);
 
                     allDayView.getStyleClass().removeAll("only", "first", "middle", "last");
@@ -263,19 +271,19 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                     }
 
                     // bind AllDayView
-                    view.bind(allDayView, false);
+                    resourcesView.bind(allDayView, false);
 
-                    Bindings.unbindBidirectional(view.adjustToFirstDayOfWeekProperty(), allDayView.adjustToFirstDayOfWeekProperty());
-                    Bindings.unbindBidirectional(view.numberOfDaysProperty(), allDayView.numberOfDaysProperty());
+                    Bindings.unbindBidirectional(resourcesView.adjustToFirstDayOfWeekProperty(), allDayView.adjustToFirstDayOfWeekProperty());
+                    Bindings.unbindBidirectional(resourcesView.numberOfDaysProperty(), allDayView.numberOfDaysProperty());
 
                     allDayView.dateProperty().bind(dateProperty);
                     allDayView.setAdjustToFirstDayOfWeek(false);
                     allDayView.setNumberOfDays(1);
 
                     // some un-bindings for AllDayView
-                    Bindings.unbindBidirectional(view.defaultCalendarProviderProperty(), allDayView.defaultCalendarProviderProperty());
-                    Bindings.unbindBidirectional(view.draggedEntryProperty(), allDayView.draggedEntryProperty());
-                    Bindings.unbindContentBidirectional(view.getCalendarSources(), allDayView.getCalendarSources());
+                    Bindings.unbindBidirectional(resourcesView.defaultCalendarProviderProperty(), allDayView.defaultCalendarProviderProperty());
+                    Bindings.unbindBidirectional(resourcesView.draggedEntryProperty(), allDayView.draggedEntryProperty());
+                    Bindings.unbindContentBidirectional(resourcesView.getCalendarSources(), allDayView.getCalendarSources());
 
                     Bindings.bindContent(allDayView.getCalendarSources(), resource.getCalendarSources());
 
@@ -288,9 +296,9 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                 HBox.setHgrow(singleResourceBox, Priority.ALWAYS);
 
                 if (resourceIndex < resources.size() - 1) {
-                    Callback<ResourcesView<T>, Region> separatorFactory = view.getSmallSeparatorFactory();
+                    Callback<ResourcesView<T>, Region> separatorFactory = resourcesView.getSmallSeparatorFactory();
                     if (separatorFactory != null) {
-                        Region separator = separatorFactory.call(view);
+                        Region separator = separatorFactory.call(resourcesView);
                         if (separator != null) {
                             allResourcesBox.getChildren().add(separator);
                             HBox.setHgrow(separator, Priority.NEVER);
@@ -305,15 +313,14 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         containerOrScrollPaneConstraints.setHgrow(Priority.ALWAYS);
         gridPane.getColumnConstraints().add(containerOrScrollPaneConstraints);
 
-        ResourcesViewContainer<T> resourcesContainer = createContainer();
-        if (view.isScrollingEnabled()) {
-            gridPane.add(resourcesContainer, 1, 1);
+        if (resourcesView.isScrollingEnabled()) {
+            gridPane.add(resourcesViewContainer, 1, 1);
         } else {
-            dayViewScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
+            dayViewScrollPane = new DayViewScrollPane(resourcesViewContainer, scrollBar);
             gridPane.add(dayViewScrollPane, 1, 1);
         }
 
-        if (view.isShowScrollBar()) {
+        if (resourcesView.isShowScrollBar()) {
             ColumnConstraints scrollbarConstraint = new ColumnConstraints();
             scrollbarConstraint.setFillWidth(true);
             scrollbarConstraint.setHgrow(Priority.NEVER);
@@ -321,7 +328,7 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
             gridPane.getColumnConstraints().add(scrollbarConstraint);
 
-            if (view.isScrollingEnabled()) {
+            if (resourcesView.isScrollingEnabled()) {
                 gridPane.add(plusMinusSlider, 2, 1);
             } else {
                 gridPane.add(scrollBar, 2, 1);
@@ -329,71 +336,32 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         }
     }
 
-    private ResourcesViewContainer<T> resourcesContainer;
-
-    private ResourcesViewContainer<T> createContainer() {
-        ResourcesView<T> view = getSkinnable();
-
-        // first tear down the existing one
-        if (resourcesContainer != null) {
-            view.unbind(resourcesContainer);
-        }
-
-        // then create the new one
-        resourcesContainer = new ResourcesViewContainer<>(view);
-        resourcesContainer.setMinHeight(0);
-        view.bind(resourcesContainer, true);
-
-        // return it
-        return resourcesContainer;
-    }
-
-    private TimeScaleView timeScaleView;
-
-    private TimeScaleView createTimeScale(){
-        ResourcesView<T> view = getSkinnable();
-
-        // first tear down the existing one
-        if (timeScaleView != null) {
-            view.unbind(timeScaleView);
-        }
-
-        // then create the new one
-        timeScaleView = new TimeScaleView();
-        view.bind(timeScaleView, true);
-
-        // return it
-        return timeScaleView;
-    }
-
     private void updateViewResourcesOverDates() {
-        final ResourcesView<T> view = getSkinnable();
+        final ResourcesView<T> resourcesView = getSkinnable();
 
-        if (view.isShowTimeScaleView()) {
+        if (resourcesView.isShowTimeScaleView()) {
             ColumnConstraints timeScaleColumn = new ColumnConstraints();
             timeScaleColumn.setFillWidth(true);
             timeScaleColumn.setHgrow(Priority.NEVER);
             gridPane.getColumnConstraints().add(timeScaleColumn);
 
-            TimeScaleView timeScale = createTimeScale();
-
-            if (view.isScrollingEnabled()) {
-                gridPane.add(timeScale, 0, 1);
+            if (resourcesView.isScrollingEnabled()) {
+                gridPane.add(timeScaleView, 0, 1);
             } else {
                 // time scale scroll pane
-                DayViewScrollPane timeScaleScrollPane = new DayViewScrollPane(timeScale, scrollBar);
+                DayViewScrollPane timeScaleScrollPane = new DayViewScrollPane(timeScaleView, scrollBar);
                 timeScaleScrollPane.getStyleClass().addAll("calendar-scroll-pane", "day-view-timescale-scroll-pane");
                 timeScaleScrollPane.setMinWidth(Region.USE_PREF_SIZE);
                 gridPane.add(timeScaleScrollPane, 0, 1);
             }
 
-            Node upperLeftCorner = view.getUpperLeftCorner();
+            Node upperLeftCorner = resourcesView.getUpperLeftCorner();
             upperLeftCorner.getStyleClass().add("upper-left-corner");
             gridPane.add(upperLeftCorner, 0, 0);
         }
 
-        if (view.isShowScrollBar()) {
-            Node upperRightCorner = view.getUpperRightCorner();
+        if (resourcesView.isShowScrollBar()) {
+            Node upperRightCorner = resourcesView.getUpperRightCorner();
             upperRightCorner.getStyleClass().add("upper-right-corner");
             gridPane.add(upperRightCorner, 2, 0);
         }
@@ -403,9 +371,9 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
         gridPane.add(headerBox, 1, 0);
 
-        Callback<T, Node> resourceHeaderFactory = view.getResourceHeaderFactory();
+        Callback<T, Node> resourceHeaderFactory = resourcesView.getResourceHeaderFactory();
 
-        ObservableList<T> resources = view.getResources();
+        ObservableList<T> resources = resourcesView.getResources();
         for (int i = 0; i < resources.size(); i++) {
             T resource = resources.get(i);
 
@@ -426,21 +394,21 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
                 }
             }
 
-            if (view.isShowAllDayView()) {
+            if (resourcesView.isShowAllDayView()) {
                 AllDayView allDayView = new AllDayView();
                 allDayView.setAdjustToFirstDayOfWeek(false);
 
                 // bind AllDayView
-                view.bind(allDayView, true);
-                allDayView.numberOfDaysProperty().bind(view.numberOfDaysProperty());
+                resourcesView.bind(allDayView, true);
+                allDayView.numberOfDaysProperty().bind(resourcesView.numberOfDaysProperty());
 
                 // rebind
-                allDayView.adjustToFirstDayOfWeekProperty().bind(view.adjustToFirstDayOfWeekProperty());
+                allDayView.adjustToFirstDayOfWeekProperty().bind(resourcesView.adjustToFirstDayOfWeekProperty());
 
                 // some unbindings for AllDayView
-                Bindings.unbindBidirectional(view.defaultCalendarProviderProperty(), allDayView.defaultCalendarProviderProperty());
-                Bindings.unbindBidirectional(view.draggedEntryProperty(), allDayView.draggedEntryProperty());
-                Bindings.unbindContentBidirectional(view.getCalendarSources(), allDayView.getCalendarSources());
+                Bindings.unbindBidirectional(resourcesView.defaultCalendarProviderProperty(), allDayView.defaultCalendarProviderProperty());
+                Bindings.unbindBidirectional(resourcesView.draggedEntryProperty(), allDayView.draggedEntryProperty());
+                Bindings.unbindContentBidirectional(resourcesView.getCalendarSources(), allDayView.getCalendarSources());
 
                 Bindings.bindContent(allDayView.getCalendarSources(), resource.getCalendarSources());
                 resourceHeader.getChildren().add(allDayView);
@@ -448,10 +416,10 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
 
             resourceHeader.getStyleClass().add("resource-header-view");
 
-            WeekDayHeaderView weekDayHeaderView = view.getWeekDayHeaderViewFactory().call(resource);
-            weekDayHeaderView.adjustToFirstDayOfWeekProperty().bind(view.adjustToFirstDayOfWeekProperty());
-            weekDayHeaderView.numberOfDaysProperty().bind(view.numberOfDaysProperty());
-            view.bind(weekDayHeaderView, true);
+            WeekDayHeaderView weekDayHeaderView = resourcesView.getWeekDayHeaderViewFactory().call(resource);
+            weekDayHeaderView.adjustToFirstDayOfWeekProperty().bind(resourcesView.adjustToFirstDayOfWeekProperty());
+            weekDayHeaderView.numberOfDaysProperty().bind(resourcesView.numberOfDaysProperty());
+            resourcesView.bind(weekDayHeaderView, true);
 
             resourceHeader.setPrefWidth(0); // so they all end up with the same percentage width
             resourceHeader.getChildren().add(weekDayHeaderView);
@@ -460,9 +428,9 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
             HBox.setHgrow(resourceHeader, Priority.ALWAYS);
 
             if (i < resources.size() - 1) {
-                Callback<ResourcesView<T>, Region> separatorFactory = view.getLargeSeparatorFactory();
+                Callback<ResourcesView<T>, Region> separatorFactory = resourcesView.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
-                    Region separator = separatorFactory.call(view);
+                    Region separator = separatorFactory.call(resourcesView);
                     if (separator != null) {
                         headerBox.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);
@@ -476,17 +444,16 @@ public class ResourcesViewSkin<T extends Resource<?>> extends DateControlSkin<Re
         dayViewsConstraints.setHgrow(Priority.ALWAYS);
         gridPane.getColumnConstraints().add(dayViewsConstraints);
 
-        ResourcesViewContainer<T> resourcesContainer = createContainer();
-        if (view.isScrollingEnabled()) {
-            resourcesContainer.setTranslateY(0);
-            resourcesContainer.setManaged(true);
-            gridPane.add(resourcesContainer, 1, 1);
+        if (resourcesView.isScrollingEnabled()) {
+            resourcesViewContainer.setTranslateY(0);
+            resourcesViewContainer.setManaged(true);
+            gridPane.add(resourcesViewContainer, 1, 1);
         } else {
-            dayViewScrollPane = new DayViewScrollPane(resourcesContainer, scrollBar);
+            dayViewScrollPane = new DayViewScrollPane(resourcesViewContainer, scrollBar);
             gridPane.add(dayViewScrollPane, 1, 1);
         }
 
-        if (view.isShowScrollBar()) {
+        if (resourcesView.isShowScrollBar()) {
             ColumnConstraints scrollbarConstraint = new ColumnConstraints();
             scrollbarConstraint.setFillWidth(true);
             scrollbarConstraint.setHgrow(Priority.NEVER);

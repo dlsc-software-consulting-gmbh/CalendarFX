@@ -101,7 +101,7 @@ public class ResourceCalendarView<T> extends DayViewBase {
         this.showScrollBar.set(showScrollBar);
     }
 
-    private final ObjectProperty<Callback<T, Node>> headerFactory = new SimpleObjectProperty<>(this, "headerFactory", it-> new Label("Header"));
+    private final ObjectProperty<Callback<T, Node>> headerFactory = new SimpleObjectProperty<>(this, "headerFactory", it -> new Label("Header"));
 
     public final Callback<T, Node> getHeaderFactory() {
         return headerFactory.get();
@@ -131,7 +131,7 @@ public class ResourceCalendarView<T> extends DayViewBase {
 
     private final ObservableList<T> resources = FXCollections.observableArrayList();
 
-    public ObservableList<T> getResources() {
+    public final ObservableList<T> getResources() {
         return resources;
     }
 }

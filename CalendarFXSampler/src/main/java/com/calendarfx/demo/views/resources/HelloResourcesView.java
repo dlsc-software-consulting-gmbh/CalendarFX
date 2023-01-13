@@ -29,9 +29,11 @@ import com.calendarfx.view.DayViewBase.EarlyLateHoursStrategy;
 import com.calendarfx.view.DayViewBase.GridType;
 import com.calendarfx.view.ResourcesView;
 import com.calendarfx.view.ResourcesView.Type;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -88,6 +90,30 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         numberOfResourcesBox.getItems().setAll(1, 2, 3, 4, 5);
         numberOfResourcesBox.setValue(resourcesView.getResources().size());
         numberOfResourcesBox.valueProperty().addListener(it -> resourcesView.getResources().setAll(createResources(numberOfResourcesBox.getValue())));
+
+        Button memoryTestButton = new Button("Test Heap");
+        memoryTestButton.setOnAction(evt -> {
+            Thread thread = new Thread(() -> {
+                Runtime r = Runtime.getRuntime();
+                int counter = 0;
+                while (true) {
+                    counter++;
+                    final int fc = counter;
+                    Platform.runLater(() -> {
+                        resourcesView.getResources().setAll(createResources(5));
+                        System.out.println(fc + ": free: " + (r.freeMemory() / 1_000) + " kb");
+                    });
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            thread.setName("Memory Test Thread");
+            thread.setDaemon(true);
+            thread.start();
+        });
 
         ChoiceBox<Integer> clicksBox = new ChoiceBox<>();
         clicksBox.getItems().setAll(1, 2, 3);
@@ -177,7 +203,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
         slider.setMax(1);
         slider.valueProperty().bindBidirectional(resourcesView.entryViewAvailabilityEditingOpacityProperty());
 
-        return new VBox(10, availabilityButton, new Label("View type"), typeBox, layoutBox, datePicker, infiniteScrolling, adjustBox, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
+        return new VBox(10, availabilityButton, new Label("View type"), typeBox, layoutBox, datePicker, infiniteScrolling, adjustBox, memoryTestButton, new Label("Number of resources"), numberOfResourcesBox, new Label("Number of days"), daysBox, new Label("Clicks to create"), clicksBox,
                 new Label("Availability Behaviour"), behaviourBox, new Label("Availability Opacity"), slider, new Label("Grid Type"), gridTypeBox, scrollbarBox, timescaleBox, allDayBox, detailsBox, flipBox);
     }
 

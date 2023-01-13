@@ -130,7 +130,6 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * via a {@link VirtualGrid} to show any kind of grid lines.
      *
      * @return the grid type
-     *
      * @see #gridLinesProperty()
      * @see #gridLineColorProperty()
      */
@@ -1101,9 +1100,9 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.bindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.bindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
         Bindings.bindBidirectional(otherControl.overlapResolutionStrategyProperty(), overlapResolutionStrategyProperty());
-        Bindings.bindBidirectional(otherControl.lassoStartProperty(),  lassoStartProperty());
-        Bindings.bindBidirectional(otherControl.lassoEndProperty(),  lassoEndProperty());
-        Bindings.bindBidirectional(otherControl.onLassoFinishedProperty(),  onLassoFinishedProperty());
+        Bindings.bindBidirectional(otherControl.lassoStartProperty(), lassoStartProperty());
+        Bindings.bindBidirectional(otherControl.lassoEndProperty(), lassoEndProperty());
+        Bindings.bindBidirectional(otherControl.onLassoFinishedProperty(), onLassoFinishedProperty());
         Bindings.bindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
         Bindings.bindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.bindBidirectional(otherControl.entryViewAvailabilityEditingBehaviourProperty(), entryViewAvailabilityEditingBehaviourProperty());
@@ -1128,9 +1127,9 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         Bindings.unbindBidirectional(otherControl.scrollingEnabledProperty(), scrollingEnabledProperty());
         Bindings.unbindBidirectional(otherControl.scrollTimeProperty(), scrollTimeProperty());
         Bindings.unbindBidirectional(otherControl.overlapResolutionStrategyProperty(), overlapResolutionStrategyProperty());
-        Bindings.unbindBidirectional(otherControl.lassoStartProperty(),  lassoStartProperty());
-        Bindings.unbindBidirectional(otherControl.lassoEndProperty(),  lassoEndProperty());
-        Bindings.unbindBidirectional(otherControl.onLassoFinishedProperty(),  onLassoFinishedProperty());
+        Bindings.unbindBidirectional(otherControl.lassoStartProperty(), lassoStartProperty());
+        Bindings.unbindBidirectional(otherControl.lassoEndProperty(), lassoEndProperty());
+        Bindings.unbindBidirectional(otherControl.onLassoFinishedProperty(), onLassoFinishedProperty());
         Bindings.unbindBidirectional(otherControl.startTimeProperty(), startTimeProperty());
         Bindings.unbindBidirectional(otherControl.endTimeProperty(), endTimeProperty());
         Bindings.unbindBidirectional(otherControl.entryViewAvailabilityEditingBehaviourProperty(), entryViewAvailabilityEditingBehaviourProperty());

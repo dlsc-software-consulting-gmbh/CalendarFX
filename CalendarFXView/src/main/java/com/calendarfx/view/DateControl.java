@@ -155,8 +155,6 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  */
 public abstract class DateControl extends CalendarFXControl {
 
-    private int entryCounter = 1;
-
     private Boolean usesOwnContextMenu;
 
     private final InvalidationListener updateCalendarListListener = (Observable it) -> updateCalendarList();
@@ -216,12 +214,12 @@ public abstract class DateControl extends CalendarFXControl {
          * The default calendar provider returns the first calendar which is visible and not read-only.
          */
         setDefaultCalendarProvider(control -> {
-            List<CalendarSource> sources = getCalendarSources();
+            List<CalendarSource> sources = control.getCalendarSources();
             for (CalendarSource s : sources) {
                 List<? extends Calendar> calendars = s.getCalendars();
                 if (calendars != null && !calendars.isEmpty()) {
                     for (Calendar c : calendars) {
-                        if (!c.isReadOnly() && isCalendarVisible(c)) {
+                        if (!c.isReadOnly() && control.isCalendarVisible(c)) {
                             return c;
                         }
                     }
@@ -232,11 +230,12 @@ public abstract class DateControl extends CalendarFXControl {
         });
 
         setEntryFactory(param -> {
-            DateControl control = param.getDateControl();
+            DateControl dateControl = param.getDateControl();
 
-            VirtualGrid grid = control.getVirtualGrid();
             ZonedDateTime time = param.getZonedDateTime();
-            DayOfWeek firstDayOfWeek = getFirstDayOfWeek();
+            DayOfWeek firstDayOfWeek = dateControl.getFirstDayOfWeek();
+
+            VirtualGrid grid = dateControl.getVirtualGrid();
             ZonedDateTime lowerTime = grid.adjustTime(time, false, firstDayOfWeek);
             ZonedDateTime upperTime = grid.adjustTime(time, true, firstDayOfWeek);
 
@@ -246,11 +245,11 @@ public abstract class DateControl extends CalendarFXControl {
                 time = upperTime;
             }
 
-            Entry<Object> entry = new Entry<>(MessageFormat.format(Messages.getString("DateControl.DEFAULT_ENTRY_TITLE"), entryCounter++));
+            Entry<Object> entry = new Entry<>(Messages.getString("DateControl.DEFAULT_ENTRY_TITLE"));
             Interval interval = new Interval(time.toLocalDateTime(), time.toLocalDateTime().plusHours(1), time.getZone());
             entry.setInterval(interval);
 
-            if (control instanceof AllDayView) {
+            if (dateControl instanceof AllDayView) {
                 entry.setFullDay(true);
             }
 
@@ -262,11 +261,11 @@ public abstract class DateControl extends CalendarFXControl {
             if (evt instanceof MouseEvent) {
                 MouseEvent mouseEvent = (MouseEvent) evt;
                 if (mouseEvent.getClickCount() == 2) {
-                    showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
+                    param.getDateControl().showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
                     return true;
                 }
             } else {
-                showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
+                param.getDateControl().showEntryDetails(param.getEntry(), param.getNode(), param.getOwner(), param.getScreenY());
                 return true;
             }
 
@@ -276,12 +275,12 @@ public abstract class DateControl extends CalendarFXControl {
         setDateDetailsCallback(param -> {
             InputEvent evt = param.getInputEvent();
             if (evt == null) {
-                showDateDetails(param.getOwner(), param.getLocalDate());
+                param.getDateControl().showDateDetails(param.getOwner(), param.getLocalDate());
                 return true;
             } else if (evt instanceof MouseEvent) {
                 MouseEvent mouseEvent = (MouseEvent) evt;
                 if (mouseEvent.getClickCount() == 1) {
-                    showDateDetails(param.getOwner(), param.getLocalDate());
+                    param.getDateControl().showDateDetails(param.getOwner(), param.getLocalDate());
                     return true;
                 }
             }
@@ -302,11 +301,10 @@ public abstract class DateControl extends CalendarFXControl {
              */
             MenuItem informationItem = new MenuItem(Messages.getString("DateControl.MENU_ITEM_INFORMATION"));
             informationItem.setOnAction(evt -> {
-                Callback<EntryDetailsParameter, Boolean> detailsCallback = getEntryDetailsCallback();
+                Callback<EntryDetailsParameter, Boolean> detailsCallback = param.getDateControl().getEntryDetailsCallback();
                 if (detailsCallback != null) {
                     ContextMenuEvent ctxEvent = param.getContextMenuEvent();
-                    EntryDetailsParameter entryDetailsParam = new EntryDetailsParameter(ctxEvent, DateControl.this, entryView.getEntry(), entryView, entryView, ctxEvent.getScreenX(), ctxEvent.getScreenY());
-                    detailsCallback.call(entryDetailsParam);
+                    detailsCallback.call(new EntryDetailsParameter(ctxEvent, param.getDateControl(), entryView.getEntry(), entryView, entryView, ctxEvent.getScreenX(), ctxEvent.getScreenY()));
                 }
             });
             contextMenu.getItems().add(informationItem);
@@ -317,7 +315,7 @@ public abstract class DateControl extends CalendarFXControl {
              * Assign entry to different calendars.
              */
             Menu calendarMenu = new Menu(Messages.getString("DateControl.MENU_CALENDAR"));
-            for (Calendar calendar : getCalendars()) {
+            for (Calendar calendar : param.getDateControl().getCalendars()) {
                 RadioMenuItem calendarItem = new RadioMenuItem(calendar.getName());
                 calendarItem.setOnAction(evt -> entry.setCalendar(calendar));
                 calendarItem.setDisable(calendar.isReadOnly());
@@ -343,7 +341,7 @@ public abstract class DateControl extends CalendarFXControl {
             calendarMenu.setDisable(param.getCalendar().isReadOnly());
             contextMenu.getItems().add(calendarMenu);
 
-            if (getEntryEditPolicy().call(new EntryEditParameter(this, entry, EditOperation.DELETE))) {
+            if (param.getDateControl().getEntryEditPolicy().call(new EntryEditParameter(param.getDateControl(), entry, EditOperation.DELETE))) {
                 /*
                  * Delete calendar entry.
                  */
@@ -433,13 +431,11 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     public final boolean isCalendarVisible(Calendar calendar) {
-        BooleanProperty prop = getCalendarVisibilityProperty(calendar);
-        return prop.get();
+        return getCalendarVisibilityProperty(calendar).get();
     }
 
     public final void setCalendarVisibility(Calendar calendar, boolean visible) {
-        BooleanProperty prop = getCalendarVisibilityProperty(calendar);
-        prop.set(visible);
+        getCalendarVisibilityProperty(calendar).set(visible);
     }
 
     public enum Layer {
@@ -624,8 +620,6 @@ public abstract class DateControl extends CalendarFXControl {
             CreateEntryParameter param = new CreateEntryParameter(this, calendar, time);
             Callback<CreateEntryParameter, Entry<?>> factory = getEntryFactory();
             Entry<?> entry = factory.call(param);
-
-            System.out.println(calendar);
 
             /*
              * This is OK. The factory can return NULL. In this case we
@@ -1471,6 +1465,8 @@ public abstract class DateControl extends CalendarFXControl {
 
         calendars.addAll(newCalendars);
         calendars.removeAll(removedCalendars);
+
+        removedCalendars.forEach(calendar -> calendarVisibilityMap.remove(calendar));
     }
 
     private abstract static class DetailsParameter {
@@ -2506,7 +2502,9 @@ public abstract class DateControl extends CalendarFXControl {
     public final void unbindAll() {
         WeakList<DateControl> controls = getBoundDateControls();
         for (DateControl next : controls) {
-            unbind(next);
+            if (next != null) {
+                unbind(next);
+            }
         }
     }
 
@@ -2669,8 +2667,6 @@ public abstract class DateControl extends CalendarFXControl {
 
         // bind properties
         Bindings.bindBidirectional(otherControl.suspendUpdatesProperty(), suspendUpdatesProperty());
-        Bindings.bindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
-        Bindings.bindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
         Bindings.bindBidirectional(otherControl.virtualGridProperty(), virtualGridProperty());
         Bindings.bindBidirectional(otherControl.draggedEntryProperty(), draggedEntryProperty());
         Bindings.bindBidirectional(otherControl.requestedTimeProperty(), requestedTimeProperty());
@@ -2701,13 +2697,15 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.createEntryClickCountProperty(), createEntryClickCountProperty());
 
         // bind callbacks
-        Bindings.bindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
-        Bindings.bindBidirectional(otherControl.dateDetailsCallbackProperty(), dateDetailsCallbackProperty());
         Bindings.bindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
-        Bindings.bindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.bindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
         Bindings.bindBidirectional(otherControl.entryDetailsPopOverContentCallbackProperty(), entryDetailsPopOverContentCallbackProperty());
         Bindings.bindBidirectional(otherControl.entryEditPolicyProperty(), entryEditPolicyProperty());
+        Bindings.bindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
+        Bindings.bindBidirectional(otherControl.dateDetailsCallbackProperty(), dateDetailsCallbackProperty());
+        Bindings.bindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
+        Bindings.bindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
+        Bindings.bindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
     }
 
     /**
@@ -2720,6 +2718,9 @@ public abstract class DateControl extends CalendarFXControl {
     public final void unbind(DateControl otherControl) {
         requireNonNull(otherControl);
 
+        // important, otherwise we end up with a memory leak
+        otherControl.getCalendarVisibilityMap().clear();
+
         // unbind collections
         Bindings.unbindContentBidirectional(otherControl.getCalendarVisibilityMap(), getCalendarVisibilityMap());
         Bindings.unbindContentBidirectional(otherControl.getCalendarSources(), getCalendarSources());
@@ -2729,8 +2730,6 @@ public abstract class DateControl extends CalendarFXControl {
 
         // unbind properties
         Bindings.unbindBidirectional(otherControl.suspendUpdatesProperty(), suspendUpdatesProperty());
-        Bindings.unbindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
-        Bindings.unbindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
         Bindings.unbindBidirectional(otherControl.virtualGridProperty(), virtualGridProperty());
         Bindings.unbindBidirectional(otherControl.draggedEntryProperty(), draggedEntryProperty());
         Bindings.unbindBidirectional(otherControl.requestedTimeProperty(), requestedTimeProperty());
@@ -2759,13 +2758,17 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.createEntryClickCountProperty(), createEntryClickCountProperty());
 
         // unbind callbacks
-        Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
-        Bindings.unbindBidirectional(otherControl.dateDetailsCallbackProperty(), dateDetailsCallbackProperty());
         Bindings.unbindBidirectional(otherControl.contextMenuCallbackProperty(), contextMenuCallbackProperty());
-        Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.calendarSourceFactoryProperty(), calendarSourceFactoryProperty());
-        Bindings.unbindBidirectional(otherControl.entryDetailsPopOverContentCallbackProperty(), entryDetailsPopOverContentCallbackProperty());
+        Bindings.unbindBidirectional(otherControl.entryDetailsCallbackProperty(), entryDetailsCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryEditPolicyProperty(), entryEditPolicyProperty());
+
+        Bindings.unbindBidirectional(otherControl.entryDetailsPopOverContentCallbackProperty(), entryDetailsPopOverContentCallbackProperty());
+        Bindings.unbindBidirectional(otherControl.dateDetailsCallbackProperty(), dateDetailsCallbackProperty());
+        Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
+        Bindings.unbindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
+        Bindings.unbindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
+
     }
 
     private final BooleanProperty suspendUpdates = new SimpleBooleanProperty(this, "suspendUpdates", false);

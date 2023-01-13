@@ -52,7 +52,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
     }
 
     private void updateViewDatesOverResources() {
-        ResourcesViewContainer<T> container = getSkinnable();
+        ResourcesViewContainer<T> resourcesViewContainer = getSkinnable();
         ObservableList<T> resources = resourcesView.getResources();
         int numberOfDays = resourcesView.getNumberOfDays();
 
@@ -67,7 +67,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
 
                 final int additionalDays = dayIndex;
 
-                dayView.dateProperty().bind(Bindings.createObjectBinding(() -> container.getDate().plusDays(additionalDays), container.dateProperty()));
+                dayView.dateProperty().bind(Bindings.createObjectBinding(() -> resourcesViewContainer.getDate().plusDays(additionalDays), resourcesViewContainer.dateProperty()));
 
                 dayView.getStyleClass().removeAll("only", "first", "middle", "last");
 
@@ -84,18 +84,18 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
                 }
 
                 // bind day view to container but remove bindings that interfere
-                container.bind(dayView, false);
+                resourcesViewContainer.bind(dayView, false);
 
                 // unbind what is not needed
-                Bindings.unbindBidirectional(container.defaultCalendarProviderProperty(), dayView.defaultCalendarProviderProperty());
-                Bindings.unbindBidirectional(container.draggedEntryProperty(), dayView.draggedEntryProperty());
-                Bindings.unbindBidirectional(container.enableCurrentTimeMarkerProperty(), dayView.enableCurrentTimeMarkerProperty());
-                Bindings.unbindBidirectional(container.enableCurrentTimeCircleProperty(), dayView.enableCurrentTimeCircleProperty());
-                Bindings.unbindBidirectional(container.availabilityCalendarProperty(), dayView.availabilityCalendarProperty());
-                Bindings.unbindBidirectional(container.lassoStartProperty(), dayView.lassoStartProperty());
-                Bindings.unbindBidirectional(container.lassoEndProperty(), dayView.lassoEndProperty());
-                Bindings.unbindBidirectional(container.onLassoFinishedProperty(), dayView.onLassoFinishedProperty());
-                Bindings.unbindContentBidirectional(container.getCalendarSources(), dayView.getCalendarSources());
+                Bindings.unbindBidirectional(resourcesViewContainer.defaultCalendarProviderProperty(), dayView.defaultCalendarProviderProperty());
+                Bindings.unbindBidirectional(resourcesViewContainer.draggedEntryProperty(), dayView.draggedEntryProperty());
+                Bindings.unbindBidirectional(resourcesViewContainer.enableCurrentTimeMarkerProperty(), dayView.enableCurrentTimeMarkerProperty());
+                Bindings.unbindBidirectional(resourcesViewContainer.enableCurrentTimeCircleProperty(), dayView.enableCurrentTimeCircleProperty());
+                Bindings.unbindBidirectional(resourcesViewContainer.availabilityCalendarProperty(), dayView.availabilityCalendarProperty());
+                Bindings.unbindBidirectional(resourcesViewContainer.lassoStartProperty(), dayView.lassoStartProperty());
+                Bindings.unbindBidirectional(resourcesViewContainer.lassoEndProperty(), dayView.lassoEndProperty());
+                Bindings.unbindBidirectional(resourcesViewContainer.onLassoFinishedProperty(), dayView.onLassoFinishedProperty());
+                Bindings.unbindContentBidirectional(resourcesViewContainer.getCalendarSources(), dayView.getCalendarSources());
 
                 dayView.setEnableCurrentTimeMarker(true);
                 dayView.setEnableCurrentTimeCircle(dayIndex == 0 && resourceIndex == 0);
@@ -124,7 +124,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
             if (dayIndex < numberOfDays - 1) {
                 Callback<ResourcesView<T>, Region> separatorFactory = resourcesView.getLargeSeparatorFactory();
                 if (separatorFactory != null) {
-                    Region separator = separatorFactory.call(container.getResourcesView());
+                    Region separator = separatorFactory.call(resourcesViewContainer.getResourcesView());
                     if (separator != null) {
                         this.box.getChildren().add(separator);
                         HBox.setHgrow(separator, Priority.NEVER);

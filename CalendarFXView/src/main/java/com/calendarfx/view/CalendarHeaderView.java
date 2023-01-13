@@ -74,6 +74,9 @@ public class CalendarHeaderView extends CalendarFXControl {
     }
 
     public final void unbind(DateControl dateControl) {
+        // important, otherwise we end up with a memory leak
+        getCalendarVisibilityMap().clear();
+
         Bindings.unbindContentBidirectional(calendars, dateControl.getCalendars());
         Bindings.unbindContentBidirectional(calendarVisibilityMap, dateControl.getCalendarVisibilityMap());
     }

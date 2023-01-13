@@ -20,6 +20,8 @@ import com.calendarfx.util.LoggingDomain;
 import com.calendarfx.util.ViewHelper;
 import com.calendarfx.view.DayViewBase;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -43,8 +45,32 @@ import java.util.Objects;
 public class DayViewScrollPane extends Pane {
 
     private final DayViewBase dayView;
+    private final ScrollBar scrollBar;
 
     private LocalTime cachedStartTime;
+
+    private final InvalidationListener scrollBarListener = it -> getDayView().setTranslateY(getScrollBar().getValue() * -1);
+
+
+    private final InvalidationListener translateYListener = it -> {
+        updateVisibleTimeRange("translate-y changed");
+        cachedStartTime = getStartTime();
+        getScrollBar().setValue(-getDayView().getTranslateY());
+    };
+
+    private final InvalidationListener sceneChangedListener = it -> updateVisibleTimeRange("scene changed");
+    private final InvalidationListener scrollPaneHeightChangedListener = it -> updateVisibleTimeRange("height of scrollpane changed");
+    private final InvalidationListener dayViewHeightChangedListener = it -> updateVisibleTimeRange("height of day view changed");
+    private final InvalidationListener visibleHoursChangedListener = it -> updateVisibleTimeRange("visible hours changed");
+    private final InvalidationListener layoutListener = it -> requestLayout();
+
+    private final WeakInvalidationListener weakScrollBarListener = new WeakInvalidationListener(scrollBarListener);
+    private final WeakInvalidationListener weakTranslateYListener = new WeakInvalidationListener(translateYListener);
+    private final WeakInvalidationListener weakSceneChangedListener = new WeakInvalidationListener(sceneChangedListener);
+    private final WeakInvalidationListener weakScrollPaneHeightChangedListener = new WeakInvalidationListener(scrollPaneHeightChangedListener);
+    private final WeakInvalidationListener weakDayViewHeightChangedListener = new WeakInvalidationListener(dayViewHeightChangedListener);
+    private final WeakInvalidationListener weakVisibleHoursChangedListener = new WeakInvalidationListener(visibleHoursChangedListener);
+    private final WeakInvalidationListener weakLayoutListener = new WeakInvalidationListener(layoutListener);
 
     /**
      * Constructs a new scrollpane for the given day view.
@@ -57,12 +83,14 @@ public class DayViewScrollPane extends Pane {
 
         this.dayView = Objects.requireNonNull(dayView);
         this.dayView.setManaged(false);
-        this.dayView.layoutBoundsProperty().addListener(it -> requestLayout());
+        this.dayView.layoutBoundsProperty().addListener(weakLayoutListener);
+
+        this.scrollBar = Objects.requireNonNull(scrollBar);
 
         scrollBar.setOrientation(Orientation.VERTICAL);
         scrollBar.maxProperty().bind(dayView.heightProperty().subtract(heightProperty()));
         scrollBar.visibleAmountProperty().bind(Bindings.multiply(scrollBar.maxProperty(), Bindings.divide(heightProperty(), dayView.heightProperty())));
-        scrollBar.valueProperty().addListener(it -> dayView.setTranslateY(scrollBar.getValue() * -1));
+        scrollBar.valueProperty().addListener(weakScrollBarListener);
 
         // user clicks on scrollbar arrows -> scroll one hour
         scrollBar.unitIncrementProperty().bind(dayView.hourHeightProperty());
@@ -70,24 +98,20 @@ public class DayViewScrollPane extends Pane {
         // user clicks in background of scrollbar = block scroll -> scroll half a page
         scrollBar.blockIncrementProperty().bind(heightProperty().divide(2));
 
-        dayView.translateYProperty().addListener(it -> {
-            updateVisibleTimeRange("translate-y changed");
-            cachedStartTime = getStartTime();
-            scrollBar.setValue(-dayView.getTranslateY());
-        });
+        dayView.translateYProperty().addListener(weakTranslateYListener);
 
         getChildren().add(dayView);
 
-        heightProperty().addListener(it -> updateVisibleTimeRange("height of scrollpane changed"));
+        heightProperty().addListener(weakScrollPaneHeightChangedListener);
 
-        dayView.sceneProperty().addListener(it -> updateVisibleTimeRange("scene changed"));
-        dayView.heightProperty().addListener(it -> updateVisibleTimeRange("height of day view changed"));
-        dayView.visibleHoursProperty().addListener(it -> updateVisibleTimeRange("visible hours changed"));
+        dayView.sceneProperty().addListener(weakSceneChangedListener);
+        dayView.heightProperty().addListener(weakDayViewHeightChangedListener);
+        dayView.visibleHoursProperty().addListener(weakVisibleHoursChangedListener);
 
-        dayView.earlyLateHoursStrategyProperty().addListener(it -> requestLayout());
-        dayView.hourHeightCompressedProperty().addListener(it -> requestLayout());
-        dayView.hoursLayoutStrategyProperty().addListener(it -> requestLayout());
-        dayView.hourHeightProperty().addListener(it -> requestLayout());
+        dayView.earlyLateHoursStrategyProperty().addListener(weakLayoutListener);
+        dayView.hourHeightCompressedProperty().addListener(weakLayoutListener);
+        dayView.hoursLayoutStrategyProperty().addListener(weakLayoutListener);
+        dayView.hourHeightProperty().addListener(weakLayoutListener);
 
         updateVisibleTimeRange("initial call");
 
@@ -167,8 +191,12 @@ public class DayViewScrollPane extends Pane {
         return endTime.get();
     }
 
-    public DayViewBase getDayView() {
+    public final DayViewBase getDayView() {
         return dayView;
+    }
+
+    public final ScrollBar getScrollBar() {
+        return scrollBar;
     }
 
     @Override
