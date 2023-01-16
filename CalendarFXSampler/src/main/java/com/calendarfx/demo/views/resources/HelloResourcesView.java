@@ -20,6 +20,7 @@ package com.calendarfx.demo.views.resources;
 import com.calendarfx.demo.CalendarFXDateControlSample;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
+import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Resource;
 import com.calendarfx.view.DateControl;
@@ -48,10 +49,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class HelloResourcesView extends CalendarFXDateControlSample {
 
     private ResourcesView resourcesView;
+
+    public static final int DATA_GENERATION_SEED = 11011;
+
+    final Random random = new Random(DATA_GENERATION_SEED);
 
     @Override
     public String getSampleName() {
@@ -99,8 +106,37 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
                 while (true) {
                     counter++;
                     final int fc = counter;
+
                     Platform.runLater(() -> {
-                        resourcesView.getResources().setAll(createResources(5));
+                        List<Resource<String>> resources = createResources(5);
+                        resourcesView.getResources().setAll(resources);
+
+                        resources.forEach(resource -> {
+                            CalendarSource source = new CalendarSource("Default");
+
+                            HelloDayViewCalendar calendar1 = new HelloDayViewCalendar(random.nextLong());
+                            calendar1.generateBaseEntries();
+                            calendar1.setStyle(Style.STYLE1);
+                            source.getCalendars().add(calendar1);
+
+                            HelloDayViewCalendar calendar2 = new HelloDayViewCalendar(random.nextLong());
+                            calendar2.generateBaseEntries();
+                            calendar2.setStyle(Style.STYLE2);
+                            source.getCalendars().add(calendar2);
+
+                            HelloDayViewCalendar calendar3 = new HelloDayViewCalendar(random.nextLong());
+                            calendar3.generateBaseEntries();
+                            calendar3.setStyle(Style.STYLE3);
+                            source.getCalendars().add(calendar3);
+
+                            HelloDayViewCalendar calendar4 = new HelloDayViewCalendar(random.nextLong());
+                            calendar4.generateTopEntries();
+                            calendar4.setStyle(Style.STYLE4);
+                            source.getCalendars().add(calendar4);
+
+                            resource.getCalendarSources().setAll(source);
+                        });
+
                         System.out.println(fc + ": free: " + (r.freeMemory() / 1_000) + " kb");
                     });
                     try {
@@ -248,9 +284,9 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
     private Resource<String> create(String name, Style style) {
         Resource<String> resource = new Resource(name);
         resource.getAvailabilityCalendar().setName("Availability of " + name);
-        resource.getCalendars().get(0).setStyle(style);
-        resource.getCalendars().get(0).setUserObject(resource);
-        resource.getCalendarSources().get(0).getCalendars().add(new Calendar("Second", resource));
+//        resource.getCalendars().get(0).setStyle(style);
+//        resource.getCalendars().get(0).setUserObject(resource);
+//        resource.getCalendarSources().get(0).getCalendars().add(new Calendar("Second", resource));
         fillAvailabilities(resource.getAvailabilityCalendar());
         return resource;
     }
@@ -269,6 +305,49 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
             evening.setInterval(date, LocalTime.of(18, 0), date, LocalTime.MAX);
             calendar.addEntry(evening);
             date = date.plusDays(1);
+        }
+    }
+
+    class HelloDayViewCalendar extends Calendar {
+
+        final Random dataRandom = new Random();
+
+        public HelloDayViewCalendar(long dataSeed) {
+            dataRandom.setSeed(dataSeed);
+        }
+
+        public void generateBaseEntries() {
+            createEntries(LocalDate.now(), Entry::new);
+            createEntries(LocalDate.now().plusDays(1), Entry::new);
+            createEntries(LocalDate.now().plusDays(2), Entry::new);
+            createEntries(LocalDate.now().plusDays(3), Entry::new);
+            createEntries(LocalDate.now().plusDays(4), Entry::new);
+        }
+
+        public void generateTopEntries() {
+            createEntries(LocalDate.now(), Entry::new);
+        }
+
+        private <T extends Entry<?>> void createEntries(LocalDate startDate, Supplier<T> entryProducer) {
+            for (int j = 0; j < 5 + (int) (dataRandom.nextDouble() * 4); j++) {
+                T entry = entryProducer.get();
+                entry.changeStartDate(startDate);
+                entry.changeEndDate(startDate);
+
+                String s = entry.getClass().getSimpleName();
+                entry.setTitle(s + (j + 1));
+
+                int hour = (int) (dataRandom.nextDouble() * 23);
+                int durationInHours = Math.max(1, Math.min(24 - hour, (int) (dataRandom.nextDouble() * 4)));
+
+                LocalTime startTime = LocalTime.of(hour, 0);
+                LocalTime endTime = startTime.plusHours(durationInHours);
+
+                entry.changeStartTime(startTime);
+                entry.changeEndTime(endTime);
+
+                entry.setCalendar(this);
+            }
         }
     }
 
