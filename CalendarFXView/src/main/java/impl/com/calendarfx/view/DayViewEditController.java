@@ -106,6 +106,13 @@ public class DayViewEditController {
         dragMode = null;
         handle = null;
 
+        /*
+         * On touch screen devices we can not edit entries.
+         */
+        if (evt.isSynthesized()) {
+            return false;
+        }
+
         if (!(evt.getTarget() instanceof EntryViewBase)) {
             return false;
         }
@@ -347,13 +354,19 @@ public class DayViewEditController {
             return;
         }
 
+        if (evt.isSynthesized()) {
+            return;
+        }
+
         switch (operation) {
             case NONE:
                 break;
             case EDIT_ENTRY:
-                Calendar calendar = entry.getCalendar();
-                if (!calendar.isReadOnly()) {
-                    mouseDraggedEditEntry(evt);
+                if (entry != null) {
+                    Calendar calendar = entry.getCalendar();
+                    if (!calendar.isReadOnly()) {
+                        mouseDraggedEditEntry(evt);
+                    }
                 }
                 break;
             case EDIT_AVAILABILITY:
@@ -508,7 +521,7 @@ public class DayViewEditController {
 //
 //                sourceEntry.setInterval(sourceInterval);
 //            } else {
-                entry.setInterval(newInterval);
+            entry.setInterval(newInterval);
 //            }
 
             if (view.isShowDetailsUponEntryCreation() && operation.equals(Operation.CREATE_ENTRY)) {
