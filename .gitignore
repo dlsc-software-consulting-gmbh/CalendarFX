@@ -5,3 +5,4 @@
 *.prefs
 CalendarFXApp/.classpath
 *.classpath
+*.log
