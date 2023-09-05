@@ -1,3 +1,5 @@
+[![JFXCentral](https://img.shields.io/badge/Find_me_on-JFXCentral-blue?logo=googlechrome&logoColor=white&link=https://www.jfx-central.com/libraries/calendar) 
+
 # CalendarFX
 A Java framework for creating sophisticated calendar views based on JavaFX. A detailed developer manual can be found online: [CalendarFX Developer Manual](https://dlsc-software-consulting-gmbh.github.io/CalendarFX/)
 
