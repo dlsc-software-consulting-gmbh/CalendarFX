@@ -48,7 +48,7 @@ public class CalendarEvent extends Event {
     /**
      * The supertype of all event types in this event class.
      */
-    public static final EventType<CalendarEvent> ANY = new EventType<>(Event.ANY, "ANY");
+    public static final EventType<CalendarEvent> ANY = new EventType<>(Event.ANY, "CALENDAR");
 
     /**
      * An event type used to inform the application that "something" inside the
