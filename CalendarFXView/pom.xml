@@ -22,7 +22,7 @@
     <parent>
         <groupId>com.calendarfx</groupId>
         <artifactId>calendar</artifactId>
-        <version>11.12.5</version>
+        <version>11.12.6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
