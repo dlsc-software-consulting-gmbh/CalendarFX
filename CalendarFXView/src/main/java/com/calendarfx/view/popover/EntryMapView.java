@@ -66,7 +66,13 @@ public class EntryMapView extends EntryPopOverPane {
         mapViewPane.setPrefSize(340, 240);
         mapViewPane.setPadding(new Insets(1));
         mapViewPane.setStyle("-fx-border-color: gray; -fx-border-radius: 4px;");
-        mapViewPane.backgroundProperty().bind(Bindings.createObjectBinding(() -> new Background(new BackgroundImage(imageLoader.getValue(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, false, true))), imageLoader.valueProperty()));
+        mapViewPane.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+            Image image = imageLoader.getValue();
+            if (image != null) {
+                return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, false, true)));
+            }
+            return null;
+        }, imageLoader.valueProperty()));
 
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Action.BROWSE)) {
             mapViewPane.setCursor(Cursor.HAND);
