@@ -48,7 +48,7 @@ public class CalendarApp extends Application {
         katja.setShortName("K");
         dirk.setShortName("D");
         philip.setShortName("P");
-        jule.setShortName("J");
+        jule.setShortName("A");
         armin.setShortName("A");
         birthdays.setShortName("B");
         holidays.setShortName("H");
