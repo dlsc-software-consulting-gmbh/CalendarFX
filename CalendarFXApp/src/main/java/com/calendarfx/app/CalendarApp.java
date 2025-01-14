@@ -37,7 +37,7 @@ public class CalendarApp extends Application {
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
 
-        Calendar katja = new Calendar("Katja");
+        Calendar katja = new Calendar("T");
         Calendar dirk = new Calendar("Dirk");
         Calendar philip = new Calendar("Philip");
         Calendar jule = new Calendar("Jule");
@@ -45,7 +45,7 @@ public class CalendarApp extends Application {
         Calendar birthdays = new Calendar("Birthdays");
         Calendar holidays = new Calendar("Holidays");
 
-        katja.setShortName("K");
+        katja.setShortName("T");
         dirk.setShortName("D");
         philip.setShortName("P");
         jule.setShortName("J");
@@ -62,7 +62,7 @@ public class CalendarApp extends Application {
         holidays.setStyle(Style.STYLE7);
 
         CalendarSource familyCalendarSource = new CalendarSource("Family");
-        familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
+        familyCalendarSource.getCalendars().addAll(birthdays, holidays, T, dirk, philip, jule, armin);
 
         calendarView.getCalendarSources().setAll(familyCalendarSource);
         calendarView.setRequestedTime(LocalTime.now());
