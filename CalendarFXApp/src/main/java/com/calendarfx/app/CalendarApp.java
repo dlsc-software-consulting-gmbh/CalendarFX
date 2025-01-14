@@ -42,7 +42,7 @@ public class CalendarApp extends Application {
         Calendar philip = new Calendar("Philip");
         Calendar jule = new Calendar("Jule");
      Calendar armin = new Calendar("Armin");
-        Calendar birthdays = new Calendar("Birthdays");
+        Calendar birthdays = new Calendar("ewr");
         Calendar holidays = new Calendar("Holidays");
 
         katja.setShortName("K");
