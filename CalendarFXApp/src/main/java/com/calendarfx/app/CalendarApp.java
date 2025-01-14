@@ -37,11 +37,11 @@ public class CalendarApp extends Application {
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
 
-        Calendar katja = new Calendar("Katja");
+        Calendar katja = new Calendar("t");
         Calendar dirk = new Calendar("Dirk");
         Calendar philip = new Calendar("Philip");
         Calendar jule = new Calendar("Jule");
-     git    Calendar armin = new Calendar("Armin");
+     Calendar armin = new Calendar("Armin");
         Calendar birthdays = new Calendar("Birthdays");
         Calendar holidays = new Calendar("Holidays");
 
