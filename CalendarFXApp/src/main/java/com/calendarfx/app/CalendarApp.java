@@ -39,7 +39,7 @@ public class CalendarApp extends Application {
 
         Calendar katja = new Calendar("T");
         Calendar dirk = new Calendar("Dirk");
-        Calendar philip = new Calendar("Philip");
+        Calendar philip = new Calendar("A");
         Calendar jule = new Calendar("Jule");
         Calendar armin = new Calendar("Armin");
         Calendar birthdays = new Calendar("Birthdays");
@@ -47,7 +47,7 @@ public class CalendarApp extends Application {
 
         katja.setShortName("T");
         dirk.setShortName("D");
-        philip.setShortName("P");
+        philip.setShortName("A");
         jule.setShortName("J");
         armin.setShortName("A");
         birthdays.setShortName("B");
@@ -62,7 +62,7 @@ public class CalendarApp extends Application {
         holidays.setStyle(Style.STYLE7);
 
         CalendarSource familyCalendarSource = new CalendarSource("Family");
-        familyCalendarSource.getCalendars().addAll(birthdays, holidays, T, dirk, philip, jule, armin);
+        familyCalendarSource.getCalendars().addAll(birthdays, holidays, T, dirk, A, jule, armin);
 
         calendarView.getCalendarSources().setAll(familyCalendarSource);
         calendarView.setRequestedTime(LocalTime.now());
