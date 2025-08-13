@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class CalendarApp extends Application {
 
@@ -96,6 +97,9 @@ public class CalendarApp extends Application {
 
         Scene scene = new Scene(stackPane);
         scene.focusOwnerProperty().addListener(it -> System.out.println("focus owner: " + scene.getFocusOwner()));
+        if (Boolean.getBoolean("atlantafx")) {
+            scene.getStylesheets().add(Objects.requireNonNull(CalendarView.class.getResource("atlantafx.css")).toExternalForm());
+        }
         CSSFX.start(scene);
 
         primaryStage.setTitle("Calendar");

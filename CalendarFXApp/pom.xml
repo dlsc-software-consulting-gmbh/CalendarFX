@@ -33,6 +33,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.mkpaz</groupId>
+            <artifactId>atlantafx-base</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
         </dependency>
