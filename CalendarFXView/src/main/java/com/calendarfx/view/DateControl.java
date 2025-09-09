@@ -275,12 +275,12 @@ public abstract class DateControl extends CalendarFXControl {
         setDateDetailsCallback(param -> {
             InputEvent evt = param.getInputEvent();
             if (evt == null) {
-                param.getDateControl().showDateDetails(param.getOwner(), param.getLocalDate());
+                param.getDateControl().showDateDetails(param.getOwner(), param.getLocalDate(), param.getScreenX(), param.getScreenY());
                 return true;
             } else if (evt instanceof MouseEvent) {
                 MouseEvent mouseEvent = (MouseEvent) evt;
                 if (mouseEvent.getClickCount() == 1) {
-                    param.getDateControl().showDateDetails(param.getOwner(), param.getLocalDate());
+                    param.getDateControl().showDateDetails(param.getOwner(), param.getLocalDate(), param.getScreenX(), param.getScreenY());
                     return true;
                 }
             }
@@ -788,6 +788,8 @@ public abstract class DateControl extends CalendarFXControl {
         entryPopOver.show(owner, position.getX(), position.getY());
     }
 
+    private PopOver datePopOver;
+
     /**
      * Creates a new {@link DatePopOver} and shows it attached to the given
      * owner node.
@@ -795,9 +797,12 @@ public abstract class DateControl extends CalendarFXControl {
      * @param owner the owner node
      * @param date  the date for which to display more detail
      */
-    public void showDateDetails(Node owner, LocalDate date) {
-        PopOver datePopOver = new DatePopOver(this, date);
-        datePopOver.show(owner);
+    public void showDateDetails(Node owner, LocalDate date, double screenX, double screenY) {
+        if (datePopOver != null && datePopOver.isShowing()) {
+            datePopOver.hide();
+        }
+        datePopOver = new DatePopOver(this, date);
+        datePopOver.show(owner, screenX, screenY);
     }
 
     private abstract static class ContextMenuParameterBase {
