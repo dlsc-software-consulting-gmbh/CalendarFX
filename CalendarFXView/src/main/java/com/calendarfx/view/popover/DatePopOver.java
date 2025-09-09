@@ -53,7 +53,6 @@ public class DatePopOver extends PopOver {
         this.date = requireNonNull(date);
         EntriesPane entriesPane = new EntriesPane(control);
 
-        getRoot().getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
         getRoot().getStyleClass().add("root");
 
         List<Entry<?>> entries = findEntries();

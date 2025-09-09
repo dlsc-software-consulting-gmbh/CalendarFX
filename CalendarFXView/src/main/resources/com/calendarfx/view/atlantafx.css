@@ -31,8 +31,8 @@
     -style7-color: rgba(174.0, 102.0, 62.0, 0.9);
 
     -weekend-fill-color: rgb(245.0, 245.0, 245.0);
-    -today-fill-color: rgb(232, 77, 62);
-    -today-stroke-color: rgb(232, 77, 62);
+    -today-fill-color: -color-danger-emphasis;
+    -today-stroke-color: -color-danger-emphasis;
 
     -usage-very-low-color: lightgreen;
     -usage-low-color: green;
@@ -150,14 +150,14 @@
  */
 
 .day-page > .container > .content > .left-side > .header {
-    -fx-background-color: rgba(0, 0, 0, .1);
+    -fx-background-color: -color-bg-subtle;
     -fx-background-radius: 4px;
     -fx-padding: 0 1em 0 1em;
 }
 
 .day-page > .container > .content > .left-side > .header > .today-label {
     -fx-font-size: 8.0em;
-    -fx-text-fill: red;
+    -fx-text-fill: -color-fg-default;
     -fx-opacity: 0.9;
 }
 
@@ -200,15 +200,13 @@
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-of-month-label {
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: -color-fg-default;
     -fx-font-size: .9em;
     -fx-opacity: 0.8;
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .day-not-of-month-label {
-    -fx-text-fill: -fx-text-background-color;
-    -fx-opacity: .5;
-    -fx-text-stroke: black;
+    -fx-text-fill: -color-fg-muted;
 }
 
 .day-page > .container > .content > .left-side > .header > .year-month-view > .container > .weekend-day {
@@ -225,7 +223,7 @@
  */
 
 .date-popover > .border {
-    -fx-fill: linear-gradient(#f6f6f6 50.0%, #e6e6e6 100.0%) !important;
+    -fx-fill: -color-border-default;
 }
 
 .date-popover > .content > .entries-pane {

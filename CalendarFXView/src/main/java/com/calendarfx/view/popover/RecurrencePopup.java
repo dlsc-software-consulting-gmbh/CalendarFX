@@ -41,7 +41,6 @@ public class RecurrencePopup extends PopupControl {
         getStyleClass().add(DEFAULT_STYLE);
 
         root = new StackPane();
-        root.getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
         recurrenceView = new RecurrenceView();
         recurrenceView.setShowSummary(false);

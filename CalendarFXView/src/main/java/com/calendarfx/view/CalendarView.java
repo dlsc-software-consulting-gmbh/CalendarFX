@@ -122,12 +122,6 @@ public class CalendarView extends DateControl {
         Bindings.bindBidirectional(searchField.visibleProperty(), showSearchFieldProperty());
 
         /*
-         * We do have a user agent stylesheet, but it doesn't seem to work
-         * properly when run as a standalone jar file.
-         */
-        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
-
-        /*
          * We are "abusing" the properties map to pass new values of read-only
          * properties from the skin to the control.
          */

@@ -51,8 +51,6 @@ public class EntryPopOverContentPane extends PopOverContentPane {
     private final WeakInvalidationListener weakFullDayListener = new WeakInvalidationListener(fullDayListener);
 
     public EntryPopOverContentPane(PopOver popOver, DateControl dateControl, Entry<?> entry) {
-        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
-
         this.popOver = popOver;
         this.dateControl = dateControl;
         this.entry = Objects.requireNonNull(entry);

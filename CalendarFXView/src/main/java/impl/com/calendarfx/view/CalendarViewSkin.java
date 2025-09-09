@@ -274,7 +274,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         searchField.setLeft(searchIcon);
         searchField.setId("search-field");
         searchField.setPromptText(Messages.getString("CalendarViewSkin.PROMPT_SEARCH_FIELD"));
-        searchField.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
+
         GridPane.setFillWidth(searchField, false);
         GridPane.setHalignment(searchField, HPos.RIGHT);
 
@@ -294,7 +294,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         leftMasterDetailPane.setDetailNode(trayPane);
         leftMasterDetailPane.setId("tray-pane");
         leftMasterDetailPane.animatedProperty().bindBidirectional(view.traysAnimatedProperty());
-        leftMasterDetailPane.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
 
         MasterDetailPane rightMasterDetailPane = new MasterDetailPane(RIGHT);
         searchResultView = view.getSearchResultView();
@@ -338,7 +337,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             developerConsoleMasterDetailPane.setDetailNode(developerConsole);
             developerConsoleMasterDetailPane.setShowDetailNode(true);
             developerConsoleMasterDetailPane.showDetailNodeProperty().bind(view.showDeveloperConsoleProperty());
-            developerConsoleMasterDetailPane.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
             getChildren().add(developerConsoleMasterDetailPane);
         } else {
             getChildren().add(borderPane);

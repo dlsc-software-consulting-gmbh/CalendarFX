@@ -4,6 +4,7 @@ module com.calendarfx.app {
     requires javafx.controls;
     requires com.calendarfx.view;
     requires atlantafx.base;
+    requires org.scenicview.scenicview;
 
     exports com.calendarfx.app;
 }

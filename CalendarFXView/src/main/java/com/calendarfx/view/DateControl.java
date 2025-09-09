@@ -309,8 +309,6 @@ public abstract class DateControl extends CalendarFXControl {
             });
             contextMenu.getItems().add(informationItem);
 
-            String stylesheet = CalendarView.class.getResource("calendar.css").toExternalForm();
-
             /*
              * Assign entry to different calendars.
              */
@@ -323,7 +321,6 @@ public abstract class DateControl extends CalendarFXControl {
                 calendarMenu.getItems().add(calendarItem);
 
                 StackPane graphic = new StackPane();
-                graphic.getStylesheets().add(stylesheet);
 
                 /*
                  * Icon has to be wrapped in a stackpane so that a stylesheet
