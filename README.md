@@ -43,4 +43,30 @@ To install the package into the local repository, for use as a dependency in oth
 mvn install
 ```
 
+# AtlantaFX
+
+To use the AtlantaFX theming support you need to pass a system property to your application like this:
+
+```
+-Datlantafx=true
+```
+
+Or inside your application call:
+
+```
+System.setProperty("atlantafx", "true");
+```
+
+Doing so will make the controls inside CalendarFX to always use the atlantafx.css file instead of the default calendar.css file.
+
+The last step is to set one of the AtlantaFX themes as the default theme for your application. For example:
+
+```
+Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
+```
+
+Obviously all of this requires that you have the AtlantaFX library on your classpath.
+
+
+
 
