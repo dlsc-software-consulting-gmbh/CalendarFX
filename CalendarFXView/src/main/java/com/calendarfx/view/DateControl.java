@@ -57,6 +57,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -309,6 +310,14 @@ public abstract class DateControl extends CalendarFXControl {
             });
             contextMenu.getItems().add(informationItem);
 
+            String stylesheet;
+
+            if (Boolean.getBoolean("atlantafx")) {
+                stylesheet = requireNonNull(CalendarFXControl.class.getResource("atlantafx.css")).toExternalForm();
+            } else {
+                stylesheet = requireNonNull(CalendarFXControl.class.getResource("calendar.css")).toExternalForm();
+            }
+
             /*
              * Assign entry to different calendars.
              */
@@ -321,6 +330,7 @@ public abstract class DateControl extends CalendarFXControl {
                 calendarMenu.getItems().add(calendarItem);
 
                 StackPane graphic = new StackPane();
+                graphic.getStylesheets().add(stylesheet);
 
                 /*
                  * Icon has to be wrapped in a stackpane so that a stylesheet
@@ -762,6 +772,21 @@ public abstract class DateControl extends CalendarFXControl {
         if (entryPopOver == null || entryPopOver.isDetached()) {
             entryPopOver = new PopOver();
             entryPopOver.setAnimated(false); // important, otherwise too many side effects
+            entryPopOver.getStyleClass().add("entry-popover");
+
+            String stylesheet;
+
+            if (Boolean.getBoolean("atlantafx")) {
+                stylesheet = requireNonNull(CalendarFXControl.class.getResource("atlantafx.css")).toExternalForm();
+            } else {
+                stylesheet = requireNonNull(CalendarFXControl.class.getResource("calendar.css")).toExternalForm();
+            }
+
+            entryPopOver.skinProperty().addListener((o, old, nw) -> {
+                if (nw != null) {
+                  ((Region)nw.getNode()).getStylesheets().add(stylesheet);
+                }
+            });
         }
 
         EntryDetailsPopOverContentParameter param = new EntryDetailsPopOverContentParameter(entryPopOver, this, owner, entry);

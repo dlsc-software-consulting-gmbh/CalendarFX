@@ -679,7 +679,6 @@
 }
 
 .weekday-view.today {
-    -fx-background-color: lavenderblush;
 }
 
 .weekday-view.weekend-day {

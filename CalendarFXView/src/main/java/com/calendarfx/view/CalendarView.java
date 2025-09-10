@@ -22,6 +22,7 @@ import com.calendarfx.view.page.PageBase;
 import com.calendarfx.view.page.WeekPage;
 import com.calendarfx.view.page.YearPage;
 import com.calendarfx.view.print.PrintView;
+import com.dlsc.gemsfx.SearchTextField;
 import impl.com.calendarfx.view.CalendarViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -85,7 +86,7 @@ public class CalendarView extends DateControl {
 
     private DeveloperConsole developerConsole;
 
-    private final CustomTextField searchField;
+    private final SearchTextField searchField;
 
     private PrintView printView;
 
@@ -107,7 +108,7 @@ public class CalendarView extends DateControl {
 
         getAvailablePages().setAll(availablePages);
 
-        this.searchField = (CustomTextField) TextFields.createClearableTextField();
+        this.searchField = new SearchTextField();
         this.sourceView = new SourceView();
         this.searchResultView = new SearchResultView();
         this.yearMonthView = new YearMonthView();
@@ -251,7 +252,7 @@ public class CalendarView extends DateControl {
      *
      * @return the search field
      */
-    public final CustomTextField getSearchField() {
+    public final SearchTextField getSearchField() {
         return searchField;
     }
 

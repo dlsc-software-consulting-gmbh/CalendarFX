@@ -32,6 +32,7 @@ import com.calendarfx.view.popover.ZoneIdComparator;
 import com.calendarfx.view.print.PrintView;
 import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
+import com.dlsc.gemsfx.SearchTextField;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -269,7 +270,7 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         zoneIdBox.visibleProperty().bind(view.enableTimeZoneSupportProperty());
         zoneIdBox.managedProperty().bind(view.enableTimeZoneSupportProperty());
 
-        CustomTextField searchField = view.getSearchField();
+        SearchTextField searchField = view.getSearchField();
         searchField.setPrefColumnCount(20);
         searchField.setLeft(searchIcon);
         searchField.setId("search-field");

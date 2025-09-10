@@ -55,8 +55,7 @@ public class RecurrenceView extends CalendarFXControl {
         return new RecurrenceViewSkin(this);
     }
 
-    private final ObjectProperty<LocalDate> startDate = new SimpleObjectProperty<LocalDate>(
-            this, "startDate", LocalDate.now()) {
+    private final ObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>(this, "startDate", LocalDate.now()) {
         @Override
         public void set(LocalDate newValue) {
             requireNonNull(newValue);
@@ -95,8 +94,7 @@ public class RecurrenceView extends CalendarFXControl {
         return startDateProperty().get();
     }
 
-    private final StringProperty recurrenceRule = new SimpleStringProperty(this,
-            "recurrenceRule", "RRULE:FREQ=DAILY") {
+    private final StringProperty recurrenceRule = new SimpleStringProperty(this, "recurrenceRule", "RRULE:FREQ=DAILY") {
         @Override
         public void set(String newValue) {
             try {
@@ -141,8 +139,7 @@ public class RecurrenceView extends CalendarFXControl {
         return recurrenceRuleProperty().get();
     }
 
-    private final BooleanProperty showSummary = new SimpleBooleanProperty(this,
-            "showSummary", true);
+    private final BooleanProperty showSummary = new SimpleBooleanProperty(this, "showSummary", true);
 
     /**
      * A property used to control the visibility of the "summary" label. The

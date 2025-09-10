@@ -29,6 +29,8 @@ import javafx.scene.control.PopupControl;
 import javafx.scene.control.Skin;
 import javafx.scene.layout.StackPane;
 
+import java.util.Objects;
+
 public class RecurrencePopup extends PopupControl {
 
     private static final String DEFAULT_STYLE = "recurrence-popup";
@@ -41,20 +43,36 @@ public class RecurrencePopup extends PopupControl {
         getStyleClass().add(DEFAULT_STYLE);
 
         root = new StackPane();
+        root.getStyleClass().add("stackpane");
+
+        ownerWindowProperty().addListener((obs, oldWindow, newWindow) -> {
+            if (Boolean.getBoolean("atlantafx")) {
+                newWindow.getScene().getStylesheets().add(Objects.requireNonNull(CalendarView.class.getResource("atlantafx.css")).toExternalForm());
+            } else {
+                newWindow.getScene().getStylesheets().add(Objects.requireNonNull(CalendarView.class.getResource("calendar.css")).toExternalForm());
+            }
+        });
 
         recurrenceView = new RecurrenceView();
         recurrenceView.setShowSummary(false);
 
+        if (Boolean.getBoolean("atlantafx")) {
+            recurrenceView.getStylesheets().add(Objects.requireNonNull(CalendarView.class.getResource("atlantafx.css")).toExternalForm());
+        } else {
+            recurrenceView.getStylesheets().add(Objects.requireNonNull(CalendarView.class.getResource("calendar.css")).toExternalForm());
+        }
+
         Bindings.bindContentBidirectional(root.getStyleClass(), getStyleClass());
 
         setAutoFix(true);
-        setAutoHide(true);
+        setAutoHide(false);
     }
 
     @Override
     protected Skin<?> createDefaultSkin() {
         return new RecurrencePopupSkin(this);
     }
+
 
     public final StackPane getRoot() {
         return root;
@@ -64,8 +82,7 @@ public class RecurrencePopup extends PopupControl {
         return recurrenceView;
     }
 
-    private class RecurrencePopupEventHandlerProperty
-            extends SimpleObjectProperty<EventHandler<RecurrencePopupEvent>> {
+    private class RecurrencePopupEventHandlerProperty extends SimpleObjectProperty<EventHandler<RecurrencePopupEvent>> {
 
         private final EventType<RecurrencePopupEvent> eventType;
 
@@ -89,8 +106,7 @@ public class RecurrencePopup extends PopupControl {
 
     public final ObjectProperty<EventHandler<RecurrencePopupEvent>> onOkPressedProperty() {
         if (onOkPressed == null) {
-            onOkPressed = new RecurrencePopupEventHandlerProperty("onOkPressed",
-                    RecurrencePopupEvent.OK_PRESSED);
+            onOkPressed = new RecurrencePopupEventHandlerProperty("onOkPressed", RecurrencePopupEvent.OK_PRESSED);
         }
 
         return onOkPressed;
@@ -119,8 +135,7 @@ public class RecurrencePopup extends PopupControl {
         return onCancelPressed;
     }
 
-    public final void setOnCancelPressed(
-            EventHandler<RecurrencePopupEvent> value) {
+    public final void setOnCancelPressed(EventHandler<RecurrencePopupEvent> value) {
         onCancelPressedProperty().set(value);
     }
 

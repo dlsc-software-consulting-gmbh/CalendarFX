@@ -53,10 +53,11 @@ public class DatePopOver extends PopOver {
         this.date = requireNonNull(date);
         EntriesPane entriesPane = new EntriesPane(control);
 
+        getRoot().getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
         getRoot().getStyleClass().add("root");
 
         List<Entry<?>> entries = findEntries();
-        if (entries == null || entries.isEmpty()) {
+        if (entries.isEmpty()) {
             Label label = new Label();
             label.setText("No Entries");
             label.getStyleClass().add("no-entries-label");
@@ -99,9 +100,7 @@ public class DatePopOver extends PopOver {
                     Map<LocalDate, List<Entry<?>>> entriesMap = calendar.findEntries(date, date, dateControl.getZoneId());
                     List<Entry<?>> entriesList = entriesMap.get(date);
                     if (entriesList != null) {
-                        for (Entry<?> entry : entriesList) {
-                            result.add(entry);
-                        }
+                        result.addAll(entriesList);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
