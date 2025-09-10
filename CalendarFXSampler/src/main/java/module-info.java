@@ -5,6 +5,7 @@ open module com.calendarfx.sampler {
     requires javafx.web;
     requires fr.brouillard.oss.cssfx;
     requires com.calendarfx.view;
+    requires atlantafx.base;
 
     exports com.calendarfx.demo to org.controlsfx.fxsampler;
     exports com.calendarfx.demo.entries to org.controlsfx.fxsampler;

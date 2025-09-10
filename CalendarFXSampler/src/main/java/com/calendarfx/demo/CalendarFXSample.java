@@ -17,6 +17,7 @@
 
 package com.calendarfx.demo;
 
+import atlantafx.base.theme.NordDark;
 import com.calendarfx.util.CalendarFX;
 import com.calendarfx.view.CalendarFXControl;
 import fr.brouillard.oss.cssfx.CSSFX;
@@ -33,6 +34,10 @@ import static java.util.Objects.requireNonNull;
 public abstract class CalendarFXSample extends SampleBase {
 
     protected Node control;
+
+    {
+        setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
+    }
 
     @Override
     public Node getPanel(Stage stage) {

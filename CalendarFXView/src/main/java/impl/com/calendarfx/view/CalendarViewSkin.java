@@ -32,6 +32,7 @@ import com.calendarfx.view.popover.ZoneIdComparator;
 import com.calendarfx.view.print.PrintView;
 import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
+import com.dlsc.gemsfx.SearchTextField;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -269,12 +270,12 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         zoneIdBox.visibleProperty().bind(view.enableTimeZoneSupportProperty());
         zoneIdBox.managedProperty().bind(view.enableTimeZoneSupportProperty());
 
-        CustomTextField searchField = view.getSearchField();
+        SearchTextField searchField = view.getSearchField();
         searchField.setPrefColumnCount(20);
         searchField.setLeft(searchIcon);
         searchField.setId("search-field");
         searchField.setPromptText(Messages.getString("CalendarViewSkin.PROMPT_SEARCH_FIELD"));
-        searchField.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
+
         GridPane.setFillWidth(searchField, false);
         GridPane.setHalignment(searchField, HPos.RIGHT);
 
@@ -294,7 +295,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         leftMasterDetailPane.setDetailNode(trayPane);
         leftMasterDetailPane.setId("tray-pane");
         leftMasterDetailPane.animatedProperty().bindBidirectional(view.traysAnimatedProperty());
-        leftMasterDetailPane.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
 
         MasterDetailPane rightMasterDetailPane = new MasterDetailPane(RIGHT);
         searchResultView = view.getSearchResultView();
@@ -338,7 +338,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
             developerConsoleMasterDetailPane.setDetailNode(developerConsole);
             developerConsoleMasterDetailPane.setShowDetailNode(true);
             developerConsoleMasterDetailPane.showDetailNodeProperty().bind(view.showDeveloperConsoleProperty());
-            developerConsoleMasterDetailPane.getStylesheets().add(CalendarFXControl.class.getResource("calendar.css").toExternalForm());
             getChildren().add(developerConsoleMasterDetailPane);
         } else {
             getChildren().add(borderPane);

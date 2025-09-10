@@ -16,7 +16,7 @@
     <parent>
         <groupId>com.dlsc</groupId>
         <artifactId>dlsc-maven-parent</artifactId>
-        <version>1.2.0</version>
+        <version>1.6.0</version>
     </parent>
 
     <url>https://github.com/dlsc-software-consulting-gmbh/CalendarFX</url>
@@ -26,13 +26,13 @@
         <project.github.repository>dlsc-software-consulting-gmbh/CalendarFX
         </project.github.repository>
         <local.repository.path>/tmp/repository</local.repository.path>
-        <java.version>11</java.version>
-        <javafx.version>19</javafx.version>
-        <ikonli.version>12.3.1</ikonli.version>
+        <java.version>24</java.version>
+        <javafx.version>24.0.2</javafx.version>
+        <ikonli.version>12.4.0</ikonli.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
-        <controlsfx.version>11.1.1</controlsfx.version>
-        <ical4j.version>4.0.0-rc5</ical4j.version>
+        <controlsfx.version>11.2.2</controlsfx.version>
+        <ical4j.version>4.1.1</ical4j.version>
         <sonar.projectKey>dlsc-software-consulting-gmbh_CalendarFX2
         </sonar.projectKey>
         <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
@@ -85,6 +85,43 @@
 
     <dependencyManagement>
         <dependencies>
+
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.14.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.measure</groupId>
+                <artifactId>unit-api</artifactId>
+                <version>2.1.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dlsc.gemsfx</groupId>
+                <artifactId>gemsfx</artifactId>
+                <version>3.5.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.mkpaz</groupId>
+                <artifactId>atlantafx-base</artifactId>
+                <version>2.0.1</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.google.j2objc</groupId>
@@ -228,13 +265,13 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.17</version>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>2.0.0-alpha5</version>
+                <version>2.0.17</version>
             </dependency>
 
             <dependency>
@@ -282,7 +319,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.16.0</version>
+                <version>1.19.0</version>
             </dependency>
 
             <dependency>
@@ -317,17 +354,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
                 <configuration>
-                    <release>11</release>
-                    <source>11</source>
-                    <target>11</target>
+                    <release>24</release>
+                    <source>24</source>
+                    <target>24</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
                 <configuration>
                     <!-- Activate the use of TCP to transmit events to the plugin -->
                     <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>

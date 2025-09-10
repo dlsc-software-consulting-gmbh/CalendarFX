@@ -22,6 +22,7 @@ import com.calendarfx.view.page.PageBase;
 import com.calendarfx.view.page.WeekPage;
 import com.calendarfx.view.page.YearPage;
 import com.calendarfx.view.print.PrintView;
+import com.dlsc.gemsfx.SearchTextField;
 import impl.com.calendarfx.view.CalendarViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -85,7 +86,7 @@ public class CalendarView extends DateControl {
 
     private DeveloperConsole developerConsole;
 
-    private final CustomTextField searchField;
+    private final SearchTextField searchField;
 
     private PrintView printView;
 
@@ -107,7 +108,7 @@ public class CalendarView extends DateControl {
 
         getAvailablePages().setAll(availablePages);
 
-        this.searchField = (CustomTextField) TextFields.createClearableTextField();
+        this.searchField = new SearchTextField();
         this.sourceView = new SourceView();
         this.searchResultView = new SearchResultView();
         this.yearMonthView = new YearMonthView();
@@ -120,12 +121,6 @@ public class CalendarView extends DateControl {
         selectedPage.set(availablePages[0]);
 
         Bindings.bindBidirectional(searchField.visibleProperty(), showSearchFieldProperty());
-
-        /*
-         * We do have a user agent stylesheet, but it doesn't seem to work
-         * properly when run as a standalone jar file.
-         */
-        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
         /*
          * We are "abusing" the properties map to pass new values of read-only
@@ -257,7 +252,7 @@ public class CalendarView extends DateControl {
      *
      * @return the search field
      */
-    public final CustomTextField getSearchField() {
+    public final SearchTextField getSearchField() {
         return searchField;
     }
 

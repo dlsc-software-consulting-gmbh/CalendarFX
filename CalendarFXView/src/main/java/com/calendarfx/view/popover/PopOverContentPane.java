@@ -34,7 +34,7 @@ public class PopOverContentPane extends BorderPane {
         topProperty().bind(headerProperty());
 
         Accordion accordion = new Accordion();
-        accordion.getStyleClass().add("popover-accordion");
+        accordion.getStyleClass().addAll("popover-accordion", "dense");
         setCenter(accordion);
 
         Bindings.bindContentBidirectional(getPanes(), accordion.getPanes());

@@ -42,16 +42,14 @@ public class RecurrencePopupSkin implements Skin<RecurrencePopup> {
         okButton.setDefaultButton(true);
         okButton.setOnAction(evt -> {
             popup.hide();
-            popup.fireEvent(
-                    new RecurrencePopupEvent(RecurrencePopupEvent.OK_PRESSED));
+            popup.fireEvent(new RecurrencePopupEvent(RecurrencePopupEvent.OK_PRESSED));
         });
 
         Button cancelButton = new Button(Messages.getString("RecurrencePopupSkin.CANCEL"));
         cancelButton.setCancelButton(true);
         cancelButton.setOnAction(evt -> {
             popup.hide();
-            popup.fireEvent(
-                    new RecurrencePopupEvent(RecurrencePopupEvent.CANCEL_PRESSED));
+            popup.fireEvent(new RecurrencePopupEvent(RecurrencePopupEvent.CANCEL_PRESSED));
         });
 
         HBox buttonBox = new HBox();

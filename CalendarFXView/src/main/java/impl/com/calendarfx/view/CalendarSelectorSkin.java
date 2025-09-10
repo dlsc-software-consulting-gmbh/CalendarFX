@@ -43,7 +43,6 @@ public class CalendarSelectorSkin extends SkinBase<CalendarSelector> {
 
         button = new MenuButton();
         button.setGraphic(buttonIcon);
-        button.getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
 
         getChildren().add(button);
 

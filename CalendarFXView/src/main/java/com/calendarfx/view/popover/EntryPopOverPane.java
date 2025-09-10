@@ -16,12 +16,10 @@
 
 package com.calendarfx.view.popover;
 
-import com.calendarfx.view.CalendarView;
 import javafx.scene.layout.StackPane;
 
 public abstract class EntryPopOverPane extends StackPane {
 
     public EntryPopOverPane() {
-        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
     }
 }

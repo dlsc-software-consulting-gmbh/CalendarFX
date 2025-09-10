@@ -58,8 +58,6 @@ public class EntryHeaderView extends GridPane {
         this.entry = requireNonNull(entry);
         requireNonNull(calendars);
 
-        getStylesheets().add(CalendarView.class.getResource("calendar.css").toExternalForm());
-
         Bindings.bindBidirectional(titleField.textProperty(), entry.titleProperty());
 
         titleField.setText(entry.getTitle());

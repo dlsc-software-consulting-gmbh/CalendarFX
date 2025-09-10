@@ -8,6 +8,8 @@ module com.calendarfx.view {
     requires transitive org.kordamp.ikonli.fontawesome;
     requires java.desktop;
     requires ical4j.core;
+    requires com.dlsc.gemsfx;
+
     exports com.calendarfx.model;
     exports com.calendarfx.util;
     exports com.calendarfx.view;
