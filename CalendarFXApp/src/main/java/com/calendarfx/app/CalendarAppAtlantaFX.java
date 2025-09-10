@@ -7,7 +7,7 @@ public class CalendarAppAtlantaFX extends CalendarApp {
 
     public static void main(String[] args) {
         System.setProperty("atlantafx", "true");
-        setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
+        setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
         launch(args);
     }
 }

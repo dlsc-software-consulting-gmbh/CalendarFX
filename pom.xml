@@ -26,8 +26,8 @@
         <project.github.repository>dlsc-software-consulting-gmbh/CalendarFX
         </project.github.repository>
         <local.repository.path>/tmp/repository</local.repository.path>
-        <java.version>24</java.version>
-        <javafx.version>24.0.2</javafx.version>
+        <java.version>21</java.version>
+        <javafx.version>23.0.2</javafx.version>
         <ikonli.version>12.4.0</ikonli.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>

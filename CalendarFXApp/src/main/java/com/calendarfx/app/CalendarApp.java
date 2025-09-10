@@ -111,7 +111,7 @@ public class CalendarApp extends Application {
         primaryStage.centerOnScreen();
         primaryStage.show();
 
-        ScenicView.show(scene);
+//        ScenicView.show(scene);
     }
 
     public static void main(String[] args) {
