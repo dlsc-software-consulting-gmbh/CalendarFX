@@ -293,6 +293,7 @@ public class CalendarView extends DateControl {
     public final PrintView getPrintView() {
         if (printView == null) {
             printView = new PrintView();
+            Bindings.bindBidirectional(printView.alertCallbackProperty(), alertCallbackProperty());
         }
 
         return printView;

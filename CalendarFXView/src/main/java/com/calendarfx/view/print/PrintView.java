@@ -40,7 +40,6 @@ import javafx.print.PrintColor;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Skin;
 import javafx.scene.image.Image;
@@ -53,6 +52,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.WeekFields;
+import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -127,6 +127,41 @@ public class PrintView extends ViewTypeControl {
      */
     public final ObservableList<CalendarSource> getCalendarSources() {
         return calendarSources;
+    }
+
+    private final ObjectProperty<Consumer<DateControl.AlertParameter>> alertCallback = new SimpleObjectProperty<>(this, "alertCallback", DateControl.createDefaultAlertCallback());
+
+    /**
+     * A property that stores a consumer used for displaying alerts to the user,
+     * e.g. when no printer is available. The default consumer shows a standard
+     * JavaFX alert dialog (see {@link DateControl#createDefaultAlertCallback()}).
+     * When the print view is created via {@link CalendarView#getPrintView()} this
+     * property will be bound to {@link DateControl#alertCallbackProperty()} of the
+     * calendar view, so that applications only need to plug their own alert
+     * display mechanism into the calendar view.
+     *
+     * @return the property used for storing the alert display consumer
+     */
+    public final ObjectProperty<Consumer<DateControl.AlertParameter>> alertCallbackProperty() {
+        return alertCallback;
+    }
+
+    public final Consumer<DateControl.AlertParameter> getAlertCallback() {
+        return alertCallbackProperty().get();
+    }
+
+    public final void setAlertCallback(Consumer<DateControl.AlertParameter> callback) {
+        requireNonNull(callback, "The alert callback can not be null");
+        alertCallbackProperty().set(callback);
+    }
+
+    // Delegates the alert display to the pluggable alert callback.
+    private void showAlert(AlertType alertType, String title, String header, String content) {
+        Consumer<DateControl.AlertParameter> callback = getAlertCallback();
+        if (callback == null) {
+            callback = DateControl.createDefaultAlertCallback();
+        }
+        callback.accept(new DateControl.AlertParameter(this, alertType, title, header, content));
     }
 
     private final ObjectProperty<LocalDate> today = new SimpleObjectProperty<>(this, "today", LocalDate.now());
@@ -450,12 +485,10 @@ public class PrintView extends ViewTypeControl {
             if (printer == null || settingsView.getPaperView()
                     .getAvailablePapers().isEmpty()) {
                 // Show an Error
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.initOwner(dialog);
-                alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
-                alert.setHeaderText(Messages.getString("PrintView.NO_PRINTERS"));
-                alert.setContentText(Messages.getString("PrintView.ERROR_NO_PRINTER"));
-                alert.show();
+                showAlert(AlertType.INFORMATION,
+                        Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"),
+                        Messages.getString("PrintView.NO_PRINTERS"),
+                        Messages.getString("PrintView.ERROR_NO_PRINTER"));
                 return;
             }
 

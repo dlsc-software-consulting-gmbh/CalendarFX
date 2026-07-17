@@ -20,7 +20,6 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.util.LoggingDomain;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -61,11 +60,10 @@ class CreateAndDeleteHandler extends DeleteHandler {
 
             if (dateControl.getCalendars().isEmpty()) {
 
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
-                alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_NO_CALENDARS_DEFINED"));
-                alert.setContentText(Messages.getString("DateControl.CONTENT_TEXT_NO_CALENDARS_DEFINED"));
-                alert.show();
+                dateControl.showAlert(AlertType.WARNING,
+                        Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"),
+                        Messages.getString("DateControl.HEADER_TEXT_NO_CALENDARS_DEFINED"),
+                        Messages.getString("DateControl.CONTENT_TEXT_NO_CALENDARS_DEFINED"));
 
             } else {
 

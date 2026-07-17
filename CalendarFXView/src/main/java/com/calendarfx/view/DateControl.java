@@ -49,6 +49,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -82,6 +83,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
@@ -642,14 +644,11 @@ public abstract class DateControl extends CalendarFXControl {
 
         } else {
 
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.initOwner(this.getScene().getWindow());
-            alert.initModality(Modality.WINDOW_MODAL);
-            alert.setTitle(Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"));
-            alert.setHeaderText(Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"));
             String newLine = System.getProperty("line.separator");
-            alert.setContentText(MessageFormat.format(Messages.getString("DateControl.CONTENT_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"), newLine));
-            alert.show();
+            showAlert(AlertType.WARNING,
+                    Messages.getString("DateControl.TITLE_CALENDAR_PROBLEM"),
+                    Messages.getString("DateControl.HEADER_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"),
+                    MessageFormat.format(Messages.getString("DateControl.CONTENT_TEXT_UNABLE_TO_CREATE_NEW_ENTRY"), newLine));
 
         }
 
@@ -1249,6 +1248,181 @@ public abstract class DateControl extends CalendarFXControl {
     public final void setEntryEditPolicy(Callback<EntryEditParameter, Boolean> policy) {
         Objects.requireNonNull(policy, "The edit entry policy can not be null");
         this.entryEditPolicy.set(policy);
+    }
+
+    /*
+     * Alert callback.
+     */
+
+    /**
+     * The parameter object passed to the alert callback.
+     *
+     * @see DateControl#alertCallbackProperty()
+     * @see DateControl#showAlert(AlertType, String, String, String)
+     */
+    public static final class AlertParameter {
+
+        private final Control sourceControl;
+        private final AlertType alertType;
+        private final String title;
+        private final String header;
+        private final String content;
+
+        /**
+         * Constructs a new parameter object.
+         *
+         * @param sourceControl the control requesting the alert
+         * @param alertType     the type of the alert (e.g. warning, information)
+         * @param title         the (localized) title of the alert
+         * @param header        the (localized) header text of the alert
+         * @param content       the (localized) content text of the alert
+         */
+        public AlertParameter(Control sourceControl, AlertType alertType, String title, String header, String content) {
+            this.sourceControl = requireNonNull(sourceControl);
+            this.alertType = requireNonNull(alertType);
+            this.title = title;
+            this.header = header;
+            this.content = content;
+        }
+
+        /**
+         * Returns the control requesting the alert, e.g. a {@link DateControl}
+         * or a {@link com.calendarfx.view.print.PrintView}. Custom alert
+         * callbacks can use this control to determine the scene or window in
+         * which the alert should be displayed.
+         *
+         * @return the control requesting the alert
+         */
+        public Control getSourceControl() {
+            return sourceControl;
+        }
+
+        /**
+         * Returns the type of the alert.
+         *
+         * @return the alert type
+         */
+        public AlertType getAlertType() {
+            return alertType;
+        }
+
+        /**
+         * Returns the (localized) title of the alert.
+         *
+         * @return the alert title
+         */
+        public String getTitle() {
+            return title;
+        }
+
+        /**
+         * Returns the (localized) header text of the alert.
+         *
+         * @return the alert header text
+         */
+        public String getHeader() {
+            return header;
+        }
+
+        /**
+         * Returns the (localized) content text of the alert.
+         *
+         * @return the alert content text
+         */
+        public String getContent() {
+            return content;
+        }
+
+        @Override
+        public String toString() {
+            return "AlertParameter [alertType=" + alertType + ", title=" + title
+                    + ", header=" + header + ", content=" + content + "]";
+        }
+    }
+
+    /**
+     * Creates the consumer that is used as the default value of
+     * {@link #alertCallbackProperty()}. The returned consumer displays a standard
+     * JavaFX {@link Alert}. The alert will be owned by the window of the source
+     * control (if the control is inside a scene) and will be window-modal.
+     *
+     * @return the default alert display consumer
+     */
+    public static Consumer<AlertParameter> createDefaultAlertCallback() {
+        return param -> {
+            Alert alert = new Alert(param.getAlertType());
+            Control sourceControl = param.getSourceControl();
+            if (sourceControl.getScene() != null && sourceControl.getScene().getWindow() != null) {
+                alert.initOwner(sourceControl.getScene().getWindow());
+                alert.initModality(Modality.WINDOW_MODAL);
+            }
+            alert.setTitle(param.getTitle());
+            alert.setHeaderText(param.getHeader());
+            alert.setContentText(param.getContent());
+            alert.show();
+        };
+    }
+
+    private final ObjectProperty<Consumer<AlertParameter>> alertCallback = new SimpleObjectProperty<>(this, "alertCallback", createDefaultAlertCallback());
+
+    /**
+     * A property that stores a consumer used for displaying alerts to the user,
+     * e.g. when no calendars have been defined or when a new entry could not be
+     * created. The default consumer shows a standard JavaFX {@link Alert} dialog
+     * (see {@link #createDefaultAlertCallback()}). Applications can replace the
+     * consumer to display alerts differently, for example as a lightweight
+     * overlay inside the scene instead of a heavyweight dialog window.
+     *
+     * <h2>Code Example</h2> The code below shows the default implementation of
+     * this consumer.
+     * <pre>
+     * setAlertCallback(param -&gt; {
+     * 	Alert alert = new Alert(param.getAlertType());
+     * 	Control sourceControl = param.getSourceControl();
+     * 	if (sourceControl.getScene() != null &amp;&amp; sourceControl.getScene().getWindow() != null) {
+     * 		alert.initOwner(sourceControl.getScene().getWindow());
+     * 		alert.initModality(Modality.WINDOW_MODAL);
+     *    }
+     * 	alert.setTitle(param.getTitle());
+     * 	alert.setHeaderText(param.getHeader());
+     * 	alert.setContentText(param.getContent());
+     * 	alert.show();
+     * });
+     * </pre>
+     *
+     * @return the property used for storing the alert display consumer
+     * @see #showAlert(AlertType, String, String, String)
+     */
+    public final ObjectProperty<Consumer<AlertParameter>> alertCallbackProperty() {
+        return alertCallback;
+    }
+
+    public final Consumer<AlertParameter> getAlertCallback() {
+        return alertCallbackProperty().get();
+    }
+
+    public final void setAlertCallback(Consumer<AlertParameter> callback) {
+        Objects.requireNonNull(callback, "The alert callback can not be null");
+        alertCallbackProperty().set(callback);
+    }
+
+    /**
+     * Displays an alert to the user by delegating to the consumer stored in
+     * {@link #alertCallbackProperty()}. Framework code invokes this method
+     * instead of creating dialogs directly, so that applications can plug in
+     * their own alert display mechanism.
+     *
+     * @param alertType the type of the alert (e.g. warning, information)
+     * @param title     the (localized) title of the alert
+     * @param header    the (localized) header text of the alert
+     * @param content   the (localized) content text of the alert
+     */
+    public final void showAlert(AlertType alertType, String title, String header, String content) {
+        Consumer<AlertParameter> callback = getAlertCallback();
+        if (callback == null) {
+            callback = createDefaultAlertCallback();
+        }
+        callback.accept(new AlertParameter(this, alertType, title, header, content));
     }
 
     private final ObjectProperty<Callback<EntryContextMenuParameter, ContextMenu>> entryContextMenuCallback = new SimpleObjectProperty<>(this, "entryFactory");
@@ -2733,6 +2907,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.bindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
         Bindings.bindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
+        Bindings.bindBidirectional(otherControl.alertCallbackProperty(), alertCallbackProperty());
     }
 
     /**
@@ -2795,6 +2970,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
         Bindings.unbindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
+        Bindings.unbindBidirectional(otherControl.alertCallbackProperty(), alertCallbackProperty());
 
     }
 
