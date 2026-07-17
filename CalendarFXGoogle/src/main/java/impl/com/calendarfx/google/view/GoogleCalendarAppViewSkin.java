@@ -38,6 +38,7 @@ import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DeveloperConsole;
 import com.calendarfx.view.VirtualGrid;
+import com.dlsc.gemsfx.PopOver;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
@@ -56,7 +57,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
 import javafx.util.Callback;
-import org.controlsfx.control.PopOver;
 import org.controlsfx.control.StatusBar;
 
 import java.net.CookieHandler;

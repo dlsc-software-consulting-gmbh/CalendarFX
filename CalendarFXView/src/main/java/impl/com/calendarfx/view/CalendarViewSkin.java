@@ -256,10 +256,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         showMonth.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_MONTH")));
         showYear.setTooltip(new Tooltip(Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_YEAR")));
 
-        // toolbar right
-        FontIcon searchIcon = new FontIcon(FontAwesome.SEARCH);
-        searchIcon.setId("search-icon");
-
         SortedList<ZoneId> sortedZones = new SortedList<>(view.getAvailableZoneIds());
         sortedZones.setComparator(new ZoneIdComparator());
 
@@ -271,9 +267,6 @@ public class CalendarViewSkin extends SkinBase<CalendarView> {
         zoneIdBox.managedProperty().bind(view.enableTimeZoneSupportProperty());
 
         SearchTextField searchField = view.getSearchField();
-        searchField.setPrefColumnCount(20);
-        searchField.setLeft(searchIcon);
-        searchField.setId("search-field");
         searchField.setPromptText(Messages.getString("CalendarViewSkin.PROMPT_SEARCH_FIELD"));
 
         GridPane.setFillWidth(searchField, false);

@@ -23,6 +23,7 @@ import com.calendarfx.view.page.WeekPage;
 import com.calendarfx.view.page.YearPage;
 import com.calendarfx.view.print.PrintView;
 import com.dlsc.gemsfx.SearchTextField;
+import com.dlsc.gemsfx.util.StringHistoryManager;
 import impl.com.calendarfx.view.CalendarViewSkin;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;

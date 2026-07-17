@@ -19,6 +19,7 @@ module com.calendarfx.google {
     requires com.google.api.services.oauth2;
     requires com.google.api.client.json.jackson2;
     requires google.api.client;
+    requires com.dlsc.gemsfx;
 
     exports com.calendarfx.google;
 }

@@ -97,7 +97,7 @@
             <dependency>
                 <groupId>com.dlsc.gemsfx</groupId>
                 <artifactId>gemsfx</artifactId>
-                <version>3.5.5</version>
+                <version>4.2.1</version>
             </dependency>
 
             <dependency>

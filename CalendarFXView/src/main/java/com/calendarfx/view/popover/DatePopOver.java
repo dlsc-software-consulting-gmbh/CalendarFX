@@ -21,8 +21,8 @@ import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
+import com.dlsc.gemsfx.PopOver;
 import javafx.scene.control.Label;
-import org.controlsfx.control.PopOver;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

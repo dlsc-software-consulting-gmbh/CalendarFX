@@ -19,6 +19,7 @@ package com.calendarfx.util;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayView;
 import com.calendarfx.view.DayViewBase;
+import com.dlsc.gemsfx.PopOver.ArrowLocation;
 import impl.com.calendarfx.view.DayViewScrollPane;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -26,7 +27,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.stage.Screen;
-import org.controlsfx.control.PopOver.ArrowLocation;
 
 import java.time.Instant;
 import java.time.LocalTime;

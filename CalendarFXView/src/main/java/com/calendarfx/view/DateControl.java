@@ -25,6 +25,8 @@ import com.calendarfx.util.WeakList;
 import com.calendarfx.view.page.DayPage;
 import com.calendarfx.view.popover.DatePopOver;
 import com.calendarfx.view.popover.EntryPopOverContentPane;
+import com.dlsc.gemsfx.PopOver;
+import com.dlsc.gemsfx.PopOver.ArrowLocation;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -65,8 +67,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.util.Callback;
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PopOver.ArrowLocation;
 import org.controlsfx.control.PropertySheet.Item;
 
 import java.text.MessageFormat;
@@ -141,7 +141,7 @@ import static javafx.scene.input.ContextMenuEvent.CONTEXT_MENU_REQUESTED;
  * {@link #setDateDetailsCallback(Callback)}. The callbacks can decide which
  * kind of user interface they want to show to the user. The default
  * implementation for both callbacks is a {@link PopOver} control from the
- * <a href="http://controlsfx.org">ControlsFX</a> project.
+ * <a href="https://www.dlsc.com/products/gemsfx/">GemsFX</a> project.
  *
  * <h2>Selection Handling</h2> Date controls use a very simple selection
  * concept. All selected entries are stored inside an observable list (see

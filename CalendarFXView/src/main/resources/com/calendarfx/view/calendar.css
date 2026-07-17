@@ -62,16 +62,6 @@
 
 }
 
-#search-field {
-    -fx-background-radius: 100.0px;
-    -fx-pref-width: 200.0px;
-}
-
-#search-icon {
-    -glyph-name: "SEARCH";
-    -glyph-size: 1.0em;
-}
-
 #date-picker {
     -fx-border-color: lightgray transparent transparent transparent;
     -fx-border-insets: 0.0 6.0 0.0 6.0;

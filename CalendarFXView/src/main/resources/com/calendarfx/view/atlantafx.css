@@ -1553,46 +1553,107 @@
     -fx-background-color: -color-bg-default;
 }
 
-/*
- * --------------------------------------------------------------------------------------------------------------
- * Styles needed by Popover control from the ControlsFX library.
- */
 
-.popover  {
+/* -----------------------------------------------------------------------
+ * popover
+ */
+.popover {
     -fx-background-color: transparent;
+}
+
+.popover:detached {
+}
+
+.popover > .background {
+    -fx-stroke: transparent;
+    -fx-fill: -color-bg-default;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0.0, 0, 3); /* same as Tooltip */
 }
 
 .popover > .border {
     -fx-stroke: -color-border-default;
+    -fx-fill: transparent;
     -fx-stroke-width: 1;
-    -fx-fill: -color-bg-default;
-    -fx-effect: dropshadow(three-pass-box, -color-shadow-default, 16px, 0.5, 0, 2);
 }
 
 .popover > .content {
 }
 
-.popover > .detached {
+/* -----------------------------------------------------------------------------------------------------
+ * SearchTextField
+ */
+.search-text-field {
+    -fx-border-color: -color-input-border;
+    -fx-background-color: -color-input-bg;
 }
 
-.popover > .content > .title > .text  {
-    -fx-padding: 6.0 6.0 0.0 6.0;
-    -fx-text-fill: -color-fg-default;
-    -fx-font-weight: bold;
+.search-text-field.danger {
+    -fx-border-color: -color-danger-emphasis;
 }
 
-.popover > .content > .title > .icon {
-    -fx-padding: 6px 0px 0px 10px;
+.search-text-field:focused {
+    -fx-border-color: -color-input-border-focused;
+    -fx-background-color: -color-input-bg-focused;
 }
 
-.popover > .content > .title > .icon > .graphics > .circle {
-    -fx-fill: -color-border-default;
-    -fx-effect: innershadow(gaussian, -color-shadow-default, 3, 0.5, 1.0, 1.0);
+.search-text-field.round {
+    -fx-border-radius: 1000px;
+    -fx-background-radius: 1000px;
 }
 
-.popover > .content > .title > .icon > .graphics > .line {
-    -fx-stroke: -color-fg-default;
-    -fx-stroke-width: 2;
+.search-text-field > .right-pane > .clear-icon-wrapper {
+}
+
+.search-text-field > .left-pane {
+}
+
+.search-text-field > .left-pane > .history-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2px 3px;
+    -fx-background-insets: 0px;
+    -fx-background-radius: 2px 0 0 2px;
+    -fx-cursor: hand;
+}
+
+.search-text-field > .left-pane > .history-button:hover,
+.search-text-field > .left-pane > .history-button:pressed,
+.search-text-field > .left-pane > .history-button:popup-showing {
+}
+
+.search-text-field.round > .left-pane > .history-button,
+.search-text-field.round > .left-pane > .history-button:hover,
+.search-text-field.round > .left-pane > .history-button:pressed,
+.search-text-field.round > .left-pane > .history-button:focused,
+.search-text-field.round > .left-pane > .history-button:popup-showing {
+    -fx-background-radius: 1000px 0 0 1000px;
+}
+
+.search-text-field > .left-pane > .history-button:disabled-popup,
+.search-text-field > .left-pane > .history-button:disabled-popup:hover,
+.search-text-field > .left-pane > .history-button:disabled-popup:pressed {
+    -fx-cursor: text;
+}
+
+.search-text-field > .left-pane > .history-button:pressed {
+}
+
+.search-text-field > .left-pane > .history-button > .icon {
+    -fx-background-color: -color-fg-subtle;
+}
+
+.search-text-field:focused > .left-pane > .history-button > .icon {
+    -fx-background-color: -color-fg-default;
+}
+
+.search-text-field > .left-pane > .history-button:disabled-popup > .icon {
+}
+
+.search-text-field > .right-pane > .clear-icon-wrapper > .ikonli-font-icon {
+    -fx-icon-color: -color-fg-subtle;
+}
+
+.search-text-field:focused > .right-pane > .clear-icon-wrapper > .ikonli-font-icon {
+    -fx-icon-color: -color-fg-default;
 }
 
 /*

@@ -21,10 +21,10 @@ import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import com.calendarfx.view.DayViewBase;
 import com.calendarfx.view.Messages;
+import com.dlsc.gemsfx.PopOver;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.util.Duration;
-import org.controlsfx.control.PopOver;
 
 import java.util.Objects;
 
