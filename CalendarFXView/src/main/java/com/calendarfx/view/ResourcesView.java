@@ -43,14 +43,9 @@ import java.util.function.Consumer;
 import static com.calendarfx.view.RequestEvent.REQUEST_ENTRY;
 
 /**
- * The detailed day view is a composite control consisting of a {@link DayView},
+ * The resources view is a composite control consisting of a {@link DayView},
  * an {@link AllDayView}, an {@link CalendarHeaderView}, and a
- * {@link TimeScaleView}. The image below shows the standard appearance of the
- * view. The second image shows the same view with the optional agenda view made
- * visible.
- *
- * <img src="doc-files/detailed-day-view.png" alt="Detailed Day View">
- * <img src="doc-files/detailed-day-view-agenda.png" alt="Detailed Day View Agenda">
+ * {@link TimeScaleView}.
  */
 public class ResourcesView<T extends Resource<?>> extends DayViewBase {
 
