@@ -42,7 +42,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Action"
           git commit -a -m "🏁 Releasing version $VERSION"
-          git push origin HEAD:master-11
+          git push origin HEAD:master
 
       - name: Release to Maven Central
         env:
