@@ -423,56 +423,58 @@ public class DayViewEditController {
     }
 
     private void mouseDraggedEditEntry(MouseEvent evt) {
-        if (entryEditingAllowed && view.getDraggedEntry() == null) {
-            DraggedEntry draggedEntry = new DraggedEntry(entry, dragMode);
-            draggedEntry.setOffsetDuration(offsetDuration);
-            view.setDraggedEntry(draggedEntry);
+        if (entryEditingAllowed) {
+            if (view.getDraggedEntry() == null) {
+                DraggedEntry draggedEntry = new DraggedEntry(entry, dragMode);
+                draggedEntry.setOffsetDuration(offsetDuration);
+                view.setDraggedEntry(draggedEntry);
+
+                switch (dragMode) {
+                    case START_AND_END_TIME:
+                        if (dayEntryView != null) {
+                            dayEntryView.getProperties().put("dragged", true);
+                        }
+                        break;
+                    case END_TIME:
+                        if (dayEntryView != null) {
+                            dayEntryView.getProperties().put("dragged-end", true);
+                        }
+                        break;
+                    case START_TIME:
+                        if (dayEntryView != null) {
+                            dayEntryView.getProperties().put("dragged-start", true);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             switch (dragMode) {
-                case START_AND_END_TIME:
-                    if (dayEntryView != null) {
-                        dayEntryView.getProperties().put("dragged", true);
+                case START_TIME:
+                    switch (handle) {
+                        case TOP:
+                        case BOTTOM:
+                            changeStartTime(evt);
+                            break;
+                        case CENTER:
+                            break;
                     }
                     break;
                 case END_TIME:
-                    if (dayEntryView != null) {
-                        dayEntryView.getProperties().put("dragged-end", true);
+                    switch (handle) {
+                        case TOP:
+                        case BOTTOM:
+                            changeEndTime(evt);
+                            break;
+                        case CENTER:
+                            break;
                     }
                     break;
-                case START_TIME:
-                    if (dayEntryView != null) {
-                        dayEntryView.getProperties().put("dragged-start", true);
-                    }
-                    break;
-                default:
+                case START_AND_END_TIME:
+                    changeStartAndEndTime(evt);
                     break;
             }
-        }
-
-        switch (dragMode) {
-            case START_TIME:
-                switch (handle) {
-                    case TOP:
-                    case BOTTOM:
-                        changeStartTime(evt);
-                        break;
-                    case CENTER:
-                        break;
-                }
-                break;
-            case END_TIME:
-                switch (handle) {
-                    case TOP:
-                    case BOTTOM:
-                        changeEndTime(evt);
-                        break;
-                    case CENTER:
-                        break;
-                }
-                break;
-            case START_AND_END_TIME:
-                changeStartAndEndTime(evt);
-                break;
         }
     }
 
