@@ -245,7 +245,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
 
     @Override
     protected DateControl createControl() {
-        resourcesView = new ResourcesView();
+        resourcesView = new ResourcesView<>();
         resourcesView.setScrollingEnabled(false);
         resourcesView.setType(Type.DATES_OVER_RESOURCES);
         resourcesView.setNumberOfDays(5);

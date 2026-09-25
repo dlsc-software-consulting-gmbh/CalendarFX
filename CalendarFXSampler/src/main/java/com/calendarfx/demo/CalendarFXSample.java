@@ -36,7 +36,7 @@ public abstract class CalendarFXSample extends SampleBase {
     protected Node control;
 
     {
-        setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
+        //setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
     }
 
     @Override

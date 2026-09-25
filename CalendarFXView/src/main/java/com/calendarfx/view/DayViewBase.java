@@ -56,7 +56,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * The common superclass for all date controls that are used to display the 24
- * hours of a day: day view, week day view, timescale, week timescale, and
+ * hours of a day: day view, week day view, timescale, week timescale, resources view, and
  * week view. Instances of this type can be configured to display hours at a
  * fixed height or alternatively a fixed number of hours for a given viewport
  * height (see {@link HoursLayoutStrategy}). This control also supports an early /
@@ -113,7 +113,15 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
      * @see #gridLineColorProperty()
      */
     public enum GridType {
+        /**
+         * Only supports grid lines for full hours and half hours.
+         */
         STANDARD,
+
+        /**
+         * Supports any kind of grid lines that can be configured via a {@link VirtualGrid}.
+         * @see #setGridLines(VirtualGrid)
+         */
         CUSTOM
     }
 
@@ -342,6 +350,11 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         return scrollingEnabled.get();
     }
 
+    /**
+     * If scrolling is enabled the day view supports infinite scrolling.
+     *
+     * @return if true the day view supports infinite scrolling
+     */
     public final BooleanProperty scrollingEnabledProperty() {
         return scrollingEnabled;
     }

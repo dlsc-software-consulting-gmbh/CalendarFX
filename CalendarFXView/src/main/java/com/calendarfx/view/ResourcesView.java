@@ -84,7 +84,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
 
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new ResourcesViewSkin(this);
+        return new ResourcesViewSkin<>(this);
     }
 
     private void maybeAdjustToFirstDayOfWeek() {
@@ -117,7 +117,7 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
     }
 
     /**
-     * Determines the visualization type: resoruces over dates or dates over resources.
+     * Determines the visualization type: resources over dates or dates over resources.
      *
      * @return the visualization type
      */

@@ -20,7 +20,7 @@ A new view called "ResourcesView" was added. It can be used to add allocations
 to one or more resources / people. A typical use case would be a personal that
 is working at a barber / hairdresser. The calendar entries would represent
 customer appointments. This view can either display "dates over resources" or
-"resources over dates". As part of the development of we added the "Resource"
+"resources over dates". As part of the development of it we added the "Resource"
 model class. This class stores a regular calendar and a special one called the
 "availability calendar". The availability of a resource can be edited when the
 view's "editAvailability" property is set to true.

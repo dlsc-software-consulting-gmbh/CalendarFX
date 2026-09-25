@@ -72,6 +72,7 @@
                 <module>CalendarFXApp</module>
                 <module>CalendarFXSchedulerApp</module>
                 <module>CalendarFXResourceApp</module>
+                <module>CalendarFXAppointmentsApp</module>
                 <module>CalendarFXiCal</module>
                 <module>CalendarFXWeather</module>
             </modules>
