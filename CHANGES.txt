@@ -1,4 +1,63 @@
 -------------------------------------------------------------------------------
+RELEASE NOTES, VERSION 12.1.x
+-------------------------------------------------------------------------------
+
+*** NEW FEATURES
+
+ResourcesView
+-------------
+
+Calendar entries can now be dragged horizontally from one resource to another.
+The preview follows the mouse cursor into the target column and the entry is
+moved to a calendar of the target resource upon release. The calendar is
+determined by a new callback, DateControl.setEntryDropCalendarProvider, which
+by default returns the first calendar of the target resource. The feature can
+be switched off via ResourcesView.setEnableCrossResourceDragging(false).
+
+As a side effect entries can now also be dragged from one date to another when
+the view type is set to DATES_OVER_RESOURCES, which was not possible before.
+
+DayViewBase
+-----------
+
+A new property called "crossViewDragEnabled" was added. It controls whether
+entries can be dragged out of a view and into a sibling view that also has this
+flag set. The default value is false, so existing controls are unaffected.
+
+ResourceCalendarView
+--------------------
+
+Supports cross-resource dragging as well, controlled by the same new property
+ResourceCalendarView.setEnableCrossResourceDragging(boolean).
+
+*** BUG FIXES
+
+DayViewEditController
+---------------------
+
+The MOUSE_RELEASED event filter was registered on the day view instead of on
+the scene, even though the intent was to receive the event "in any case". As a
+result a drag gesture that ended outside of the view it started in was never
+completed: the drag preview was left behind as a ghost and the edit was never
+applied. The filter is now registered on the scene as intended.
+
+MOUSE_DRAGGED is now observed on the scene as well. Once a drag starts, the
+entry view below the cursor is removed, which makes JavaFX re-target the
+gesture to whatever node currently sits under the mouse. Without this the
+controller that owns the gesture stopped receiving events as soon as the cursor
+left its own view.
+
+Moving an entry from one calendar to another
+--------------------------------------------
+
+Entry.setCalendar only fires ENTRY_CALENDAR_CHANGED on the new calendar. When
+an entry was moved directly from one calendar to another, the old calendar and
+therefore the view showing it never learned that the entry was gone, so a stale
+copy of the entry stayed behind and the entry appeared to exist twice. Moving
+an entry to another resource is now performed as a removal followed by an
+addition, which notifies both the source and the target.
+
+-------------------------------------------------------------------------------
 RELEASE NOTES, VERSION 11.12.x (October 2022)
 -------------------------------------------------------------------------------
 

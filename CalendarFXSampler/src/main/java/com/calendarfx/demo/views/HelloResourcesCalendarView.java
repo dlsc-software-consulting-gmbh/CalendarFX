@@ -17,6 +17,7 @@
 
 package com.calendarfx.demo.views;
 
+import com.calendarfx.demo.CalendarEventLogger;
 import com.calendarfx.demo.CalendarFXSample;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
@@ -93,6 +94,8 @@ public class HelloResourcesCalendarView extends CalendarFXSample {
 
             String resource = "Resource " + (i + 1);
             view.getResources().add(resource);
+
+            CalendarEventLogger.attach(resource, source);
 
             DayView dayView = view.getDayView(resource);
             dayView.setEnableCurrentTimeMarker(true);

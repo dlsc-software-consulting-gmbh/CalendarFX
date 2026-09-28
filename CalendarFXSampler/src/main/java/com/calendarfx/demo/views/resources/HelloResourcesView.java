@@ -17,6 +17,7 @@
 
 package com.calendarfx.demo.views.resources;
 
+import com.calendarfx.demo.CalendarEventLogger;
 import com.calendarfx.demo.CalendarFXDateControlSample;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Calendar.Style;
@@ -288,6 +289,7 @@ public class HelloResourcesView extends CalendarFXDateControlSample {
 //        resource.getCalendars().get(0).setUserObject(resource);
 //        resource.getCalendarSources().get(0).getCalendars().add(new Calendar("Second", resource));
         fillAvailabilities(resource.getAvailabilityCalendar());
+        CalendarEventLogger.attach(resource);
         return resource;
     }
 

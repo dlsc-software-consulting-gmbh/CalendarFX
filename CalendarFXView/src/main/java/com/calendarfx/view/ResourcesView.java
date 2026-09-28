@@ -307,6 +307,40 @@ public class ResourcesView<T extends Resource<?>> extends DayViewBase {
         showAllDayViewProperty().set(show);
     }
 
+    // cross resource dragging support
+
+    private final BooleanProperty enableCrossResourceDragging = new SimpleBooleanProperty(this, "enableCrossResourceDragging", true);
+
+    /**
+     * A property used to control whether the user can drag an entry from one resource to
+     * another. The calendar that the entry ends up in is determined by the callback stored
+     * in {@link DateControl#entryDropCalendarProviderProperty()}, which by default returns
+     * the first calendar of the target resource.
+     *
+     * @return true if entries can be dragged from one resource to another
+     */
+    public final BooleanProperty enableCrossResourceDraggingProperty() {
+        return enableCrossResourceDragging;
+    }
+
+    /**
+     * Returns the value of {@link #enableCrossResourceDraggingProperty()}.
+     *
+     * @return true if entries can be dragged from one resource to another
+     */
+    public final boolean isEnableCrossResourceDragging() {
+        return enableCrossResourceDraggingProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #enableCrossResourceDraggingProperty()}.
+     *
+     * @param enable true if entries can be dragged from one resource to another
+     */
+    public final void setEnableCrossResourceDragging(boolean enable) {
+        enableCrossResourceDraggingProperty().set(enable);
+    }
+
     // show timescale view support
 
     private final BooleanProperty showTimeScaleView = new SimpleBooleanProperty(this, "showTimeScaleView", true);
