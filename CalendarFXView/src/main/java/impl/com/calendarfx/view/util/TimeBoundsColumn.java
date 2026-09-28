@@ -62,7 +62,7 @@ public final class TimeBoundsColumn {
             ZonedDateTime otherEntryStartTime = otherEntry.getStartAsZonedDateTime();
             ZonedDateTime otherEntryEndTime = otherEntry.getEndAsZonedDateTime();
 
-            if (entry.isFullDay()) {
+            if (otherEntry.isFullDay()) {
                 otherEntryStartTime = otherEntryStartTime.with(LocalTime.MIN);
                 otherEntryEndTime = otherEntryEndTime.with(LocalTime.MAX);
             }

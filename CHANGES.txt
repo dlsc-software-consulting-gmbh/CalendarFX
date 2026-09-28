@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-RELEASE NOTES, VERSION 12.1.x
+RELEASE NOTES, VERSION 12.2.x
 -------------------------------------------------------------------------------
 
 *** NEW FEATURES
@@ -56,6 +56,26 @@ therefore the view showing it never learned that the entry was gone, so a stale
 copy of the entry stayed behind and the entry appeared to exist twice. Moving
 an entry to another resource is now performed as a removal followed by an
 addition, which notifies both the source and the target.
+
+TimeBoundsResolver
+------------------
+
+The comparator used to sort the entry views before resolving their overlaps
+always returned 0, so the list was effectively left unsorted. The clustering
+algorithm only compares an entry view against the cluster that was built last
+and therefore requires the views to be ordered by start time. With an unsorted
+list entries that belong to the same cluster could end up in separate clusters
+with a different column count, which made overlapping entries overlap visually
+as well. The comparator now sorts by start time and only consults the optional
+"additional comparator" when two entries start at the same time.
+
+TimeBoundsColumn
+----------------
+
+When checking whether a column has room for an entry view, the full day flag of
+the entry being placed was used to decide whether the time bounds of the entries
+already sitting in the column had to be expanded to the whole day. A timed entry
+could therefore be placed into the same column as a full day entry.
 
 -------------------------------------------------------------------------------
 RELEASE NOTES, VERSION 11.12.x (October 2022)

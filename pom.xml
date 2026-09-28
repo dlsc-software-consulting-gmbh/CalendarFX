@@ -357,6 +357,13 @@
                 <configuration>
                     <!-- Activate the use of TCP to transmit events to the plugin -->
                     <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+                    <!--
+                        Tests that instantiate JavaFX controls need a user agent stylesheet to be
+                        registered, otherwise the static initializer of javafx.scene.control.Control
+                        fails with "Toolkit not initialized". FxTestSupport registers one reflectively
+                        so that the tests can run headless (e.g. on CI) without starting the toolkit.
+                    -->
+                    <argLine>--add-opens javafx.graphics/javafx.application=com.calendarfx.view</argLine>
                 </configuration>
             </plugin>
         </plugins>

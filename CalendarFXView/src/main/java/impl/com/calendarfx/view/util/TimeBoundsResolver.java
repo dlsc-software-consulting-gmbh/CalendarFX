@@ -16,8 +16,11 @@
 
 package impl.com.calendarfx.view.util;
 
+import com.calendarfx.model.Entry;
 import com.calendarfx.view.EntryViewBase;
 
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -49,13 +52,21 @@ public final class TimeBoundsResolver {
 
         final Comparator<T> comparator = (o1, o2) -> {
 
-            int result = o1.compareTo(o2);
+            /*
+             * The clustering algorithm below only works correctly if the views are
+             * sorted by their start time, hence the start time always wins.
+             */
+            int result = getStartTime(o1).compareTo(getStartTime(o2));
 
-            if (result == 0 && additionalComparator != null) {
+            if (result != 0) {
+                return result;
+            }
+
+            if (additionalComparator != null) {
                 return additionalComparator.compare(o1, o2);
             }
 
-            return 0;
+            return o1.getEntry().compareTo(o2.getEntry());
         };
 
         entryViews.sort(comparator);
@@ -81,5 +92,16 @@ public final class TimeBoundsResolver {
         }
 
         return placements;
+    }
+
+    private static ZonedDateTime getStartTime(EntryViewBase<?> view) {
+        Entry<?> entry = view.getEntry();
+        ZonedDateTime startTime = entry.getStartAsZonedDateTime();
+
+        if (entry.isFullDay()) {
+            startTime = startTime.with(LocalTime.MIN);
+        }
+
+        return startTime;
     }
 }
