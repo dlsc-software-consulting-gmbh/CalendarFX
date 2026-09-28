@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or usage help
+    url: https://github.com/dlsc-software-consulting-gmbh/CalendarFX/discussions
+    about: Please ask usage questions in Discussions rather than the issue tracker.
+  - name: Developer manual
+    url: https://dlsc-software-consulting-gmbh.github.io/CalendarFX/
+    about: The manual covers the model, the controls and most customization points.
+  - name: Commercial support
+    url: https://www.dlsc.com
+    about: DLSC Software & Consulting offers commercial support and custom development.

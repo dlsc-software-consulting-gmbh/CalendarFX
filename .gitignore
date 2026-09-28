@@ -1,4 +1,4 @@
-/target/
+target/
 .idea
 *.iml
 .project
@@ -6,3 +6,6 @@
 CalendarFXApp/.classpath
 *.classpath
 *.log
+.DS_Store
+.settings/
+*.swp

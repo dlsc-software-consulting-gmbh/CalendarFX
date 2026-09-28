@@ -1,0 +1,89 @@
+name: Bug report
+description: Report a problem with CalendarFX
+labels: [ "bug" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Please search the
+        [existing issues](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/issues)
+        first — your problem may already be known.
+
+        Do **not** report security vulnerabilities here. Please follow
+        [SECURITY.md](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/blob/master/SECURITY.md)
+        instead.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the problem is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Please provide a minimal, self-contained and runnable example. Bug reports without a
+        reproducible example are much harder to act on and may be closed.
+      placeholder: |
+        1. Run the following application ...
+        2. Click on ...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+
+  - type: input
+    id: calendarfx-version
+    attributes:
+      label: CalendarFX version
+      placeholder: "12.0.1"
+    validations:
+      required: true
+
+  - type: input
+    id: java-version
+    attributes:
+      label: Java version
+      placeholder: "21.0.4 (Zulu)"
+    validations:
+      required: true
+
+  - type: input
+    id: javafx-version
+    attributes:
+      label: JavaFX version
+      placeholder: "23"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Stack trace, logs or screenshots
+      description: Paste any relevant output here. Screenshots are helpful for visual issues.
+      render: shell
+    validations:
+      required: false
