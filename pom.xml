@@ -31,7 +31,7 @@
         <ikonli.version>12.4.0</ikonli.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
-        <controlsfx.version>11.2.2</controlsfx.version>
+        <controlsfx.version>11.2.5</controlsfx.version>
         <ical4j.version>4.1.1</ical4j.version>
     </properties>
 
