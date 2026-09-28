@@ -1,0 +1,42 @@
+name: Feature request
+description: Suggest an idea or improvement for CalendarFX
+labels: [ "enhancement" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. For larger ideas, consider starting a
+        [discussion](https://github.com/dlsc-software-consulting-gmbh/CalendarFX/discussions)
+        first so that the design can be agreed upon before any code is written.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Use case
+      description: What are you trying to achieve, and why is it hard or impossible today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the API or behaviour you would like to see.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any workarounds you have tried or other solutions you have thought about.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Mockups, sketches, links to comparable features in other libraries.
+    validations:
+      required: false

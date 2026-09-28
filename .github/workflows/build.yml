@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - master-11
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.event.head_commit.message, '🏁 Releasing version') != true
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 21
