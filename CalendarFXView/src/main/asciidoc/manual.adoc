@@ -631,6 +631,33 @@ By default, the calendar entries will become semi-transparent when the user swit
 [.thumb]
 image::resources-view-availability.png[esourcesView - Availability Editing,align="center"]
 
+==== Dragging Entries Between Resources
+
+By default the user can drag a calendar entry horizontally from one resource to another. While the mouse cursor moves across the
+column boundary the drag preview follows it into the target column. Upon release the entry is moved to a calendar of the target
+resource.
+
+The calendar that receives the entry is determined by the callback stored in `DateControl.entryDropCalendarProviderProperty()`. The
+default implementation returns the first calendar of the target resource. An application that keeps several calendars per resource can
+replace it. The callback only has to be set once, on the `ResourcesView` itself, as it receives the target control as part of its
+parameter object.
+
+[source,java]
+----
+resourcesView.setEntryDropCalendarProvider(param -> {
+    Calendar sourceCalendar = param.getSourceCalendar();
+    DateControl target = param.getTargetDateControl();
+    // pick a calendar of the target resource, or return null to reject the drop
+    return target.getCalendars().stream()
+            .filter(calendar -> calendar.getName().equals(sourceCalendar.getName()))
+            .findFirst()
+            .orElse(null);
+});
+----
+
+The feature can be switched off via `ResourcesView.setEnableCrossResourceDragging(false)`. The `ResourceCalendarView` control supports the
+same feature and the same property.
+
 
 == Developer Console
 

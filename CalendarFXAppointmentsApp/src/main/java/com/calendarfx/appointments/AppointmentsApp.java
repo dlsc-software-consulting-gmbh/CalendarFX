@@ -115,6 +115,8 @@ public class AppointmentsApp extends Application {
             return entry;
         });
 
+        stylists.forEach(CalendarEventLogger::attach);
+
         resourcesView.getResources().setAll(stylists);
     }
 

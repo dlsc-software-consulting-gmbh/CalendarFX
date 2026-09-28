@@ -1092,6 +1092,34 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
         this.enableStartAndEndTimesFlip.set(enableStartAndEndTimesFlip);
     }
 
+    private final BooleanProperty crossViewDragEnabled = new SimpleBooleanProperty(this, "crossViewDragEnabled", false);
+
+    public final boolean isCrossViewDragEnabled() {
+        return crossViewDragEnabled.get();
+    }
+
+    /**
+     * Determines whether the user can drag an entry out of this view and into a sibling
+     * view that also has this flag set, for example from one resource to another inside
+     * a {@link ResourcesView}. The entry is then moved to the calendar returned by
+     * {@link DateControl#entryDropCalendarProviderProperty()}.
+     *
+     * <p>
+     * This property is deliberately not propagated by {@link #bind(DayViewBase, boolean)}.
+     * A {@link WeekDayView} must never become a drag target, because the drag gesture
+     * inside a {@link WeekView} is owned by the week view itself and not by the
+     * individual day views.
+     *
+     * @return whether entries can be dragged from this view into a sibling view
+     */
+    public final BooleanProperty crossViewDragEnabledProperty() {
+        return crossViewDragEnabled;
+    }
+
+    public final void setCrossViewDragEnabled(boolean crossViewDragEnabled) {
+        this.crossViewDragEnabled.set(crossViewDragEnabled);
+    }
+
     /**
      * Invokes {@link DateControl#bind(DateControl, boolean)} and adds some more
      * bindings between this control and the given control.
@@ -1189,6 +1217,44 @@ public abstract class DayViewBase extends DateControl implements ZonedDateTimePr
             @Override
             public String getDescription() {
                 return "Support scrolling to previous or next days";
+            }
+
+            @Override
+            public String getCategory() {
+                return DAY_VIEW_BASE_CATEGORY;
+            }
+        });
+
+        items.add(new Item() {
+
+            @Override
+            public Optional<ObservableValue<?>> getObservableValue() {
+                return Optional.of(crossViewDragEnabledProperty());
+            }
+
+            @Override
+            public void setValue(Object value) {
+                setCrossViewDragEnabled((boolean) value);
+            }
+
+            @Override
+            public Object getValue() {
+                return isCrossViewDragEnabled();
+            }
+
+            @Override
+            public Class<?> getType() {
+                return boolean.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Cross view dragging";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Allow entries to be dragged into a sibling view.";
             }
 
             @Override

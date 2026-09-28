@@ -32,6 +32,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
         resourcesView.getResources().addListener(updateViewListener);
         resourcesView.numberOfDaysProperty().addListener(updateViewListener);
         resourcesView.typeProperty().addListener(updateViewListener);
+        resourcesView.enableCrossResourceDraggingProperty().addListener(updateViewListener);
 
         updateView();
 
@@ -99,6 +100,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
 
                 dayView.setEnableCurrentTimeMarker(true);
                 dayView.setEnableCurrentTimeCircle(dayIndex == 0 && resourceIndex == 0);
+                dayView.setCrossViewDragEnabled(resourcesView.isEnableCrossResourceDragging());
 
                 dayView.setAvailabilityCalendar(resource.getAvailabilityCalendar());
                 dayView.installDefaultLassoFinishedBehaviour();
@@ -179,6 +181,7 @@ public class ResourcesViewContainerSkin<T extends Resource<?>> extends DayViewBa
 
             weekView.setEnableCurrentTimeCircle(i == 0);
             weekView.setEnableCurrentTimeMarker(true);
+            weekView.setCrossViewDragEnabled(resourcesView.isEnableCrossResourceDragging());
             weekView.setAvailabilityCalendar(resource.getAvailabilityCalendar());
 
             weekView.installDefaultLassoFinishedBehaviour();

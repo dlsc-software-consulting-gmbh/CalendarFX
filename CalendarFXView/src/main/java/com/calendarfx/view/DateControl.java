@@ -1251,6 +1251,123 @@ public abstract class DateControl extends CalendarFXControl {
     }
 
     /*
+     * Entry drop calendar provider callback.
+     */
+
+    /**
+     * The parameter object passed to the entry drop calendar provider.
+     *
+     * @see DateControl#entryDropCalendarProviderProperty()
+     */
+    public static final class EntryDropParameter {
+
+        private final Entry<?> entry;
+
+        private final Calendar sourceCalendar;
+
+        private final DateControl sourceDateControl;
+
+        private final DateControl targetDateControl;
+
+        public EntryDropParameter(Entry<?> entry, Calendar sourceCalendar, DateControl sourceDateControl, DateControl targetDateControl) {
+            this.entry = Objects.requireNonNull(entry);
+            this.sourceCalendar = sourceCalendar;
+            this.sourceDateControl = Objects.requireNonNull(sourceDateControl);
+            this.targetDateControl = Objects.requireNonNull(targetDateControl);
+        }
+
+        /**
+         * The entry that was dragged.
+         *
+         * @return the dragged entry
+         */
+        public Entry<?> getEntry() {
+            return entry;
+        }
+
+        /**
+         * The calendar the entry belonged to when the drag started. May be null.
+         *
+         * @return the original calendar of the entry
+         */
+        public Calendar getSourceCalendar() {
+            return sourceCalendar;
+        }
+
+        /**
+         * The date control where the drag gesture started.
+         *
+         * @return the source date control
+         */
+        public DateControl getSourceDateControl() {
+            return sourceDateControl;
+        }
+
+        /**
+         * The date control where the entry was dropped.
+         *
+         * @return the target date control
+         */
+        public DateControl getTargetDateControl() {
+            return targetDateControl;
+        }
+
+        @Override
+        public String toString() {
+            return "EntryDropParameter{" +
+                    "entry=" + entry +
+                    ", sourceCalendar=" + sourceCalendar +
+                    ", sourceDateControl=" + sourceDateControl +
+                    ", targetDateControl=" + targetDateControl +
+                    '}';
+        }
+    }
+
+    private final ObjectProperty<Callback<EntryDropParameter, Calendar>> entryDropCalendarProvider = new SimpleObjectProperty<>(this, "entryDropCalendarProvider", param -> {
+        Callback<DateControl, Calendar> defaultCalendarProvider = param.getTargetDateControl().getDefaultCalendarProvider();
+        if (defaultCalendarProvider == null) {
+            return null;
+        }
+        return defaultCalendarProvider.call(param.getTargetDateControl());
+    });
+
+    /**
+     * A callback used to determine the calendar that an entry shall be moved to when the
+     * user drags it from one date control into another one, for example from one resource
+     * to another inside a {@link ResourcesView}. Returning null rejects the drop, in which
+     * case the entry is left completely untouched.
+     *
+     * <p>
+     * The default implementation delegates to the {@link #defaultCalendarProviderProperty()}
+     * of the control the entry was dropped on. Because the callback dispatches on
+     * {@link EntryDropParameter#getTargetDateControl()} it is resource-agnostic, so a single
+     * instance can be shared by all views of a composite control.
+     *
+     * @return the entry drop calendar provider callback
+     */
+    public final ObjectProperty<Callback<EntryDropParameter, Calendar>> entryDropCalendarProviderProperty() {
+        return entryDropCalendarProvider;
+    }
+
+    /**
+     * Returns the value of {@link #entryDropCalendarProviderProperty()}.
+     *
+     * @return the entry drop calendar provider
+     */
+    public final Callback<EntryDropParameter, Calendar> getEntryDropCalendarProvider() {
+        return entryDropCalendarProviderProperty().get();
+    }
+
+    /**
+     * Sets the value of {@link #entryDropCalendarProviderProperty()}.
+     *
+     * @param provider the entry drop calendar provider
+     */
+    public final void setEntryDropCalendarProvider(Callback<EntryDropParameter, Calendar> provider) {
+        entryDropCalendarProviderProperty().set(provider);
+    }
+
+    /*
      * Alert callback.
      */
 
@@ -2907,6 +3024,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.bindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.bindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
         Bindings.bindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
+        Bindings.bindBidirectional(otherControl.entryDropCalendarProviderProperty(), entryDropCalendarProviderProperty());
         Bindings.bindBidirectional(otherControl.alertCallbackProperty(), alertCallbackProperty());
     }
 
@@ -2970,6 +3088,7 @@ public abstract class DateControl extends CalendarFXControl {
         Bindings.unbindBidirectional(otherControl.entryContextMenuCallbackProperty(), entryContextMenuCallbackProperty());
         Bindings.unbindBidirectional(otherControl.entryFactoryProperty(), entryFactoryProperty());
         Bindings.unbindBidirectional(otherControl.defaultCalendarProviderProperty(), defaultCalendarProviderProperty());
+        Bindings.unbindBidirectional(otherControl.entryDropCalendarProviderProperty(), entryDropCalendarProviderProperty());
         Bindings.unbindBidirectional(otherControl.alertCallbackProperty(), alertCallbackProperty());
 
     }
